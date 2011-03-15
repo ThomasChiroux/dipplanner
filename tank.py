@@ -35,7 +35,10 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
-ABSOLUTE_MAX_PPO2 = 1.6
+ABSOLUTE_MAX_PPO2 = 2
+DEFAULT_MAX_PPO2 = 1.6
+ABSOLUTE_MIN_PPO2 = 0.16
+DEFAULT_MIN_PPO2 = 0.16
 ABSOLUTE_MAX_TANK_PRESSURE = 300 # in bar
 ABSOLUTE_MAX_TANK_SIZE = 30 # in liter
 
@@ -75,7 +78,7 @@ class Tank(object):
   We can also (optionnaly) provide the type of tanks : volume and pressure
   """
   
-  def __init__(self,  f_O2=0.21, f_He=0, max_ppo2=1.6, mod=None,
+  def __init__(self,  f_O2=0.21, f_He=0, max_ppo2=DEFAULT_MAX_PPO2, mod=None,
                       tank_vol=12, tank_pressure=200):
     """Constructor for Tank class
     If nothing is provided, create a default 'Air' with 12l/200b tank
@@ -137,9 +140,9 @@ class Tank(object):
        self.mod > self._calculate_mod(ABSOLUTE_MAX_PPO2):
       raise InvalidMod
     
-    if self.tank_pressure > ABSOLUTE_MAX_TANK_PRESSURE: #no pressure > 300bars
+    if self.tank_pressure > ABSOLUTE_MAX_TANK_PRESSURE: #no pressure > xxxbars
       raise InvalidTank
-    if self.tank_vol > ABSOLUTE_MAX_TANK_SIZE: #no tank larger than 20liter
+    if self.tank_vol > ABSOLUTE_MAX_TANK_SIZE: #no tank larger than xxliter
       raise InvalidTank
     
   def name(self):
@@ -188,6 +191,12 @@ class Tank(object):
       return self.mod
     else:
       return self._calculate_mod(max_ppo2)
+  
+  def get_min_od(self, min_ppo2=ABSOLUTE_MIN_PPO2):
+    """return in meter the minimum operating depth for the gas in the tank
+    return 0 if diving from/to surface is ok with this gaz
+    """
+    return self._calculate_mod(min_ppo2)
     
   def consume_gas(self, gas_consumed):
     """Consume gas inside this tank

@@ -56,9 +56,9 @@ class TestTank(unittest.TestCase):
     assert mytank.mod == 70
   
   def testTankisTrimix870(self):
-    mytank = Tank(f_O2=0.08, f_He=0.7)
-    assert str(mytank) == 'Trimix 8/70'
-    assert mytank.mod == 190
+    mytank = Tank(f_O2=0.1, f_He=0.7)
+    assert str(mytank) == 'Trimix 10/70'
+    assert mytank.mod == 150
 
   def testTankisHeliox2080(self):
     mytank = Tank(f_O2=0.2, f_He=0.8)
@@ -89,7 +89,8 @@ class TestTank(unittest.TestCase):
     mytank = Tank(f_O2=0.08, f_He=0.7, max_ppo2=1.4)
     assert str(mytank) == 'Trimix 8/70'
     assert mytank.mod == 165
-
+    assert mytank.get_min_od() == 10
+    
   def testTankisHeliox2080_2(self):
     mytank = Tank(f_O2=0.2, f_He=0.8, max_ppo2=1.4)
     assert str(mytank) == 'Heliox 20/80'

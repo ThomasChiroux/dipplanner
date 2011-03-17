@@ -149,19 +149,23 @@ class Segment(object):
 
     if self.setpoint > 0:
       #CCR mode
-      # TODO: change this to a 'real' calculation based on narcotic effet of
-      #       all gases
-      if (self.tank.f_He + self.tank.f_N2) > 0:
-        # partial pressure of all inert gazes
-        p_inert = p_absolute - self.setpoint * 10
-        # TODO : attention, j'ai besoin de plus que juste la pp_intert, j'ai
-        # besoin de chaque pression partielle respirée pour calculer ensuite
-        # le facteur narcotique selon chaque gaz
-        # le setpoint me donne la ppo2 : comment calculer la ppn2 et ppHe ?
+      f_inert = self.tank.f_He + self.tank.f_N2 
+      if (f_inert) > 0:
+        pp_inert = p_absolute - self.setpoint
       else:
-        p_inert = 0
-      if p_inert > 0:
-        ppn2_inspired = (p_inert * self.tank.f_N2) / (self.tank.f_He + self.tank.f_N2)
+        pp_inert = 0
+      if pp_inert > 0:
+        # sort of approximation here ?
+        # calculate here a narcotic index based on the proportion of innert
+        # gases in the dilluent tank
+        # should (perhaps) calculate based on proportion of innert gases in
+        # the loop ?
+        ppn2_inspired = (pp_inert * self.tank.f_N2) / f_inert
+        pphe_inspired = (pp_inert * self.tank.f_He) / f_inert
+        narcotic_index = p_absolute * \
+                         (ppn2_inspired * settings.N2_NARCOTIC_VALUE + \
+                          self.setpoint * settings.O2_NARCOTIC_VALUE + \
+                          pphe_inspired * settings.HE_NARCOTIC_VALUE)
       else:
         narcotic_index = 0
     else:

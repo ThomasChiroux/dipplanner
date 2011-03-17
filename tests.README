@@ -1,0 +1,9 @@
+To run tests, use the following commands from main module directory :
+
+Run all tests :
+./tests/run_all_tests.py
+
+Run one test in particular (and with tank_test module) :
+PYTHONPATH=. python tests/module_test.py
+
+PYTHONPATH=. python tests/tank_test.py

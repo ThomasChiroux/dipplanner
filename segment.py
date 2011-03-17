@@ -30,16 +30,18 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
-
-# Const : should be in global parameter
-AMBIANT_PRESSURE_SURFACE = 1.0 # surface pressure (in bar)
-DIVE_CONSUMPTION_RATE = 17 # liter/minute
-DECO_CONSUMPTION_RATE = 12 # liter/minute
+# local import
+import settings
 
 class SegmentException(Exception):
   """Base exception class for this module
   """
-  pass
+  def __init__(self, description):
+    self.description = description
+  
+  def __str__(self):
+    return repr(self.description)
+
 
 class UnauthorizedMod(SegmentException):
   """raised when the MOD is not possible according to the 
@@ -73,9 +75,9 @@ class Segment(object):
     if problem, raise UnauthorizedMod
     """
     if self.depth > self.tank.get_mod():
-      raise UnauthorizedMod
+      raise UnauthorizedMod("depth is exceeding the maximum MOD")
     if self.depth < self.tank.get_min_od(): # checks minimum operating depth
-      raise UnauthorizedMod
+      raise UnauthorizedMod("depth is too low for the minimum MOD")
     
   def get_p_absolute(self, method='simple'):
     """returns the absolute pression in bar
@@ -84,7 +86,7 @@ class Segment(object):
     "complex method" : use real density of water, T°, etc...: need more parameters
     today: only simple method
     """
-    return self.depth/10 + AMBIANT_PRESSURE_SURFACE
+    return self.depth/10 + settings.AMBIANT_PRESSURE_SURFACE
     
   def get_end(self):
     """Calculates and returns E.N.D :
@@ -93,12 +95,6 @@ class Segment(object):
     nacosys effet of all gas used, assuming there is no trace of
     other gases (like argon)
     """
-    # Narcotic values of gas : TODO: raise that in global parametrers
-    he_narcotic = 0.23
-    n2_narcotic = 1.0
-    o2_narcotic = 1.0
-    ar_narcotic = 2.33
-    
     p_absolute = self.get_p_absolute()
     # calculate the reference narcotic effect of air
     # Air consists of: Nitrogen N2: 78.08%, Oxygen O2: 20.95%, Argon Ar: 0.934%
@@ -106,8 +102,8 @@ class Segment(object):
     #reference_narcotic = n2_narcotic * 0.7808 + \
     #                     o2_narcotic * 0.2095 + \
     #                     ar_narcotic * 0.00934
-    reference_narcotic = n2_narcotic * 0.79 + \
-                        o2_narcotic * 0.21
+    reference_narcotic = settings.N2_NARCOTIC_VALUE * 0.79 + \
+                        settings.O2_NARCOTIC_VALUE * 0.21
 
     if self.setpoint > 0:
       #CCR mode
@@ -126,9 +122,10 @@ class Segment(object):
       # only N2 is narcotic
       #ppn2_inspired = self.tank.f_N2 * p_absolute
       
-      narcotic_index = p_absolute * (self.tank.f_N2 * n2_narcotic + \
-                                     self.tank.f_O2 * o2_narcotic + \
-                                     self.tank.f_He * he_narcotic)
+      narcotic_index = p_absolute * \
+                       (self.tank.f_N2 * settings.N2_NARCOTIC_VALUE + \
+                        self.tank.f_O2 * settings.O2_NARCOTIC_VALUE + \
+                        self.tank.f_He * settings.HE_NARCOTIC_VALUE)
     end = int((narcotic_index / reference_narcotic - 1) * 10)
     return end
     
@@ -172,8 +169,8 @@ class SegmentDive(Segment):
     if self.setpoint > 0 :
       return 0
     else:
-      pressure = (self.depth/10 + AMBIANT_PRESSURE_SURFACE)
-      return ( pressure * self.time * float(DIVE_CONSUMPTION_RATE)/60 )
+      pressure = (self.depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)/60 )
     
 class SegmentDeco(Segment):
   """Specialisation of segment class for deco segments
@@ -206,8 +203,8 @@ class SegmentDeco(Segment):
     if self.setpoint > 0 :
       return 0
     else:
-      pressure = (float(self.depth)/10 + AMBIANT_PRESSURE_SURFACE)
-      return ( pressure * self.time * float(DECO_CONSUMPTION_RATE)/60 )
+      pressure = (float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      return ( pressure * self.time * float(settings.DECO_CONSUMPTION_RATE)/60 )
 
 class SegmentAscDesc(Segment):
   """Specialisation of segment class for Ascent or Descent segments
@@ -249,9 +246,9 @@ class SegmentAscDesc(Segment):
       max_depth = self.end_depth
 
     if max_depth > self.tank.get_mod():
-      raise UnauthorizedMod
+      raise UnauthorizedMod("depth is exceeding the maximum MOD")
     if min_depth < self.tank.get_min_od(): # checks minimum operating depth
-      raise UnauthorizedMod
+      raise UnauthorizedMod("depth is too low for the minimum MOD")
 
   def gas_used(self):
     """returns the quantity (in liter) of gas used for this segment
@@ -264,5 +261,5 @@ class SegmentAscDesc(Segment):
       return 0
     else:
       average_depth = (self.start_depth + self.end_depth) / 2.0
-      pressure = (average_depth/10 + AMBIANT_PRESSURE_SURFACE)
-      return ( pressure * self.time * float(DIVE_CONSUMPTION_RATE)/60 )
+      pressure = (average_depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)/60 )

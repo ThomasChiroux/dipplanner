@@ -35,38 +35,41 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
-ABSOLUTE_MAX_PPO2 = 2
-DEFAULT_MAX_PPO2 = 1.6
-ABSOLUTE_MIN_PPO2 = 0.16
-DEFAULT_MIN_PPO2 = 0.16
-ABSOLUTE_MAX_TANK_PRESSURE = 300 # in bar
-ABSOLUTE_MAX_TANK_SIZE = 30 # in liter
+# local imports
+import settings
 
 class TankException(Exception):
-  """Base exception class for this module
-  """
-  pass
+  """Base exception class for Tank"""
+  def __init__(self, description):
+    self.description = description
+  
+  def __str__(self):
+    return repr(self.description)
   
 class InvalidGas(TankException):
   """Exception raised when the gas informations provided for the Tank
   are invalid
+  
   """
   pass
 
 class InvalidTank(TankException):
   """Exception raised when the tank infos provided are invalid
+  
   """
   pass
   
 class InvalidMod(TankException):
   """Exception raised when the given MOD is incompatible with the gas
   provided for the tank
+  
   """
   pass
   
 class EmptyTank(TankException):
   """Exception raised when trying to consume more gas in tank than the
   remaining gas
+  
   """
   pass
   
@@ -76,14 +79,31 @@ class Tank(object):
   We provide proportion of N2, O2, He, calculates MOD and volumes during the
   dives
   We can also (optionnaly) provide the type of tanks : volume and pressure
+  
   """
   
-  def __init__(self,  f_O2=0.21, f_He=0, max_ppo2=DEFAULT_MAX_PPO2, mod=None,
-                      tank_vol=12, tank_pressure=200):
+  def __init__(self,  f_O2=0.21, f_He=0.0, max_ppo2=settings.DEFAULT_MAX_PPO2, 
+                      mod=None, tank_vol=12, tank_pressure=200):
     """Constructor for Tank class
     If nothing is provided, create a default 'Air' with 12l/200b tank
     and max_ppo2 to 1.6 (used to calculate mod)
     if mod not provided, mod is calculed based on max tolerable ppo2
+    
+    Keyword arguments:
+    f_O2 -- Fraction of O2 in the gaz in % : between 0.0 and 1.0
+    f_He -- Fraction of He in the gaz in % : between 0.0 and 1.0
+    max_ppo2 -- sets the maximum ppo2 you want for this tank (default: settings.DEFAULT_MAX_PPO2)
+    mod -- 
+    tank_vol --
+    Tank_pressure -- 
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    InvalidGas --
+    InvalidMod --
+    InvalidTank --
     """
     self.f_O2 = f_O2
     self.f_He = f_He
@@ -134,16 +154,16 @@ class Tank(object):
     if validity check fails raise an Exception 'InvalidTank'
     """
     if self.f_O2 + self.f_He > 1:
-      raise InvalidGas
+      raise InvalidGas("Proportion of O2+He is more than 100%")
     
     if self.mod > self._calculate_mod(self.max_ppo2) or \
-       self.mod > self._calculate_mod(ABSOLUTE_MAX_PPO2):
-      raise InvalidMod
+       self.mod > self._calculate_mod(settings.ABSOLUTE_MAX_PPO2):
+      raise InvalidMod("MOD exceed maximum tolerable MOD")
     
-    if self.tank_pressure > ABSOLUTE_MAX_TANK_PRESSURE: #no pressure > xxxbars
-      raise InvalidTank
-    if self.tank_vol > ABSOLUTE_MAX_TANK_SIZE: #no tank larger than xxliter
-      raise InvalidTank
+    if self.tank_pressure > settings.ABSOLUTE_MAX_TANK_PRESSURE: 
+      raise InvalidTank("Tank pressure exceed maximum tolerable pressure")
+    if self.tank_vol > settings.ABSOLUTE_MAX_TANK_SIZE: 
+      raise InvalidTank("Tank size exceed maximum tolerable tank size")
     
   def name(self):
     """returns a Human readable name for the gaz and tanks
@@ -192,7 +212,7 @@ class Tank(object):
     else:
       return self._calculate_mod(max_ppo2)
   
-  def get_min_od(self, min_ppo2=ABSOLUTE_MIN_PPO2):
+  def get_min_od(self, min_ppo2=settings.ABSOLUTE_MIN_PPO2):
     """return in meter the minimum operating depth for the gas in the tank
     return 0 if diving from/to surface is ok with this gaz
     """
@@ -205,7 +225,7 @@ class Tank(object):
     return remaining gaz in tank (in liter) in other cases
     """
     if self.remaining_gas - gas_consumed < 0:
-      raise EmptyTank
+      raise EmptyTank("There is not enought gas in this tank")
     else:
       self.used_gas += gas_consumed
       self.remaining_gas -= gas_consumed

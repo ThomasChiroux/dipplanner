@@ -19,30 +19,26 @@
 # 
 # This module is part of PPlan, a Dive planning Tool written in python
 # Strongly inspired by Guy Wittig's MVPlan 
+"""Global settings for dipplanner
 """
-Test for compartment class
-"""
-
-__version__ = "0.1"
 
 __authors__ = [
   # alphabetical order by last name
   'Thomas Chiroux',
 ]
-# test here
 
+ABSOLUTE_MAX_PPO2 = 2.0
+DEFAULT_MAX_PPO2 = 1.6
+ABSOLUTE_MIN_PPO2 = 0.16
+DEFAULT_MIN_PPO2 = 0.16
+ABSOLUTE_MAX_TANK_PRESSURE = 300 # in bar
+ABSOLUTE_MAX_TANK_SIZE = 30 # in liter
 
-import unittest
-# import here the module / classes to be tested
-from compartment import Compartment, ModelStateException
+AMBIANT_PRESSURE_SURFACE = 1.0 # surface pressure (in bar)
+DIVE_CONSUMPTION_RATE = 17 # liter/minute
+DECO_CONSUMPTION_RATE = 12 # liter/minute
 
-class Test(unittest.TestCase):
-  def setUp(self):
-    compt1 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
-  def test1(self):
-    myobj = Class()
-    assert myobj.foo == 'bar'
-  
-    
-if __name__ == "__main__":
-  unittest.main() 
+HE_NARCOTIC_VALUE = 0.23
+N2_NARCOTIC_VALUE = 1.0
+O2_NARCOTIC_VALUE = 1.0
+AR_NARCOTIC_VALUE = 2.33

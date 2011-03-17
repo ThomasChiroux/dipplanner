@@ -31,6 +31,9 @@ __authors__ = [
 
 import math
 
+# local imports
+import settings
+
 class ModelException(Exception):
   """Base exception class for model"""
   def __init__(self, description):
@@ -90,6 +93,7 @@ class Compartment(object):
     pp_He_inspired : partial pressure of inspired helium
     pp_N2_inspired : partial pressure of inspired nitrogen
     seg_time : segment time in seconds
+    store the new values in self.pp_He and self.pp_N2
     raise ModelStateException if pp or time < 0
     """
     if pp_He_inspired < 0 or pp_N2_inspired < 0 or seg_time < 0:
@@ -100,5 +104,23 @@ class Compartment(object):
       self.pp_He = new_pp_He
       self.pp_N2 = new_pp_N2
       
-      
-      
+  def asc_desc(self, pp_He_inspired, pp_N2_inspired, rate_he, rate_n2, seg_time):
+      """Ascend or descent calculations.
+      Uses equation : P=Pio+R(t -1/k)-[Pio-Po-(R/k)]e^-kt
+      pp_He_inspired : partial pressure of inspired helium
+      pp_N2_inspired : partial pressure of inspired nitrogen
+      rate_he : rate of change of pp_He
+      rate_n2 : rate of change of pp_n2
+      seg_time : segment time in seconds
+      store the new values in self.pp_He and self.pp_N2
+      raise ModelStateException if pp or time < 0
+      """
+      if pp_He_inspired < 0 or pp_N2_inspired < 0 or seg_time < 0:
+        raise ModelStateException("Error in argument: negative value is not allowed")
+      else:
+        new_pp_He = pp_He_inspired + rate_he * (seg_time - (1.0/self.k_He)) - (pp_He_inspired - self.pp_He - (rate_he/self.k_He)) * math.exp(-self.k_He*float(seg_time)/60)
+        new_pp_N2 = pp_N2_inspired + rate_n2 * (seg_time - (1.0/self.k_N2)) - (pp_N2_inspired - self.pp_N2 - (rate_n2/self.k_N2)) * math.exp(-self.k_N2*float(seg_time)/60)
+        self.pp_He = new_pp_He
+        self.pp_N2 = new_pp_N2
+  
+  

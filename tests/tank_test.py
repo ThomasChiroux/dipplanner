@@ -31,6 +31,7 @@ __authors__ = [
 ]
 
 import unittest
+# local imports
 from tank import Tank, InvalidGas, InvalidTank, InvalidMod, EmptyTank
 
 class TestTank(unittest.TestCase):
@@ -163,4 +164,6 @@ class TestTank(unittest.TestCase):
     
     
 if __name__ == "__main__":
+  if __package__ is None:
+    __package__ = "dipplanner"
   unittest.main() 

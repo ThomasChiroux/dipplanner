@@ -27,6 +27,11 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+# water density kg/l
+FRESH_WATER_DENSITY = 1.0
+SEA_WATER_DENSITY = 1.03
+WATER_DENSITY = SEA_WATER_DENSITY 
+
 ABSOLUTE_MAX_PPO2 = 2.0
 DEFAULT_MAX_PPO2 = 1.6
 ABSOLUTE_MIN_PPO2 = 0.16

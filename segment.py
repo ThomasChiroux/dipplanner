@@ -49,17 +49,28 @@ class UnauthorizedMod(SegmentException):
   pass
 
 class Segment(object):
-  """Base class for all types of segments"""
+  """Base class for all types of segments
+  types of segments can be :
+  const = "Constant Depth"
+  ascent = "Ascent"
+  descent = "Descent"
+  deco = "Decompression"
+  waypoint = "Waypoint"
+  surf = "Surface"
+  """
+  types = [ 'const', 'ascent', 'descent', 'deco', 'waypoint', 'surf' ]
   
   def __init__(self):
     """constructor for Segment base class, just defines all the parameters
-    the type of segment can be:
-      'const' : constant depth
-      'ascent' : ascent
-      'descent' : descednt
-      'deco' : deco
-      'waypoint' : waypoint (TODO: c'est quoi ?)
-      'surf'  : surface
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    <nothing>
     """
     self.type = None # type of segment : base class has no type
     self.in_use = True # is this segment in use : default: yes
@@ -72,7 +83,15 @@ class Segment(object):
   def check_mod(self):
     """checks the mod for this segment according to the used tank.
     checks both Max Operating Depth and Min Operating Depth (hypoxic cases)
-    if problem, raise UnauthorizedMod
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    UnauthorizedMod -- if segments goes below max mod or upper min mod
     """
     if self.depth > self.tank.get_mod():
       raise UnauthorizedMod("depth is exceeding the maximum MOD")
@@ -83,34 +102,62 @@ class Segment(object):
     """returns the absolute pression in bar
     (1atm = 1ATA = 1.01325 bar = 14.70psi)
     Simple method : 10m = +1 bar
-    "complex method" : use real density of water, T°, etc...: need more parameters
-    today: only simple method
-    """
-    return self.depth/10 + settings.AMBIANT_PRESSURE_SURFACE
+    Complex method : use real density of water, T°, etc...: need more parameters
     
+    Keyword arguments:
+    method -- 'simple' or 'complex'. simple is default
+    
+    Returns:
+    a float indicating the absolute pressure in bar
+    
+    Raise:
+    ValueError -- when providing a bad method
+    """
+    if method == 'simple':
+      return float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE
+    elif method == 'complex':
+      g = 9.81
+      return (settings.WATER_DENSITY * 1E3 * g * float(self.depth)) * 1E-5 + \
+              settings.AMBIANT_PRESSURE_SURFACE
+    else:
+      raise ValueError("invalid method of calculation")
+      
   def get_end(self):
     """Calculates and returns E.N.D :
     Equivalent Narcosis Depth
     Instead of Mvplan, it uses a 'calculation method' based on 
-    nacosys effet of all gas used, assuming there is no trace of
-    other gases (like argon)
+    narcosis effet of all gas used, assuming there is no trace of
+    other gases (like argon) in the breathing gas, but compare the narcotic
+    effect with surface gas, wich is 'air' and contains a small amount of argon
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    Integer : Equivalient Narcosis Depth in meter
+    
     """
     p_absolute = self.get_p_absolute()
     # calculate the reference narcotic effect of air
     # Air consists of: Nitrogen N2: 78.08%, Oxygen O2: 20.95%, Argon Ar: 0.934%
-    # TODO: at 1 bar or at AMBIANT_PRESSURE_SURFACE bar ??
-    #reference_narcotic = n2_narcotic * 0.7808 + \
-    #                     o2_narcotic * 0.2095 + \
-    #                     ar_narcotic * 0.00934
-    reference_narcotic = settings.N2_NARCOTIC_VALUE * 0.79 + \
-                        settings.O2_NARCOTIC_VALUE * 0.21
+    reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * \
+                         (settings.N2_NARCOTIC_VALUE * 0.7808 + \
+                          settings.O2_NARCOTIC_VALUE * 0.2095 + \
+                          settings.AR_NARCOTIC_VALUE * 0.00934)
+    #reference_narcotic = settings.N2_NARCOTIC_VALUE * 0.79 + \
+    #                    settings.O2_NARCOTIC_VALUE * 0.21
 
     if self.setpoint > 0:
       #CCR mode
       # TODO: change this to a 'real' calculation based on narcotic effet of
       #       all gases
       if (self.tank.f_He + self.tank.f_N2) > 0:
+        # partial pressure of all inert gazes
         p_inert = p_absolute - self.setpoint * 10
+        # TODO : attention, j'ai besoin de plus que juste la pp_intert, j'ai
+        # besoin de chaque pression partielle respirée pour calculer ensuite
+        # le facteur narcotique selon chaque gaz
+        # le setpoint me donne la ppo2 : comment calculer la ppn2 et ppHe ?
       else:
         p_inert = 0
       if p_inert > 0:
@@ -119,9 +166,6 @@ class Segment(object):
         narcotic_index = 0
     else:
       #OC mode
-      # only N2 is narcotic
-      #ppn2_inspired = self.tank.f_N2 * p_absolute
-      
       narcotic_index = p_absolute * \
                        (self.tank.f_N2 * settings.N2_NARCOTIC_VALUE + \
                         self.tank.f_O2 * settings.O2_NARCOTIC_VALUE + \
@@ -143,30 +187,57 @@ class Segment(object):
                                                   self.get_end() )
     
   def __str__(self):
+    """Return a human readable name of the segment"""
     return self.__repr__()
     
   def __unicode__(self):
+    """Return a human readable name of the segment in unicode"""
     return u"%s" % self.__repr__()
     
 class SegmentDive(Segment):
   """Specialisation of segment class for dive segments
   """
   def __init__(self, depth, time, tank, setpoint = 0):
-    """Constructor for SegmentDive class. Look at base class for
-    more explanations"""
+    """Constructor for SegmentDive class. 
+    Look at base class for more explanations
+    
+    Keyword arguments:
+    depth -- in meter, the (constant) depth for this segment
+    time -- in second, duration of this segment
+    tank -- object instance of Tank class : 
+            describe the tank used in this segment
+    setpoint -- float, for CCR, setpoint used for this segment
+                for OC : setpoint should be zero
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    UnauthorizedMod -- if depth is incompatible with either min or max mod
+    
+    """
     self.type = 'const' # type of segment
     self.in_use = True # is this segment in use : default: yes
-    self.depth = depth # depth of this segment, in meter
-    self.time = time # time of this segment, in second
+    self.depth = float(depth) # depth of this segment, in meter
+    self.time = float(time) # time of this segment, in second
     
-    self.setpoint = setpoint # for CCR
+    self.setpoint = float(setpoint) # for CCR
     self.tank = tank # tank used for this segment
 
     self.check_mod()
     
   def gas_used(self):
-    """returns the quantity (in liter) of gas used for this segment"""
+    """calculates returns the quantity (in liter) of gas used for this segment
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    float, in liter, quantity of gas used
+    
+    """
     if self.setpoint > 0 :
+      # CCR mode: we do not calculate gas_used
       return 0
     else:
       pressure = (self.depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
@@ -176,12 +247,28 @@ class SegmentDeco(Segment):
   """Specialisation of segment class for deco segments
   """
   def __init__(self, depth, time, tank, setpoint = 0):
-    """Constructor for SegmentDeco class. Look at base class for
-    more explanations
+    """Constructor for SegmentDeco class. 
+    Look at base class for more explanations
+    
     In deco segment, we also have to manage some new parameters :
-    - gf_used
-    - control_compartment
-    - mv_max (max M-value for the compartment)
+    gf_used : which gradient factor is used
+    control_compartment : who is the control compartement
+    mv_max : max M-value for the compartment
+    
+    Keyword arguments:
+    depth -- in meter, the (constant) depth for this segment
+    time -- in second, duration of this segment
+    tank -- object instance of Tank class : 
+            describe the tank used in this segment
+    setpoint -- float, for CCR, setpoint used for this segment
+                for OC : setpoint should be zero
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    UnauthorizedMod -- if depth is incompatible with either min or max mod
+    
     """
     self.type = 'deco' # type of segment
     self.in_use = True # is this segment in use : default: yes
@@ -192,14 +279,22 @@ class SegmentDeco(Segment):
     self.tank = tank # tank used for this segment
 
     # other parameters used in deco mode
-    self.gf_used = 0 # wich gradient factor is used
-    self.control_compartment = None # who is the control compartement
-    self.mv_max = 0 # maximum M-Value gradient for the compartment
+    self.gf_used = 0.0 
+    self.control_compartment = None 
+    self.mv_max = 0.0 
     
     self.check_mod()
 
   def gas_used(self):
-    """returns the quantity (in liter) of gas used for this segment"""
+    """calculates returns the quantity (in liter) of gas used for this segment
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    float, in liter, quantity of gas used
+    
+    """
     if self.setpoint > 0 :
       return 0
     else:
@@ -209,23 +304,42 @@ class SegmentDeco(Segment):
 class SegmentAscDesc(Segment):
   """Specialisation of segment class for Ascent or Descent segments
   """
+  
   def __init__(self, start_depth, end_depth, rate, tank, setpoint = 0):
-    """Constructor for SegmentAscDesc class. Look at base class for
-    more explanations
+    """Constructor for SegmentAscDesc class. 
+    Look at base class for more explanations
     in this segment, we do not specify time, but rate (of ascending 
     or descending) and start_depth and end_depth
     The comparaison between start and end depth determine if asc or desc
     rate is given in m/min
-    """
     
+    Keyword arguments:
+    start_depth -- in meter, the starting depth for this segment
+    end_depth -- in meter, the ending depth for this segment
+    rate -- in m/min, rate of ascending or descending
+    tank -- object instance of Tank class : 
+            describe the tank used in this segment
+    setpoint -- float, for CCR, setpoint used for this segment
+                for OC : setpoint should be zero
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    UnauthorizedMod -- if depth is incompatible with either min or max mod
+    
+    """
     self.in_use = True # is this segment in use : default: yes
     self.depth = float(end_depth) # depth of this segment, in meter
-    self.time = float(60) * (abs(float(end_depth) - float(start_depth)) / float(rate))
-    self.rate = float(rate)
     self.start_depth = float(start_depth)
     self.end_depth = float(end_depth)
+    self.rate = float(rate)
     self.setpoint = float(setpoint) # for CCR
     self.tank = tank # tank used for this segment
+        
+    # calculate the time based on start-end depth and rate:
+    self.time = 60.0 * (abs(self.end_depth - self.start_depth) / self.rate)
+    
     if start_depth > end_depth:
       self.type = 'ascent' # type of segment
     else:
@@ -236,7 +350,16 @@ class SegmentAscDesc(Segment):
   def check_mod(self):
     """checks the mod for this segment according to the used tank.
     checks both Max Operating Depth and Min Operating Depth (hypoxic cases)
-    if problem, raise UnauthorizedMod
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    UnauthorizedMod -- if segments goes below max mod or upper min mod
+    
     """
     if self.type == 'ascent':
       max_depth = self.start_depth
@@ -251,15 +374,22 @@ class SegmentAscDesc(Segment):
       raise UnauthorizedMod("depth is too low for the minimum MOD")
 
   def gas_used(self):
-    """returns the quantity (in liter) of gas used for this segment
+    """calc. and returns the quantity (in liter) of gas used in this segment
     because it's ascend or descent, the gas is not used at the same rate
     during the segment
     Because the rate is the same during all the segment, we can use the
     consumption at the average depth of the segment
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    float, in liter, quantity of gas used
+    
     """
     if self.setpoint > 0 :
       return 0
     else:
       average_depth = (self.start_depth + self.end_depth) / 2.0
       pressure = (average_depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
-      return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)/60 )
+      return pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)/60

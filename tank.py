@@ -22,10 +22,6 @@
 """
 Contains a Tank Class
 in MVPlan, this class was the 'Gas' class
-
-TODO:
- - handle double tanks, connected or not
- - minimum gas remaining in tank ? (ie/ 50 bar mini ??)
 """
 
 __version__ = "0.1"
@@ -83,7 +79,7 @@ class Tank(object):
   """
   
   def __init__(self,  f_O2=0.21, f_He=0.0, max_ppo2=settings.DEFAULT_MAX_PPO2, 
-                      mod=None, tank_vol=12, tank_pressure=200):
+                      mod=None, tank_vol=12.0, tank_pressure=200):
     """Constructor for Tank class
     If nothing is provided, create a default 'Air' with 12l/200b tank
     and max_ppo2 to 1.6 (used to calculate mod)
@@ -92,39 +88,43 @@ class Tank(object):
     Keyword arguments:
     f_O2 -- Fraction of O2 in the gaz in % : between 0.0 and 1.0
     f_He -- Fraction of He in the gaz in % : between 0.0 and 1.0
-    max_ppo2 -- sets the maximum ppo2 you want for this tank (default: settings.DEFAULT_MAX_PPO2)
-    mod -- 
-    tank_vol --
-    Tank_pressure -- 
+    max_ppo2 -- sets the maximum ppo2 you want for this tank
+                (default: settings.DEFAULT_MAX_PPO2)
+    mod -- Specify the mod you want. 
+            if not provided, calculates the mod based on max_ppo2
+            if provided and not compatible with max_ppo2 : raise InvalidMod
+    tank_vol -- Volume of the tank in liter
+    Tank_pressure -- Pressure of the tank, in bar
     
     Returns:
     <nothing>
     
     Raise:
-    InvalidGas --
-    InvalidMod --
-    InvalidTank --
+    InvalidGas -- see validate()
+    InvalidMod -- if mod > max mod based on max_ppo2 and see validate()
+    InvalidTank -- see validate()
     """
-    self.f_O2 = f_O2
-    self.f_He = f_He
-    self.f_N2 = 1 - (self.f_O2 + self.f_He)
-    self.max_ppo2 = max_ppo2
-    self.tank_vol = tank_vol
-    self.tank_pressure = tank_pressure
-    if mod:
-      self.mod = mod
+    self.f_O2 = float(f_O2)
+    self.f_He = float(f_He)
+    self.f_N2 = 1.0 - (self.f_O2 + self.f_He)
+    self.max_ppo2 = float(max_ppo2)
+    self.tank_vol = float(tank_vol)
+    self.tank_pressure = float(tank_pressure)
+    if mod is not None:
+      if mod > self._calculate_mod(self.max_ppo2):
+        raise InvalidMod("The mod exceed maximum MOD based on given max ppo2")
+      self.mod = float(mod)
     else:
       self.mod = self._calculate_mod(self.max_ppo2)
     
     self.in_use = True
   
-    self.used_gas = 0
+    self.used_gas = 0.0
     if self.tank_vol and self.tank_pressure:
       self.total_gas = self.tank_vol*self.tank_pressure
     else:
-      self.total_gas = 0
+      self.total_gas = 0.0
     self.remaining_gas = self.total_gas
-
     self._validate()
 
   def __repr__(self):
@@ -140,30 +140,67 @@ class Tank(object):
     return u"%s" % self.name()
     
   def __cmp__(self, othertank):
-    """Compare a tank to another tank, based on MOD"""
+    """Compare a tank to another tank, based on MOD
+    
+    Keyword arguments:
+    othertank -- another tank object
+    
+    Returns:
+    Integer -- result of cmp()
+    
+    """
     return cmp(self.mod, othertank.mod)
     
   def _calculate_mod(self, max_ppo2):
     """calculate and returns mod for a given ppo2 based on this tank info
     result in meter
+    
+    Keyword arguments:
+    max_ppo2 -- maximum ppo2 accepted (float). Any value accepted, but should 
+                be > 0.0
+                
+    Returns:
+    Integer : Maximum Operating Depth in meter
+    
     """
     return int(10*(max_ppo2/self.f_O2)-10)
     
   def _validate(self):
-    """Test the validity of the tank informations
+    """Test the validity of the tank informations inside this object
     if validity check fails raise an Exception 'InvalidTank'
+    
+    Keyword arguments:
+    <nothing>
+    
+    Returns:
+    <nothing>
+    
+    Raise:
+    InvalidGas -- When proportions of gas exceed 100% for example (or negatives values)
+    InvalidMod -- if mod > max mod based on max_ppo2 or ABSOLUTE_MAX_MOD
+                  ABSOLUTE_MAX_MOD is a global settings which can not be
+                  exceeded.
+    InvalidTank -- when pressure or tank size exceed maximum values or are
+                   incorrect (like negatives) values
     """
+    if self.f_O2 < 0 or self.f_He < 0 or self.f_N2 < 0:
+      raise InvalidGas("Proportion of gas should not be < 0")
     if self.f_O2 + self.f_He > 1:
       raise InvalidGas("Proportion of O2+He is more than 100%")
-    
+    if self.mod <= 0:
+      raise InvalidMod("MOD should be >= 0")
     if self.mod > self._calculate_mod(self.max_ppo2) or \
        self.mod > self._calculate_mod(settings.ABSOLUTE_MAX_PPO2):
       raise InvalidMod("MOD exceed maximum tolerable MOD")
     
     if self.tank_pressure > settings.ABSOLUTE_MAX_TANK_PRESSURE: 
       raise InvalidTank("Tank pressure exceed maximum tolerable pressure")
-    if self.tank_vol > settings.ABSOLUTE_MAX_TANK_SIZE: 
+    if self.tank_pressure <= 0:
+      raise InvalidTank("Tank pressure should be greated than zero")
+    if self.tank_vol > settings.ABSOLUTE_MAX_TANK_SIZE:
       raise InvalidTank("Tank size exceed maximum tolerable tank size")
+    if self.tank_vol <= 0:
+      raise InvalidTank("Tank size should be greater than zero")
     
   def name(self):
     """returns a Human readable name for the gaz and tanks

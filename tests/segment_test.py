@@ -55,13 +55,13 @@ class Test(unittest.TestCase):
     assert self.diveseg1.gas_used() == 680, 'Wrong gas used : %s' % self.diveseg1.gas_used()
     
   def test_gas_end1(self):
-    assert self.diveseg1.get_end() == 30, 'wrong E.N.D : %s' % self.diveseg1.get_end()
+    assert self.diveseg1.get_end() == 29, 'wrong E.N.D : %s' % self.diveseg1.get_end()
     
   def test_gas_end2(self):
-    assert self.diveseg2.get_end() == 63, 'wrong E.N.D : %s' % self.diveseg2.get_end()
+    assert self.diveseg2.get_end() == 62, 'wrong E.N.D : %s' % self.diveseg2.get_end()
 
   def test_str1(self):
-    assert str(self.diveseg2) == "CONST: for 600s at 150m on Trimix 10/70, SP:0, END:63m", \
+    assert str(self.diveseg2) == "CONST: for 600.0s at 150.0m on Trimix 10/70, SP:0.0, END:62m", \
                                                   'wrong name : %s' % str(self.diveseg2)
   
   def test_deco1(self):

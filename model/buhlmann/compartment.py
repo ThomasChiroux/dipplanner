@@ -33,19 +33,8 @@ import math
 
 # local imports
 import settings
+from exceptions import ModelStateException
 
-class ModelException(Exception):
-  """Base exception class for model"""
-  def __init__(self, description):
-    self.description = description
-  
-  def __str__(self):
-    return repr(self.description)
-  
-class ModelStateException(ModelException):
-  """Model State Exception"""
-  pass
-    
 class Compartment(object):
   """Buhlmann compartment class"""
   

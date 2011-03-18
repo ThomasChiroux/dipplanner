@@ -32,7 +32,8 @@ __authors__ = [
 
 import unittest
 # import here the module / classes to be tested
-from model.buhlmann.compartment import Compartment, ModelStateException
+from model.buhlmann.compartment import Compartment
+from model.buhlmann.exceptions import ModelStateException
 
 class Test(unittest.TestCase):
   def setUp(self):

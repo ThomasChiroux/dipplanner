@@ -19,35 +19,29 @@
 # 
 # This module is part of PPlan, a Dive planning Tool written in python
 # Strongly inspired by Guy Wittig's MVPlan 
-"""Global settings for dipplanner
+"""Defines Exceptions for buhlmann model
 """
+
+__version__ = "0.1"
 
 __authors__ = [
   # alphabetical order by last name
   'Thomas Chiroux',
 ]
 
-# water density kg/l
-FRESH_WATER_DENSITY = 1.0
-SEA_WATER_DENSITY = 1.03
-WATER_DENSITY = SEA_WATER_DENSITY 
+import math
 
-ABSOLUTE_MAX_PPO2 = 2.0
-DEFAULT_MAX_PPO2 = 1.6
-ABSOLUTE_MIN_PPO2 = 0.16
-DEFAULT_MIN_PPO2 = 0.16
-ABSOLUTE_MAX_TANK_PRESSURE = 300 # in bar
-ABSOLUTE_MAX_TANK_SIZE = 30 # in liter
+# local imports
+import settings
 
-PP_H2O_SURFACE = 0.014 # in bar : eq 10.5mmHG (20°; 60% hum)
-AMBIANT_PRESSURE_SURFACE = 1.0 # surface pressure (in bar)
-DIVE_CONSUMPTION_RATE = 17 # liter/minute
-DECO_CONSUMPTION_RATE = 12 # liter/minute
-
-HE_NARCOTIC_VALUE = 0.23
-N2_NARCOTIC_VALUE = 1.0
-O2_NARCOTIC_VALUE = 1.0
-AR_NARCOTIC_VALUE = 2.33
-
-GF_LOW = 0.35
-GF_HIGH = 0.80
+class ModelException(Exception):
+  """Base exception class for model"""
+  def __init__(self, description):
+    self.description = description
+  
+  def __str__(self):
+    return repr(self.description)
+  
+class ModelStateException(ModelException):
+  """Model State Exception"""
+  pass

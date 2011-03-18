@@ -19,7 +19,10 @@
 # 
 # This module is part of PPlan, a Dive planning Tool written in python
 # Strongly inspired by Guy Wittig's MVPlan 
-"""
+"""gradient module
+
+Contains:
+Gradient -- class
 """
 
 __version__ = "0.1"

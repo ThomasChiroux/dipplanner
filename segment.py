@@ -50,13 +50,22 @@ class UnauthorizedMod(SegmentException):
 
 class Segment(object):
   """Base class for all types of segments
-  types of segments can be :
-  const = "Constant Depth"
-  ascent = "Ascent"
-  descent = "Descent"
-  deco = "Decompression"
-  waypoint = "Waypoint"
-  surf = "Surface"
+  
+  Attributes:
+  type -- type of segment
+          types of segments can be :
+          const = "Constant Depth"
+          ascent = "Ascent"
+          descent = "Descent"
+          deco = "Decompression"
+          waypoint = "Waypoint"
+          surf = "Surface"
+  in_use -- boolean : True if segment is used
+  depth -- float : depth of this segment, in meter
+  time -- duration of this segment, in seconds
+  run_time -- runtime in profile
+  setpoint -- setpoint for CCR
+  tank -- refer to tank object used in this segment
   """
   types = [ 'const', 'ascent', 'descent', 'deco', 'waypoint', 'surf' ]
   

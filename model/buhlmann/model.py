@@ -65,6 +65,8 @@ class Model(object):
   MODEL_VALIDATION_FAILURE -- sattic const for failure of validation
   """
   COMPS = 16
+  
+  #TODO: SUPPRIMER CES DEUX ELEMENTS ET REMPLACER PAR DES RAISE
   MODEL_VALIDATION_SUCCESS = 1
   MODEL_VALIDATION_FAILURE = 0
   
@@ -80,9 +82,9 @@ class Model(object):
     """
     self.units = 'metric'
     self.tissues = []
-    self.gradient = Gradient(settings.GF_LOW, settings.GF_HIGH)
     self.ox_tox = OxTox()
-    
+    self.init_gradient()
+
     for comp_number in range(0, self.COMPS):
       comp = Compartment()
       comp.set_pp(0.0, 0.79 * (settings.AMBIANT_PRESSURE_SURFACE - \
@@ -116,6 +118,19 @@ class Model(object):
     """Return a human readable name of the segment in unicode"""
     return u"%s" % self.__repr__()
 
+  def init_gradient(self):
+    """Initialise the gradient attribute
+    uses the default settings parameters for gf_low and high
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    <nothing>
+    
+    """
+    self.gradient = Gradient(settings.GF_LOW, settings.GF_HIGH)
+    
   def set_time_constants(self):
     """Initialize time constants in buhmann tissue list
     Only for metric values

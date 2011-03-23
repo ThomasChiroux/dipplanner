@@ -34,7 +34,7 @@ import unittest
 # import here the module / classes to be tested
 import settings
 from model.buhlmann.model import Model
-from model.buhlmann.exceptions import ModelStateException
+from model.buhlmann.model_exceptions import ModelStateException
 
 class Test(unittest.TestCase):
   def setUp(self):

@@ -33,15 +33,8 @@ import math
 
 # local imports
 import settings
+from dipp_exception import DipplannerException
 
-class ModelException(Exception):
-  """Base exception class for model"""
-  def __init__(self, description):
-    self.description = description
-  
-  def __str__(self):
-    return repr(self.description)
-  
-class ModelStateException(ModelException):
+class ModelStateException(DipplannerException):
   """Model State Exception"""
   pass

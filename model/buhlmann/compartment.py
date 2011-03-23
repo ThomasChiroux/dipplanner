@@ -33,7 +33,7 @@ import math
 
 # local imports
 import settings
-from exceptions import ModelStateException
+from model_exceptions import ModelStateException
 
 class Compartment(object):
   """Buhlmann compartment class"""

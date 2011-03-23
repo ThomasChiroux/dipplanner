@@ -19,10 +19,10 @@
 # 
 # This module is part of PPlan, a Dive planning Tool written in python
 # Strongly inspired by Guy Wittig's MVPlan 
-"""profile class module
+"""dive class module
 
 Contains:
-Profile -- class
+Dive -- class
 """
 
 __version__ = "0.1"
@@ -34,31 +34,23 @@ __authors__ = [
 
 # local imports
 import settings
+from dipp_exception import DipplannerException
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from model.buhlmann.model import Model
 
-class ProfileException(Exception):
-  """Base exception class for this module
-  """
-  def __init__(self, description):
-    self.description = description
-
-  def __str__(self):
-    return repr(self.description)
-
-class NothingToProcess(ProfileException):
+class NothingToProcess(DipplannerException):
   """raised when the is no input segments to process"""
   pass
 
-class ProcessingError(ProfileException):
+class ProcessingError(DipplannerException):
   """raised when the is no input segments to process"""
   pass
 
-class InfiniteDeco(ProfileException):
+class InfiniteDeco(DipplannerException):
   """raised when the deco time becomes enourmous (like infinite)"""
   pass
 
-class Profile(object):
+class Dive(object):
   """Conducts dive based on inputSegments, knownGases, and an existing model.
   Iterates through dive segments updating the Model. When all dive segments are
   processed then calls ascend(0.0) to return to the surface.
@@ -338,7 +330,7 @@ class Profile(object):
     control = self.model.control_compartment()
     
     while self.current_depth > target_depth:
-      print "ascent -- debug : %s, %s" % (self.current_depth, target_depth)
+      #print "ascent -- debug : %s, %s" % (self.current_depth, target_depth)
       # can we move to the proposed next stop depth ?
       while force_deco_stop or next_stop_depth < self.model.ceiling():
         in_deco_cycle = True
@@ -379,7 +371,7 @@ class Profile(object):
           
       # finished decompression loop 
       if in_deco_cycle:
-        print "...in deco cycle"
+        #print "...in deco cycle"
         # finalise the last deco cycle
         self.run_time += deco_stop_time
         if settings.FORCE_ALL_STOPS:
@@ -397,7 +389,7 @@ class Profile(object):
         in_deco_cycle = False
         deco_stop_time = 0
       elif in_ascent_cycle:
-        print "...in ascent cycle"
+        #print "...in ascent cycle"
         # did not decompress, just ascend
         # TODO : if we enable this code always (not in rlif, but direct) then
         #        model will ascend between deco stops, but ... 
@@ -431,7 +423,7 @@ class Profile(object):
       
       # set next rounded stop depth
       next_stop_depth = int(self.current_depth) - settings.STOP_DEPTH_INCREMENT
-      print "next stop depth: %s, target: %s" % (next_stop_depth, target_depth)
+      #print "next stop depth: %s, target: %s" % (next_stop_depth, target_depth)
 
       # check in cas we are overshooting or hit last stop
       if next_stop_depth < target_depth or \

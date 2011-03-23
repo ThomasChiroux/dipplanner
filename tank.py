@@ -33,36 +33,30 @@ __authors__ = [
 
 # local imports
 import settings
+from dipp_exception import DipplannerException
 
-class TankException(Exception):
-  """Base exception class for Tank"""
-  def __init__(self, description):
-    self.description = description
-  
-  def __str__(self):
-    return repr(self.description)
-  
-class InvalidGas(TankException):
+
+class InvalidGas(DipplannerException):
   """Exception raised when the gas informations provided for the Tank
   are invalid
   
   """
   pass
 
-class InvalidTank(TankException):
+class InvalidTank(DipplannerException):
   """Exception raised when the tank infos provided are invalid
   
   """
   pass
   
-class InvalidMod(TankException):
+class InvalidMod(DipplannerException):
   """Exception raised when the given MOD is incompatible with the gas
   provided for the tank
   
   """
   pass
   
-class EmptyTank(TankException):
+class EmptyTank(DipplannerException):
   """Exception raised when trying to consume more gas in tank than the
   remaining gas
   

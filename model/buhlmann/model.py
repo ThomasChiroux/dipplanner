@@ -34,7 +34,7 @@ __authors__ = [
 
 # local imports
 import settings
-from exceptions import ModelStateException
+from model_exceptions import ModelStateException
 from compartment import Compartment
 from gradient import Gradient
 from oxygen_toxicity import OxTox

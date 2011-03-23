@@ -32,18 +32,9 @@ __authors__ = [
 
 # local import
 import settings
+from dipp_exception import DipplannerException
 
-class SegmentException(Exception):
-  """Base exception class for this module
-  """
-  def __init__(self, description):
-    self.description = description
-  
-  def __str__(self):
-    return repr(self.description)
-
-
-class UnauthorizedMod(SegmentException):
+class UnauthorizedMod(DipplannerException):
   """raised when the MOD is not possible according to the 
   depth(s) of the segment"""
   pass

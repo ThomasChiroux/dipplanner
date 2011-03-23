@@ -19,7 +19,7 @@
 # 
 # This module is part of PPlan, a Dive planning Tool written in python
 # Strongly inspired by Guy Wittig's MVPlan 
-"""Base Class for exceptions
+"""Base Class for exceptions for dipplanner module
 """
 
 __version__ = "0.1"
@@ -28,3 +28,12 @@ __authors__ = [
   # alphabetical order by last name
   'Thomas Chiroux',
 ]
+
+class DipplannerException(Exception):
+  """Base exception class for dipplanner
+  """
+  def __init__(self, description):
+    self.description = description
+  
+  def __str__(self):
+    return repr(self.description)

@@ -32,7 +32,8 @@ __authors__ = [
 
 import unittest
 # import here the module / classes to be tested
-from profile import Profile, NothingToProcess, ProcessingError, InfiniteDeco
+from dive import Dive
+from dive import ProcessingError, NothingToProcess, InfiniteDeco
 from tank import Tank
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
@@ -41,7 +42,7 @@ class Test(unittest.TestCase):
   def setUp(self):
     airtank = Tank()
     diveseg1 = SegmentDive(30, 30*60, airtank, 0)
-    self.profile1 = Profile([diveseg1], [airtank])
+    self.profile1 = Dive([diveseg1], [airtank])
     
   def test1(self):
     self.profile1.do_dive()

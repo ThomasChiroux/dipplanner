@@ -330,7 +330,7 @@ class Dive(object):
     control = self.model.control_compartment()
     
     while self.current_depth > target_depth:
-      #print "ascent -- debug : %s, %s" % (self.current_depth, target_depth)
+      print "ascent -- debug : %s, %s" % (self.current_depth, target_depth)
       # can we move to the proposed next stop depth ?
       while force_deco_stop or next_stop_depth < self.model.ceiling():
         in_deco_cycle = True
@@ -367,7 +367,7 @@ class Dive(object):
         deco_stop_time += stop_time
         # sanity check for infinite loop
         if deco_stop_time > 300000:
-          raise InfiniteDeco
+          raise InfiniteDeco("Infinite deco error")
           
       # finished decompression loop 
       if in_deco_cycle:

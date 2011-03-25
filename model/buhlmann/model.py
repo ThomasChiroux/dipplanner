@@ -141,6 +141,8 @@ class Model(object):
     Returns:
     <nothing>
     """
+    # note: comparing with buhlmann original (1990) ZH-L16 a coeficient,
+    # there is here a x10 factor (for a)
     self.tissues[0].set_compartment_time_constants(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578);         
     self.tissues[1].set_compartment_time_constants(3.02,    8.0,    13.83,  0.5747, 10.0,   0.6514);
     self.tissues[2].set_compartment_time_constants(4.72,    12.5,   11.919, 0.6527, 8.618,  0.7222);
@@ -204,6 +206,7 @@ class Model(object):
     
     for comp_number in range(0, self.COMPS):
       pressure = self.tissues[comp_number].get_max_amb(self.gradient.gf) - settings.AMBIANT_PRESSURE_SURFACE
+      #print "pressure:%s" % pressure
       if pressure > depth:
         control_compartment_number = comp_number
         depth = pressure

@@ -41,7 +41,8 @@ class Test(unittest.TestCase):
     self.compt2 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
     self.compt2.set_pp(1.4, 1.9)
     self.compt3 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
-    self.compt3.set_pp(1.4, 1.9)
+    #self.compt3 = Compartment(70.69,  187.0,  5.333,  0.8997, 3.497,  0.9319)
+    self.compt3.set_pp(0.0, 3.16)
     
   def test1(self):
     #myobj = Class()
@@ -91,16 +92,24 @@ class Test(unittest.TestCase):
     self.compt2.asc_desc(3.1, 5.6, 0.125, 0.125, 12*60)
     assert round(self.compt2.pp_N2, 11) == 5.66813393539,  "wrong pp_N2 : %s" % self.compt2.pp_N2
 
-  def test15(self):
-    mv = self.compt3.get_m_value_at(2.2)
-    assert  mv == 2, "wrong M-Value : %s" % mv
+  def test_m_value1(self):
+    mv = self.compt3.get_m_value_at(0.0)
+    assert round(mv,3) == 11.696, "wrong M-Value : %s" % mv
+  
+  def test_m_value2(self):
+    mv = self.compt3.get_m_value_at(1.0)
+    assert round(mv,10) == 13.4887572607, "wrong M-Value : %s" % mv
     
-  def test16(self):
+  def test_m_value3(self):
+    mv = self.compt3.get_m_value_at(3.0)
+    assert round(mv,9) == 17.074271782, "wrong M-Value : %s" % mv
+
+  def test_max_amb1(self):
     max_amb = self.compt3.get_max_amb(0.8)
     assert max_amb == 2, "wrong max_amb for given gf : %s" % max_amb
     
-  def test17(self):
-    mv = self.compt3.get_mv(6.2)
+  def test_mv1(self):
+    mv = self.compt3.get_mv(1.0)
     assert mv == 2, "wrong mv for given amb pressure : %s" % mv
 if __name__ == "__main__":
   unittest.main() 

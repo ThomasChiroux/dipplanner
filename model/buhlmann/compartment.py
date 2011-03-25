@@ -51,9 +51,11 @@ class Compartment(object):
     Raise:
     see set_compartment_time_constants method
     """
-    self.pp_He = 0
-    self.pp_N2 = 0
-    if h_He and h_N2 and a_He and b_He and a_N2 and b_N2:
+    self.pp_He = 0.0
+    self.pp_N2 = 0.0
+    if h_He is not None and h_N2 is not None and \
+       a_He is not None and b_He is not None and \
+       a_N2 is not None and b_N2 is not None:
       self.set_compartment_time_constants(h_He, h_N2, a_He, b_He, a_N2, b_N2)
   
   
@@ -72,12 +74,12 @@ class Compartment(object):
     <nothing>
     
     """
-    self.k_He = math.log(2) / h_He
-    self.k_N2 = math.log(2) / h_N2
-    self.a_He = a_He
-    self.b_He = b_He
-    self.a_N2 = a_N2
-    self.b_N2 = b_N2
+    self.k_He = math.log(2) / float(h_He)
+    self.k_N2 = math.log(2) / float(h_N2)
+    self.a_He = float(a_He) #/ 10
+    self.b_He = float(b_He)
+    self.a_N2 = float(a_N2) #/ 10
+    self.b_N2 = float(b_N2)
     
   def set_pp(self, pp_He, pp_N2):
     """Sets partial pressures of He and N2
@@ -93,11 +95,11 @@ class Compartment(object):
     ModelStateException -- if pp < 0
     
     """
-    if pp_He < 0 or pp_N2 < 0:
+    if pp_He < 0.0 or pp_N2 < 0.0:
       raise ModelStateException("Error in argument: negative pp is not allowed")
     else:
-      self.pp_He = pp_He
-      self.pp_N2 = pp_N2
+      self.pp_He = float(pp_He)
+      self.pp_N2 = float(pp_N2)
       
   def const_depth(self, pp_He_inspired, pp_N2_inspired, seg_time):
     """Constant depth calculations. 
@@ -180,7 +182,7 @@ class Compartment(object):
     
     """
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    return pressure / b_He_N2 + a_He_N2
+    return float(pressure) / b_He_N2 + a_He_N2
     
   def get_max_amb(self, gf):
     """Gets Tolerated Absolute Pressure for the compartment
@@ -193,7 +195,12 @@ class Compartment(object):
     
     """
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    return (p_He_N2 - a_He_N2 * gf) / (gf/b_He_N2 - gf + 1.0)
+    #TODO: il y a un pb avec cette formule ou cette fonction : elle 
+    #      retourne (selon les cas) des valeurs négatives (si p_He_N2 < a_He_N2)
+    #      et cela ne me parrait pas logique ni normal
+    max_amb = (p_He_N2 - a_He_N2 * gf) / (gf / b_He_N2 - gf + 1.0)
+    #max_amb = (p_He_N2 - a_He_N2 ) /  b_He_N2 
+    return max_amb
     
   def get_mv(self, p_amb):
     """Gets M-Value for a compartment, given an ambient pressure
@@ -206,4 +213,4 @@ class Compartment(object):
     
     """
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    return p_He_N2 / (p_amb / b_He_N2 + a_He_N2)
+    return p_He_N2 / (float(p_amb) / b_He_N2 + a_He_N2)

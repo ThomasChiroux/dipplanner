@@ -59,6 +59,9 @@ class OxTox(object):
   def add_O2(self, time, pp_O2):
     """Adds oxygen load into model. 
     Uses NOAA lookup table to add percentage based on time and ppO2.
+    Calculate OTU using formula OTU= T * (0.5/(pO2-0.5))^-(5/6)
+    this OTU formula need T (time) in minutes, so we need to convert the
+    time in second to minutes while using this formula
     
     Keyword arguments:
     pp_O2 -- partial pressure of oxygen
@@ -68,10 +71,9 @@ class OxTox(object):
     <nothing>
     
     """
-    # Calculate OTU using formula OTU= T * (0.5/(pO2-0.5))^-(5/6)
     if pp_O2 > 0.5:
       # only accumulate OTU for ppO2 > 0.5 atm
-      diff_otu = (float(time) / 60) * math.pow( (0.5 / ( pp_O2 - 0.5)), -0.833333)
+      diff_otu = (float(time)/60) * math.pow( (0.5 / ( pp_O2 - 0.5)), -0.833333)
       self.otu += diff_otu
       
     # CNS calculation
@@ -111,5 +113,5 @@ class OxTox(object):
       self.otu = 0.0
     old_cns = self.cns
     # decay cns with haltime of 90mins
-    self.cns = self.cns * math.exp( -(float(time) / 60) * 0.693147 / 90.0)
+    self.cns = self.cns * math.exp( -(float(time)/60) * 0.693147 / 90.0)
     

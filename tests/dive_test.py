@@ -40,14 +40,32 @@ from segment import UnauthorizedMod
 
 class Test(unittest.TestCase):
   def setUp(self):
-    airtank = Tank()
-    diveseg1 = SegmentDive(30, 30*60, airtank, 0)
-    self.profile1 = Dive([diveseg1], [airtank])
-    
-  def test1(self):
+    self.airtank = Tank()
+    self.txtank1 = Tank(0.21, 0.30)
+
+  def test_air_dive1(self):
+    diveseg1 = SegmentDive(30, 30*60, self.airtank, 0)
+    self.profile1 = Dive([diveseg1], [self.airtank])
     self.profile1.do_dive()
     assert self.profile1.output_segments == [], "bad output segments ? (%s)" % str(self.profile1.output_segments)
-    pass
+
+  def test_air_dive2(self):
+    diveseg2 = SegmentDive(20, 30*60, self.airtank, 0)
+    self.profile2 = Dive([diveseg2], [self.airtank])
+    self.profile2.do_dive()
+    assert self.profile2.output_segments == [], "bad output segments ? (%s)" % str(self.profile2.output_segments)
+
+  def test_air_dive3(self):
+    diveseg3 = SegmentDive(55, 30*60, self.airtank, 0)
+    self.profile3 = Dive([diveseg3], [self.airtank])
+    self.profile3.do_dive()
+    assert self.profile3.output_segments == [], "bad output segments ? (%s)" % str(self.profile3.output_segments)
+  
+  def test_tx_dive1(self):
+    diveseg1 = SegmentDive(30, 30*60, self.txtank1, 0)
+    self.profile1 = Dive([diveseg1], [self.txtank1])
+    self.profile1.do_dive()
+    assert self.profile1.output_segments == [], "bad output segments ? (%s)" % str(self.profile1.output_segments)
     
 if __name__ == "__main__":
   unittest.main() 

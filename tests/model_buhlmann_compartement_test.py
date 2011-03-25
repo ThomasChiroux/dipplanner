@@ -39,7 +39,7 @@ class Test(unittest.TestCase):
   def setUp(self):
     self.compt1 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
     self.compt2 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
-    self.compt2.set_pp(1.4, 1.9)
+    self.compt2.set_pp(0.3*5, (1-0.21-0.3)*5)
     self.compt3 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
     #self.compt3 = Compartment(70.69,  187.0,  5.333,  0.8997, 3.497,  0.9319)
     self.compt3.set_pp(0.0, 3.16)
@@ -53,63 +53,64 @@ class Test(unittest.TestCase):
     assert self.compt1.pp_N2 == 0, "wrong pp_N2 : %s" % self.compt1.pp_N2
   
   def test3(self):
-    assert self.compt1.k_He == 0.36869530880848156, "wrong k_He : %s" % self.compt1.k_He
+    assert round(self.compt1.k_He, 14) == 0.00614492181347, "wrong k_He : %s" % self.compt1.k_He
 
   def test4(self):
-    assert self.compt1.k_N2 == 0.13862943611198905, "wrong k_N2 : %s" % self.compt1.k_N2
+    assert round(self.compt1.k_N2, 14) == 0.00231049060187, "wrong k_N2 : %s" % self.compt1.k_N2
 
   def test5(self):
-    assert self.compt1.a_He == 16.189, "wrong a_He : %s" % self.compt1.a_He
+    assert self.compt1.a_He == 1.6189, "wrong a_He : %s" % self.compt1.a_He
 
   def test6(self):
     assert self.compt1.b_He == 0.4770, "wrong b_He : %s" % self.compt1.b_He
 
   def test7(self):
-    assert self.compt1.a_N2 == 11.696, "wrong a_N2 : %s" % self.compt1.a_N2
+    assert self.compt1.a_N2 == 1.1696, "wrong a_N2 : %s" % self.compt1.a_N2
     
   def test8(self):
     assert self.compt1.b_N2 == 0.5578, "wrong b_N2 : %s" % self.compt1.b_N2
   
   def test9(self):
-    assert self.compt2.pp_He == 1.4, "wrong pp_He : %s" % self.compt2.pp_He
+    assert self.compt2.pp_He == 1.5, "wrong pp_He : %s" % self.compt2.pp_He
     
   def test10(self):
-    assert self.compt2.pp_N2 == 1.9, "wrong pp_N2 : %s" % self.compt2.pp_N2
+    assert self.compt2.pp_N2 == 2.45, "wrong pp_N2 : %s" % self.compt2.pp_N2
   
   def test11(self):
-    self.compt2.const_depth(1.5, 2.1, 12*60)
-    assert round(self.compt2.pp_He,11) == 1.49880179275,  "wrong pp_He : %s" % self.compt2.pp_He
+    self.compt2.const_depth(0.3*4.5, (1-0.21-0.3)*4.5, 12*60)
+    assert round(self.compt2.pp_He,11) == 1.35179731087,  "wrong pp_He : %s" % self.compt2.pp_He
   
   def test12(self):
-    self.compt2.const_depth(1.5, 2.1, 12*60)
-    assert round(self.compt2.pp_N2,11) == 2.06210708584,  "wrong pp_N2 : %s" % self.compt2.pp_N2
+    self.compt2.const_depth(0.3*4.5, (1-0.21-0.3)*4.5, 12*60)
+    assert round(self.compt2.pp_N2,11) == 2.25141881985,  "wrong pp_N2 : %s" % self.compt2.pp_N2
   
   def test13(self):
-    self.compt2.asc_desc(3.1, 5.6, 0.125, 0.125, 12*60)
-    assert round(self.compt2.pp_He, 11) == 4.24465946415,  "wrong pp_He : %s" % self.compt2.pp_He
+    self.compt2.asc_desc(0.2997, 0.48951, 0.1, 0.163333333333, 9.0)
+    assert round(self.compt2.pp_He, 11) == 1.45985489718,  "wrong pp_He : %s" % self.compt2.pp_He
 
   def test14(self):
-    self.compt2.asc_desc(3.1, 5.6, 0.125, 0.125, 12*60)
-    assert round(self.compt2.pp_N2, 11) == 5.66813393539,  "wrong pp_N2 : %s" % self.compt2.pp_N2
+    self.compt2.asc_desc(0.2997, 0.48951, 0.1, 0.163333333333, 9.0)
+    assert round(self.compt2.pp_N2, 11) == 2.42483220311,  "wrong pp_N2 : %s" % self.compt2.pp_N2
 
   def test_m_value1(self):
     mv = self.compt3.get_m_value_at(0.0)
-    assert round(mv,3) == 11.696, "wrong M-Value : %s" % mv
+    assert mv == 1.1696, "wrong M-Value : %s" % mv
   
   def test_m_value2(self):
     mv = self.compt3.get_m_value_at(1.0)
-    assert round(mv,10) == 13.4887572607, "wrong M-Value : %s" % mv
+    assert round(mv,11) == 2.96235726067, "wrong M-Value : %s" % mv
     
   def test_m_value3(self):
     mv = self.compt3.get_m_value_at(3.0)
-    assert round(mv,9) == 17.074271782, "wrong M-Value : %s" % mv
+    assert round(mv,9) == 6.547871782, "wrong M-Value : %s" % mv
 
   def test_max_amb1(self):
     max_amb = self.compt3.get_max_amb(0.8)
-    assert max_amb == 2, "wrong max_amb for given gf : %s" % max_amb
+    assert round(max_amb,11) == 1.36110151389, "wrong max_amb for given gf : %s" % max_amb
     
   def test_mv1(self):
     mv = self.compt3.get_mv(1.0)
-    assert mv == 2, "wrong mv for given amb pressure : %s" % mv
+    assert round(mv,11) == 1.06671806333, "wrong mv for given amb pressure : %s" % mv
+    
 if __name__ == "__main__":
   unittest.main() 

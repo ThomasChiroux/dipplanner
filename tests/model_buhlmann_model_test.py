@@ -78,13 +78,13 @@ class Test(unittest.TestCase):
 
   def test_simple10(self):
     mv = self.model1.m_value(12)
-    assert mv == 0.23232, "Error in model m_value : %s" % mv
+    assert round(mv,12) == 0.310114218019, "Error in model m_value : %s" % mv
 
   def test_output1(self):
     assert str(self.model1) == "coucou", "Error in model output : %s" % str(self.model1)
 
   def test_cstd1(self):
-    assert self.model2.gradient.gf == 0.5, "Error in model gf : %s" % self.model2.gradient.gf
+    assert self.model2.gradient.gf == settings.GF_LOW, "Error in model gf : %s" % self.model2.gradient.gf
   
   def test_output2(self):
     assert str(self.model2) == "coucou2", "Error in model output : %s" % str(self.model1)

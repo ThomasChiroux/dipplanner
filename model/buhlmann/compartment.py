@@ -74,11 +74,11 @@ class Compartment(object):
     <nothing>
     
     """
-    self.k_He = math.log(2) / float(h_He)
-    self.k_N2 = math.log(2) / float(h_N2)
-    self.a_He = float(a_He) #/ 10
+    self.k_He = math.log(2) / (float(h_He)*60)
+    self.k_N2 = math.log(2) / (float(h_N2)*60)
+    self.a_He = float(a_He) / 10
     self.b_He = float(b_He)
-    self.a_N2 = float(a_N2) #/ 10
+    self.a_N2 = float(a_N2) / 10
     self.b_N2 = float(b_N2)
     
   def set_pp(self, pp_He, pp_N2):
@@ -120,8 +120,8 @@ class Compartment(object):
     if pp_He_inspired < 0 or pp_N2_inspired < 0 or seg_time < 0:
       raise ModelStateException("Error in argument: negative value is not allowed")
     else:
-      new_pp_He = self.pp_He + ((pp_He_inspired - self.pp_He) * (1 - math.exp(-self.k_He*float(seg_time)/60)))
-      new_pp_N2 = self.pp_N2 + ((pp_N2_inspired - self.pp_N2) * (1 - math.exp(-self.k_N2*float(seg_time)/60)))
+      new_pp_He = self.pp_He + ((pp_He_inspired - self.pp_He) * (1 - math.exp(-self.k_He*float(seg_time))))
+      new_pp_N2 = self.pp_N2 + ((pp_N2_inspired - self.pp_N2) * (1 - math.exp(-self.k_N2*float(seg_time))))
       self.pp_He = new_pp_He
       self.pp_N2 = new_pp_N2
       
@@ -146,8 +146,8 @@ class Compartment(object):
       if pp_He_inspired < 0 or pp_N2_inspired < 0 or seg_time < 0:
         raise ModelStateException("Error in argument: negative value is not allowed")
       else:
-        new_pp_He = pp_He_inspired + rate_he * (float(seg_time)/60 - (1.0/self.k_He)) - (pp_He_inspired - self.pp_He - (rate_he/self.k_He)) * math.exp(-self.k_He*float(seg_time)/60)
-        new_pp_N2 = pp_N2_inspired + rate_n2 * (float(seg_time)/60 - (1.0/self.k_N2)) - (pp_N2_inspired - self.pp_N2 - (rate_n2/self.k_N2)) * math.exp(-self.k_N2*float(seg_time)/60)
+        new_pp_He = pp_He_inspired + rate_he * (float(seg_time) - (1.0/self.k_He)) - (pp_He_inspired - self.pp_He - (rate_he/self.k_He)) * math.exp(-self.k_He*float(seg_time))
+        new_pp_N2 = pp_N2_inspired + rate_n2 * (float(seg_time) - (1.0/self.k_N2)) - (pp_N2_inspired - self.pp_N2 - (rate_n2/self.k_N2)) * math.exp(-self.k_N2*float(seg_time))
         self.pp_He = new_pp_He
         self.pp_N2 = new_pp_N2
   
@@ -167,7 +167,7 @@ class Compartment(object):
     return p_He_N2, a_He_N2, b_He_N2
     
   def get_m_value_at(self, pressure):
-    """Gets M-Value for given ambient pressure uning the Buhlmann equation
+    """Gets M-Value for given ambient pressure using the Buhlmann equation
     Pm = Pa/b +a         where: Pm = M-Value pressure,
                                 Pa = ambiant pressure
                                 a,b co-efficients
@@ -182,7 +182,8 @@ class Compartment(object):
     
     """
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    return float(pressure) / b_He_N2 + a_He_N2
+    mv = float(pressure) / b_He_N2 + a_He_N2
+    return mv
     
   def get_max_amb(self, gf):
     """Gets Tolerated Absolute Pressure for the compartment
@@ -213,4 +214,7 @@ class Compartment(object):
     
     """
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    return p_He_N2 / (float(p_amb) / b_He_N2 + a_He_N2)
+    mv = p_He_N2 / (float(p_amb) / b_He_N2 + a_He_N2)
+    #mv = float(p_amb) / b_He_N2 + a_He_N2
+    print "comp m-value for %s : %s" % (p_amb, mv)
+    return mv

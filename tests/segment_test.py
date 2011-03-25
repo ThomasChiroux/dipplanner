@@ -46,13 +46,13 @@ class Test(unittest.TestCase):
     self.diveseg2 = SegmentDive(150, 10*60, self.trimixtank1, 0)
     self.decoseg1 = SegmentDeco(12, 5*60, self.nitroxtank1, 0)
     self.decoseg2 = SegmentDeco(3, 15*60, self.oxygentank1, 0)
-    self.ascseg1 = SegmentAscDesc(150,50, 20, self.trimixtank1, 0)
-    self.ascseg2 = SegmentAscDesc(30, 12, 10, self.nitroxtank1, 0)
-    self.descseg1 = SegmentAscDesc(0, 40, 20, self.airtank,0)
-    self.descseg2 = SegmentAscDesc(40,150, 20, self.trimixtank1, 0)
+    self.ascseg1 = SegmentAscDesc(150,50, 20.0/60, self.trimixtank1, 0)
+    self.ascseg2 = SegmentAscDesc(30, 12, 10.0/60, self.nitroxtank1, 0)
+    self.descseg1 = SegmentAscDesc(0, 40, 20.0/60, self.airtank,0)
+    self.descseg2 = SegmentAscDesc(40,150, 20.0/60, self.trimixtank1, 0)
     
   def test_gas_used1(self):
-    assert self.diveseg1.gas_used() == 680, 'Wrong gas used : %s' % self.diveseg1.gas_used()
+    assert round(self.diveseg1.gas_used(),2) == 682.21, 'Wrong gas used : %s' % self.diveseg1.gas_used()
     
   def test_gas_end1(self):
     assert self.diveseg1.get_end() == 29, 'wrong E.N.D : %s' % self.diveseg1.get_end()
@@ -65,22 +65,22 @@ class Test(unittest.TestCase):
                                                   'wrong name : %s' % str(self.diveseg2)
   
   def test_deco1(self):
-    assert self.decoseg1.gas_used() == 132, 'Wrong gas used : %s' % self.decoseg1.gas_used()
+    assert self.decoseg1.gas_used() == 132.78, 'Wrong gas used : %s' % self.decoseg1.gas_used()
   
   def test_deco2(self):
-    assert self.decoseg2.gas_used() == 234, 'Wrong gas used : %s' % self.decoseg2.gas_used()
+    assert round(self.decoseg2.gas_used(),2) == 236.34, 'Wrong gas used : %s' % self.decoseg2.gas_used()
     
   def test_asc1(self):
-    assert self.ascseg1.gas_used() == 935, 'Wrong gas used : %s' % self.ascseg1.gas_used()
+    assert self.ascseg1.gas_used() == 936.105, 'Wrong gas used : %s' % self.ascseg1.gas_used()
     
   def test_asc2(self):
-    assert self.ascseg2.gas_used() == 94.86, 'Wrong gas used : %s' % self.ascseg2.gas_used()
+    assert self.ascseg2.gas_used() == 95.2578, 'Wrong gas used : %s' % self.ascseg2.gas_used()
 
   def test_desc1(self):
-    assert self.descseg1.gas_used() == 102, 'Wrong gas used : %s' % self.descseg1.gas_used()
+    assert self.descseg1.gas_used() == 102.442, 'Wrong gas used : %s' % self.descseg1.gas_used()
 
   def test_desc2(self):
-    assert self.descseg2.gas_used() == 981.75, 'Wrong gas used : %s' % self.descseg2.gas_used()
+    assert self.descseg2.gas_used() == 982.9655, 'Wrong gas used : %s' % self.descseg2.gas_used()
 
   def test_wrong_mod1(self):
     try:

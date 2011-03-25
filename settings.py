@@ -38,7 +38,8 @@ ABSOLUTE_MIN_PPO2 = 0.16
 ABSOLUTE_MAX_TANK_PRESSURE = 300 # in bar
 ABSOLUTE_MAX_TANK_SIZE = 30 # in liter
 
-PP_H2O_SURFACE = 0.014 # in bar : eq 10.5mmHG (20°; 60% hum)
+#TODO: what is the good value : 0.014 or 0.0627 ??
+PP_H2O_SURFACE = 0.014 #0.0627 # 0.014 # in bar : eq 10.5mmHG (20°; 60% hum)
 
 HE_NARCOTIC_VALUE = 0.23
 N2_NARCOTIC_VALUE = 1.0
@@ -57,19 +58,19 @@ WATER_DENSITY = SEA_WATER_DENSITY
 DEFAULT_MAX_PPO2 = 1.6
 DEFAULT_MIN_PPO2 = 0.16
 
-AMBIANT_PRESSURE_SURFACE = 1.0 # surface pressure (in bar)
-DIVE_CONSUMPTION_RATE = 17 # liter/minute
-DECO_CONSUMPTION_RATE = 12 # liter/minute
+AMBIANT_PRESSURE_SURFACE = 1.013 # surface pressure (in bar)
+DIVE_CONSUMPTION_RATE = 17.0/60 # liter/s
+DECO_CONSUMPTION_RATE = 12.0/60 # liter/s
 
-DESCENT_RATE = 20 # m/minute
-ASCENT_RATE = 10 # m/minute
+DESCENT_RATE = float(20)/60 # m/s
+ASCENT_RATE = float(10)/60 # m/s
 
-RUN_TIME = False  # if True: segments represents runtime, 
+RUN_TIME = True  # if True: segments represents runtime, 
                   # if false, segments represents segtime
               
 USE_OC_DECO = True # if True, use enabled gases of decomp in oc or bailout
 
-GF_LOW = 0.30
-GF_HIGH = 0.80
+GF_LOW = 0.3
+GF_HIGH = 0.8
 
 MULTILEVEL_MODE = False 

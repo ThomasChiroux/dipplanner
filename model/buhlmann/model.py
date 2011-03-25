@@ -98,12 +98,13 @@ class Model(object):
     """Returns a string representing the model"""
     model_string = "Compartment pressures:\n"
     for comp_number in range(0, self.COMPS):
-         model_string += "C:%s He:%s N2:%s Ceiling:%s MV:%s\n" % (
+         model_string += "C:%s He:%s N2:%s gf:%s Ceiling:%s MV:%s\n" % (
           comp_number,
           self.tissues[comp_number].pp_He,
           self.tissues[comp_number].pp_N2,
-          self.tissues[comp_number].get_max_amb(self.gradient.gf) - 10.0,
-          self.tissues[comp_number].get_mv(10.0)
+          self.gradient.gf,
+          (self.tissues[comp_number].get_max_amb(self.gradient.gf)) * 1,
+          self.tissues[comp_number].get_mv(settings.AMBIANT_PRESSURE_SURFACE)
          )
     model_string += "Ceiling: %s\n" % self.ceiling()
     model_string += "Max surface M-Value: %s\n" % self.m_value(0.0)
@@ -142,7 +143,7 @@ class Model(object):
     <nothing>
     """
     # note: comparing with buhlmann original (1990) ZH-L16 a coeficient,
-    # there is here a x10 factor (for a)
+    # there is here a x10 factor for a coeficient
     self.tissues[0].set_compartment_time_constants(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578);         
     self.tissues[1].set_compartment_time_constants(3.02,    8.0,    13.83,  0.5747, 10.0,   0.6514);
     self.tissues[2].set_compartment_time_constants(4.72,    12.5,   11.919, 0.6527, 8.618,  0.7222);
@@ -202,14 +203,14 @@ class Model(object):
     
     """
     control_compartment_number = 0
-    depth = 0.0
+    max_pressure = 0.0
     
     for comp_number in range(0, self.COMPS):
       pressure = self.tissues[comp_number].get_max_amb(self.gradient.gf) - settings.AMBIANT_PRESSURE_SURFACE
       #print "pressure:%s" % pressure
-      if pressure > depth:
+      if pressure > max_pressure:
         control_compartment_number = comp_number
-        depth = pressure
+        max_pressure = pressure
     return control_compartment_number + 1
     
   def ceiling(self):
@@ -222,27 +223,27 @@ class Model(object):
     Float, ceiling depth in meter
     
     """
-    depth = 0.0
+    pressure = 0.0
     
     for comp in self.tissues:
       #Get compartment tolerated ambient pressure and convert from absolute
       #pressure to depth
-      comp_depth = comp.get_max_amb(self.gradient.gf) - settings.AMBIANT_PRESSURE_SURFACE
-      if comp_depth > depth:
-        depth = comp_depth
-    return depth
+      comp_pressure = comp.get_max_amb(self.gradient.gf) - settings.AMBIANT_PRESSURE_SURFACE
+      if comp_pressure > pressure:
+        pressure = comp_pressure
+    return pressure*10
     
-  def m_value(self, depth):
-    """Determine the maximum M-Value for a given depth
+  def m_value(self, pressure):
+    """Determine the maximum M-Value for a given depth (pressure)
     
     Keyword arguments:
-    depth -- in meter
+    pressure -- in bar
     
     Returns
     float, max M-Value
     
     """
-    p_absolute = depth + settings.AMBIANT_PRESSURE_SURFACE
+    p_absolute = pressure + settings.AMBIANT_PRESSURE_SURFACE
     compartment_mv = 0.0
     max_mv = 0.0
     
@@ -250,14 +251,15 @@ class Model(object):
       compartment_mv = comp.get_mv(p_absolute)
       if compartment_mv > max_mv:
         max_mv = compartment_mv
+    print "max mv : %s" % max_mv
     return max_mv
     
-  def const_depth(self, depth, seg_time, f_He, f_N2, pp_O2):
+  def const_depth(self, pressure, seg_time, f_He, f_N2, pp_O2):
     """Constant depth profile. 
     Calls Compartment.constDepth for each compartment to update the model.
     
     Kerword arguments:
-    depth -- Depth of segment in metres
+    pressure -- pressure of this depth of segment in bar
     seg_time -- Time of segment in seconds
     f_He -- Fraction of inert gas Helium in inspired gas mix
     f_N2 -- Fraction of inert gas Nitrogen in inspired gas mix
@@ -271,7 +273,7 @@ class Model(object):
     ModelStateException
     
     """
-    ambiant_pressure = depth - settings.AMBIANT_PRESSURE_SURFACE
+    ambiant_pressure = pressure + settings.AMBIANT_PRESSURE_SURFACE
     
     if pp_O2 > 0.0:
       # CCR mode
@@ -295,20 +297,18 @@ class Model(object):
       pp_O2_inspired = pp_O2
       #Check that ppO2Inspired is not greater than the depth. 
       #This occurs in shallow deco when the setpoint specified is > depth
-      if pp_O2_inspired <= (depth + settings.AMBIANT_PRESSURE_SURFACE) and \
-         p_inert > 0.0:
+      if pp_O2_inspired <= ambiant_pressure and p_inert > 0.0:
         # pp_O2 is the setpoint
         self.ox_tox.add_O2(seg_time, pp_O2)
       else:
         # pp_O2 is equal to the depth, also true is there is no inert gaz
-        self.ox_tox.add_O2(seg_time, depth + settings.AMBIANT_PRESSURE_SURFACE \
-                                           - settings.PP_H2O_SURFACE)
+        self.ox_tox.add_O2(seg_time, ambiant_pressure - settings.PP_H2O_SURFACE)
     else:
       # OC mode
       pp_He_inspired = (ambiant_pressure - settings.PP_H2O_SURFACE) * f_He
       pp_N2_inspired = (ambiant_pressure - settings.PP_H2O_SURFACE) * f_N2
       # update ox_tox
-      if depth == 0.0: #surface
+      if pressure == 0.0: #surface
         self.ox_tox.remove_O2(seg_time)
       else:
         self.ox_tox.add_O2(seg_time, (ambiant_pressure \
@@ -323,9 +323,9 @@ class Model(object):
     Calls Compartment.asc_desc to update compartments
 
     Kerword arguments:
-    start -- start depth of this segment in metre
-    finish -- finish depth of this segment in metre
-    rate -- rate of ascent or descent in m/min
+    start -- start pressure of this segment in bar (WARNING: not meter !)
+    finish -- finish pressure of this segment in bar (WARNING: not meter !) 
+    rate -- rate of ascent or descent in m/s
     f_He -- Fraction of inert gas Helium in inspired gas mix
     f_N2 -- Fraction of inert gas Nitrogen in inspired gas mix
     pp_O2 -- For CCR mode, partial pressure of oxygen in bar. 
@@ -341,7 +341,7 @@ class Model(object):
     # rem: here we do not bother of PP_H2O like in constant_depth : WHY ?
     start_ambiant_pressure = start + settings.AMBIANT_PRESSURE_SURFACE
     finish_ambiant_pressure = finish + settings.AMBIANT_PRESSURE_SURFACE
-    seg_time = 60 * abs((float(finish) - float(start)) / rate)
+    seg_time = abs(float(finish) - float(start)) / rate
     if pp_O2 > 0.0:
       # CCR mode
       # Calculate inert gas partial pressure == pAmb - pO2 - pH2O 
@@ -360,9 +360,9 @@ class Model(object):
         pp_N2_inspired = (p_inert_start * f_N2) / (f_He + f_N2)
         # calculate rate of change of each inert gas
         rate_He = ((p_inert_finish * f_He) / (f_He + f_N2) - pp_He_inspired) \
-                  / (seg_time / 60)
+                  / (seg_time)
         rate_N2 = ((p_inert_finish * f_N2) / (f_He + f_N2) - pp_N2_inspired) \
-                  / (seg_time / 60)
+                  / (seg_time)
       else:
         pp_He_inspired = 0.0
         pp_N2_inspired = 0.0

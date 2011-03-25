@@ -245,7 +245,7 @@ class SegmentDive(Segment):
       return 0
     else:
       pressure = (self.depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
-      return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)/60 )
+      return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE))
     
 class SegmentDeco(Segment):
   """Specialisation of segment class for deco segments
@@ -303,7 +303,7 @@ class SegmentDeco(Segment):
       return 0
     else:
       pressure = (float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE)
-      return ( pressure * self.time * float(settings.DECO_CONSUMPTION_RATE)/60 )
+      return ( pressure * self.time * float(settings.DECO_CONSUMPTION_RATE))
 
 class SegmentAscDesc(Segment):
   """Specialisation of segment class for Ascent or Descent segments
@@ -320,7 +320,7 @@ class SegmentAscDesc(Segment):
     Keyword arguments:
     start_depth -- in meter, the starting depth for this segment
     end_depth -- in meter, the ending depth for this segment
-    rate -- in m/min, rate of ascending or descending
+    rate -- in m/s, rate of ascending or descending
     tank -- object instance of Tank class : 
             describe the tank used in this segment
     setpoint -- float, for CCR, setpoint used for this segment
@@ -342,7 +342,7 @@ class SegmentAscDesc(Segment):
     self.tank = tank # tank used for this segment
         
     # calculate the time based on start-end depth and rate:
-    self.time = 60.0 * (abs(self.end_depth - self.start_depth) / self.rate)
+    self.time = (abs(self.end_depth - self.start_depth) / self.rate)
     
     if start_depth > end_depth:
       self.type = 'ascent' # type of segment
@@ -394,6 +394,6 @@ class SegmentAscDesc(Segment):
     if self.setpoint > 0 :
       return 0
     else:
-      average_depth = (self.start_depth + self.end_depth) / 2.0
+      average_depth = (float(self.start_depth) + float(self.end_depth)) / 2.0
       pressure = (average_depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
-      return pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)/60
+      return pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)

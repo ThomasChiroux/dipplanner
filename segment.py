@@ -79,7 +79,41 @@ class Segment(object):
     self.run_time = 0.0 # runtime in profile (TODO: voir a quoi ça sert)
     self.setpoint = 0.0 # for CCR
     self.tank = None # tank used for this segment
+
+  def __repr__(self):
+    """Returns a string representing the actual segment"""
+    return "%s: at %sm for %s on %s, SP:%s, END:%sm" % ( self.type.upper(),
+                                                  self.depth,
+                                                  self._get_segment_time_in_minutes(),
+                                                  str(self.tank),
+                                                  self.setpoint,
+                                                  self.get_end() )
+
+  def __str__(self):
+    """Return a human readable name of the segment"""
+    return self.__repr__()
+
+  def __unicode__(self):
+    """Return a human readable name of the segment in unicode"""
+    return u"%s" % self.__repr__()
   
+  def _get_segment_time_in_minutes(self):
+    """Return a string which represent the segment time
+    in minutes and seconds (ex: 1'28'')
+    
+    Keyword arguments:
+    <none>
+    
+    Returns:
+    a string : segmement time in minutes and seconds
+    
+    Raise:
+    <nothing>
+    
+    """
+    text = "%s'%s''" % (int(self.time/60), int(self.time % 60))
+    return text
+    
   def check_mod(self):
     """checks the mod for this segment according to the used tank.
     checks both Max Operating Depth and Min Operating Depth (hypoxic cases)
@@ -180,24 +214,7 @@ class Segment(object):
   def gas_used(self):
     """returns the quantity (in liter) of gas used for this segment"""
     pass
-    
-  def __repr__(self):
-    """Returns a string representing the actual segment"""
-    return "%s: for %ss at %sm on %s, SP:%s, END:%sm" % ( self.type.upper(),
-                                                  self.time,
-                                                  self.depth,
-                                                  str(self.tank),
-                                                  self.setpoint,
-                                                  self.get_end() )
-    
-  def __str__(self):
-    """Return a human readable name of the segment"""
-    return self.__repr__()
-    
-  def __unicode__(self):
-    """Return a human readable name of the segment in unicode"""
-    return u"%s" % self.__repr__()
-    
+        
 class SegmentDive(Segment):
   """Specialisation of segment class for dive segments
   """

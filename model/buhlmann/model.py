@@ -98,11 +98,12 @@ class Model(object):
     """Returns a string representing the model"""
     model_string = "Compartment pressures:\n"
     for comp_number in range(0, self.COMPS):
-         model_string += "C:%s He:%s N2:%s gf:%s Ceiling:%s MV:%s\n" % (
+         model_string += "C:%s He:%s N2:%s gf:%s mv_at:%s max_amb:%s MV:%s\n" % (
           comp_number,
           self.tissues[comp_number].pp_He,
           self.tissues[comp_number].pp_N2,
           self.gradient.gf,
+          self.tissues[comp_number].get_m_value_at(settings.AMBIANT_PRESSURE_SURFACE),
           (self.tissues[comp_number].get_max_amb(self.gradient.gf)) * 1,
           self.tissues[comp_number].get_mv(settings.AMBIANT_PRESSURE_SURFACE)
          )

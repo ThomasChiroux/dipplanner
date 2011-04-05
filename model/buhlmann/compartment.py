@@ -153,6 +153,7 @@ class Compartment(object):
   
   def _calculate_p_a_b_inert(self):
     """Calculate and returns p_He_N2, a_He_N2 and b_He_N2
+    based on current pp_He and pp_N2 of this compartment
     
     Keyword arguments:
     <none>
@@ -187,6 +188,7 @@ class Compartment(object):
     
   def get_max_amb(self, gf):
     """Gets Tolerated Absolute Pressure for the compartment
+    for current pp of He and N2
     
     Keyword arguments:
     gf -- gradient factor : 0.1 to 1.0, typical 0.2 - 0.95
@@ -196,11 +198,9 @@ class Compartment(object):
     
     """
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    #TODO: il y a un pb avec cette formule ou cette fonction : elle 
-    #      retourne (selon les cas) des valeurs négatives (si p_He_N2 < a_He_N2)
-    #      et cela ne me parrait pas logique ni normal
-    max_amb = (p_He_N2 - a_He_N2 * gf) / (gf / b_He_N2 - gf + 1.0)
+
     #max_amb = (p_He_N2 - a_He_N2 ) /  b_He_N2 
+    max_amb = (p_He_N2 - a_He_N2 * gf) / (gf / b_He_N2 - gf + 1.0)
     return max_amb
     
   def get_mv(self, p_amb):
@@ -216,5 +216,5 @@ class Compartment(object):
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
     mv = p_He_N2 / (float(p_amb) / b_He_N2 + a_He_N2)
     #mv = float(p_amb) / b_He_N2 + a_He_N2
-    print "comp m-value for %s : %s" % (p_amb, mv)
+    #print "comp m-value for %s : %s" % (p_amb, mv)
     return mv

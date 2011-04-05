@@ -70,7 +70,7 @@ RUN_TIME = True  # if True: segments represents runtime,
               
 USE_OC_DECO = True # if True, use enabled gases of decomp in oc or bailout
 
-GF_LOW = 0.3
-GF_HIGH = 0.8
+GF_LOW = 0.30
+GF_HIGH = 0.80
 
 MULTILEVEL_MODE = False 

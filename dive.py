@@ -134,7 +134,23 @@ class Dive(object):
     self.in_final_ascent = False
     self.run_time = 0 # in second
     self.metadata = ""
-    
+
+  def __repr__(self):
+    """Returns a string representing the result of the dive"""
+    text = "Dive profile : GF:%s-%s\n" % (settings.GF_LOW*100, 
+                                          settings.GF_HIGH*100)
+    for segment in self.output_segments:
+      text += "%s\n" % str(segment)
+    return text
+
+  def __str__(self):
+    """Return a human readable name of the segment"""
+    return self.__repr__()
+
+  def __unicode__(self):
+    """Return a human readable name of the segment in unicode"""
+    return u"%s" % self.__repr__()
+
   def do_surface_interval(self, time):
     """Conducts a surface interval 
     by performing a constant depth calculation on air at zero meters
@@ -265,7 +281,7 @@ class Dive(object):
                                                   self.current_tank, 
                                                   self.pp_O2))
                                                   
-    # all input segment are now process : process to ascend to the surface 
+    # all input segment are now processed : process to ascend to the surface 
     self.in_final_ascent = True
     # ascend to the surface
     self.ascend(0.0)
@@ -312,14 +328,16 @@ class Dive(object):
                          * settings.STOP_DEPTH_INCREMENT
     else:
       next_stop_depth = int(self.current_depth - settings.STOP_DEPTH_INCREMENT)
-      
+
+    print "next_stop_depth: %s" % next_stop_depth
     # hack in case we are overshooting or hit last stop or any of 
     # the other bizzar combinations ...
     if next_stop_depth < target_depth or \
        self.current_depth < settings.LAST_STOP_DEPTH:
       next_stop_depth = target_depth
-    #elif next_stop_depth == settings.LAST_STOP_DEPTH:
-    #  next_stop_depth = target_depth # TODO: bizarre...
+    elif next_stop_depth == settings.LAST_STOP_DEPTH:
+      print "next_stop_depth==LAST_STOP_DEPTH !"
+      next_stop_depth = target_depth # TODO: bizarre...
     elif next_stop_depth < settings.LAST_STOP_DEPTH:
       next_stop_depth = settings.LAST_STOP_DEPTH
 
@@ -336,12 +354,14 @@ class Dive(object):
     while self.current_depth > target_depth:
       #print "ascent -- debug : %s, %s" % (self.current_depth, target_depth)
       # can we move to the proposed next stop depth ?
+      print "model ceiling: %s" % self.model.ceiling()
       while force_deco_stop or next_stop_depth < self.model.ceiling():
         in_deco_cycle = True
         force_deco_stop = False #Only used for first entry into deco stop
         if in_ascent_cycle: #Finalise last ascent cycle as we are now decomp
           if start_depth > self.current_depth:
             # add ascent segment
+            print "Add AscDesc (1): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth)
             self.output_segments.append(SegmentAscDesc(start_depth, 
                                                        self.current_depth, 
                                                        settings.ASCENT_RATE,
@@ -426,6 +446,7 @@ class Dive(object):
       temp_tank = self.current_tank # remember in case we switch
       if self.set_deco_gas(self.current_depth): # True if we changed gas
         if in_ascent_cycle:
+          print "Add AscDesc (2): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth)
           self.output_segments.append(SegmentAscDesc(start_depth,
                                                      self.current_depth,
                                                      settings.ASCENT_RATE,
@@ -453,6 +474,7 @@ class Dive(object):
         
     # are we still in ascent segment ?
     if in_ascent_cycle:
+      print "Add AscDesc (3): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth)
       self.output_segments.append(SegmentAscDesc(start_depth,
                                                  self.current_depth,
                                                  settings.ASCENT_RATE,
@@ -510,10 +532,13 @@ class Dive(object):
       self.is_closed_circuit = False
       
     # check and switch deco gases
+    current_tank_sav = self.current_tank
     for temp_tank in self.tanks:
       if temp_tank.get_mod() >= depth:
-        self.current_tank = temp_tank
-        gas_switch = True
+        if temp_tank != current_tank_sav:
+          self.current_tank = temp_tank
+          gas_switch = True
+          print "Changing gas to %s" % self.current_tank
       else:
         break
     return gas_switch

@@ -32,6 +32,7 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+import logging
 #local imports
 import settings
 
@@ -64,6 +65,10 @@ class Gradient(object):
     ValueError -- if either gf_low of gf_high has wrong value
     
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.model.buhlmann.gradient.Gradient")
+    self.logger.info("creating an instance of Gradient")
+    
     self.set_gf_low(gf_low)
     self.set_gf_high(gf_high)
     self.gf_slope = 1.0

@@ -32,6 +32,7 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+import logging
 # local imports
 import settings
 from dipp_exception import DipplannerException
@@ -99,6 +100,10 @@ class Dive(object):
     <nothing>
         
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.dive.Dive")
+    self.logger.info("creating an instance of Dive")
+    
     if model is None:
       # new dive : new model
       self.if_repetative_dive = False
@@ -134,6 +139,7 @@ class Dive(object):
     self.in_final_ascent = False
     self.run_time = 0 # in second
     self.metadata = ""
+
 
   def __repr__(self):
     """Returns a string representing the result of the dive"""
@@ -238,7 +244,7 @@ class Dive(object):
                                                      self.current_tank,
                                                      self.pp_O2))
           self.run_time += (delta_depth / settings.DESCENT_RATE)
-          #print "descent time : %ss" % (delta_depth / settings.DESCENT_RATE)
+          self.logger.debug("descent time : %ss" % (delta_depth / settings.DESCENT_RATE))
         else: # ascent
           # call ascend method of this class for decompression calculation
           self.ascend(seg.depth)
@@ -260,7 +266,7 @@ class Dive(object):
                                                     self.current_tank, 
                                                     self.pp_O2))
             self.metadata += "Dive to %s for %ss\n" % (seg.depth, seg.time - self.run_time)
-            #print "Dive to %s for %ss" % (seg.depth, seg.time - self.run_time)
+            self.logger.debug("Dive to %s for %ss" % (seg.depth, seg.time - self.run_time))
             self.run_time = seg.time
           else:
             self.model.const_depth(float(seg.depth)/10,
@@ -273,7 +279,7 @@ class Dive(object):
                                                     self.current_tank, 
                                                     self.pp_O2))
             self.metadata += "Dive to %s for %ss\n" % (seg.depth, seg.time)
-            #print "Dive to %s for %ss" % (seg.depth, seg.time)
+            self.logger.debug("Dive to %s for %ss" % (seg.depth, seg.time))
             self.run_time += seg.time
         else: #process waypoint
           self.output_segments.append(SegmentDive(seg.depth, 
@@ -329,14 +335,14 @@ class Dive(object):
     else:
       next_stop_depth = int(self.current_depth - settings.STOP_DEPTH_INCREMENT)
 
-    print "next_stop_depth: %s" % next_stop_depth
+    self.logger.debug("next_stop_depth: %s" % next_stop_depth)
     # hack in case we are overshooting or hit last stop or any of 
     # the other bizzar combinations ...
     if next_stop_depth < target_depth or \
        self.current_depth < settings.LAST_STOP_DEPTH:
       next_stop_depth = target_depth
     elif next_stop_depth == settings.LAST_STOP_DEPTH:
-      print "next_stop_depth==LAST_STOP_DEPTH !"
+      self.logger.debug("next_stop_depth==LAST_STOP_DEPTH !")
       next_stop_depth = target_depth # TODO: bizarre...
     elif next_stop_depth < settings.LAST_STOP_DEPTH:
       next_stop_depth = settings.LAST_STOP_DEPTH
@@ -352,16 +358,16 @@ class Dive(object):
     control = self.model.control_compartment()
     
     while self.current_depth > target_depth:
-      #print "ascent -- debug : %s, %s" % (self.current_depth, target_depth)
+      self.logger.debug("ascent -- debug : %s, %s" % (self.current_depth, target_depth))
       # can we move to the proposed next stop depth ?
-      #print "model ceiling: %s" % self.model.ceiling()
+      self.logger.debug("model ceiling: %s" % self.model.ceiling())
       while force_deco_stop or next_stop_depth < self.model.ceiling():
         in_deco_cycle = True
         force_deco_stop = False #Only used for first entry into deco stop
         if in_ascent_cycle: #Finalise last ascent cycle as we are now decomp
           if start_depth > self.current_depth:
             # add ascent segment
-            print "Add AscDesc (1): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth)
+            self.logger.debug("Add AscDesc (1): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth))
             self.output_segments.append(SegmentAscDesc(start_depth, 
                                                        self.current_depth, 
                                                        settings.ASCENT_RATE,
@@ -376,7 +382,7 @@ class Dive(object):
         #   - otherwise wait until we are finally surfacing before setting it
         if (not settings.MULTILEVEL_MODE or self.in_final_ascent) and \
             (not self.model.gradient.gf_set):
-          #print "...set m-value gradient"
+          self.logger.debug("...set m-value gradient")
           self.model.gradient.set_gf_slope_at_depth(self.current_depth)
           self.model.gradient.set_gf_at_depth(next_stop_depth)
         
@@ -392,13 +398,13 @@ class Dive(object):
           stop_time = settings.STOP_TIME_INCREMENT # in second
 
         # execute the stop
-        #print "deco at %sm for %ss (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % (self.current_depth,
+        #self.logger.debug("deco at %sm for %ss (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % (self.current_depth,
         #                                              stop_time,
         #                                              deco_stop_time,
         #                                              self.current_tank.f_He,
         #                                              self.current_tank.f_N2,
         #                                              self.pp_O2,
-        #                                              self.model.ceiling())
+        #                                              self.model.ceiling()))
         self.model.const_depth(float(self.current_depth)/10,
                                stop_time,
                                self.current_tank.f_He,
@@ -412,7 +418,7 @@ class Dive(object):
           
       # finished decompression loop 
       if in_deco_cycle:
-        #print "...in deco cycle"
+        self.logger.debug("...in deco cycle")
         # finalise the last deco cycle
         self.run_time += deco_stop_time
         if settings.FORCE_ALL_STOPS:
@@ -430,7 +436,7 @@ class Dive(object):
         in_deco_cycle = False
         deco_stop_time = 0
       elif in_ascent_cycle:
-        #print "...in ascent cycle"
+        #self.logger.debug("...in ascent cycle")
         # did not decompress, just ascend
         # TODO : if we enable this code always (not in rlif, but direct) then
         #        model will ascend between deco stops, but ... 
@@ -455,7 +461,7 @@ class Dive(object):
       temp_tank = self.current_tank # remember in case we switch
       if self.set_deco_gas(self.current_depth): # True if we changed gas
         if in_ascent_cycle:
-          print "Add AscDesc (2): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth)
+          self.logger.debug("Add AscDesc (2): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth))
           self.output_segments.append(SegmentAscDesc(start_depth,
                                                      self.current_depth,
                                                      settings.ASCENT_RATE,
@@ -465,18 +471,18 @@ class Dive(object):
       
       # set next rounded stop depth
       next_stop_depth = int(self.current_depth) - settings.STOP_DEPTH_INCREMENT
-      #print "next stop depth: %s, target: %s" % (next_stop_depth, target_depth)
+      self.logger.debug("next stop depth: %s, target: %s" % (next_stop_depth, target_depth))
 
       # check in cas we are overshooting or hit last stop
       if next_stop_depth < target_depth or \
          self.current_depth < settings.LAST_STOP_DEPTH:
-        print "next_stop_depth (%s) < target_depth (%s)" % (next_stop_depth, target_depth)
+        self.logger.debug("next_stop_depth (%s) < target_depth (%s)" % (next_stop_depth, target_depth))
         next_stop_depth = target_depth
       elif self.current_depth < settings.LAST_STOP_DEPTH:
-        print "current_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (current_depth, settings.LAST_STOP_DEPTH)
+        self.logger.debug("current_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (current_depth, settings.LAST_STOP_DEPTH))
         next_stop_depth = target_depth
       #elif next_stop_depth < settings.LAST_STOP_DEPTH:
-      #  print "next_stop_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (next_stop_depth, settings.LAST_STOP_DEPTH)
+      #  self.logger.debug("next_stop_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (next_stop_depth, settings.LAST_STOP_DEPTH))
       #  next_stop_depth = settings.LAST_STOP_DEPTH
       #TODO: j'ai commenté les lignes ci-dessus pour éviter une boucle infinie
       #      commprendre pourquoi elles existent...
@@ -486,7 +492,7 @@ class Dive(object):
         
     # are we still in ascent segment ?
     if in_ascent_cycle:
-      print "Add AscDesc (3): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth)
+      self.logger.debug("Add AscDesc (3): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth))
       self.output_segments.append(SegmentAscDesc(start_depth,
                                                  self.current_depth,
                                                  settings.ASCENT_RATE,
@@ -550,7 +556,7 @@ class Dive(object):
         if temp_tank != current_tank_sav:
           self.current_tank = temp_tank
           gas_switch = True
-          print "Changing gas to %s" % self.current_tank
+          self.logger.debug("Changing gas to %s" % self.current_tank)
       else:
         break
     return gas_switch

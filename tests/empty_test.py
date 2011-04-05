@@ -32,9 +32,13 @@ __authors__ = [
 
 import unittest
 # import here the module / classes to be tested
+import dipplanner
 
 class Test(unittest.TestCase):
-  
+  def setUp(self):
+    # temporary hack (tests):
+    dipplanner.activate_debug()
+      
   def test1(self):
     #myobj = Class()
     #assert myobj.foo == 'bar'

@@ -34,9 +34,13 @@ import unittest
 # import here the module / classes to be tested
 
 from model.buhlmann.gradient import Gradient
+import dipplanner
 
 class Test(unittest.TestCase):
   def setUp(self):
+    # temporary hack (tests):
+    dipplanner.activate_debug()
+    
     self.gradient1 = Gradient(0.3, 0.8)
     self.gradient2 = Gradient(0.35, 0.75)
   

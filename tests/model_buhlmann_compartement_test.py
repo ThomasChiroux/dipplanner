@@ -34,9 +34,13 @@ import unittest
 # import here the module / classes to be tested
 from model.buhlmann.compartment import Compartment
 from model.buhlmann.model_exceptions import ModelStateException
+import dipplanner
 
 class Test(unittest.TestCase):
   def setUp(self):
+    # temporary hack (tests):
+    dipplanner.activate_debug()
+    
     self.compt1 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
     self.compt2 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
     self.compt2.set_pp(0.3*5, (1-0.21-0.3)*5)

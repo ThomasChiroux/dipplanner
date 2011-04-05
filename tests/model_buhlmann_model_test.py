@@ -35,9 +35,13 @@ import unittest
 import settings
 from model.buhlmann.model import Model
 from model.buhlmann.model_exceptions import ModelStateException
+import dipplanner
 
 class Test(unittest.TestCase):
   def setUp(self):
+    # temporary hack (tests):
+    dipplanner.activate_debug()
+    
     # simples test
     self.model1 = Model()
     

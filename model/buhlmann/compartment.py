@@ -30,7 +30,7 @@ __authors__ = [
 ]
 
 import math
-
+import logging
 # local imports
 import settings
 from model_exceptions import ModelStateException
@@ -51,6 +51,10 @@ class Compartment(object):
     Raise:
     see set_compartment_time_constants method
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.model.buhlmann.compartment.Compartment")
+    self.logger.info("creating an instance of Compartment")
+    
     self.pp_He = 0.0
     self.pp_N2 = 0.0
     if h_He is not None and h_N2 is not None and \
@@ -216,5 +220,5 @@ class Compartment(object):
     p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
     mv = p_He_N2 / (float(p_amb) / b_He_N2 + a_He_N2)
     #mv = float(p_amb) / b_He_N2 + a_He_N2
-    #print "comp m-value for %s : %s" % (p_amb, mv)
+    self.logger.debug("comp m-value for %s : %s" % (p_amb, mv))
     return mv

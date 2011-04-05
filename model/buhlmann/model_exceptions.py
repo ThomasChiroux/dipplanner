@@ -29,7 +29,8 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
-import math
+#import math
+import logging
 
 # local imports
 import settings

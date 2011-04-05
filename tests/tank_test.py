@@ -33,9 +33,13 @@ __authors__ = [
 import unittest
 # local imports
 from tank import Tank, InvalidGas, InvalidTank, InvalidMod, EmptyTank
+import dipplanner
 
 class TestTank(unittest.TestCase):
-  
+  def setUp(self):
+    # temporary hack (tests):
+    dipplanner.activate_debug()
+    
   def testTankisAir(self):
     mytank = Tank()
     assert str(mytank) == 'Air'

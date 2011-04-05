@@ -32,6 +32,7 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+import logging
 # local imports
 import settings
 from model_exceptions import ModelStateException
@@ -80,6 +81,10 @@ class Model(object):
     <nothing>
     
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.model.buhlmann.model.Model")
+    self.logger.info("creating an instance of Model")
+    
     self.units = 'metric'
     self.tissues = []
     self.ox_tox = OxTox()
@@ -208,7 +213,7 @@ class Model(object):
     
     for comp_number in range(0, self.COMPS):
       pressure = self.tissues[comp_number].get_max_amb(self.gradient.gf) - settings.AMBIANT_PRESSURE_SURFACE
-      #print "pressure:%s" % pressure
+      self.logger.debug("pressure:%s" % pressure)
       if pressure > max_pressure:
         control_compartment_number = comp_number
         max_pressure = pressure
@@ -252,7 +257,7 @@ class Model(object):
       compartment_mv = comp.get_mv(p_absolute)
       if compartment_mv > max_mv:
         max_mv = compartment_mv
-    print "max mv : %s" % max_mv
+    self.logger.debug("max mv : %s" % max_mv)
     return max_mv
     
   def const_depth(self, pressure, seg_time, f_He, f_N2, pp_O2):

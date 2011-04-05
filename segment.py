@@ -30,6 +30,7 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+import logging
 # local import
 import settings
 from dipp_exception import DipplannerException
@@ -72,6 +73,10 @@ class Segment(object):
     Raise:
     <nothing>
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.segment.Segment")
+    self.logger.info("creating an instance of Segment")
+    
     self.type = None # type of segment : base class has no type
     self.in_use = True # is this segment in use : default: yes
     self.depth = 0.0 # depth of this segment, in meter
@@ -79,7 +84,7 @@ class Segment(object):
     self.run_time = 0.0 # runtime in profile (TODO: voir a quoi ça sert)
     self.setpoint = 0.0 # for CCR
     self.tank = None # tank used for this segment
-
+    
   def __repr__(self):
     """Returns a string representing the actual segment"""
     return "%s: at %sm for %s on %s, SP:%s, END:%sm" % ( self.type.upper(),
@@ -237,6 +242,10 @@ class SegmentDive(Segment):
     UnauthorizedMod -- if depth is incompatible with either min or max mod
     
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.segment.SegmentDive")
+    self.logger.info("creating an instance of SegmentDive")
+    
     self.type = 'const' # type of segment
     self.in_use = True # is this segment in use : default: yes
     self.depth = float(depth) # depth of this segment, in meter
@@ -246,6 +255,7 @@ class SegmentDive(Segment):
     self.tank = tank # tank used for this segment
 
     self.check_mod()
+
     
   def gas_used(self):
     """calculates returns the quantity (in liter) of gas used for this segment
@@ -291,6 +301,10 @@ class SegmentDeco(Segment):
     UnauthorizedMod -- if depth is incompatible with either min or max mod
     
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.segment.SegmentDeco")
+    self.logger.info("creating an instance of SegmentDeco")
+    
     self.type = 'deco' # type of segment
     self.in_use = True # is this segment in use : default: yes
     self.depth = float(depth) # depth of this segment, in meter
@@ -305,6 +319,7 @@ class SegmentDeco(Segment):
     self.mv_max = 0.0 
     
     self.check_mod()
+
 
   def gas_used(self):
     """calculates returns the quantity (in liter) of gas used for this segment
@@ -350,6 +365,10 @@ class SegmentAscDesc(Segment):
     UnauthorizedMod -- if depth is incompatible with either min or max mod
     
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.segment.SegmentAscDesc")
+    self.logger.info("creating an instance of SegmentAscDesc")
+    
     self.in_use = True # is this segment in use : default: yes
     self.depth = float(end_depth) # depth of this segment, in meter
     self.start_depth = float(start_depth)

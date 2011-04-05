@@ -33,10 +33,13 @@ __authors__ = [
 import unittest
 # import here the module / classes to be tested
 from model.buhlmann.oxygen_toxicity import OxTox
-
+import dipplanner
 
 class Test(unittest.TestCase):
   def setUp(self):
+    # temporary hack (tests):
+    dipplanner.activate_debug()
+    
     self.ox1 = OxTox()
     self.ox2 = OxTox()
   

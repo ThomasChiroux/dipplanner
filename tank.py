@@ -31,6 +31,8 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+import logging
+
 # local imports
 import settings
 from dipp_exception import DipplannerException
@@ -98,6 +100,10 @@ class Tank(object):
     InvalidMod -- if mod > max mod based on max_ppo2 and see validate()
     InvalidTank -- see validate()
     """
+    #initiate class logger
+    self.logger = logging.getLogger("dipplanner.tank.Tank")
+    self.logger.info("creating an instance of Tank")
+    
     self.f_O2 = float(f_O2)
     self.f_He = float(f_He)
     self.f_N2 = 1.0 - (self.f_O2 + self.f_He)

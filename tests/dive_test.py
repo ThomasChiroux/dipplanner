@@ -50,18 +50,18 @@ class Test(unittest.TestCase):
     assert str(self.profile1) == "", "bad output segments ? (%s)" % str(self.profile1)
 
   def test_air_dive2(self):
-    #diveseg2 = SegmentDive(20, 30*60, self.airtank, 0)
-    #self.profile2 = Dive([diveseg2], [self.airtank])
-    #self.profile2.do_dive()
-    #assert str(self.profile2) == "", "bad output segments ? (%s)" % str(self.profile2)
-    pass
+    diveseg2 = SegmentDive(20, 30*60, self.airtank, 0)
+    self.profile2 = Dive([diveseg2], [self.airtank])
+    self.profile2.do_dive()
+    assert str(self.profile2) == "", "bad output segments ? (%s)" % str(self.profile2)
+    #pass
     
   def test_air_dive3(self):
-    #diveseg3 = SegmentDive(55, 30*60, self.airtank, 0)
-    #self.profile3 = Dive([diveseg3], [self.airtank])
-    #self.profile3.do_dive()
-    #assert str(self.profile3) == "", "bad output segments ? (%s)" % str(self.profile3)
-    pass
+    diveseg3 = SegmentDive(55, 30*60, self.airtank, 0)
+    self.profile3 = Dive([diveseg3], [self.airtank])
+    self.profile3.do_dive()
+    assert str(self.profile3) == "", "bad output segments ? (%s)" % str(self.profile3)
+    #pass
     
   def test_tx_dive1(self):
     #diveseg1 = SegmentDive(30, 30*60, self.txtank1, 0)

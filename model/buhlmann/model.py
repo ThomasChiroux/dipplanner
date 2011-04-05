@@ -275,7 +275,6 @@ class Model(object):
     
     """
     ambiant_pressure = pressure + settings.AMBIANT_PRESSURE_SURFACE
-    
     if pp_O2 > 0.0:
       # CCR mode
       #Determine pInert by subtracting absolute oxygen pressure and pH2O

@@ -261,7 +261,7 @@ class SegmentDive(Segment):
       # CCR mode: we do not calculate gas_used
       return 0
     else:
-      pressure = (self.depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE)
       return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE))
     
 class SegmentDeco(Segment):
@@ -412,5 +412,5 @@ class SegmentAscDesc(Segment):
       return 0
     else:
       average_depth = (float(self.start_depth) + float(self.end_depth)) / 2.0
-      pressure = (average_depth/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (float(average_depth)/10 + settings.AMBIANT_PRESSURE_SURFACE)
       return pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)

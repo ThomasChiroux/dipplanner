@@ -226,8 +226,8 @@ class Dive(object):
         #Ascend or descend to dive segment, 
         #using existing gas and ppO2 settings
         if delta_depth > 0.0: # descent
-          self.model.asc_desc(self.current_depth/10, 
-                              seg.depth/10, 
+          self.model.asc_desc(float(self.current_depth)/10, 
+                              float(seg.depth)/10, 
                               settings.DESCENT_RATE,
                               self.current_tank.f_He,
                               self.current_tank.f_N2,
@@ -250,7 +250,7 @@ class Dive(object):
         if seg.time > 0: #only do this if it's not a waypoint
           if run_time_flag:
             run_time_flag = False # do this one only
-            self.model.const_depth(seg.depth/10,
+            self.model.const_depth(float(seg.depth)/10,
                                    seg.time - self.run_time,
                                    self.current_tank.f_He,
                                    self.current_tank.f_N2,
@@ -263,7 +263,7 @@ class Dive(object):
             #print "Dive to %s for %ss" % (seg.depth, seg.time - self.run_time)
             self.run_time = seg.time
           else:
-            self.model.const_depth(seg.depth/10,
+            self.model.const_depth(float(seg.depth)/10,
                                    seg.time,
                                    self.current_tank.f_He,
                                    self.current_tank.f_N2,
@@ -348,13 +348,13 @@ class Dive(object):
     self.model.gradient.set_gf_at_depth(next_stop_depth)
     
     # Remember maxM-Value and controlling compartment
-    max_MV = self.model.m_value(self.current_depth/10)
+    max_MV = self.model.m_value(float(self.current_depth)/10)
     control = self.model.control_compartment()
     
     while self.current_depth > target_depth:
       #print "ascent -- debug : %s, %s" % (self.current_depth, target_depth)
       # can we move to the proposed next stop depth ?
-      print "model ceiling: %s" % self.model.ceiling()
+      #print "model ceiling: %s" % self.model.ceiling()
       while force_deco_stop or next_stop_depth < self.model.ceiling():
         in_deco_cycle = True
         force_deco_stop = False #Only used for first entry into deco stop
@@ -381,14 +381,17 @@ class Dive(object):
           self.model.gradient.set_gf_at_depth(next_stop_depth)
         
         #calculate stop_time
-        stop_time = settings.STOP_TIME_INCREMENT # in second
+        if deco_stop_time == 0 and self.run_time % settings.STOP_TIME_INCREMENT > 0:
+          stop_time = int(self.run_time / settings.STOP_TIME_INCREMENT) *\
+                      settings.STOP_TIME_INCREMENT +\
+                      settings.STOP_TIME_INCREMENT -\
+                      self.run_time
+          if stop_time == 0:
+            stop_time = settings.STOP_TIME_INCREMENT # in second
+        else:
+          stop_time = settings.STOP_TIME_INCREMENT # in second
 
         # execute the stop
-        self.model.const_depth(self.current_depth/10,
-                               stop_time,
-                               self.current_tank.f_He,
-                               self.current_tank.f_N2,
-                               self.pp_O2)
         #print "deco at %sm for %ss (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % (self.current_depth,
         #                                              stop_time,
         #                                              deco_stop_time,
@@ -396,6 +399,12 @@ class Dive(object):
         #                                              self.current_tank.f_N2,
         #                                              self.pp_O2,
         #                                              self.model.ceiling())
+        self.model.const_depth(float(self.current_depth)/10,
+                               stop_time,
+                               self.current_tank.f_He,
+                               self.current_tank.f_N2,
+                               self.pp_O2)
+        
         deco_stop_time += stop_time
         # sanity check for infinite loop
         if deco_stop_time > 300000:
@@ -426,7 +435,7 @@ class Dive(object):
         # TODO : if we enable this code always (not in rlif, but direct) then
         #        model will ascend between deco stops, but ... 
         #        this causes collateral damage to runtim calculations
-        self.model.asc_desc(self.current_depth/10, 
+        self.model.asc_desc(float(self.current_depth)/10, 
                             float(next_stop_depth)/10,
                             settings.ASCENT_RATE,
                             self.current_tank.f_He,
@@ -439,7 +448,7 @@ class Dive(object):
       
       #now we moved up the the next depth
       self.current_depth = next_stop_depth
-      max_MV = self.model.m_value(self.current_depth/10)
+      max_MV = self.model.m_value(float(self.current_depth)/10)
       control = self.model.control_compartment()
       
       # Check and switch deco gas
@@ -461,10 +470,13 @@ class Dive(object):
       # check in cas we are overshooting or hit last stop
       if next_stop_depth < target_depth or \
          self.current_depth < settings.LAST_STOP_DEPTH:
+        print "next_stop_depth (%s) < target_depth (%s)" % (next_stop_depth, target_depth)
         next_stop_depth = target_depth
       elif self.current_depth < settings.LAST_STOP_DEPTH:
+        print "current_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (current_depth, settings.LAST_STOP_DEPTH)
         next_stop_depth = target_depth
       #elif next_stop_depth < settings.LAST_STOP_DEPTH:
+      #  print "next_stop_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (next_stop_depth, settings.LAST_STOP_DEPTH)
       #  next_stop_depth = settings.LAST_STOP_DEPTH
       #TODO: j'ai commenté les lignes ci-dessus pour éviter une boucle infinie
       #      commprendre pourquoi elles existent...

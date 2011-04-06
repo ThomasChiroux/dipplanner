@@ -18,7 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 # 
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan 
 """
 Test for compartment class
 """
@@ -39,7 +38,7 @@ import dipplanner
 class Test(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
-    dipplanner.activate_debug()
+    dipplanner.activate_debug_for_tests()
     
     self.compt1 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
     self.compt2 = Compartment(1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
@@ -117,4 +116,6 @@ class Test(unittest.TestCase):
     assert round(mv,11) == 1.06671806333, "wrong mv for given amb pressure : %s" % mv
     
 if __name__ == "__main__":
-  unittest.main() 
+  #unittest.main() 
+  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  unittest.TextTestRunner(verbosity=2).run(suite)

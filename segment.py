@@ -34,12 +34,18 @@ import logging
 # local import
 import settings
 from dipp_exception import DipplannerException
+from tools import seconds_to_strtime
 
 class UnauthorizedMod(DipplannerException):
   """raised when the MOD is not possible according to the 
   depth(s) of the segment"""
-  pass
-
+  
+  def __init__(self, description):
+    """constructor : call the upper constructor"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.dipp_exception.UnauthorizedMod")
+    #self.logger.error("Raising an exception: UnauthorizedMod ! (%s)" % description)
+    
 class Segment(object):
   """Base class for all types of segments
   
@@ -75,7 +81,7 @@ class Segment(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.Segment")
-    self.logger.info("creating an instance of Segment")
+    self.logger.debug("creating an instance of Segment")
     
     self.type = None # type of segment : base class has no type
     self.in_use = True # is this segment in use : default: yes
@@ -87,12 +93,14 @@ class Segment(object):
     
   def __repr__(self):
     """Returns a string representing the actual segment"""
-    return "%s: at %sm for %s on %s, SP:%s, END:%sm" % ( self.type.upper(),
-                                                  self.depth,
-                                                  self._get_segment_time_in_minutes(),
-                                                  str(self.tank),
-                                                  self.setpoint,
-                                                  self.get_end() )
+    return "%8s: at %3dm for %s [RT:%s], on %s,  SP:%s, END:%sm" % ( 
+                                          self.type.upper(),
+                                          self.depth,
+                                          seconds_to_strtime(self.time),
+                                          seconds_to_strtime(self.run_time),
+                                          str(self.tank),
+                                          self.setpoint,
+                                          self.get_end() )
 
   def __str__(self):
     """Return a human readable name of the segment"""
@@ -102,23 +110,6 @@ class Segment(object):
     """Return a human readable name of the segment in unicode"""
     return u"%s" % self.__repr__()
   
-  def _get_segment_time_in_minutes(self):
-    """Return a string which represent the segment time
-    in minutes and seconds (ex: 1'28'')
-    
-    Keyword arguments:
-    <none>
-    
-    Returns:
-    a string : segmement time in minutes and seconds
-    
-    Raise:
-    <nothing>
-    
-    """
-    text = "%s'%s''" % (int(self.time/60), int(self.time % 60))
-    return text
-    
   def check_mod(self):
     """checks the mod for this segment according to the used tank.
     checks both Max Operating Depth and Min Operating Depth (hypoxic cases)
@@ -141,7 +132,7 @@ class Segment(object):
     """returns the absolute pression in bar
     (1atm = 1ATA = 1.01325 bar = 14.70psi)
     Simple method : 10m = +1 bar
-    Complex method : use real density of water, T°, etc...: need more parameters
+    Complex method : use real density of water, T°, etc...:need more parameters
     
     Keyword arguments:
     method -- 'simple' or 'complex'. simple is default
@@ -189,7 +180,7 @@ class Segment(object):
     if self.setpoint > 0:
       #CCR mode
       f_inert = self.tank.f_He + self.tank.f_N2 
-      if (f_inert) > 0:
+      if f_inert > 0:
         pp_inert = p_absolute - self.setpoint
       else:
         pp_inert = 0
@@ -201,10 +192,10 @@ class Segment(object):
         # the loop ?
         ppn2_inspired = (pp_inert * self.tank.f_N2) / f_inert
         pphe_inspired = (pp_inert * self.tank.f_He) / f_inert
-        narcotic_index = p_absolute * \
-                         (ppn2_inspired * settings.N2_NARCOTIC_VALUE + \
+        narcotic_index = (ppn2_inspired * settings.N2_NARCOTIC_VALUE + \
                           self.setpoint * settings.O2_NARCOTIC_VALUE + \
                           pphe_inspired * settings.HE_NARCOTIC_VALUE)
+        self.logger.debug("pabs: %.3f, pp_inert: %.3f at %sm, ppn2i:%s, pphei:%s, narco idx:%s" % (p_absolute, pp_inert, self.depth, ppn2_inspired, pphe_inspired, narcotic_index ))
       else:
         narcotic_index = 0
     else:
@@ -213,7 +204,10 @@ class Segment(object):
                        (self.tank.f_N2 * settings.N2_NARCOTIC_VALUE + \
                         self.tank.f_O2 * settings.O2_NARCOTIC_VALUE + \
                         self.tank.f_He * settings.HE_NARCOTIC_VALUE)
-    end = int((narcotic_index / reference_narcotic - 1) * 10)
+    if narcotic_index > 0:
+      end = int((narcotic_index / reference_narcotic - 1) * 10)
+    else:
+      end = 0
     return end
     
   def gas_used(self):
@@ -242,9 +236,10 @@ class SegmentDive(Segment):
     UnauthorizedMod -- if depth is incompatible with either min or max mod
     
     """
+    Segment.__init__(self)
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.SegmentDive")
-    self.logger.info("creating an instance of SegmentDive")
+    self.logger.debug("creating an instance of SegmentDive")
     
     self.type = 'const' # type of segment
     self.in_use = True # is this segment in use : default: yes
@@ -301,9 +296,10 @@ class SegmentDeco(Segment):
     UnauthorizedMod -- if depth is incompatible with either min or max mod
     
     """
+    Segment.__init__(self)
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.SegmentDeco")
-    self.logger.info("creating an instance of SegmentDeco")
+    self.logger.debug("creating an instance of SegmentDeco")
     
     self.type = 'deco' # type of segment
     self.in_use = True # is this segment in use : default: yes
@@ -365,9 +361,10 @@ class SegmentAscDesc(Segment):
     UnauthorizedMod -- if depth is incompatible with either min or max mod
     
     """
+    Segment.__init__(self)
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.SegmentAscDesc")
-    self.logger.info("creating an instance of SegmentAscDesc")
+    self.logger.debug("creating an instance of SegmentAscDesc")
     
     self.in_use = True # is this segment in use : default: yes
     self.depth = float(end_depth) # depth of this segment, in meter

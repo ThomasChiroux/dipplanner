@@ -55,7 +55,7 @@ class OxTox(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.model.buhlmann.oxygen_toxicity.OxTox")
-    self.logger.info("creating an instance of Oxtox")
+    self.logger.debug("creating an instance of Oxtox")
     
     self.cns = 0.0
     self.otu = 0.0

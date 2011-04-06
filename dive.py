@@ -102,7 +102,7 @@ class Dive(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.dive.Dive")
-    self.logger.info("creating an instance of Dive")
+    self.logger.debug("creating an instance of Dive")
     
     if model is None:
       # new dive : new model
@@ -140,13 +140,21 @@ class Dive(object):
     self.run_time = 0 # in second
     self.metadata = ""
 
-
   def __repr__(self):
     """Returns a string representing the result of the dive"""
     text = "Dive profile : GF:%s-%s\n" % (settings.GF_LOW*100, 
                                           settings.GF_HIGH*100)
     for segment in self.output_segments:
       text += "%s\n" % str(segment)
+    text += "Gas:\n"
+    for tank in self.tanks:
+      text += "  %s : used: %.1fl (rem: %.1fl or %db)\n" % \
+                  (str(tank), 
+                   tank.used_gas, 
+                   tank.remaining_gas, 
+                   tank.remaining_gas / tank.tank_vol)
+    text += "Oxygen Toxicity: OTU:%d, CNS:%d%%\n" % \
+                            (self.model.ox_tox.otu, self.model.ox_tox.cns*100)
     return text
 
   def __str__(self):
@@ -156,7 +164,19 @@ class Dive(object):
   def __unicode__(self):
     """Return a human readable name of the segment in unicode"""
     return u"%s" % self.__repr__()
+    
+  def __cmp__(self, otherdive):
+    """Compare a dive to another dive, based on run_time
 
+    Keyword arguments:
+    otherdive -- another dive object
+
+    Returns:
+    Integer -- result of cmp()
+
+    """
+    return cmp(self.run_time, otherdive.run_time)
+      
   def do_surface_interval(self, time):
     """Conducts a surface interval 
     by performing a constant depth calculation on air at zero meters
@@ -243,8 +263,9 @@ class Dive(object):
                                                      settings.DESCENT_RATE,
                                                      self.current_tank,
                                                      self.pp_O2))
-          self.run_time += (delta_depth / settings.DESCENT_RATE)
-          self.logger.debug("descent time : %ss" % (delta_depth / settings.DESCENT_RATE))
+          self.run_time += float(delta_depth) / float(settings.DESCENT_RATE)
+          self.logger.debug("descent time : %ss" % \
+                                  (float(delta_depth) / settings.DESCENT_RATE))
         else: # ascent
           # call ascend method of this class for decompression calculation
           self.ascend(seg.depth)
@@ -265,9 +286,13 @@ class Dive(object):
                                                     seg.time - self.run_time, 
                                                     self.current_tank, 
                                                     self.pp_O2))
-            self.metadata += "Dive to %s for %ss\n" % (seg.depth, seg.time - self.run_time)
-            self.logger.debug("Dive to %s for %ss" % (seg.depth, seg.time - self.run_time))
-            self.run_time = seg.time
+            self.metadata += "Dive to %s for %ss\n" % \
+                                          (seg.depth, seg.time - self.run_time)
+            self.logger.debug("Dive to %s for %ss" % \
+                                         (seg.depth, seg.time - self.run_time))
+            # run_time = seg_time because it's only done the first time
+            self.run_time = seg.time 
+            self.logger.debug("update run time : %ss" % self.run_time)
           else:
             self.model.const_depth(float(seg.depth)/10,
                                    seg.time,
@@ -281,6 +306,7 @@ class Dive(object):
             self.metadata += "Dive to %s for %ss\n" % (seg.depth, seg.time)
             self.logger.debug("Dive to %s for %ss" % (seg.depth, seg.time))
             self.run_time += seg.time
+            self.logger.debug("update run time : %ss" % self.run_time)
         else: #process waypoint
           self.output_segments.append(SegmentDive(seg.depth, 
                                                   seg.time, 
@@ -296,8 +322,13 @@ class Dive(object):
     for output_seg in self.output_segments:
       total_time += output_seg.time
       output_seg.run_time = total_time
+    if total_time != self.run_time:
+      self.logger.warning("dive run_time (%ss) differs from all segments \
+@                           time (%ss)" % (self.run_time, total_time) )
     # write metadata into the model
     self.model.metadata = self.metadata
+    # recalculate the gas consumptions
+    self.do_gas_calcs()
     
   def ascend(self, target_depth):
     """Ascend to target depth, decompressing if necessary. 
@@ -358,7 +389,8 @@ class Dive(object):
     control = self.model.control_compartment()
     
     while self.current_depth > target_depth:
-      self.logger.debug("ascent -- debug : %s, %s" % (self.current_depth, target_depth))
+      self.logger.debug("ascent -- debug : %s, %s" % \
+                                           (self.current_depth, target_depth))
       # can we move to the proposed next stop depth ?
       self.logger.debug("model ceiling: %s" % self.model.ceiling())
       while force_deco_stop or next_stop_depth < self.model.ceiling():
@@ -367,7 +399,9 @@ class Dive(object):
         if in_ascent_cycle: #Finalise last ascent cycle as we are now decomp
           if start_depth > self.current_depth:
             # add ascent segment
-            self.logger.debug("Add AscDesc (1): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth))
+            self.logger.debug("Add AscDesc(1): start_depth:%s, \
+                               current_depth:%s" % \
+                               (start_depth, self.current_depth))
             self.output_segments.append(SegmentAscDesc(start_depth, 
                                                        self.current_depth, 
                                                        settings.ASCENT_RATE,
@@ -387,7 +421,8 @@ class Dive(object):
           self.model.gradient.set_gf_at_depth(next_stop_depth)
         
         #calculate stop_time
-        if deco_stop_time == 0 and self.run_time % settings.STOP_TIME_INCREMENT > 0:
+        if deco_stop_time == 0 and \
+           self.run_time % settings.STOP_TIME_INCREMENT > 0:
           stop_time = int(self.run_time / settings.STOP_TIME_INCREMENT) *\
                       settings.STOP_TIME_INCREMENT +\
                       settings.STOP_TIME_INCREMENT -\
@@ -398,13 +433,14 @@ class Dive(object):
           stop_time = settings.STOP_TIME_INCREMENT # in second
 
         # execute the stop
-        #self.logger.debug("deco at %sm for %ss (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % (self.current_depth,
-        #                                              stop_time,
-        #                                              deco_stop_time,
-        #                                              self.current_tank.f_He,
-        #                                              self.current_tank.f_N2,
-        #                                              self.pp_O2,
-        #                                              self.model.ceiling()))
+        self.logger.debug("deco at %sm for %s (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % \
+                                                     (self.current_depth,
+                                                      stop_time,
+                                                      deco_stop_time,
+                                                      self.current_tank.f_He,
+                                                      self.current_tank.f_N2,
+                                                      self.pp_O2,
+                                                      self.model.ceiling()))
         self.model.const_depth(float(self.current_depth)/10,
                                stop_time,
                                self.current_tank.f_He,
@@ -421,6 +457,7 @@ class Dive(object):
         self.logger.debug("...in deco cycle")
         # finalise the last deco cycle
         self.run_time += deco_stop_time
+        self.logger.debug("update run time : %ss" % self.run_time)
         if settings.FORCE_ALL_STOPS:
           force_deco_stop = True
         
@@ -447,8 +484,9 @@ class Dive(object):
                             self.current_tank.f_He,
                             self.current_tank.f_N2,
                             self.pp_O2)
-        self.run_time += (self.current_depth - next_stop_depth) \
-                         / (-settings.ASCENT_RATE)
+        self.run_time += abs(float(self.current_depth)-float(next_stop_depth)) \
+                         / (float(settings.ASCENT_RATE))
+        self.logger.debug("update run time : %ss" % self.run_time)
         # TODO: Issue here is that this ascent time is not accounted for 
         #       in any segments unless it was in an ascent cycle            
       
@@ -461,7 +499,9 @@ class Dive(object):
       temp_tank = self.current_tank # remember in case we switch
       if self.set_deco_gas(self.current_depth): # True if we changed gas
         if in_ascent_cycle:
-          self.logger.debug("Add AscDesc (2): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth))
+          self.logger.debug("Add AscDesc(2): start_depth:%s, \
+                             current_depth:%s" % \
+                                            (start_depth, self.current_depth))
           self.output_segments.append(SegmentAscDesc(start_depth,
                                                      self.current_depth,
                                                      settings.ASCENT_RATE,
@@ -471,15 +511,18 @@ class Dive(object):
       
       # set next rounded stop depth
       next_stop_depth = int(self.current_depth) - settings.STOP_DEPTH_INCREMENT
-      self.logger.debug("next stop depth: %s, target: %s" % (next_stop_depth, target_depth))
+      self.logger.debug("next stop depth: %s, target: %s" % \
+                                              (next_stop_depth, target_depth))
 
       # check in cas we are overshooting or hit last stop
       if next_stop_depth < target_depth or \
          self.current_depth < settings.LAST_STOP_DEPTH:
-        self.logger.debug("next_stop_depth (%s) < target_depth (%s)" % (next_stop_depth, target_depth))
+        self.logger.debug("next_stop_depth (%s) < target_depth (%s)" % \
+                                              (next_stop_depth, target_depth))
         next_stop_depth = target_depth
       elif self.current_depth < settings.LAST_STOP_DEPTH:
-        self.logger.debug("current_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (current_depth, settings.LAST_STOP_DEPTH))
+        self.logger.debug("current_depth (%s) < LAST_STOP_DEPTH (%s)" % \
+                                    (current_depth, settings.LAST_STOP_DEPTH))
         next_stop_depth = target_depth
       #elif next_stop_depth < settings.LAST_STOP_DEPTH:
       #  self.logger.debug("next_stop_depth (%s) < settings.LAST_STOP_DEPTH (%s)" % (next_stop_depth, settings.LAST_STOP_DEPTH))
@@ -492,7 +535,8 @@ class Dive(object):
         
     # are we still in ascent segment ?
     if in_ascent_cycle:
-      self.logger.debug("Add AscDesc (3): start_depth:%s, current_depth:%s" % (start_depth, self.current_depth))
+      self.logger.debug("Add AscDesc(3): start_depth:%s, \
+                         current_depth:%s" % (start_depth, self.current_depth))
       self.output_segments.append(SegmentAscDesc(start_depth,
                                                  self.current_depth,
                                                  settings.ASCENT_RATE,
@@ -552,11 +596,16 @@ class Dive(object):
     # check and switch deco gases
     current_tank_sav = self.current_tank
     for temp_tank in self.tanks:
-      if temp_tank.get_mod() >= depth:
-        if temp_tank != current_tank_sav:
+      if temp_tank.get_mod() >= depth and \
+         temp_tank.get_min_od() < depth: # authorised tank at this depth
+        if temp_tank < current_tank_sav:
           self.current_tank = temp_tank
           gas_switch = True
-          self.logger.debug("Changing gas to %s" % self.current_tank)
-      else:
-        break
+          self.logger.warning("Changing gas from %s (mod:%s) to %s (mod:%s)" % \
+                                                (current_tank_sav,
+                                                current_tank_sav.get_mod(),
+                                                self.current_tank,
+                                                self.current_tank.get_mod() ))
+      #else:
+      #  break
     return gas_switch

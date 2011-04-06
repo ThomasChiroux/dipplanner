@@ -17,8 +17,7 @@
 # along with this program.
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 # 
-# This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan 
+# This module is part of dipplanner, a Dive planning Tool written in python 
 """
 Test for XXXXX class
 """
@@ -39,7 +38,7 @@ import dipplanner
 class Test(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
-    dipplanner.activate_debug()
+    dipplanner.activate_debug_for_tests()
     
     self.gradient1 = Gradient(0.3, 0.8)
     self.gradient2 = Gradient(0.35, 0.75)
@@ -66,4 +65,6 @@ class Test(unittest.TestCase):
     assert self.gradient2.gf == 0.35, "wrong gw_low : %s" % self.gradient2.gf
 
 if __name__ == "__main__":
-  unittest.main() 
+  #unittest.main() 
+  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  unittest.TextTestRunner(verbosity=2).run(suite)

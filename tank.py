@@ -102,7 +102,7 @@ class Tank(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.tank.Tank")
-    self.logger.info("creating an instance of Tank")
+    self.logger.debug("creating an instance of Tank")
     
     self.f_O2 = float(f_O2)
     self.f_He = float(f_He)
@@ -163,7 +163,7 @@ class Tank(object):
     Integer : Maximum Operating Depth in meter
     
     """
-    return int(10*(max_ppo2/self.f_O2)-10)
+    return int(10*(float(max_ppo2) / self.f_O2)-10)
     
   def _validate(self):
     """Test the validity of the tank informations inside this object

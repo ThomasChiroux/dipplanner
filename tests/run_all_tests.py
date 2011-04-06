@@ -31,7 +31,9 @@ def suite():
 
 if __name__ == '__main__':
     try:
-        unittest.main(defaultTest='suite')
+        #unittest.main(defaultTest='suite')
+        suite = suite()
+        unittest.TextTestRunner(verbosity=2).run(suite)
     except SystemExit:
         pass
     except:

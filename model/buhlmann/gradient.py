@@ -67,7 +67,7 @@ class Gradient(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.model.buhlmann.gradient.Gradient")
-    self.logger.info("creating an instance of Gradient")
+    self.logger.debug("creating an instance of Gradient")
     
     self.set_gf_low(gf_low)
     self.set_gf_high(gf_high)

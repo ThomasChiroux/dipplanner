@@ -53,7 +53,7 @@ class Compartment(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.model.buhlmann.compartment.Compartment")
-    self.logger.info("creating an instance of Compartment")
+    self.logger.debug("creating an instance of Compartment")
     
     self.pp_He = 0.0
     self.pp_N2 = 0.0

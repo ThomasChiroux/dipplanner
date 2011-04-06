@@ -83,7 +83,7 @@ class Model(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.model.buhlmann.model.Model")
-    self.logger.info("creating an instance of Model")
+    self.logger.debug("creating an instance of Model")
     
     self.units = 'metric'
     self.tissues = []
@@ -101,7 +101,7 @@ class Model(object):
 
   def __repr__(self):
     """Returns a string representing the model"""
-    model_string = "Compartment pressures:\n"
+    model_string = "" #"Compartment pressures:\n"
     for comp_number in range(0, self.COMPS):
          model_string += "C:%s He:%s N2:%s gf:%s mv_at:%s max_amb:%s MV:%s\n" % (
           comp_number,
@@ -112,9 +112,9 @@ class Model(object):
           (self.tissues[comp_number].get_max_amb(self.gradient.gf)) * 1,
           self.tissues[comp_number].get_mv(settings.AMBIANT_PRESSURE_SURFACE)
          )
-    model_string += "Ceiling: %s\n" % self.ceiling()
-    model_string += "Max surface M-Value: %s\n" % self.m_value(0.0)
-    model_string += "OTUs accumulated: %s" % self.ox_tox.otu
+    #model_string += "Ceiling: %s\n" % self.ceiling()
+    #model_string += "Max surface M-Value: %s\n" % self.m_value(0.0)
+    #model_string += "OTUs accumulated: %s" % self.ox_tox.otu
     return model_string
 
   def __str__(self):

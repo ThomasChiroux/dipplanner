@@ -18,7 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 # 
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan 
 """
 Test for tank class
 """
@@ -38,7 +37,7 @@ import dipplanner
 class TestTank(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
-    dipplanner.activate_debug()
+    dipplanner.activate_debug_for_tests()
     
   def testTankisAir(self):
     mytank = Tank()
@@ -170,4 +169,5 @@ class TestTank(unittest.TestCase):
 if __name__ == "__main__":
   if __package__ is None:
     __package__ = "dipplanner"
-  unittest.main() 
+  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  unittest.TextTestRunner(verbosity=2).run(suite)

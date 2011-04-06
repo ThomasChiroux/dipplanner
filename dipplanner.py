@@ -38,30 +38,86 @@ import settings
 from dive import Dive
 from dive import ProcessingError, NothingToProcess, InfiniteDeco
 from tank import Tank
+from segment import SegmentDive, SegmentDeco, SegmentAscDesc
+from segment import UnauthorizedMod
+
 
 LOGGER = logging.getLogger("dipplanner")
 
 def activate_debug():
-  """setup the debug parameters"""
+  """setup the default debug parameters
+  
+  it's mainly used for test cases who needs also logging to be set
+  
+  Keyword Arguments:
+  <none>
+  
+  Return:
+  <nothing>
+  
+  Raise:
+  <nothing>
+
+  """
   LOGGER.setLevel(logging.DEBUG)
   # create file handler which logs even debug messages
   fh = logging.FileHandler("dipplanner.log")
-  fh.setLevel(logging.INFO)
+  fh.setLevel(logging.DEBUG)
   # create console handler with a higher log level
   ch = logging.StreamHandler()
   ch.setLevel(logging.WARNING)
   # create formatter and add it to the handlers
-  formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+  formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
   fh.setFormatter(formatter)
   ch.setFormatter(formatter)
   # add the handlers to the logger
   LOGGER.addHandler(fh)
   LOGGER.addHandler(ch)
+
+def activate_debug_for_tests():
+  """setup the default debug parameters
   
+  it's mainly used for test cases who needs also logging to be set
+  
+  Keyword Arguments:
+  <none>
+  
+  Return:
+  <nothing>
+  
+  Raise:
+  <nothing>
+
+  """
+  LOGGER.setLevel(logging.WARNING)
+  # create file handler which logs even debug messages
+  #fh = logging.FileHandler("dipplanner.log")
+  #fh.setLevel(logging.DEBUG)
+  # create console handler with a higher log level
+  ch = logging.StreamHandler()
+  ch.setLevel(logging.INFO)
+  # create formatter and add it to the handlers
+  formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+  #fh.setFormatter(formatter)
+  ch.setFormatter(formatter)
+  # add the handlers to the logger
+  #LOGGER.addHandler(fh)
+  LOGGER.addHandler(ch)
+
 def parse_arguments():
   """parse all command lines options"""
-  pass
+  return (None,None)
+
 
 if __name__ == "__main__":
   """run from command line"""
+  activate_debug()
   (options, args) = parse_arguments()
+  
+  
+  airtank = Tank()
+  txtank1 = Tank(0.21, 0.30)
+  diveseg1 = SegmentDive(30, 30*60, airtank, 0)
+  profile1 = Dive([diveseg1], [airtank])
+  profile1.do_dive()
+  print profile1

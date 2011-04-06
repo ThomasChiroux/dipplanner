@@ -18,7 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 # 
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan 
 """
 Test for XXXXX class
 """
@@ -40,7 +39,7 @@ import dipplanner
 class Test(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
-    dipplanner.activate_debug()
+    dipplanner.activate_debug_for_tests()
     
     self.airtank = Tank()
     self.trimixtank1 = Tank(f_O2=0.10, f_He=0.70)
@@ -65,7 +64,7 @@ class Test(unittest.TestCase):
     assert self.diveseg2.get_end() == 62, 'wrong E.N.D : %s' % self.diveseg2.get_end()
 
   def test_str1(self):
-    assert str(self.diveseg2) == "CONST: for 600.0s at 150.0m on Trimix 10/70, SP:0.0, END:62m", \
+    assert str(self.diveseg2) == "   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:62m", \
                                                   'wrong name : %s' % str(self.diveseg2)
   
   def test_deco1(self):
@@ -120,4 +119,7 @@ class Test(unittest.TestCase):
 
   
 if __name__ == "__main__":
-  unittest.main() 
+  #unittest.main() 
+  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  unittest.TextTestRunner(verbosity=2).run(suite)
+  

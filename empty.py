@@ -18,11 +18,8 @@
 # If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>
 # 
 # This module is part of PPlan, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan 
-"""Base Class for exceptions
 """
-
-__version__ = "0.1"
+"""
 
 __authors__ = [
   # alphabetical order by last name

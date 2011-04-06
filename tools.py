@@ -18,8 +18,10 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 # 
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""
-Test for XXXXX class
+"""tools modules
+
+Contains:
+seconds_to_strtime -- function
 """
 
 __version__ = "0.1"
@@ -29,21 +31,24 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
-import unittest
-# import here the module / classes to be tested
-import dipplanner
-
-class Test(unittest.TestCase):
-  def setUp(self):
-    # temporary hack (tests):
-    dipplanner.activate_debug_for_tests()
-      
-  def test1(self):
-    #myobj = Class()
-    #assert myobj.foo == 'bar'
-    pass
+def seconds_to_strtime(duration):
+  """Convert a value in seconds into a string representing the time in
+  minutes and seconds
+  (like 2:06)
+  It does returns only minutes and seconds, not hours, minutes and seconds
+  
+  Keyword Arguments:
+  duration - the duration in seconds
+  
+  Returns:
+  <string> : the time in minutes and seconds
+  
+  Raise:
+  ValueError: when bad time values
+  
+  """
+  if duration < 0:
+    raise ValueError("time can not be negative")
     
-if __name__ == "__main__":
-  #unittest.main() 
-  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
-  unittest.TextTestRunner(verbosity=2).run(suite)
+  text = "%3d:%02d" % (int(duration/60), int(duration % 60))
+  return text

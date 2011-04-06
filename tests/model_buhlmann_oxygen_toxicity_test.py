@@ -18,7 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 # 
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan 
 """
 Test for oxygen toxicity class
 """
@@ -38,7 +37,7 @@ import dipplanner
 class Test(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
-    dipplanner.activate_debug()
+    dipplanner.activate_debug_for_tests()
     
     self.ox1 = OxTox()
     self.ox2 = OxTox()
@@ -81,4 +80,6 @@ class Test(unittest.TestCase):
     assert round(self.ox1.otu,11) == 0.0, "bad otu value : %s" % self.ox1.otu
     
 if __name__ == "__main__":
-  unittest.main() 
+  #unittest.main()
+  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  unittest.TextTestRunner(verbosity=2).run(suite)

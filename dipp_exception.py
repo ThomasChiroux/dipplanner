@@ -29,10 +29,14 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+import logging
+
 class DipplannerException(Exception):
   """Base exception class for dipplanner
   """
   def __init__(self, description):
+    self.logger = logging.getLogger("dipplanner.dipp_exception.DipplannerException")
+    #self.logger.error("Raising an exception !")
     self.description = description
   
   def __str__(self):

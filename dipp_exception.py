@@ -35,8 +35,7 @@ class DipplannerException(Exception):
   """Base exception class for dipplanner
   """
   def __init__(self, description):
-    self.logger = logging.getLogger("dipplanner.dipp_exception.DipplannerException")
-    #self.logger.error("Raising an exception !")
+    self.logger = logging.getLogger("dipplanner.DipplannerException")
     self.description = description
   
   def __str__(self):

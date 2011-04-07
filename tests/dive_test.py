@@ -40,7 +40,7 @@ from segment import UnauthorizedMod
 import dipplanner
 from tools import seconds_to_strtime
 
-class Test(unittest.TestCase):
+class TestDive(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
@@ -52,8 +52,9 @@ class Test(unittest.TestCase):
     self.deco1 = Tank(0.8, 0.0, tank_vol=7.0, tank_pressure=200)
     self.deco2 = Tank(0.5, 0.0, tank_vol=7.0, tank_pressure=200)
     self.decoo2 = Tank(1.0, 0.0, tank_vol=7.0, tank_pressure=200)
-    
-  def test_not_enough_gas(self):
+
+class TestDiveNotEnoughGas1(TestDive):
+  def runTest(self):
     diveseg1 = SegmentDive(60, 30*60, self.air12l, 0)
     self.profile1 = Dive([diveseg1], [self.air12l])
     try:
@@ -63,7 +64,8 @@ class Test(unittest.TestCase):
     else:
       self.fail("EmptyTank")
 
-  def test_air_dive1_complete_profile(self):
+class TestDiveAirDiveOutput1(TestDive):
+  def runTest(self):
     diveseg1 = SegmentDive(30, 30*60, self.airtank, 0)
     self.profile1 = Dive([diveseg1], [self.airtank])
     self.profile1.do_dive()
@@ -81,13 +83,15 @@ Gas:
 Oxygen Toxicity: OTU:20, CNS:7%
 """, "bad dive profile (%s)" % str(self.profile1)
 
-  def test_air_dive1_run_time(self):
+class TestDiveAirDiveRunTime1(TestDive):
+  def runTest(self):
     diveseg1 = SegmentDive(30, 30*60, self.airtank, 0)
     self.profile1 = Dive([diveseg1], [self.airtank])
     self.profile1.do_dive()
     assert seconds_to_strtime(self.profile1.run_time) == " 47:41", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
 
-  def test_air_dive2(self):
+class TestDiveAirDiveOutput2(TestDive):
+  def runTest(self):
     diveseg2 = SegmentDive(20, 30*60, self.airtank, 0)
     self.profile2 = Dive([diveseg2], [self.airtank])
     self.profile2.do_dive()
@@ -103,13 +107,15 @@ Gas:
 Oxygen Toxicity: OTU:9, CNS:5%
 """, "bad dive profile (%s)" % str(self.profile2)
 
-  def test_air_dive2_runtime(self):
+class TestDiveAirDiveRunTime2(TestDive):
+  def runTest(self):
     diveseg2 = SegmentDive(20, 30*60, self.airtank, 0)
     self.profile2 = Dive([diveseg2], [self.airtank])
     self.profile2.do_dive()
     assert seconds_to_strtime(self.profile2.run_time) == " 31:50", "bad dive runtime (%s)" % seconds_to_strtime(self.profile2.run_time)
 
-  def test_air_dive3(self):
+class TestDiveAirDiveOutput3(TestDive):
+  def runTest(self):
     diveseg3 = SegmentDive(55, 30*60, self.airdouble, 0)
     self.profile3 = Dive([diveseg3], [self.airdouble])
     self.profile3.do_dive()
@@ -132,13 +138,15 @@ Gas:
 Oxygen Toxicity: OTU:47, CNS:20%
 """, "bad dive profile (%s)" % str(self.profile3)
     
-  def test_air_dive3_run_time(self):
+class TestDiveAirDiveRunTime3(TestDive):
+  def runTest(self):
     diveseg3 = SegmentDive(55, 30*60, self.airdouble, 0)
     self.profile3 = Dive([diveseg3], [self.airdouble])
     self.profile3.do_dive()
     assert seconds_to_strtime(self.profile3.run_time) == "128:21", "bad dive runtime (%s)" % seconds_to_strtime(self.profile3.run_time)
  
-  def test_air_dive4(self):
+class TestDiveAirDiveOutput4(TestDive):
+  def runTest(self):
     diveseg3 = SegmentDive(55, 30*60, self.airdouble, 0)
     self.profile3 = Dive([diveseg3], [self.airdouble,self.decoo2, self.deco2])
     self.profile3.do_dive()
@@ -163,14 +171,15 @@ Gas:
 Oxygen Toxicity: OTU:94, CNS:49%
 """, "bad dive profile (%s)" % str(self.profile3)
 
-  def test_air_dive4_run_time(self):
+class TestDiveAirDiveRunTime4(TestDive):
+  def runTest(self):
     diveseg3 = SegmentDive(55, 30*60, self.airdouble, 0)
     self.profile3 = Dive([diveseg3], [self.airdouble, self.deco2, self.decoo2 ])
     self.profile3.do_dive()
     assert seconds_to_strtime(self.profile3.run_time) == " 69:35", "bad dive runtime (%s)" % seconds_to_strtime(self.profile3.run_time)
 
-
-  def test_tx_dive1(self):
+class TestDiveTxDiveOutput1(TestDive):
+  def runTest(self):
     diveseg1 = SegmentDive(30, 30*60, self.txtank1, 0)
     self.profile1 = Dive([diveseg1], [self.txtank1])
     self.profile1.do_dive()
@@ -188,31 +197,48 @@ Gas:
 Oxygen Toxicity: OTU:20, CNS:7%
 """, "bad dive profile (%s)" % str(self.profile1)
 
-  def test_tx_dive1_run_time(self):
+class TestDiveTxDiveRunTime1(TestDive):
+  def runTest(self):
     diveseg1 = SegmentDive(30, 30*60, self.txtank1, 0)
     self.profile1 = Dive([diveseg1], [self.txtank1])
     self.profile1.do_dive()
     assert seconds_to_strtime(self.profile1.run_time) == " 54:10", "bad dive runtime (%s)" % seconds_to_strtime(self.profile1.run_time)
   
-  def test_ccr_dive1(self):
+class TestDiveCCRDiveOutput1(TestDive):
+  def runTest(self):
     diveseg1 = SegmentDive(65, 30*60, self.txtank1, 1.4)
     self.profile1 = Dive([diveseg1], [self.txtank1, self.decoo2])
     self.profile1.do_dive()
     assert str(self.profile1) == """Dive profile : GF:30.0-80.0
- DESCENT: at  30m for   1:30 [RT:  1:30], on Trimix 21/30,  SP:0.0, END:20m
-   CONST: at  30m for  28:30 [RT: 30:00], on Trimix 21/30,  SP:0.0, END:20m
-  ASCENT: at  15m for   1:30 [RT: 31:30], on Trimix 21/30,  SP:0.0, END:8m
-    DECO: at  15m for   0:01 [RT: 31:31], on Trimix 21/30,  SP:0.0, END:8m
-    DECO: at  12m for   0:37 [RT: 32:08], on Trimix 21/30,  SP:0.0, END:6m
-    DECO: at   9m for   3:03 [RT: 35:11], on Trimix 21/30,  SP:0.0, END:4m
-    DECO: at   6m for   5:00 [RT: 40:11], on Trimix 21/30,  SP:0.0, END:2m
-    DECO: at   3m for  13:59 [RT: 54:10], on Trimix 21/30,  SP:0.0, END:0m
+ DESCENT: at  65m for   3:15 [RT:  3:15], on Trimix 21/30,  SP:1.4, END:45m
+   CONST: at  65m for  26:45 [RT: 30:00], on Trimix 21/30,  SP:1.4, END:45m
+  ASCENT: at  36m for   2:54 [RT: 32:54], on Trimix 21/30,  SP:1.4, END:25m
+    DECO: at  36m for   0:25 [RT: 33:19], on Trimix 21/30,  SP:1.4, END:25m
+    DECO: at  33m for   0:54 [RT: 34:13], on Trimix 21/30,  SP:1.4, END:23m
+    DECO: at  30m for   1:07 [RT: 35:20], on Trimix 21/30,  SP:1.4, END:21m
+    DECO: at  27m for   1:22 [RT: 36:42], on Trimix 21/30,  SP:1.4, END:19m
+    DECO: at  24m for   1:57 [RT: 38:39], on Trimix 21/30,  SP:1.4, END:17m
+    DECO: at  21m for   2:04 [RT: 40:43], on Trimix 21/30,  SP:1.4, END:15m
+    DECO: at  18m for   2:39 [RT: 43:22], on Trimix 21/30,  SP:1.4, END:13m
+    DECO: at  15m for   3:22 [RT: 46:44], on Trimix 21/30,  SP:1.4, END:11m
+    DECO: at  12m for   5:08 [RT: 51:52], on Trimix 21/30,  SP:1.4, END:9m
+    DECO: at   9m for   6:42 [RT: 58:34], on Trimix 21/30,  SP:1.4, END:7m
+    DECO: at   6m for   8:38 [RT: 67:12], on Oxygen,  SP:0.0, END:5m
+    DECO: at   3m for  15:50 [RT: 83:02], on Oxygen,  SP:0.0, END:2m
 Gas:
-  Trimix 21/30 : used: 2495.6l (rem: 1504.4l or 75b)
-Oxygen Toxicity: OTU:20, CNS:7%
+  Oxygen : used: 416.6l (rem: 983.4l or 140b)
+  Trimix 21/30 : used: 0.0l (rem: 4000.0l or 200b)
+Oxygen Toxicity: OTU:126, CNS:63%
 """, "bad dive profile (%s)" % str(self.profile1)
-    
+
+class TestDiveCCRDiveRunTime1(TestDive):
+  def runTest(self):
+    diveseg1 = SegmentDive(65, 30*60, self.txtank1, 1.4)
+    self.profile1 = Dive([diveseg1], [self.txtank1, self.decoo2])
+    self.profile1.do_dive()
+    assert seconds_to_strtime(self.profile1.run_time) == " 83:02", "bad dive runtime (%s)" % seconds_to_strtime(self.profile1.run_time)    
 if __name__ == "__main__":
-  #unittest.main() 
-  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  import sys
+  suite = unittest.findTestCases(sys.modules[__name__])
+  #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
   unittest.TextTestRunner(verbosity=2).run(suite)

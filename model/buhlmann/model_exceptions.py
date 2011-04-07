@@ -38,4 +38,8 @@ from dipp_exception import DipplannerException
 
 class ModelStateException(DipplannerException):
   """Model State Exception"""
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.DipplannerException.ModelStateException")
+    self.logger.error("Raising an exception: ModelStateException ! (%s)" % description)

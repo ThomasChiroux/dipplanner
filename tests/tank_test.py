@@ -38,83 +38,101 @@ class TestTank(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
-    
-  def testTankisAir(self):
+
+  def tearDown(self):
+    pass
+
+class TestTankisAir(TestTank):    
+  def runTest(self):
     mytank = Tank()
     assert str(mytank) == 'Air'
     assert mytank.mod == 66
 
-  def testTankisNitrox32(self):
+class TestTankNitrox32(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.32)
     assert str(mytank) == 'Nitrox 32'
     assert mytank.mod == 40
   
-  def testTankisO2(self):
+class TestTankisO2(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=1)
     assert str(mytank) == 'Oxygen'
     assert mytank.mod == 6
-    
-  def testTankisTrimix2030(self):
+
+class TestTankisTrimix2030(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.2, f_He=0.3)
     assert str(mytank) == 'Trimix 20/30'
     assert mytank.mod == 70
-  
-  def testTankisTrimix870(self):
+    
+class TestTankisTrimix870(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.1, f_He=0.7)
     assert str(mytank) == 'Trimix 10/70'
     assert mytank.mod == 150
 
-  def testTankisHeliox2080(self):
+class TestTankisHeliox2080(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.2, f_He=0.8)
     assert str(mytank) == 'Heliox 20/80'
     assert mytank.mod == 70
 
-  def testTankisAir2(self):
+class TestTankisAir2(TestTank):    
+  def runTest(self):
     mytank = Tank(max_ppo2=1.4)
     assert str(mytank) == 'Air'
     assert mytank.mod == 56
 
-  def testTankisNitrox32_2(self):
+class TestTankisNitrox32_2(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.32, max_ppo2=1.4)
     assert str(mytank) == 'Nitrox 32'
     assert mytank.mod == 33
 
-  def testTankisO2_2(self):
+class TestTankisO2_2(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=1, max_ppo2=1.4)
     assert str(mytank) == 'Oxygen'
     assert mytank.mod == 4
 
-  def testTankisTrimix2030_2(self):
+class TestTankisTrimix2030_2(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.2, f_He=0.3, max_ppo2=1.4)
     assert str(mytank) == 'Trimix 20/30'
     assert mytank.mod == 59
 
-  def testTankisTrimix870_2(self):
+class TestTankisTrimix870_2(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.08, f_He=0.7, max_ppo2=1.4)
     assert str(mytank) == 'Trimix 8/70'
     assert mytank.mod == 165
     assert mytank.get_min_od() == 10
-    
-  def testTankisHeliox2080_2(self):
+
+class TestTankisHeliox2080_2(TestTank):    
+  def runTest(self):
     mytank = Tank(f_O2=0.2, f_He=0.8, max_ppo2=1.4)
     assert str(mytank) == 'Heliox 20/80'
     assert mytank.mod == 59
 
-  
-  def testTankVolume1(self):
+class TestTankVolume1(TestTank):
+  def runTest(self):
     mytank = Tank(tank_vol=15, tank_pressure=207)
     assert mytank.total_gas == 3105
 
-  def testTankVolume2(self):
+class TestTankVolume2(TestTank):
+  def runTest(self):
     mytank = Tank(tank_vol=18, tank_pressure=230)
     assert mytank.total_gas == 4140
 
-  def testTankVolume3(self):
+class TestTankVolume3(TestTank):    
+  def runTest(self):
     mytank = Tank(tank_vol=15, tank_pressure=207)
     mytank.consume_gas(405)
     assert mytank.remaining_gas == 2700
-  
-  def testTankVolume4(self):
+
+class TestTankVolume4(TestTank):
+  def runTest(self):
     mytank = Tank(tank_vol=15, tank_pressure=207)
     mytank.consume_gas(405)
     try:
@@ -124,31 +142,35 @@ class TestTank(unittest.TestCase):
     else:
       self.fail("should raise EmptyTank")
 
-  def testTankInvalidGas(self):
+class TestTankInvalidGas(TestTank):    
+  def runTest(self):
     try:
       mytank = Tank(f_O2 = 0.8, f_He=0.3)
     except InvalidGas:
       pass
     else:
       self.fail("should raise Invalid Gas")
-    
-  def testTankInvalidTank1(self):
+
+class TestTankInvalidTank1(TestTank):    
+  def runTest(self):  
     try:
       mytank = Tank(f_O2 = 0.8, tank_vol=33)
     except InvalidTank:
       pass
     else:
       self.fail("should raise Invalid Tank")
-      
-  def testTankInvalidTank2(self):
+
+class TestTankInvalidTank2(TestTank):    
+  def runTest(self):  
     try:
       mytank = Tank(f_O2 = 0.3, tank_pressure=350)
     except InvalidTank:
       pass
     else:
       self.fail("should raise Invalid Tank")
-  
-  def testTankInvalidMod1(self):
+
+class TestTankInvalidMod1(TestTank):    
+  def runTest(self):  
     try:
       mytank = Tank(f_O2 = 0.8, mod=33)
     except InvalidMod:
@@ -156,18 +178,24 @@ class TestTank(unittest.TestCase):
     else:
       self.fail("should raise Invalid Mod")
 
-  def testTankInvalidMod2(self):
+class TestTankInvalidMod2(TestTank):
+  def runTest(self):  
     try:
       mytank = Tank(f_O2 = 1, mod=7)
     except InvalidMod:
       pass
     else:
       self.fail("should raise Invalid Mod")
-      
-    
-    
+  
 if __name__ == "__main__":
   if __package__ is None:
     __package__ = "dipplanner"
-  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  import sys
+  suite = unittest.findTestCases(sys.modules[__name__]) 
+  #suite = unittest.TestLoader().loadTestsFromTestCase([TestTankInvalidGas, TestTankInvalidMod1])
+  #suite = unittest.TestSuite()
+  #suite2 = unittest.TestSuite()
+  #suite.addTest(TestTankInvalidGas())
+  #suite2.addTest(TestTankInvalidMod1())
+  #unittest.TextTestRunner(verbosity=2).run(suite2)
   unittest.TextTestRunner(verbosity=2).run(suite)

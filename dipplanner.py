@@ -89,19 +89,11 @@ def activate_debug_for_tests():
   <nothing>
 
   """
-  LOGGER.setLevel(logging.WARNING)
-  # create file handler which logs even debug messages
-  #fh = logging.FileHandler("dipplanner.log")
-  #fh.setLevel(logging.DEBUG)
-  # create console handler with a higher log level
+  LOGGER.setLevel(logging.CRITICAL)
   ch = logging.StreamHandler()
   ch.setLevel(logging.INFO)
-  # create formatter and add it to the handlers
   formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
-  #fh.setFormatter(formatter)
   ch.setFormatter(formatter)
-  # add the handlers to the logger
-  #LOGGER.addHandler(fh)
   LOGGER.addHandler(ch)
 
 def parse_arguments():
@@ -117,7 +109,12 @@ if __name__ == "__main__":
   
   airtank = Tank()
   txtank1 = Tank(0.21, 0.30)
-  diveseg1 = SegmentDive(30, 30*60, airtank, 0)
-  profile1 = Dive([diveseg1], [airtank])
-  profile1.do_dive()
-  print profile1
+  
+  try:
+    diveseg1 = SegmentDive(70, 30*60, airtank, 0)
+    profile1 = Dive([diveseg1], [airtank])
+    profile1.do_dive()
+  except:
+    print "erreur"
+  else:
+    print profile1

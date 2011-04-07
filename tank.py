@@ -43,27 +43,43 @@ class InvalidGas(DipplannerException):
   are invalid
   
   """
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.DipplannerException.InvalidGas")
+    self.logger.error("Raising an exception: InvalidGas ! (%s)" % description)
 
 class InvalidTank(DipplannerException):
   """Exception raised when the tank infos provided are invalid
   
   """
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.DipplannerException.InvalidTank")
+    self.logger.error("Raising an exception: InvalidTank ! (%s)" % description)
   
 class InvalidMod(DipplannerException):
   """Exception raised when the given MOD is incompatible with the gas
   provided for the tank
   
   """
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.DipplannerException.InvalidMod")
+    self.logger.error("Raising an exception: InvalidMod ! (%s)" % description)
   
 class EmptyTank(DipplannerException):
   """Exception raised when trying to consume more gas in tank than the
   remaining gas
   
   """
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.DipplannerException.EmptyTank")
+    self.logger.error("Raising an exception: EmptyTank ! (%s)" % description)
   
 class Tank(object):
   """This class implements a representation of dive tanks wich 
@@ -102,7 +118,10 @@ class Tank(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.tank.Tank")
-    self.logger.debug("creating an instance of Tank")
+    self.logger.debug("creating an instance of Tank: O2:%f, He:%f, \
+max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
+                                                       mod, tank_vol,
+                                                       tank_pressure))
     
     self.f_O2 = float(f_O2)
     self.f_He = float(f_He)

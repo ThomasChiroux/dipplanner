@@ -41,15 +41,27 @@ from model.buhlmann.model import Model
 
 class NothingToProcess(DipplannerException):
   """raised when the is no input segments to process"""
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.dipp_exception.NothingToProcess")
+    self.logger.error("Raising an exception: NothingToProcess ! (%s)" % description)
 
 class ProcessingError(DipplannerException):
   """raised when the is no input segments to process"""
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.dipp_exception.ProcessingError")
+    self.logger.error("Raising an exception: ProcessingError ! (%s)" % description)
 
 class InfiniteDeco(DipplannerException):
   """raised when the deco time becomes enourmous (like infinite)"""
-  pass
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.dipp_exception.InfiniteDeco")
+    self.logger.error("Raising an exception: InfiniteDeco ! (%s)" % description)
 
 class Dive(object):
   """Conducts dive based on inputSegments, knownGases, and an existing model.
@@ -585,23 +597,20 @@ class Dive(object):
     if len(self.tanks) == 0:
       return False
       
-    # If this is the first time that this method is called 
-    # we need to change to Open Circuit bailout
-    if self.is_closed_circuit:
-      self.current_tank = self.tanks[0]
-      #self.current_tank_index = 0
-      self.pp_O2 = False
-      self.is_closed_circuit = False
-      
     # check and switch deco gases
     current_tank_sav = self.current_tank
     for temp_tank in self.tanks:
       if temp_tank.get_mod() >= depth and \
          temp_tank.get_min_od() < depth: # authorised tank at this depth
         if temp_tank < current_tank_sav:
+          if self.is_closed_circuit:
+            # only change from CC to OC when a valid tank for deco is available
+            self.pp_O2 = False
+            self.is_closed_circuit = False
+
           self.current_tank = temp_tank
           gas_switch = True
-          self.logger.warning("Changing gas from %s (mod:%s) to %s (mod:%s)" % \
+          self.logger.info("Changing gas from %s (mod:%s) to %s (mod:%s)" % \
                                                 (current_tank_sav,
                                                 current_tank_sav.get_mod(),
                                                 self.current_tank,

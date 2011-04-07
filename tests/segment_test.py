@@ -36,7 +36,7 @@ from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
 import dipplanner
 
-class Test(unittest.TestCase):
+class TestSegment(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
@@ -53,55 +53,67 @@ class Test(unittest.TestCase):
     self.ascseg2 = SegmentAscDesc(30, 12, 10.0/60, self.nitroxtank1, 0)
     self.descseg1 = SegmentAscDesc(0, 40, 20.0/60, self.airtank,0)
     self.descseg2 = SegmentAscDesc(40,150, 20.0/60, self.trimixtank1, 0)
-    
-  def test_gas_used1(self):
+
+class TestSegmentGasUsed1(TestSegment):
+  def runTest(self):
     assert round(self.diveseg1.gas_used(),2) == 682.21, 'Wrong gas used : %s' % self.diveseg1.gas_used()
     
-  def test_gas_end1(self):
+class TestSegmentGasEnd1(TestSegment):
+  def runTest(self):
     assert self.diveseg1.get_end() == 29, 'wrong E.N.D : %s' % self.diveseg1.get_end()
-    
-  def test_gas_end2(self):
+
+class TestSegmentGasEnd2(TestSegment):
+  def runTest(self):
     assert self.diveseg2.get_end() == 62, 'wrong E.N.D : %s' % self.diveseg2.get_end()
 
-  def test_str1(self):
+class TestSegmentStr1(TestSegment):
+  def runTest(self):
     assert str(self.diveseg2) == "   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:62m", \
                                                   'wrong name : %s' % str(self.diveseg2)
-  
-  def test_deco1(self):
+class TestSegmentDeco1(TestSegment):
+  def runTest(self):  
     assert self.decoseg1.gas_used() == 132.78, 'Wrong gas used : %s' % self.decoseg1.gas_used()
-  
-  def test_deco2(self):
+
+class TestSegmentDeco2(TestSegment):
+  def runTest(self):  
     assert round(self.decoseg2.gas_used(),2) == 236.34, 'Wrong gas used : %s' % self.decoseg2.gas_used()
-    
-  def test_asc1(self):
+
+class TestSegmentAsc1(TestSegment):
+  def runTest(self):
     assert self.ascseg1.gas_used() == 936.105, 'Wrong gas used : %s' % self.ascseg1.gas_used()
-    
-  def test_asc2(self):
+
+class TestSegmentAsc2(TestSegment):
+  def runTest(self):
     assert self.ascseg2.gas_used() == 95.2578, 'Wrong gas used : %s' % self.ascseg2.gas_used()
 
-  def test_desc1(self):
+class TestSegmentDesc1(TestSegment):
+  def runTest(self):
     assert self.descseg1.gas_used() == 102.442, 'Wrong gas used : %s' % self.descseg1.gas_used()
 
-  def test_desc2(self):
+class TestSegmentDesc2(TestSegment):
+  def runTest(self):
     assert self.descseg2.gas_used() == 982.9655, 'Wrong gas used : %s' % self.descseg2.gas_used()
 
-  def test_wrong_mod1(self):
+class TestSegmentWrongMod1(TestSegment):
+  def runTest(self):
     try:
       baddiveseg = SegmentDive(150, 10*60, self.airtank,0)
     except UnauthorizedMod:
       pass
     else:
       self.fail("should raise UnauthorizedMod") 
-  
-  def test_wrong_mod2(self):
+
+class TestSegmentWrongMod2(TestSegment):
+  def runTest(self):  
     try:
       baddiveseg = SegmentDeco(3, 10*60, self.trimixtank1,0)
     except UnauthorizedMod:
       pass
     else:
       self.fail("should raise UnauthorizedMod") 
-  
-  def test_wrong_mod3(self):
+
+class TestSegmentWrongMod3(TestSegment):
+  def runTest(self):
     try:
       baddiveseg = SegmentAscDesc(150, 3, 10, self.nitroxtank1,0)
     except UnauthorizedMod:
@@ -109,7 +121,8 @@ class Test(unittest.TestCase):
     else:
       self.fail("should raise UnauthorizedMod") 
 
-  def test_wrong_mod4(self):
+class TestSegmentWrongMod4(TestSegment):
+  def runTest(self):
     try:
       baddiveseg = SegmentAscDesc(3, 150, 10, self.trimixtank1,0)
     except UnauthorizedMod:
@@ -120,6 +133,8 @@ class Test(unittest.TestCase):
   
 if __name__ == "__main__":
   #unittest.main() 
-  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  import sys
+  suite = unittest.findTestCases(sys.modules[__name__]) 
+  #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
   unittest.TextTestRunner(verbosity=2).run(suite)
   

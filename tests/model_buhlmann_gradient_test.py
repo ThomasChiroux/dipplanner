@@ -35,7 +35,7 @@ import unittest
 from model.buhlmann.gradient import Gradient
 import dipplanner
 
-class Test(unittest.TestCase):
+class TestModelBuhlmannGradient(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
@@ -43,28 +43,36 @@ class Test(unittest.TestCase):
     self.gradient1 = Gradient(0.3, 0.8)
     self.gradient2 = Gradient(0.35, 0.75)
   
-  def test1(self):
+class TestModelBuhlmannGradientSimple1(TestModelBuhlmannGradient):
+  def runTest(self):
     assert self.gradient1.gf_low == 0.3, "wrong gw_low : %s" % self.gradient1.gf_low
 
-  def test2(self):
+class TestModelBuhlmannGradientSimple2(TestModelBuhlmannGradient):
+  def runTest(self):
     assert self.gradient1.gf_high == 0.8, "wrong gw_high : %s" % self.gradient1.gf_high
 
-  def test3(self):
+class TestModelBuhlmannGradientSimple3(TestModelBuhlmannGradient):
+  def runTest(self):
     assert self.gradient1.gf_slope == 1.0, "wrong gw_slope : %s" % self.gradient1.gf_slope
 
-  def test4(self):
+class TestModelBuhlmannGradientSimple4(TestModelBuhlmannGradient):
+  def runTest(self):
     assert self.gradient1.gf == 0.3, "wrong gw_low : %s" % self.gradient1.gf
 
-  def test5(self):
+class TestModelBuhlmannGradientSimple5(TestModelBuhlmannGradient):
+  def runTest(self):
     self.gradient2.set_gf_slope_at_depth(12)
     assert round(self.gradient2.gf_slope, 13) == -0.0333333333333, "wrong gw_slope : %s" % self.gradient2.gf_slope
     
-  def test6(self):
+class TestModelBuhlmannGradientSimple6(TestModelBuhlmannGradient):
+  def runTest(self):
     self.gradient2.set_gf_slope_at_depth(6)
     self.gradient2.set_gf_at_depth(6)
     assert self.gradient2.gf == 0.35, "wrong gw_low : %s" % self.gradient2.gf
 
 if __name__ == "__main__":
   #unittest.main() 
-  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  import sys
+  suite = unittest.findTestCases(sys.modules[__name__])
+  #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
   unittest.TextTestRunner(verbosity=2).run(suite)

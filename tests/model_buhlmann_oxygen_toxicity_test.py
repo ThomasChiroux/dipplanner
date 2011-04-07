@@ -34,52 +34,63 @@ import unittest
 from model.buhlmann.oxygen_toxicity import OxTox
 import dipplanner
 
-class Test(unittest.TestCase):
+class TestModelBuhlmannOxTox(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
     
     self.ox1 = OxTox()
     self.ox2 = OxTox()
-  
-  def test1(self):
+
+class TestModelBuhlmannOxToxCns(TestModelBuhlmannOxTox):
+  def runTest(self):  
     assert self.ox1.cns == 0.0, "bad cns value : %s" % self.ox1.cns
 
-  def test2(self):
+class TestModelBuhlmannOxToxOtu(TestModelBuhlmannOxTox):
+  def runTest(self):
     assert self.ox1.otu == 0.0, "bad otu value : %s" % self.ox1.otu
 
-  def test3(self):
+class TestModelBuhlmannOxToxMaxOx(TestModelBuhlmannOxTox):
+  def runTest(self):
     assert self.ox1.max_ox == 0.0, "bad max_ox value : %s" % self.ox1.max_ox
     
-  def test4(self):
+class TestModelBuhlmannOxToxCns2(TestModelBuhlmannOxTox):
+  def runTest(self):  
     self.ox1.add_O2(10*60, 1.3)
     assert round(self.ox1.cns,13) == 0.0555555555556, "bad cns value : %s" % self.ox1.cns
 
-  def test5(self):
+class TestModelBuhlmannOxToxOtu2(TestModelBuhlmannOxTox):
+  def runTest(self):
     self.ox1.add_O2(10*60, 1.3)
     assert round(self.ox1.otu,10) == 14.7944872366, "bad otu value : %s" % self.ox1.otu
 
-  def test6(self):
+class TestModelBuhlmannOxToxCns2(TestModelBuhlmannOxTox):
+  def runTest(self):
     self.ox1.add_O2(10*60, 1.3)
     self.ox1.remove_O2(4*60*60)
     assert round(self.ox1.cns,14) == 0.00874945594818, "bad cns value : %s" % self.ox1.cns
     
-  def test7(self):
+class TestModelBuhlmannOxToxOtu3(TestModelBuhlmannOxTox):
+  def runTest(self):
     self.ox1.add_O2(10*60, 1.3)
     self.ox1.remove_O2(4*60*60)
     assert round(self.ox1.otu,10) == 14.7944872366, "bad otu value : %s" % self.ox1.otu
 
-  def test8(self):
+class TestModelBuhlmannOxToxCns3(TestModelBuhlmannOxTox):
+  def runTest(self):
     self.ox1.add_O2(10*60, 1.3)
     self.ox1.remove_O2(25*60*60)
     assert round(self.ox1.cns,7) == 0.0000005, "bad cns value : %s" % round(self.ox1.cns,7)
 
-  def test9(self):
+class TestModelBuhlmannOxToxOtu4(TestModelBuhlmannOxTox):
+  def runTest(self):
     self.ox1.add_O2(10*60, 1.3)
     self.ox1.remove_O2(25*60*60)
     assert round(self.ox1.otu,11) == 0.0, "bad otu value : %s" % self.ox1.otu
     
 if __name__ == "__main__":
   #unittest.main()
-  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  import sys
+  suite = unittest.findTestCases(sys.modules[__name__])
+  #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
   unittest.TextTestRunner(verbosity=2).run(suite)

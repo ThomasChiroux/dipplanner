@@ -33,17 +33,17 @@ import unittest
 # import here the module / classes to be tested
 import dipplanner
 
-class Test(unittest.TestCase):
+class TestXXXXXXX(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
       
-  def test1(self):
-    #myobj = Class()
-    #assert myobj.foo == 'bar'
+class TestXXXXXXXSimple1(TestXXXXXXX):
+  def runTest(self):
     pass
     
 if __name__ == "__main__":
-  #unittest.main() 
-  suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  import sys
+  suite = unittest.findTestCases(sys.modules[__name__])  
+  #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
   unittest.TextTestRunner(verbosity=2).run(suite)

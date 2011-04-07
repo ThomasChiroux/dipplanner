@@ -41,10 +41,10 @@ class UnauthorizedMod(DipplannerException):
   depth(s) of the segment"""
   
   def __init__(self, description):
-    """constructor : call the upper constructor"""
+    """constructor : call the upper constructor and set the logger"""
     DipplannerException.__init__(self, description)
-    self.logger = logging.getLogger("dipplanner.dipp_exception.UnauthorizedMod")
-    #self.logger.error("Raising an exception: UnauthorizedMod ! (%s)" % description)
+    self.logger = logging.getLogger("dipplanner.DipplannerException.UnauthorizedMod")
+    self.logger.error("Raising an exception: UnauthorizedMod ! (%s)" % description)
     
 class Segment(object):
   """Base class for all types of segments
@@ -81,7 +81,7 @@ class Segment(object):
     """
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.Segment")
-    self.logger.debug("creating an instance of Segment")
+    #self.logger.debug("creating an instance of Segment")
     
     self.type = None # type of segment : base class has no type
     self.in_use = True # is this segment in use : default: yes
@@ -239,7 +239,8 @@ class SegmentDive(Segment):
     Segment.__init__(self)
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.SegmentDive")
-    self.logger.debug("creating an instance of SegmentDive")
+    self.logger.debug("creating an instance of SegmentDive: \
+depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     
     self.type = 'const' # type of segment
     self.in_use = True # is this segment in use : default: yes
@@ -299,7 +300,8 @@ class SegmentDeco(Segment):
     Segment.__init__(self)
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.SegmentDeco")
-    self.logger.debug("creating an instance of SegmentDeco")
+    self.logger.debug("creating an instance of SegmentDeco: \
+depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     
     self.type = 'deco' # type of segment
     self.in_use = True # is this segment in use : default: yes
@@ -364,7 +366,12 @@ class SegmentAscDesc(Segment):
     Segment.__init__(self)
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.segment.SegmentAscDesc")
-    self.logger.debug("creating an instance of SegmentAscDesc")
+    self.logger.debug("creating an instance of SegmentAscDesc: \
+startdepth:%s, enddepth:%s, rate:%ss, tank:%s, sp:%f" % (start_depth, 
+                                                          end_depth,
+                                                          rate, 
+                                                          tank, 
+                                                          setpoint))
     
     self.in_use = True # is this segment in use : default: yes
     self.depth = float(end_depth) # depth of this segment, in meter

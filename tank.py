@@ -24,8 +24,6 @@ Contains a Tank Class
 in MVPlan, this class was the 'Gas' class
 """
 
-__version__ = "0.1"
-
 __authors__ = [
   # alphabetical order by last name
   'Thomas Chiroux',

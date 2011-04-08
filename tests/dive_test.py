@@ -20,10 +20,8 @@
 # This module is part of dipplanner, a Dive planning Tool written in python
 """Test for Dive class
 
-TODO: beaucoup de cas de tests de profils
+TODO: more test profiles
 """
-
-__version__ = "0.1"
 
 __authors__ = [
   # alphabetical order by last name

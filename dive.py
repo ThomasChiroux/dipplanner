@@ -25,8 +25,6 @@ Contains:
 Dive -- class
 """
 
-__version__ = "0.1"
-
 __authors__ = [
   # alphabetical order by last name
   'Thomas Chiroux',
@@ -41,7 +39,7 @@ from model.buhlmann.model import Model
 
 class NothingToProcess(DipplannerException):
   """raised when the is no input segments to process"""
-  def __init__(self, description):
+  def __init__(self, description=""):
     """constructor : call the upper constructor and set the logger"""
     DipplannerException.__init__(self, description)
     self.logger = logging.getLogger("dipplanner.dipp_exception.NothingToProcess")
@@ -49,7 +47,7 @@ class NothingToProcess(DipplannerException):
 
 class ProcessingError(DipplannerException):
   """raised when the is no input segments to process"""
-  def __init__(self, description):
+  def __init__(self, description=""):
     """constructor : call the upper constructor and set the logger"""
     DipplannerException.__init__(self, description)
     self.logger = logging.getLogger("dipplanner.dipp_exception.ProcessingError")
@@ -57,7 +55,7 @@ class ProcessingError(DipplannerException):
 
 class InfiniteDeco(DipplannerException):
   """raised when the deco time becomes enourmous (like infinite)"""
-  def __init__(self, description):
+  def __init__(self, description=""):
     """constructor : call the upper constructor and set the logger"""
     DipplannerException.__init__(self, description)
     self.logger = logging.getLogger("dipplanner.dipp_exception.InfiniteDeco")

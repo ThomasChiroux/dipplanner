@@ -50,14 +50,15 @@ LAST_STOP_DEPTH = 3 # in meter : last stop before surfacing
 STOP_TIME_INCREMENT = 1 # in second
 FORCE_ALL_STOPS = True # one deco stop begun, force to stop to each deco depth
                        # stop
-# ========= User settings ========
+AMBIANT_PRESSURE_SEA_LEVEL = 1.01325 # surface pressure (in bar)
 
+# ========= User settings ========
 WATER_DENSITY = SEA_WATER_DENSITY 
+AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL
 
 DEFAULT_MAX_PPO2 = 1.6
-DEFAULT_MIN_PPO2 = 0.16
+DEFAULT_MIN_PPO2 = 0.19
 
-AMBIANT_PRESSURE_SURFACE = 1.013 # surface pressure (in bar)
 DIVE_CONSUMPTION_RATE = 17.0/60 # liter/s
 DECO_CONSUMPTION_RATE = 12.0/60 # liter/s
 

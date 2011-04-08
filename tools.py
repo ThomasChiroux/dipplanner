@@ -24,12 +24,14 @@ Contains:
 seconds_to_strtime -- function
 """
 
-__version__ = "0.1"
-
 __authors__ = [
   # alphabetical order by last name
   'Thomas Chiroux',
 ]
+
+import math
+
+import settings
 
 def seconds_to_strtime(duration):
   """Convert a value in seconds into a string representing the time in
@@ -52,3 +54,26 @@ def seconds_to_strtime(duration):
     
   text = "%3d:%02d" % (int(duration/60), int(duration % 60))
   return text
+  
+def pressure_converter(altitude):
+  """Convert a given altitude in pressure in bar
+  uses the formula:
+  p = 101325.(1-2.25577.10^-5.h)^5.25588
+  
+  Keyword Arguments:
+  altitude - current altitude in meter
+  
+  Returns:
+  float - resulting pressure in bar
+  
+  Raise:
+  ValueError: when bad altitude is given (bad or <0 or > 10000 m)
+  
+  """
+  if altitude < 0: 
+    raise ValueError("altitude can not be negative")
+  if altitude > 10000:
+    raise ValueError("altitude can not higher than 10000m")
+  
+  return math.pow(1 - 2.25577 * math.pow(10,-5) * altitude, 5.25588) * \
+         settings.AMBIANT_PRESSURE_SEA_LEVEL

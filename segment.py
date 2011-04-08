@@ -23,8 +23,6 @@
 A segment is a portion of a dive in the same depth (depth + duration)
 """
 
-__version__ = "0.1"
-
 __authors__ = [
   # alphabetical order by last name
   'Thomas Chiroux',

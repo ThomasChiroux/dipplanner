@@ -33,6 +33,7 @@ import logging
 import settings
 from dipp_exception import DipplannerException
 from tools import seconds_to_strtime
+from tools import depth_pressure
 
 class UnauthorizedMod(DipplannerException):
   """raised when the MOD is not possible according to the 
@@ -126,7 +127,7 @@ class Segment(object):
     if self.depth < self.tank.get_min_od(): # checks minimum operating depth
       raise UnauthorizedMod("depth is too low for the minimum MOD")
     
-  def get_p_absolute(self, method='simple'):
+  def get_p_absolute(self, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     """returns the absolute pression in bar
     (1atm = 1ATA = 1.01325 bar = 14.70psi)
     Simple method : 10m = +1 bar
@@ -144,9 +145,7 @@ class Segment(object):
     if method == 'simple':
       return float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE
     elif method == 'complex':
-      g = 9.81
-      return (settings.WATER_DENSITY * 1E3 * g * float(self.depth)) * 1E-5 + \
-              settings.AMBIANT_PRESSURE_SURFACE
+      return depth_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE
     else:
       raise ValueError("invalid method of calculation")
       
@@ -265,7 +264,7 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
       # CCR mode: we do not calculate gas_used
       return 0
     else:
-      pressure = (float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (depth_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE)
       return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE))
     
 class SegmentDeco(Segment):
@@ -330,7 +329,7 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     if self.setpoint > 0 :
       return 0
     else:
-      pressure = (float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (depth_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE)
       return ( pressure * self.time * float(settings.DECO_CONSUMPTION_RATE))
 
 class SegmentAscDesc(Segment):
@@ -433,5 +432,5 @@ startdepth:%s, enddepth:%s, rate:%ss, tank:%s, sp:%f" % (start_depth,
       return 0
     else:
       average_depth = (float(self.start_depth) + float(self.end_depth)) / 2.0
-      pressure = (float(average_depth)/10 + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (depth_pressure(average_depth) + settings.AMBIANT_PRESSURE_SURFACE)
       return pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)

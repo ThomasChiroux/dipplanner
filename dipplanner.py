@@ -173,9 +173,19 @@ sample: "airtank;0.21;0.0;12;200"
 at the full time of the segment. 
 By default the segment time is shortened by descent or ascent time
 """)
-  
-  
+    
   parser.add_option_group(group2)
+  
+  group3 = OptionGroup(parser, "Internal Parameters")
+  group3.add_option("--depthcalcmethod", metavar="simple|complex", 
+                    type="string", default='complex',
+          help="""method used for pressure from depth calculation. 
+          Simple method uses only +10m = +1bar
+          Complex methods uses real water density""")
+  group3.add_option("--ambiantpressureatsea", metavar="VAL",
+                    type=float, default=1.01325,
+                    help="""Change ambiant pressure at sea level (in bar)""")
+  parser.add_option_group(group3)
   
   # parse the options
   (options, args) = parser.parse_args()
@@ -237,13 +247,20 @@ By default the segment time is shortened by descent or ascent time
   if options.forcesegmenttime:
     settings.RUN_TIME = False
   
+  if options.depthcalcmethod == 'simple' or \
+     options.depthcalcmethod == 'complex':
+    settings.METHOD_FOR_DEPTH_CALCULATION = options.depthcalcmethod
+  
+  if options.ambiantpressureatsea:
+    settings.AMBIANT_PRESSURE_SEA_LEVEL = options.ambiantpressureatsea
+    
   # sanity checks
   if not options.tanks:
     parser.error("You must provides at least one Tank for the dive")
   
   if len(args) == 0:
     parser.error("You must provides at least one dive segment")
-    
+   
   # returns
   return (options, args)
 

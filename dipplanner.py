@@ -119,9 +119,9 @@ see http://dipplanner.org
 
 at leat one SEGMENT is mandatory.
 use the following format for segment :
-"prof;duration;tank;setpoint"
-* prof: in meter
-* duration : in seconds
+"depth;duration;tank;setpoint"
+* depth: in meter
+* duration : in seconds (operations are allowed like: '30*60')
 * tank : name of the tank (same name as tank options)
 * setpoint : 0 if OC, setpoint if CCR
 

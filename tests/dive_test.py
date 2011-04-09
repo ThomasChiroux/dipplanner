@@ -45,8 +45,10 @@ class TestDive(unittest.TestCase):
     
     self.air12l = Tank(tank_vol=12.0, tank_pressure=200) 
     self.airtank = Tank(tank_vol=18.0, tank_pressure=200)
+    self.airtank12 = Tank(tank_vol=12.0, tank_pressure=200)
     self.airdouble = Tank(tank_vol=30.0, tank_pressure=200) #bi15l 200b
     self.txtank1 = Tank(0.21, 0.30, tank_vol=20.0, tank_pressure=200)
+    self.txtanknormodbl = Tank(0.21, 0.30, tank_vol=30.0, tank_pressure=200)
     self.deco1 = Tank(0.8, 0.0, tank_vol=7.0, tank_pressure=200)
     self.deco2 = Tank(0.5, 0.0, tank_vol=7.0, tank_pressure=200)
     self.decoo2 = Tank(1.0, 0.0, tank_vol=7.0, tank_pressure=200)
@@ -237,8 +239,11 @@ class TestDiveCCRDiveRunTime1(TestDive):
     self.profile1.do_dive()
     assert seconds_to_strtime(self.profile1.run_time) == " 83:42", "bad dive runtime (%s)" % seconds_to_strtime(self.profile1.run_time)    
 
+# ==============================================================================
+# ========================== M A I N ===========================================
+# ==============================================================================
 if __name__ == "__main__":
   import sys
   suite = unittest.findTestCases(sys.modules[__name__])
-  #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  #suite = unittest.TestLoader().loadTestsFromTestCase(TestDiveTxNormoDecoNx8040m60min)
   unittest.TextTestRunner(verbosity=2).run(suite)

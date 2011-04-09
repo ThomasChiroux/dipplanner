@@ -17,7 +17,7 @@
 # along with this program.
 # If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>
 # 
-# This module is part of PPlan, a Dive planning Tool written in python
+# This module is part of dipplanner, a Dive planning Tool written in python
 """
 """
 

@@ -22,6 +22,7 @@
 
 Contains:
 seconds_to_strtime -- function
+pressure_converter -- function
 """
 
 __authors__ = [

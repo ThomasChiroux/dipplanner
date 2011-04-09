@@ -35,6 +35,7 @@ import sys
 from optparse import OptionParser, OptionGroup
 import logging
 
+from optparse_hack import IndentedHelpFormatterWithNL
 import settings
 from dive import Dive
 from dive import ProcessingError, NothingToProcess, InfiniteDeco
@@ -45,6 +46,8 @@ from tools import pressure_converter
 
 LOGGER = logging.getLogger("dipplanner")
 
+# optparse hack...
+    
 def activate_debug():
   """setup the default debug parameters
   
@@ -111,35 +114,37 @@ def parse_arguments():
   Raise:
   Nothing, but can exit
   """
-  usage = """usage: %prog [options] <SEGMENT1> [<SEGMENT2> ...]"""
-  description = """\
-%prog calculates and output dive profile
-see http://dipplanner.org 
-(Thomas Chiroux, 2011)
+  usage = """usage: %prog [options]"""
+  description = """%prog calculates and output dive profile
+(c)Thomas Chiroux, 2011 - see http://dipplanner.org 
+"""
 
-at leat one SEGMENT is mandatory.
-use the following format for segment :
-"depth;duration;tank;setpoint"
+  epilog = ""
+  parser = OptionParser(description=description, usage=usage, epilog=epilog,
+                        version="%prog v"+__version__,
+                        formatter=IndentedHelpFormatterWithNL() )
+                        
+  group1 = OptionGroup(parser, "Mandatory Options",
+      """Without this mandatory options (at leat one of each), 
+the program will not run""")
+  group1.add_option("-t", "--tank", dest="tanks", 
+                     action="append", type="string", metavar = "STRING",
+                     help="""Tank used for the dive
+Format:  "tank_name;fO2;fHe;Volume(l);Pressure(bar)"
+Example: "airtank;0.21;0.0;12;200"
+""")
+  group1.add_option("-s", "--segment", dest="segments", 
+                     action="append", type="string", metavar = "STRING",
+                     help="""Input segments used for the dive\n\
+Format:  "depth;duration;tank;setpoint"
+Example: "30;20*60;airtank;0.0"
 * depth: in meter
 * duration : in seconds (operations are allowed like: '30*60')
 * tank : name of the tank (same name as tank options)
 * setpoint : 0 if OC, setpoint if CCR
 
 You can specify multiple args like:
-%prog [options] "30;1000;airtank;0.0" "20;800;airtank;0.0"
-"""
-
-  epilog = ""
-  parser = OptionParser(description=description, usage=usage, epilog=epilog,
-                        version="%prog v"+__version__)
-                        
-  group1 = OptionGroup(parser, "Mandatory Options",
-                  "Without this mandatory options, the program will not run")
-  group1.add_option("-t", "--tank", dest="tanks", 
-                     action="append", type="string", 
-                     help="""Tank used for the dive\n\
-Format: "tank_name;fO2;fHe;Volume(l);Pressure(bar)"\n
-sample: "airtank;0.21;0.0;12;200"
+%prog [other_options] -s "30;1000;airtank;0.0" -s "20;800;airtank;0.0"
 """)
   parser.add_option_group(group1)
   

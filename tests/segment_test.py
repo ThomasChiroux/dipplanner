@@ -54,7 +54,7 @@ class TestSegment(unittest.TestCase):
 
 class TestSegmentGasUsed1(TestSegment):
   def runTest(self):
-    assert round(self.diveseg1.gas_used(),2) == 682.21, 'Wrong gas used : %s' % self.diveseg1.gas_used()
+    self.assertAlmostEqual(self.diveseg1.gas_used(),687.5718,4, 'Wrong gas used : %s' % self.diveseg1.gas_used())
     
 class TestSegmentGasEnd1(TestSegment):
   def runTest(self):
@@ -70,27 +70,27 @@ class TestSegmentStr1(TestSegment):
                                                   'wrong name : %s' % str(self.diveseg2)
 class TestSegmentDeco1(TestSegment):
   def runTest(self):  
-    assert self.decoseg1.gas_used() == 132.78, 'Wrong gas used : %s' % self.decoseg1.gas_used()
+    self.assertAlmostEqual(self.decoseg1.gas_used(), 133.54596, 5, 'Wrong gas used : %s' % self.decoseg1.gas_used())
 
 class TestSegmentDeco2(TestSegment):
   def runTest(self):  
-    assert round(self.decoseg2.gas_used(),2) == 236.34, 'Wrong gas used : %s' % self.decoseg2.gas_used()
+    self.assertAlmostEqual(self.decoseg2.gas_used(), 236.94822, 5, 'Wrong gas used : %s' % self.decoseg2.gas_used())
 
 class TestSegmentAsc1(TestSegment):
   def runTest(self):
-    assert self.ascseg1.gas_used() == 936.105, 'Wrong gas used : %s' % self.ascseg1.gas_used()
+    self.assertAlmostEqual(self.ascseg1.gas_used(), 944.99175, 5, 'Wrong gas used : %s' % self.ascseg1.gas_used())
 
 class TestSegmentAsc2(TestSegment):
   def runTest(self):
-    assert self.ascseg2.gas_used() == 95.2578, 'Wrong gas used : %s' % self.ascseg2.gas_used()
+    self.assertAlmostEqual(self.ascseg2.gas_used(), 95.9356818, 7, 'Wrong gas used : %s' % self.ascseg2.gas_used())
 
 class TestSegmentDesc1(TestSegment):
   def runTest(self):
-    assert self.descseg1.gas_used() == 102.442, 'Wrong gas used : %s' % self.descseg1.gas_used()
+    self.assertAlmostEqual(self.descseg1.gas_used(), 103.15974, 5, 'Wrong gas used : %s' % self.descseg1.gas_used())
 
 class TestSegmentDesc2(TestSegment):
   def runTest(self):
-    assert self.descseg2.gas_used() == 982.9655, 'Wrong gas used : %s' % self.descseg2.gas_used()
+    self.assertAlmostEqual(self.descseg2.gas_used(), 992.2533225, 7, 'Wrong gas used : %s' % self.descseg2.gas_used())
 
 class TestSegmentWrongMod1(TestSegment):
   def runTest(self):

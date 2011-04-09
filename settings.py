@@ -50,8 +50,8 @@ LAST_STOP_DEPTH = 3 # in meter : last stop before surfacing
 STOP_TIME_INCREMENT = 1 # in second
 FORCE_ALL_STOPS = True # one deco stop begun, force to stop to each deco depth
                        # stop
-AMBIANT_PRESSURE_SEA_LEVEL = 1.013#25 # surface pressure (in bar)
-METHOD_FOR_DEPTH_CALCULATION = 'simple' # either simple (/10) or complex
+AMBIANT_PRESSURE_SEA_LEVEL = 1.01325 # surface pressure (in bar)
+METHOD_FOR_DEPTH_CALCULATION = 'complex' # either simple (/10) or complex
 
 # ========= User settings ========
 WATER_DENSITY = SEA_WATER_DENSITY 

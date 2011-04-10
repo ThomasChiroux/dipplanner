@@ -24,7 +24,7 @@ runs in command line and output resulting dive profile
 also initiate log files
 """
 
-__version__ = "0.2working"
+__version__ = "0.1"
 
 __authors__ = [
   # alphabetical order by last name

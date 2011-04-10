@@ -262,10 +262,7 @@ By default the segment time is shortened by descent or ascent time
   # sanity checks
   if not options.tanks:
     parser.error("You must provides at least one Tank for the dive")
-  
-  if len(args) == 0:
-    parser.error("You must provides at least one dive segment")
-   
+     
   # returns
   return (options, args)
 
@@ -284,8 +281,8 @@ if __name__ == "__main__":
                        tank_pressure=float(eval(pressure)))
   
   segments = []
-  for arg in args:
-    (depth, time, tankname, setpoint) = arg.split(";")
+  for seg in options.segments:
+    (depth, time, tankname, setpoint) = seg.split(";")
     # looks for tank in tanks
     try:
       segments.append(SegmentDive(float(eval(depth)), 

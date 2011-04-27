@@ -24,7 +24,7 @@ runs in command line and output resulting dive profile
 also initiate log files
 """
 
-__version__ = "0.1"
+__version__ = "0.2nightly"
 
 __authors__ = [
   # alphabetical order by last name
@@ -34,6 +34,7 @@ __authors__ = [
 import sys
 from optparse import OptionParser, OptionGroup
 import logging
+from ConfigParser import SafeConfigParser
 
 from optparse_hack import IndentedHelpFormatterWithNL
 import settings
@@ -100,6 +101,150 @@ def activate_debug_for_tests():
   ch.setFormatter(formatter)
   LOGGER.addHandler(ch)
 
+def parse_config_file(filenames):
+  """parse a config file and change default settings values
+  
+  Keyword Arguments:
+  filename -- name (and path) of the config file to be parsed
+
+  Returns:
+  <nothing>
+
+  Raise:
+  Nothing, but can exit
+  """
+  if filenames is not None:
+    config = SafeConfigParser()
+    filesread = config.read(filenames)
+  else:
+    LOGGER.warning("No config file found: skip config from files")
+    return (None, None)
+
+  missing = set(filenames) - set(filesread)
+  if len(filesread) == 0:
+    LOGGER.warning("No config file found: skip config from files")
+    return (None, None)
+    
+  if len(missing) > 0:
+    if len(missing) == 1:
+      LOGGER.warning("Config file : %s not found, skip it" % list(missing)[0])
+    else:
+      LOGGER.warning("Config files : %s not found, skip them" %\
+                                    ', '.join(str(n) for n in list(missing)) )
+  
+  # now try to find each parameter and set the new setting
+  if config.has_section('advanced'):
+    section = 'advanced'
+    if config.has_option(section, 'fresh_water_density'):
+      settings.FRESH_WATER_DENSITY = float(config.get(section, 'fresh_water_density'))
+    if config.has_option(section, 'sea_water_density'):
+      settings.SEA_WATER_DENSITY = float(config.get(section, 'sea_water_density'))
+    if config.has_option(section, 'absolute_max_ppo2'):
+      settings.ABSOLUTE_MAX_PPO2 = float(config.get(section, 'absolute_max_ppo2'))
+    if config.has_option(section, 'absolute_min_ppo2'):
+      settings.ABSOLUTE_MIN_PPO2 = float(config.get(section, 'absolute_min_ppo2'))
+    if config.has_option(section, 'absolute_max_tank_pressure'):
+      settings.ABSOLUTE_MAX_TANK_PRESSURE = float(config.get(section, 'absolute_max_tank_pressure'))
+    if config.has_option(section, 'absolute_max_tank_size'):
+      settings.ABSOLUTE_MAX_TANK_SIZE = float(config.get(section, 'absolute_max_tank_size'))
+          
+    if config.has_option(section, 'pp_h2o_surface'):
+      settings.PP_H2O_SURFACE = float(config.get(section, 'pp_h2o_surface'))
+    if config.has_option(section, 'he_narcotic_value'):
+      settings.HE_NARCOTIC_VALUE = float(config.get(section, 'he_narcotic_value'))
+    if config.has_option(section, 'n2_narcotic_value'):
+      settings.N2_NARCOTIC_VALUE = float(config.get(section, 'n2_narcotic_value'))
+    if config.has_option(section, 'o2_narcotic_value'):
+      settings.O2_NARCOTIC_VALUE = float(config.get(section, 'o2_narcotic_value'))
+    if config.has_option(section, 'ar_narcotic_value'):
+      settings.AR_NARCOTIC_VALUE = float(config.get(section, 'ar_narcotic_value'))
+    
+    if config.has_option(section, 'stop_depth_increment'):
+      settings.STOP_DEPTH_INCREMENT = float(config.get(section, 'stop_depth_increment'))
+    if config.has_option(section, 'last_stop_depth'):
+      settings.LAST_STOP_DEPTH = float(config.get(section, 'last_stop_depth'))
+    if config.has_option(section, 'stop_time_increment'):
+      settings.STOP_TIME_INCREMENT = float(config.get(section, 'stop_time_increment'))
+    if config.has_option(section, 'force_all_stops'):
+      settings.FORCE_ALL_STOPS = eval(config.get(section, 'force_all_stops').title())
+    if config.has_option(section, 'ambiant_pressure_sea_level'):
+      settings.AMBIANT_PRESSURE_SEA_LEVEL = float(config.get(section, 'ambiant_pressure_sea_level'))
+    if config.has_option(section, 'method_for_depth_calculation'):
+      if config.get(section, 'method_for_depth_calculation') == 'simple' or \
+         config.get(section, 'method_for_depth_calculation') == 'complex':
+         settings.METHOD_FOR_DEPTH_CALCULATION = config.get(section, 'method_for_depth_calculation')
+
+  if config.has_section('general'):
+    section = 'general'
+    if config.has_option(section, 'max_ppo2'):
+      settings.DEFAULT_MAX_PPO2 = float(config.get(section, 'max_ppo2'))
+    if config.has_option(section, 'min_ppo2'):
+      settings.DEFAULT_MIN_PPO2 = float(config.get(section, 'min_ppo2'))
+    if config.has_option(section, 'descent_rate'):
+      settings.DESCENT_RATE = float(config.get(section, 'descent_rate'))/60
+    if config.has_option(section, 'ascent_rate'):
+      settings.ASCENT_RATE = float(config.get(section, 'ascent_rate'))/60
+      
+    if config.has_option(section, 'dive_consumption_rate'):
+      settings.DIVE_CONSUMPTION_RATE = \
+                        float(config.get(section, 'dive_consumption_rate'))/60
+    if config.has_option(section, 'deco_consumption_rate'):
+      settings.DIVE_CONSUMPTION_RATE = \
+                        float(config.get(section, 'deco_consumption_rate'))/60
+    
+    if config.has_option(section, 'gf_low'):
+      settings.GF_LOW = float(eval(config.get(section, 'gf_low').strip('%')))/100
+    if config.has_option(section, 'gf_high'):
+      settings.GF_HIGH = float(eval(config.get(section, 'gf_high').strip('%')))/100
+      
+    if config.has_option(section, 'water'):
+      if config.get(section, 'water') == 'sea':
+        settings.WATER_DENSITY = settings.SEA_WATER_DENSITY
+      elif config.get(section, 'water') == 'fresh':
+        settings.WATER_DENSITY = settings.FRESH_WATER_DENSITY        
+
+    if config.has_option(section, 'altitude'):
+      settings.AMBIANT_PRESSURE_SURFACE = \
+                    pressure_converter(float(config.get(section, 'altitude')))  
+
+    if config.has_option(section, 'run_time'):
+      settings.RUN_TIME = eval(config.get(section, 'run_time').title())
+
+    if config.has_option(section, 'use_oc_deco'):
+      settings.RUN_TIME = eval(config.get(section, 'use_oc_deco').title())
+      
+    if config.has_option(section, 'multilevel_mode'):
+      settings.RUN_TIME = eval(config.get(section, 'multilevel_mode').title())
+  
+  tanks = {}
+  segments = []
+  if config.has_section('tanks'):
+    section = 'tanks'
+    for parameter_name, parameter_value in config.items(section):
+      (name, fO2, fHe, volume, pressure) = parameter_value.split(";")
+      tanks[name] = Tank(float(fO2), 
+                       float(fHe),
+                       max_ppo2=settings.DEFAULT_MAX_PPO2,
+                       tank_vol=float(eval(volume)), 
+                       tank_pressure=float(eval(pressure)))
+  
+  if config.has_section('segments'):
+    section = 'segments'
+    for parameter_name, parameter_value in config.items(section):
+      (depth, time, tankname, setpoint) = parameter_value.split(";")
+      try:
+        segments.append(SegmentDive(float(eval(depth)), 
+                                    float(eval(time)), 
+                                    tanks[tankname], 
+                                    float(setpoint)))
+      except KeyError:
+        print "Error : tank name (%s) in not found in tank list !" % tankname
+        sys.exit(0)
+      except:
+        raise
+
+  return (tanks, segments)
+
 def parse_arguments():
   """parse all command lines options
   
@@ -125,8 +270,15 @@ def parse_arguments():
                         formatter=IndentedHelpFormatterWithNL() )
                         
   group1 = OptionGroup(parser, "Mandatory Options",
-      """Without this mandatory options (at leat one of each), 
-the program will not run""")
+      """Either presence of tank and segment inside a config file or
+this mandatory options (at leat one of each) are needed for this program to run""")
+  group1.add_option("-c", "--config", dest="config_files", 
+                     action="append", type="string", metavar = "STRING",
+                     help="""path for config file. 
+Default : ./config.cfg"
+see manual for more infos on config file
+""")
+
   group1.add_option("-t", "--tank", dest="tanks", 
                      action="append", type="string", metavar = "STRING",
                      help="""Tank used for the dive
@@ -149,31 +301,31 @@ You can specify multiple args like:
   parser.add_option_group(group1)
   
   group2 = OptionGroup(parser, "Dive Parameters")
-  group2.add_option("--gflow", metavar="VAL", type="string", default="30",
-                    help="""GF low, in %, default value : 30%""")
-  group2.add_option("--gfhigh", metavar="VAL", type="string", default="80",
-                    help="""GF high, in %, default value : 80%""")
-  group2.add_option("--water", metavar="VAL", type="string", default="sea",
-                  help="""type of water : sea or fresh, default:sea""")
+  group2.add_option("--gflow", metavar="VAL", type="string",
+                    help="""GF low, in %""")
+  group2.add_option("--gfhigh", metavar="VAL", type="string",
+                    help="""GF high, in %""")
+  group2.add_option("--water", metavar="VAL", type="string",
+                  help="""type of water : sea or fresh""")
   
-  group2.add_option("--altitude", metavar="VAL", type="int", default=0,
-    help="""altitude of the dive in meter. default: sea altitude: 0m""")
-  group2.add_option("--diveconsrate", metavar="VAL", type="string", default="20",
-    help="""gas consumption rate during dive (in l/minute). default: 20l/min""")
-  group2.add_option("--decoconsrate", metavar="VAL", type="string", default="15",
-    help="""gas consumption rate during deco (in l/minute). default: 15l/min""")
-  group2.add_option("--descentrate", metavar="VAL", type="string", default="20",
-    help="""descent rate (in m/minute). default: 20m/min""")
-  group2.add_option("--ascentrate", metavar="VAL", type="string", default="10",
-    help="""ascent rate (in m/minute). default: 10m/min""")  
+  group2.add_option("--altitude", metavar="VAL", type="int",
+    help="""altitude of the dive in meter.""")
+  group2.add_option("--diveconsrate", metavar="VAL", type="string",
+    help="""gas consumption rate during dive (in l/minute).""")
+  group2.add_option("--decoconsrate", metavar="VAL", type="string",
+    help="""gas consumption rate during deco (in l/minute).""")
+  group2.add_option("--descentrate", metavar="VAL", type="string",
+    help="""descent rate (in m/minute).""")
+  group2.add_option("--ascentrate", metavar="VAL", type="string",
+    help="""ascent rate (in m/minute).""")  
   
-  group2.add_option("--maxppo2", metavar="VAL", type="float", default=1.6,
-    help="max allowed ppo2 for this dive. default: 1.6")
-  group2.add_option("--minppo2", metavar="VAL", type="float", default=0.19,
-    help="minimum allowed ppo2 for this dive. default: 0.19")  
-  group2.add_option("--samegasfordeco", action="store_true", default=False,
+  group2.add_option("--maxppo2", metavar="VAL", type="float",
+    help="max allowed ppo2 for this dive.")
+  group2.add_option("--minppo2", metavar="VAL", type="float",
+    help="minimum allowed ppo2 for this dive.")  
+  group2.add_option("--samegasfordeco", action="store_true",
     help="if set, do not use deco tanks (or bailout) for decompressions")  
-  group2.add_option("--forcesegmenttime", action="store_true", default=False,
+  group2.add_option("--forcesegmenttime", action="store_true",
     help="""if set, each input segment will be dove
 at the full time of the segment. 
 By default the segment time is shortened by descent or ascent time
@@ -183,18 +335,24 @@ By default the segment time is shortened by descent or ascent time
   
   group3 = OptionGroup(parser, "Internal Parameters")
   group3.add_option("--depthcalcmethod", metavar="simple|complex", 
-                    type="string", default='complex',
+                    type="string",
           help="""method used for pressure from depth calculation. 
           Simple method uses only +10m = +1bar
           Complex methods uses real water density""")
   group3.add_option("--ambiantpressureatsea", metavar="VAL",
-                    type=float, default=1.01325,
+                    type=float,
                     help="""Change ambiant pressure at sea level (in bar)""")
   parser.add_option_group(group3)
   
   # parse the options
   (options, args) = parser.parse_args()
 
+  tanks, segments = parse_config_file(options.config_files)
+  if tanks is None:
+    tanks = {}
+  if segments is None:
+    segments = []
+    
   if options.gflow:
     try:
       settings.GF_LOW = float(eval(options.gflow.strip('%')))/100
@@ -258,43 +416,42 @@ By default the segment time is shortened by descent or ascent time
   
   if options.ambiantpressureatsea:
     settings.AMBIANT_PRESSURE_SEA_LEVEL = options.ambiantpressureatsea
-    
-  # sanity checks
-  if not options.tanks:
-    parser.error("You must provides at least one Tank for the dive")
+   
+  if options.tanks: 
+    for tank in options.tanks:
+      (name, fO2, fHe, volume, pressure) = tank.split(";")
+      tanks[name] = Tank(float(fO2), 
+                         float(fHe),
+                         max_ppo2=settings.DEFAULT_MAX_PPO2,
+                         tank_vol=float(eval(volume)), 
+                         tank_pressure=float(eval(pressure)))
+  
+  if options.segments:
+    for seg in options.segments:
+      (depth, time, tankname, setpoint) = seg.split(";")
+      # looks for tank in tanks
+      try:
+        segments.append(SegmentDive(float(eval(depth)), 
+                                    float(eval(time)), 
+                                    tanks[tankname], 
+                                    float(setpoint)))
+      except KeyError:
+        parser.error("Error : tank name (%s) in not found in tank list !" % tankname)
+      except:
+        raise
      
   # returns
-  return (options, args)
-
+  return (options, args, tanks, segments)
 
 if __name__ == "__main__":
   """run from command line"""
   activate_debug()
-  (options, args) = parse_arguments()
-  tanks = {}
-  for tank in options.tanks:
-    (name, fO2, fHe, volume, pressure) = tank.split(";")
-    tanks[name] = Tank(float(fO2), 
-                       float(fHe),
-                       max_ppo2=settings.DEFAULT_MAX_PPO2,
-                       tank_vol=float(eval(volume)), 
-                       tank_pressure=float(eval(pressure)))
+  (options, args, tanks, segments) = parse_arguments()
   
-  segments = []
-  for seg in options.segments:
-    (depth, time, tankname, setpoint) = seg.split(";")
-    # looks for tank in tanks
-    try:
-      segments.append(SegmentDive(float(eval(depth)), 
-                                  float(eval(time)), 
-                                  tanks[tankname], 
-                                  float(setpoint)))
-    except KeyError:
-      print "Error : tank name (%s) in not found in tank list !" % tankname
-      sys.exit(0)
-    except:
-      raise
-      
-  profile = Dive(segments, tanks.values())
-  profile.do_dive()
-  print profile
+  if tanks and segments:
+    profile = Dive(segments, tanks.values())
+    profile.do_dive()
+    print profile
+  else:
+    print "Error : you must provide tanks and segments"
+    sys.exit(0)

@@ -378,25 +378,29 @@ By default the segment time is shortened by descent or ascent time
     try:
       settings.DIVE_CONSUMPTION_RATE = float(eval(options.diveconsrate))/60
     except:
-      parser.error("Error while parsing option diveconsrate : %s" % options.diveconsrate)
+      parser.error("Error while parsing option diveconsrate : %s" % \
+                                                          options.diveconsrate)
       
   if options.decoconsrate:
     try:
       settings.DECO_CONSUMPTION_RATE = float(eval(options.decoconsrate))/60
     except:
-      parser.error("Error while parsing option decoconsrate : %s" % options.decoconsrate)  
+      parser.error("Error while parsing option decoconsrate : %s" % \
+                                                          options.decoconsrate)  
 
   if options.descentrate:
     try:
       settings.DESCENT_RATE = float(eval(options.descentrate))/60
     except:
-      parser.error("Error while parsing option descentrate : %s" % options.descentrate)
+      parser.error("Error while parsing option descentrate : %s" % \
+                                                          options.descentrate)
       
   if options.ascentrate:
     try:
       settings.ASCENT_RATE = float(eval(options.ascentrate))/60
     except:
-      parser.error("Error while parsing option ascentrate : %s" % options.ascentrate)  
+      parser.error("Error while parsing option ascentrate : %s" % \
+                                                           options.ascentrate)  
   
   if options.maxppo2:
     settings.DEFAULT_MAX_PPO2 = options.maxppo2

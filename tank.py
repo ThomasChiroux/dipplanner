@@ -30,6 +30,7 @@ __authors__ = [
 ]
 
 import logging
+import math
 
 # local imports
 import settings
@@ -138,11 +139,114 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
   
     self.used_gas = 0.0
     if self.tank_vol and self.tank_pressure:
-      self.total_gas = self.tank_vol*self.tank_pressure
+      self.total_gas = self.calculate_real_volume()
     else:
       self.total_gas = 0.0
     self.remaining_gas = self.total_gas
     self._validate()
+
+  def calculate_real_volume(self, tank_vol=None, tank_pressure=None,
+                                  f_O2=None, f_He=None):
+    """
+    Calculate the real gas volume of the tank (in liter) based
+    on Van der waals equation:
+    (P+n2.a/V2).(V-n.b)=n.R.T
+    
+    Keyword arguments:
+    tank_vol -- Volume of the tank in liter
+                optionnal : if not provided, use self.tank_vol
+    tank_pressure -- Pressure of the tank in bar
+                     optionnal : if not provided, use self.tank_pressure
+    f_O2 -- fraction of O2 in the gas
+            optionnal : if not provided, use self.f_O2
+    f_He -- fraction of He in the gas
+            optionnal : if not provided, use self.f_He
+
+    Returns:
+    float -- total gas volume of the tank in liter
+    
+    Raise:
+    <nothing>
+    """
+    # handle parameters
+    if tank_vol is None:
+      tank_vol = self.tank_vol
+    if tank_pressure is None:
+      tank_pressure = self.tank_pressure
+    if f_O2 is None:
+      f_O2 = self.f_O2
+    if f_He is None:
+      f_He = self.f_He
+    f_N2 = 1.0 - (f_O2 + f_He)
+
+    # Constants used in calculations
+    a_O2 = 1.382
+    b_O2 = 0.03186
+    a_N2 = 1.37
+    b_N2 = 0.0387
+    a_He = 0.0346
+    b_He = 0.0238
+    vm_O2 = 31.9988
+    vm_N2 = 28.01348
+    vm_He = 4.0020602
+    R = 0.0831451
+    T = 273.15+15 # temp at 15°C
+    
+    # at first, calculate a and b values for this gas    
+    a_gas = math.sqrt(a_O2 * a_O2 * f_O2 * f_O2 + \
+                      a_O2 * a_He * f_O2 * f_He + \
+                      a_O2 * a_N2 * f_O2 * f_N2 + \
+                      a_He * a_O2 * f_He * f_O2 + \
+                      a_He * a_He * f_He * f_He + \
+                      a_He * a_N2 * f_He * f_N2 + \
+                      a_N2 * a_O2 * f_N2 * f_O2 + \
+                      a_N2 * a_He * f_N2 * f_He + \
+                      a_N2 * a_N2 * f_N2 * f_N2)
+    
+    b_gas = math.sqrt(b_O2 * b_O2 * f_O2 * f_O2 + \
+                      b_O2 * b_He * f_O2 * f_He + \
+                      b_O2 * b_N2 * f_O2 * f_N2 + \
+                      b_He * b_O2 * f_He * f_O2 + \
+                      b_He * b_He * f_He * f_He + \
+                      b_He * b_N2 * f_He * f_N2 + \
+                      b_N2 * b_O2 * f_N2 * f_O2 + \
+                      b_N2 * b_He * f_N2 * f_He + \
+                      b_N2 * b_N2 * f_N2 * f_N2)
+
+    # now approximate n (quantities of molecules of gas in the tank in mol)
+    # using perfect gas law : PV = nRT : n = PV/RT
+    approx_n = (float(tank_pressure) * float(tank_vol)) / (R * T)
+    
+    # recalculate pressure on the tank whith approx_n
+    # P=n.R.T/(V-n.b)-n2.a/V2)
+    tank_pressure_mid = (approx_n * R * T) / (tank_vol - approx_n * b_gas) - \
+                        (approx_n * approx_n * a_gas) / (tank_vol * tank_vol)
+    
+    # now try to approx tank_pressure with new_tank_pressure by
+    # variating approx_n
+    # start with *2 or /2 value (which is enormous !)
+    if tank_pressure_mid < tank_pressure:
+      n_left = approx_n
+      n_right = approx_n * 2
+    else:
+      n_left = approx_n / 2
+      n_right = approx_n
+      
+    while round(tank_pressure_mid,2) != round(tank_pressure,2):
+      n_mid = (n_left + n_right) / 2
+      tank_pressure_mid = (n_mid * R * T) / (tank_vol - n_mid * b_gas) - \
+                          (n_mid * n_mid * a_gas) / (tank_vol * tank_vol)
+      if tank_pressure_mid > tank_pressure:
+        # keep left
+        n_right = n_mid
+      else:
+        n_left = n_mid
+
+    # now recalculate the real liters in the tank based on n
+    total_gas_volume = n_mid * R * T / settings.AMBIANT_PRESSURE_SURFACE
+    self.logger.debug("real total gas volume : %02fl instead of %02fl" % \
+                        (total_gas_volume, tank_vol*tank_pressure))
+    return total_gas_volume
 
   def __repr__(self):
     """Returns a string representing the actual tank"""

@@ -116,18 +116,18 @@ class TestTankisHeliox2080_2(TestTank):
 class TestTankVolume1(TestTank):
   def runTest(self):
     mytank = Tank(tank_vol=15, tank_pressure=207)
-    assert mytank.total_gas == 3105
+    self.assertAlmostEqual(mytank.total_gas,3116, 0, 'Wrong Tank Volume : %s' % mytank.total_gas)
 
 class TestTankVolume2(TestTank):
   def runTest(self):
     mytank = Tank(tank_vol=18, tank_pressure=230)
-    assert mytank.total_gas == 4140
+    self.assertAlmostEqual(mytank.total_gas, 4064, 0, 'Wrong Tank Volume : %s' % mytank.total_gas)
 
 class TestTankVolume3(TestTank):    
   def runTest(self):
     mytank = Tank(tank_vol=15, tank_pressure=207)
     mytank.consume_gas(405)
-    assert mytank.remaining_gas == 2700
+    self.assertAlmostEqual(mytank.remaining_gas, 2711, 0, 'Wrong Tank Volume : %s' % mytank.remaining_gas)
 
 class TestTankVolume4(TestTank):
   def runTest(self):

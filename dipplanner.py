@@ -36,7 +36,6 @@ import sys
 import logging
 from ConfigParser import SafeConfigParser
 import argparse
-#from optparse_hack import IndentedHelpFormatterWithNL
 import settings
 from dive import Dive
 from dive import ProcessingError, NothingToProcess, InfiniteDeco

@@ -32,11 +32,11 @@ __authors__ = [
 ]
 
 import sys
-from optparse import OptionParser, OptionGroup
+#from optparse import OptionParser, OptionGroup
 import logging
 from ConfigParser import SafeConfigParser
-
-from optparse_hack import IndentedHelpFormatterWithNL
+import argparse
+#from optparse_hack import IndentedHelpFormatterWithNL
 import settings
 from dive import Dive
 from dive import ProcessingError, NothingToProcess, InfiniteDeco
@@ -254,40 +254,43 @@ def parse_arguments():
   none
   
   Returns:
-  a list with 2 tuples: options and args
+  a list with args, tanks and segments
   
   Raise:
   Nothing, but can exit
   """
-  usage = """usage: %prog [options]"""
-  description = """%prog calculates and output dive profile
-(c)Thomas Chiroux, 2011 - see http://dipplanner.org 
+  usage = """%(prog)s [options]"""
+  description = """%(prog)s calculates and output dive profile
+Thomas Chiroux, 2011-2012 - see http://dipplanner.org
 """
 
   epilog = ""
-  parser = OptionParser(description=description, usage=usage, epilog=epilog,
-                        version="%prog v"+__version__,
-                        formatter=IndentedHelpFormatterWithNL() )
+
+  parser = argparse.ArgumentParser(
+                        description = description,
+                        usage = usage,
+                        epilog = epilog,
+                        formatter_class = argparse.RawTextHelpFormatter )
                         
-  group1 = OptionGroup(parser, "Mandatory Options",
+  group1 = parser.add_argument_group("Mandatory Options",
       """Either presence of tank and segment inside a config file or
 this mandatory options (at leat one of each) are needed for this program to run""")
-  group1.add_option("-c", "--config", dest="config_files", 
-                     action="append", type="string", metavar = "STRING",
-                     help="""path for config file. 
-Default : ./config.cfg"
-see manual for more infos on config file
-""")
+  group1.add_argument("-c", "--config", dest="config_files",
+                     action="append", type=str, metavar = "STRING",
+                     help="""path for config file.
+Default : ./config.cfg
+see manual for more infos on config file""")
 
-  group1.add_option("-t", "--tank", dest="tanks", 
-                     action="append", type="string", metavar = "STRING",
+  group1.add_argument("-t", "--tank", dest="tanks",
+                     action="append", type=str, metavar = "STRING",
                      help="""Tank used for the dive
 Format:  "tank_name;fO2;fHe;Volume(l);Pressure(bar)"
 Example: "airtank;0.21;0.0;12;200"
 """)
-  group1.add_option("-s", "--segment", dest="segments", 
-                     action="append", type="string", metavar = "STRING",
-                     help="""Input segments used for the dive\n\
+  group1.add_argument("-s", "--segment", dest="segments",
+                     action="append", type=str, metavar = "STRING",
+                     help="""Input segments used for the dive
+
 Format:  "depth;duration;tank;setpoint"
 Example: "30;20*60;airtank;0.0"
 * depth: in meter
@@ -296,133 +299,129 @@ Example: "30;20*60;airtank;0.0"
 * setpoint : 0 if OC, setpoint if CCR
 
 You can specify multiple args like:
-%prog [other_options] -s "30;1000;airtank;0.0" -s "20;800;airtank;0.0"
+%(prog)s [other_options] -s "30;1000;airtank;0.0" -s "20;800;airtank;0.0"
 """)
-  parser.add_option_group(group1)
-  
-  group2 = OptionGroup(parser, "Dive Parameters")
-  group2.add_option("--gflow", metavar="VAL", type="string",
-                    help="""GF low, in %""")
-  group2.add_option("--gfhigh", metavar="VAL", type="string",
-                    help="""GF high, in %""")
-  group2.add_option("--water", metavar="VAL", type="string",
+
+  group2 = parser.add_argument_group("Dive Parameters")
+  group2.add_argument("--gflow", metavar="VAL", type=str,
+                    help="""GF low, in """)
+  group2.add_argument("--gfhigh", metavar="VAL", type=str,
+                    help="""GF high, in """)
+  group2.add_argument("--water", metavar="VAL", type=str,
                   help="""type of water : sea or fresh""")
-  
-  group2.add_option("--altitude", metavar="VAL", type="int",
+
+  group2.add_argument("--altitude", metavar="VAL", type=int,
     help="""altitude of the dive in meter.""")
-  group2.add_option("--diveconsrate", metavar="VAL", type="string",
+  group2.add_argument("--diveconsrate", metavar="VAL", type=str,
     help="""gas consumption rate during dive (in l/minute).""")
-  group2.add_option("--decoconsrate", metavar="VAL", type="string",
+  group2.add_argument("--decoconsrate", metavar="VAL", type=str,
     help="""gas consumption rate during deco (in l/minute).""")
-  group2.add_option("--descentrate", metavar="VAL", type="string",
+  group2.add_argument("--descentrate", metavar="VAL", type=str,
     help="""descent rate (in m/minute).""")
-  group2.add_option("--ascentrate", metavar="VAL", type="string",
-    help="""ascent rate (in m/minute).""")  
-  
-  group2.add_option("--maxppo2", metavar="VAL", type="float",
+  group2.add_argument("--ascentrate", metavar="VAL", type=str,
+    help="""ascent rate (in m/minute).""")
+
+  group2.add_argument("--maxppo2", metavar="VAL", type=float,
     help="max allowed ppo2 for this dive.")
-  group2.add_option("--minppo2", metavar="VAL", type="float",
-    help="minimum allowed ppo2 for this dive.")  
-  group2.add_option("--samegasfordeco", action="store_true",
-    help="if set, do not use deco tanks (or bailout) for decompressions")  
-  group2.add_option("--forcesegmenttime", action="store_true",
+  group2.add_argument("--minppo2", metavar="VAL", type=float,
+    help="minimum allowed ppo2 for this dive.")
+  group2.add_argument("--samegasfordeco", action="store_true",
+    help="if set, do not use deco tanks (or bailout) for decompressions")
+  group2.add_argument("--forcesegmenttime", action="store_true",
     help="""if set, each input segment will be dove
-at the full time of the segment. 
+at the full time of the segment.
 By default the segment time is shortened by descent or ascent time
 """)
-    
-  parser.add_option_group(group2)
   
-  group3 = OptionGroup(parser, "Internal Parameters")
-  group3.add_option("--depthcalcmethod", metavar="simple|complex", 
-                    type="string",
-          help="""method used for pressure from depth calculation. 
+  group3 = parser.add_argument_group("Internal Parameters")
+  group3.add_argument("--depthcalcmethod", metavar="simple|complex",
+                    type=str,
+          help="""method used for pressure from depth calculation.
           Simple method uses only +10m = +1bar
           Complex methods uses real water density""")
-  group3.add_option("--ambiantpressureatsea", metavar="VAL",
+  group3.add_argument("--ambiantpressureatsea", metavar="VAL",
                     type=float,
                     help="""Change ambiant pressure at sea level (in bar)""")
-  parser.add_option_group(group3)
-  
-  # parse the options
-  (options, args) = parser.parse_args()
 
-  tanks, segments = parse_config_file(options.config_files)
+  # parse the options
+  args = parser.parse_args()
+
+  tanks, segments = parse_config_file(args.config_files)
   if tanks is None:
     tanks = {}
   if segments is None:
     segments = []
     
-  if options.gflow:
+  if args.gflow:
     try:
-      settings.GF_LOW = float(eval(options.gflow.strip('%')))/100
+      settings.GF_LOW = float(eval(args.gflow.strip('%')))/100
     except:
-      parser.error("Error while parsing option gflow : %s" % options.gflow)
+      parser.error("Error while parsing option gflow : %s" % args.gflow)
 
-  if options.gfhigh:
+  if args.gfhigh:
     try:
-      settings.GF_HIGH = float(eval(options.gfhigh.strip('%')))/100
+      settings.GF_HIGH = float(eval(args.gfhigh.strip('%')))/100
     except:
-      parser.error("Error while parsing option gfhigh : %s" % options.gfhigh)
+      parser.error("Error while parsing option gfhigh : %s" % args.gfhigh)
 
-  if options.water:
-    if options.water.lower() == "sea":
+  if args.water:
+    if args.water.lower() == "sea":
       settings.WATER_DENSITY = settings.SEA_WATER_DENSITY
-    if options.water.lower() == "fresh":
+    if args.water.lower() == "fresh":
       settings.WATER_DENSITY = settings.FRESH_WATER_DENSITY
       
-  if options.altitude:
-    settings.AMBIANT_PRESSURE_SURFACE = pressure_converter(options.altitude)
+  if args.altitude:
+    settings.AMBIANT_PRESSURE_SURFACE = pressure_converter(args.altitude)
 
-  if options.diveconsrate:
+  if args.diveconsrate:
     try:
-      settings.DIVE_CONSUMPTION_RATE = float(eval(options.diveconsrate))/60
+      settings.DIVE_CONSUMPTION_RATE = float(eval(args.diveconsrate))/60
     except:
-      parser.error("Error while parsing option diveconsrate : %s" % \
-                                                          options.diveconsrate)
+      parser.error("Error while parsing option diveconsrate : %s" %\
+                   args.diveconsrate)
       
-  if options.decoconsrate:
+  if args.decoconsrate:
     try:
-      settings.DECO_CONSUMPTION_RATE = float(eval(options.decoconsrate))/60
+      settings.DECO_CONSUMPTION_RATE = float(eval(args.decoconsrate))/60
     except:
-      parser.error("Error while parsing option decoconsrate : %s" % \
-                                                          options.decoconsrate)  
+      parser.error("Error while parsing option decoconsrate : %s" %\
+                   args.decoconsrate)
 
-  if options.descentrate:
+  if args.descentrate:
     try:
-      settings.DESCENT_RATE = float(eval(options.descentrate))/60
+      settings.DESCENT_RATE = float(eval(args.descentrate))/60
     except:
-      parser.error("Error while parsing option descentrate : %s" % \
-                                                          options.descentrate)
+      parser.error("Error while parsing option descentrate : %s" %\
+                   args.descentrate)
       
-  if options.ascentrate:
+  if args.ascentrate:
     try:
-      settings.ASCENT_RATE = float(eval(options.ascentrate))/60
+      settings.ASCENT_RATE = float(eval(args.ascentrate))/60
     except:
-      parser.error("Error while parsing option ascentrate : %s" % \
-                                                           options.ascentrate)  
+      parser.error("Error while parsing option ascentrate : %s" %\
+                   args.ascentrate)
   
-  if options.maxppo2:
-    settings.DEFAULT_MAX_PPO2 = options.maxppo2
+  if args.maxppo2:
+    settings.DEFAULT_MAX_PPO2 = args.maxppo2
 
-  if options.minppo2:
-    settings.DEFAULT_MIN_PPO2 = options.minppo2
+  if args.minppo2:
+    settings.DEFAULT_MIN_PPO2 = args.minppo2
   
-  if options.samegasfordeco:
+  if args.samegasfordeco:
     settings.USE_OC_DECO = False
   
-  if options.forcesegmenttime:
+  if args.forcesegmenttime:
     settings.RUN_TIME = False
   
-  if options.depthcalcmethod == 'simple' or \
-     options.depthcalcmethod == 'complex':
-    settings.METHOD_FOR_DEPTH_CALCULATION = options.depthcalcmethod
+  if args.depthcalcmethod == 'simple' or\
+     args.depthcalcmethod == 'complex':
+    settings.METHOD_FOR_DEPTH_CALCULATION = args.depthcalcmethod
   
-  if options.ambiantpressureatsea:
-    settings.AMBIANT_PRESSURE_SEA_LEVEL = options.ambiantpressureatsea
+  if args.ambiantpressureatsea:
+    settings.AMBIANT_PRESSURE_SEA_LEVEL = args.ambiantpressureatsea
    
-  if options.tanks: 
-    for tank in options.tanks:
+  if args.tanks:
+    for tank in args.tanks:
       (name, fO2, fHe, volume, pressure) = tank.split(";")
       tanks[name] = Tank(float(fO2), 
                          float(fHe),
@@ -430,8 +429,8 @@ By default the segment time is shortened by descent or ascent time
                          tank_vol=float(eval(volume)), 
                          tank_pressure=float(eval(pressure)))
   
-  if options.segments:
-    for seg in options.segments:
+  if args.segments:
+    for seg in args.segments:
       (depth, time, tankname, setpoint) = seg.split(";")
       # looks for tank in tanks
       try:
@@ -445,12 +444,11 @@ By default the segment time is shortened by descent or ascent time
         raise
      
   # returns
-  return (options, args, tanks, segments)
+  return (args, tanks, segments)
 
 if __name__ == "__main__":
-  """run from command line"""
   activate_debug()
-  (options, args, tanks, segments) = parse_arguments()
+  (args, tanks, segments) = parse_arguments()
   
   if tanks and segments:
     profile = Dive(segments, tanks.values())

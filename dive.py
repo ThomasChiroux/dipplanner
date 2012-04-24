@@ -159,11 +159,14 @@ class Dive(object):
       text += "%s\n" % str(segment)
     text += "Gas:\n"
     for tank in self.tanks:
-      text += "  %s : used: %.1fl (rem: %.1fl or %db)\n" % \
-                  (str(tank), 
+      text += "  %s : Total: %.1fl, Used: %.1fl (rem: %.1fl or %db)\n" % \
+                  (str(tank),
+                   tank.total_gas,
                    tank.used_gas, 
                    tank.remaining_gas, 
                    tank.remaining_gas / tank.tank_vol)
+      if not tank.check_rule():
+        text += "   WARNING !!! Not enought remaining gas in tank (min: %.1fl) !\n" % tank.min_gas
     text += "Oxygen Toxicity: OTU:%d, CNS:%d%%\n" % \
                             (self.model.ox_tox.otu, self.model.ox_tox.cns*100)
     return text

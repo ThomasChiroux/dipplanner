@@ -221,12 +221,13 @@ def parse_config_file(filenames):
   if config.has_section('tanks'):
     section = 'tanks'
     for parameter_name, parameter_value in config.items(section):
-      (name, fO2, fHe, volume, pressure) = parameter_value.split(";")
+      (name, fO2, fHe, volume, pressure, rule) = parameter_value.split(";")
       tanks[name] = Tank(float(fO2), 
                        float(fHe),
                        max_ppo2=settings.DEFAULT_MAX_PPO2,
                        tank_vol=float(eval(volume)), 
-                       tank_pressure=float(eval(pressure)))
+                       tank_pressure=float(eval(pressure)),
+                       tank_rule = rule)
   
   if config.has_section('segments'):
     section = 'segments'
@@ -284,8 +285,10 @@ see manual for more infos on config file""")
   group1.add_argument("-t", "--tank", dest="tanks",
                      action="append", type=str, metavar = "STRING",
                      help="""Tank used for the dive
-Format:  "tank_name;fO2;fHe;Volume(l);Pressure(bar)"
-Example: "airtank;0.21;0.0;12;200"
+Format:  "tank_name;fO2;fHe;Volume(l);Pressure(bar);Minimum gas rule"
+Example: "airtank;0.21;0.0;12;200,50b"
+
+Minimum gas rule in format : xxxb of 1/x
 """)
   group1.add_argument("-s", "--segment", dest="segments",
                      action="append", type=str, metavar = "STRING",
@@ -429,12 +432,13 @@ By default the segment time is shortened by descent or ascent time
    
   if args.tanks:
     for tank in args.tanks:
-      (name, fO2, fHe, volume, pressure) = tank.split(";")
+      (name, fO2, fHe, volume, pressure, rule) = tank.split(";")
       tanks[name] = Tank(float(fO2), 
                          float(fHe),
                          max_ppo2=settings.DEFAULT_MAX_PPO2,
                          tank_vol=float(eval(volume)), 
-                         tank_pressure=float(eval(pressure)))
+                         tank_pressure=float(eval(pressure)),
+                         tank_rule = rule)
   
   if args.segments:
     for seg in args.segments:

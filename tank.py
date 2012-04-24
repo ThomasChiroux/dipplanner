@@ -31,6 +31,7 @@ __authors__ = [
 
 import logging
 import math
+import re
 
 # local imports
 import settings
@@ -90,7 +91,8 @@ class Tank(object):
   """
   
   def __init__(self,  f_O2=0.21, f_He=0.0, max_ppo2=settings.DEFAULT_MAX_PPO2, 
-                      mod=None, tank_vol=12.0, tank_pressure=200):
+                      mod=None, tank_vol=12.0, tank_pressure=200,
+                      tank_rule="30b"):
     """Constructor for Tank class
     If nothing is provided, create a default 'Air' with 12l/200b tank
     and max_ppo2 to 1.6 (used to calculate mod)
@@ -106,7 +108,14 @@ class Tank(object):
             if provided and not compatible with max_ppo2 : raise InvalidMod
     tank_vol -- Volume of the tank in liter
     Tank_pressure -- Pressure of the tank, in bar
-    
+    tank_rule -- rule for warning in the tank consumption
+                 must be either :
+                 * XXXb (ex: 50b means 50 bar minimum at the end of the dive)
+                 * 1/x (ex : 1/3 for rule of thirds:
+                          1/3 for way in,
+                          1/3 for way out,
+                          1/3 remains at the end of the dive)
+                       ( ex2: 1/6 rule: 1/6 way IN, 1/6 wau OUT, 2/3 remains)
     Returns:
     <nothing>
     
@@ -143,6 +152,18 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     else:
       self.total_gas = 0.0
     self.remaining_gas = self.total_gas
+    # calculate minimum remaining gas
+    m = re.search("([0-9]+)b", tank_rule)
+    if m is not None:
+      self.min_gas = self.calculate_real_volume(self.tank_vol,
+                                                int(m.group(1)))
+    else:
+      m = re.search("1/([0-9])", tank_rule)
+      if m is not None:
+        self.min_gas = self.total_gas * (float(1)- 2*(1/float(m.group(1))))
+      else:
+        self.min_gas = 0
+    self.logger.debug("minimum gas authorised: %s" % self.min_gas)
     self._validate()
 
   def calculate_real_volume(self, tank_vol=None, tank_pressure=None,
@@ -381,10 +402,24 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     take one argument : gas_consumed, in liter
     return EmptyTank Exception if all the gas is consumed
     return remaining gaz in tank (in liter) in other cases
+
+    modification: do not raise empty tank : does the calculation and the
+    result may be negative : in this case (result < of choosen tank rules)
+    it will display a special warning
     """
-    if self.remaining_gas - gas_consumed < 0:
-      raise EmptyTank("There is not enought gas in this tank")
+    #if self.remaining_gas - gas_consumed < 0:
+      #raise EmptyTank("There is not enought gas in this tank")
+    #else:
+    self.used_gas += gas_consumed
+    self.remaining_gas -= gas_consumed
+    return self.remaining_gas
+
+  def check_rule(self):
+    """Checks the rule agains the remaining gas in the tank
+    returns : True if rule OK
+              False if rule NOK
+    """
+    if self.remaining_gas < self.min_gas:
+      return False
     else:
-      self.used_gas += gas_consumed
-      self.remaining_gas -= gas_consumed
-      return self.remaining_gas
+      return True

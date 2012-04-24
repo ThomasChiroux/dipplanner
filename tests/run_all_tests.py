@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! /usr/bin/python
 #
 # This script is based on the one found at http://vim.wikia.com/wiki/VimTip280
 # but has been generalised. It searches the current working directory for

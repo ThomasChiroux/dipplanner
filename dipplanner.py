@@ -40,6 +40,7 @@ import settings
 from dive import Dive
 from dive import ProcessingError, NothingToProcess, InfiniteDeco
 from tank import Tank
+from tank import InvalidGas, InvalidTank, InvalidMod, EmptyTank
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
 from tools import pressure_converter
@@ -302,6 +303,10 @@ You can specify multiple args like:
 """)
 
   group2 = parser.add_argument_group("Dive Parameters")
+  group2.add_argument("--model", metavar="VAL", type=str,
+                      default = "ZHL16c", choices=['ZHL16b', 'ZHL16c'],
+                      help="""Decompression model: either ZHL16b or ZHL16c """)
+
   group2.add_argument("--gflow", metavar="VAL", type=str,
                     help="""GF low, in """)
   group2.add_argument("--gfhigh", metavar="VAL", type=str,
@@ -399,7 +404,10 @@ By default the segment time is shortened by descent or ascent time
     except:
       parser.error("Error while parsing option ascentrate : %s" %\
                    args.ascentrate)
-  
+
+  if args.model:
+    settings.DECO_MODEL = args.model
+
   if args.maxppo2:
     settings.DEFAULT_MAX_PPO2 = args.maxppo2
 
@@ -451,8 +459,20 @@ if __name__ == "__main__":
   
   if tanks and segments:
     profile = Dive(segments, tanks.values())
-    profile.do_dive()
-    print profile
+    try:
+      profile.do_dive()
+    except EmptyTank, err:
+      print "ERROR: " + err.description
+    except InvalidGas, err:
+      print "ERROR: " + err.description
+    except InvalidTank, err:
+      print "ERROR: " + err.description
+    except InvalidMod, err:
+      print "ERROR: " + err.description
+    except Exception, err:
+      print "ERROR: " + err.description
+    else:
+      print profile
   else:
     print "Error : you must provide tanks and segments"
     sys.exit(0)

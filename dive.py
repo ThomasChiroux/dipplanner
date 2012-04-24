@@ -118,7 +118,7 @@ class Dive(object):
     if model is None:
       # new dive : new model
       self.if_repetative_dive = False
-      self.model = Model()
+      self.model = Model() # buhlman model by default
       self.metadata = ""
     else:
       # repetative dive

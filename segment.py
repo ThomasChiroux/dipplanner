@@ -95,8 +95,8 @@ class Segment(object):
     return "%8s: at %3dm for %s [RT:%s], on %s,  SP:%s, END:%sm" % ( 
                                           self.type.upper(),
                                           self.depth,
-                                          seconds_to_strtime(self.time),
-                                          seconds_to_strtime(self.run_time),
+                                          self.get_time_str(),
+                                          self.get_run_time_str(),
                                           str(self.tank),
                                           self.setpoint,
                                           self.get_end() )
@@ -126,7 +126,35 @@ class Segment(object):
       raise UnauthorizedMod("depth is exceeding the maximum MOD")
     if self.depth < self.tank.get_min_od(): # checks minimum operating depth
       raise UnauthorizedMod("depth is too low for the minimum MOD")
-    
+
+  def get_time_str(self):
+    """returns segment time in the form MMM:SS
+
+    Keyword Arguments:
+    <none>
+
+    Returns:
+    string -- segment time in the form MMM:SS
+
+    Raise:
+    <nothing>
+    """
+    return seconds_to_strtime(self.time)
+
+  def get_run_time_str(self):
+    """returns runtime in the form MMM:SS
+
+    Keyword Arguments:
+    <none>
+
+    Returns:
+    string -- segment time in the form MMM:SS
+
+    Raise:
+    <nothing>
+    """
+    return seconds_to_strtime(self.run_time)
+
   def get_p_absolute(self, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     """returns the absolute pression in bar
     (1atm = 1ATA = 1.01325 bar = 14.70psi)

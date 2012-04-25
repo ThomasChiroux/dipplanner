@@ -174,8 +174,17 @@ def parse_config_file(filenames):
          config.get(section, 'method_for_depth_calculation') == 'complex':
          settings.METHOD_FOR_DEPTH_CALCULATION = config.get(section, 'method_for_depth_calculation')
 
+  if config.has_section('output'):
+    section = 'output'
+    if config.has_option(section, 'template'):
+      settings.TEMPLATE = config.get(section, 'template')
+
   if config.has_section('general'):
     section = 'general'
+    if config.has_option(section, 'deco_model'):
+      if config.get(section, 'deco_model') == "ZHL16b" or \
+          config.get(section, 'deco_model') == "ZHL16c":
+        settings.DECO_MODEL = config.get(section, 'deco_model')
     if config.has_option(section, 'max_ppo2'):
       settings.DEFAULT_MAX_PPO2 = float(config.get(section, 'max_ppo2'))
     if config.has_option(section, 'min_ppo2'):
@@ -350,6 +359,12 @@ By default the segment time is shortened by descent or ascent time
                     type=float,
                     help="""Change ambiant pressure at sea level (in bar)""")
 
+  group4 = parser.add_argument_group("Output Parameters")
+  group4.add_argument("--template", metavar="TEMPLATE",
+                      type=str,
+                      help="""Name of the template to be used
+The template file should be present in ./templates""")
+
   # parse the options
   args = parser.parse_args()
 
@@ -453,7 +468,9 @@ By default the segment time is shortened by descent or ascent time
         parser.error("Error : tank name (%s) in not found in tank list !" % tankname)
       except:
         raise
-     
+
+  if args.template:
+    settings.TEMPLATE = args.template
   # returns
   return (args, tanks, segments)
 
@@ -476,7 +493,7 @@ if __name__ == "__main__":
     except Exception, err:
       print "ERROR: " + err.description
     else:
-      print profile
+      print profile.output()
   else:
     print "Error : you must provide tanks and segments"
     sys.exit(0)

@@ -133,12 +133,8 @@ class TestTankVolume4(TestTank):
   def runTest(self):
     mytank = Tank(tank_vol=15, tank_pressure=207)
     mytank.consume_gas(405)
-    try:
-      mytank.consume_gas(2800)
-    except EmptyTank:
-      pass
-    else:
-      self.fail("should raise EmptyTank")
+    mytank.consume_gas(2800)
+    self.assertEqual(mytank.check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s)' % mytank.check_rule())
 
 class TestTankInvalidGas(TestTank):    
   def runTest(self):

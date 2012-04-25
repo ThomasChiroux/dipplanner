@@ -74,6 +74,12 @@ class TestDiveTxNormoDecoNx8010m10min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas,339.7312725,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8010m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -92,7 +98,13 @@ class TestDiveTxNormoDecoNx8010m20min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas,683.7568725,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
-    
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8010m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -111,6 +123,12 @@ class TestDiveTxNormoDecoNx8010m30min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1027.7824725,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 class TestDiveTxNormoDecoNx8010m40min(TestDive):
   def setUp(self):
@@ -131,6 +149,12 @@ class TestDiveTxNormoDecoNx8010m40min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1371.8080725,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8010m50min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -149,6 +173,12 @@ class TestDiveTxNormoDecoNx8010m50min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1715.8336725,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 class TestDiveTxNormoDecoNx8010m60min(TestDive):
   def setUp(self):
@@ -169,19 +199,24 @@ class TestDiveTxNormoDecoNx8010m60min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2059.8592725,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8010m180min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(10, 180*60, self.txtanknormodbl, 0)
     self.profile1 = Dive([diveseg1], [self.txtanknormodbl, self.deco1])
-    
-  def runTest(self):
-    try:
-      self.profile1.do_dive()
-    except EmptyTank:
-      pass
-    else:
-      self.fail("should raise EmptyTank")
+    self.profile1.do_dive()
+
+  def test_tank0_cons(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank1_cons(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 # ===================================================== 20m tests ==============
 class TestDiveTxNormoDecoNx8020m10min(TestDive):
@@ -203,6 +238,12 @@ class TestDiveTxNormoDecoNx8020m10min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 544.96697445,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8020m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -221,7 +262,13 @@ class TestDiveTxNormoDecoNx8020m20min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1060.76567445,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
-    
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8020m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -240,6 +287,12 @@ class TestDiveTxNormoDecoNx8020m30min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1576.56437445,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 class TestDiveTxNormoDecoNx8020m40min(TestDive):
   def setUp(self):
@@ -260,19 +313,24 @@ class TestDiveTxNormoDecoNx8020m40min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2092.36307445,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8020m120min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(20, 120*60, self.txtanknormodbl, 0)
     self.profile1 = Dive([diveseg1], [self.txtanknormodbl, self.deco1])
-    
-  def runTest(self):
-    try:
-      self.profile1.do_dive()
-    except EmptyTank:
-      pass
-    else:
-      self.fail("should raise EmptyTank")
+    self.profile1.do_dive()
+
+  def test_tank0_cons(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank1_cons(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 # ===================================================== 30m tests ==============
 class TestDiveTxNormoDecoNx8030m10min(TestDive):
@@ -294,6 +352,12 @@ class TestDiveTxNormoDecoNx8030m10min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 755.43696195,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8030m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -312,7 +376,13 @@ class TestDiveTxNormoDecoNx8030m20min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1435.9915599,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
-    
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8030m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -331,6 +401,12 @@ class TestDiveTxNormoDecoNx8030m30min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2130.64118775,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 class TestDiveTxNormoDecoNx8030m40min(TestDive):
   def setUp(self):
@@ -351,19 +427,24 @@ class TestDiveTxNormoDecoNx8030m40min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2893.60329135,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8030m90min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(30, 90*60, self.txtanknormodbl, 0)
     self.profile1 = Dive([diveseg1], [self.txtanknormodbl, self.deco1])
-    
-  def runTest(self):
-    try:
-      self.profile1.do_dive()
-    except EmptyTank:
-      pass
-    else:
-      self.fail("should raise EmptyTank")
+    self.profile1.do_dive()
+
+  def test_tank0_cons(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank1_cons(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 # ===================================================== 40m tests ==============
 class TestDiveTxNormoDecoNx8040m10min(TestDive):
@@ -385,6 +466,12 @@ class TestDiveTxNormoDecoNx8040m10min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 952.74372345,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8040m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -403,7 +490,13 @@ class TestDiveTxNormoDecoNx8040m20min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1876.4761188,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
-    
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8040m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -422,6 +515,12 @@ class TestDiveTxNormoDecoNx8040m30min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas,2853.16205265,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 class TestDiveTxNormoDecoNx8040m40min(TestDive):
   def setUp(self):
@@ -442,6 +541,12 @@ class TestDiveTxNormoDecoNx8040m40min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas,3921.45092145,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8040m50min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -461,19 +566,24 @@ class TestDiveTxNormoDecoNx8040m50min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 4933.7794242,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8040m60min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(40, 60*60, self.txtanknormodbl, 0)
     self.profile1 = Dive([diveseg1], [self.txtanknormodbl, self.deco1])
-    
-  def runTest(self):
-    try:
-      self.profile1.do_dive()
-    except EmptyTank:
-      pass
-    else:
-      self.fail("should raise EmptyTank")
+    self.profile1.do_dive()
+
+  def test_tank0_cons(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank1_cons(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 # ===================================================== 50m tests ==============
 class TestDiveTxNormoDecoNx8050m10min(TestDive):
@@ -495,6 +605,12 @@ class TestDiveTxNormoDecoNx8050m10min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1183.5343281,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8050m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -513,7 +629,13 @@ class TestDiveTxNormoDecoNx8050m20min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2378.4085485,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
-    
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8050m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -532,6 +654,12 @@ class TestDiveTxNormoDecoNx8050m30min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3661.42772955,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 class TestDiveTxNormoDecoNx8050m40min(TestDive):
   def setUp(self):
@@ -552,19 +680,24 @@ class TestDiveTxNormoDecoNx8050m40min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 5112.52849815,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8050m50min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(50, 50*60, self.txtanknormodbl, 0)
     self.profile1 = Dive([diveseg1], [self.txtanknormodbl, self.deco1])
-    
-  def runTest(self):
-    try:
-      self.profile1.do_dive()
-    except EmptyTank:
-      pass
-    else:
-      self.fail("should raise EmptyTank")
+    self.profile1.do_dive()
+
+  def test_tank0_cons(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank1_cons(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 # ===================================================== 60m tests ==============
 class TestDiveTxNormoDecoNx8060m10min(TestDive):
@@ -586,6 +719,12 @@ class TestDiveTxNormoDecoNx8060m10min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1414.3156506, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8060m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -604,7 +743,13 @@ class TestDiveTxNormoDecoNx8060m20min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2903.7880302,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
-    
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8060m25min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -623,6 +768,12 @@ class TestDiveTxNormoDecoNx8060m25min(TestDive):
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3686.87302545,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 class TestDiveTxNormoDecoNx8060m30min(TestDive):
   def setUp(self):
@@ -643,19 +794,24 @@ class TestDiveTxNormoDecoNx8060m30min(TestDive):
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 4587.34384065,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
+  def test_tank_cons_rule_0(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank_cons_rule_1(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
+
 class TestDiveTxNormoDecoNx8060m40min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(60, 40*60, self.txtanknormodbl, 0)
     self.profile1 = Dive([diveseg1], [self.txtanknormodbl, self.deco1])
-    
-  def runTest(self):
-    try:
-      self.profile1.do_dive()
-    except EmptyTank:
-      pass
-    else:
-      self.fail("should raise EmptyTank")
+    self.profile1.do_dive()
+
+  def test_tank0_cons(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
+
+  def test_tank1_cons(self):
+    self.assertEqual(self.profile1.tanks[1].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[1].check_rule(), self.profile1.tanks[1].name()))
 
 # ===================================================== 70m tests ==============
 class TestDiveTxNormoDecoNx8070m10min(TestDive):

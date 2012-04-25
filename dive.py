@@ -30,6 +30,7 @@ __authors__ = [
   'Thomas Chiroux',
 ]
 
+import os
 import logging
 # local imports
 import settings
@@ -37,6 +38,7 @@ from dipp_exception import DipplannerException
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from model.buhlmann.model import Model
 from tools import depth_pressure
+from jinja2 import Environment, FileSystemLoader
 
 class NothingToProcess(DipplannerException):
   """raised when the is no input segments to process"""
@@ -152,24 +154,10 @@ class Dive(object):
     self.metadata = ""
 
   def __repr__(self):
-    """Returns a string representing the result of the dive"""
-    text = "Dive profile : GF:%s-%s\n" % (settings.GF_LOW*100, 
-                                          settings.GF_HIGH*100)
-    for segment in self.output_segments:
-      text += "%s\n" % str(segment)
-    text += "Gas:\n"
-    for tank in self.tanks:
-      text += "  %s : Total: %.1fl, Used: %.1fl (rem: %.1fl or %db)\n" % \
-                  (str(tank),
-                   tank.total_gas,
-                   tank.used_gas, 
-                   tank.remaining_gas, 
-                   tank.remaining_gas / tank.tank_vol)
-      if not tank.check_rule():
-        text += "   WARNING !!! Not enought remaining gas in tank (min: %.1fl) !\n" % tank.min_gas
-    text += "Oxygen Toxicity: OTU:%d, CNS:%d%%\n" % \
-                            (self.model.ox_tox.otu, self.model.ox_tox.cns*100)
-    return text
+    """Returns a string representing the result of the dive using default
+       template
+    """
+    return self.output("default.tpl")
 
   def __str__(self):
     """Return a human readable name of the segment"""
@@ -190,7 +178,23 @@ class Dive(object):
 
     """
     return cmp(self.run_time, otherdive.run_time)
-      
+
+  def output(self, template=None):
+    """Returns the dive profile calculated, using the template given
+    in settings or command lines
+    """
+    env = Environment( loader = FileSystemLoader(os.getcwd() + '/templates/'))
+    if template is None:
+      tpl = env.get_template(settings.TEMPLATE)
+    else:
+      tpl = env.get_template(template)
+    text = tpl.render(settings = settings,
+                      output_segments = self.output_segments,
+                      tanks = self.tanks,
+                      model = self.model
+    )
+    return text
+
   def do_surface_interval(self, time):
     """Conducts a surface interval 
     by performing a constant depth calculation on air at zero meters

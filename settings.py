@@ -54,6 +54,8 @@ AMBIANT_PRESSURE_SEA_LEVEL = 1.01325 # surface pressure (in bar)
 METHOD_FOR_DEPTH_CALCULATION = 'complex' # either simple (/10) or complex
 
 # ========= User settings ========
+TEMPLATE = "default.tpl"
+
 DECO_MODEL = "ZHL16c"
 WATER_DENSITY = SEA_WATER_DENSITY 
 AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL

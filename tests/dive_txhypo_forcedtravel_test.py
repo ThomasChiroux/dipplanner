@@ -56,7 +56,7 @@ class TestDiveTxHypo50m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(50, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -84,7 +84,7 @@ class TestDiveTxHypo50m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(50, 20*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -112,7 +112,7 @@ class TestDiveTxHypo50m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(50, 30*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -140,7 +140,7 @@ class TestDiveTxHypo50m40min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(50, 40*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -168,7 +168,7 @@ class TestDiveTxHypo50m50min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(50, 50*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -185,7 +185,7 @@ class TestDiveTxHypo60m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(60, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -213,7 +213,7 @@ class TestDiveTxHypo60m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(60, 20*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -241,7 +241,7 @@ class TestDiveTxHypo60m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(60, 30*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -269,7 +269,7 @@ class TestDiveTxHypo60m40min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(60, 40*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -286,7 +286,7 @@ class TestDiveTxHypo70m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(70, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -314,7 +314,7 @@ class TestDiveTxHypo70m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(70, 20*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -342,7 +342,7 @@ class TestDiveTxHypo70m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(70, 30*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -359,7 +359,7 @@ class TestDiveTxHypo80m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(80, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -387,7 +387,7 @@ class TestDiveTxHypo80m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(80, 20*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -415,7 +415,7 @@ class TestDiveTxHypo80m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(80, 30*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -432,7 +432,7 @@ class TestDiveTxHypo90m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(90, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -460,7 +460,7 @@ class TestDiveTxHypo90m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(90, 20*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -488,7 +488,7 @@ class TestDiveTxHypo90m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(90, 30*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -505,7 +505,7 @@ class TestDiveTxHypo100m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(100, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -533,7 +533,7 @@ class TestDiveTxHypo100m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(100, 15*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -561,7 +561,7 @@ class TestDiveTxHypo100m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(100, 20*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -578,7 +578,7 @@ class TestDiveTxHypo110m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(110, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -606,7 +606,7 @@ class TestDiveTxHypo110m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(110, 15*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -634,7 +634,7 @@ class TestDiveTxHypo110m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(110, 20*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -651,7 +651,7 @@ class TestDiveTxHypo120m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(120, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -679,7 +679,7 @@ class TestDiveTxHypo120m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(120, 15*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -696,7 +696,7 @@ class TestDiveTxHypo130m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(130, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -724,7 +724,7 @@ class TestDiveTxHypo130m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(130, 15*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -741,7 +741,7 @@ class TestDiveTxHypo140m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(140, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -769,7 +769,7 @@ class TestDiveTxHypo140m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(140, 15*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -786,7 +786,7 @@ class TestDiveTxHypo150m10min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(150, 10*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
     
   def test_RT(self):
@@ -814,7 +814,7 @@ class TestDiveTxHypo150m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
     diveseg1 = SegmentDive(150, 15*60, self.txhypo, 0)
-    self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+    self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
     self.profile1.do_dive()
 
   def test_tank0_cons(self):
@@ -834,7 +834,7 @@ class TestDiveTxHypo160m10min(TestDive):
   def runTest(self):
     try:
       diveseg1 = SegmentDive(160, 10*60, self.txhypo, 0)
-      self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo, self.deco1])
+      self.profile1 = Dive([self.divesegdesc1, self.divesegdesc2, diveseg1], [self.txtravel, self.txhypo, self.deco1])
       self.profile1.do_dive()
     except UnauthorizedMod:
       pass

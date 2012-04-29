@@ -31,7 +31,7 @@ import unittest
 # import here the module / classes to be tested
 import dipplanner
 from tools import pressure_converter
-from tools import depth_pressure
+from tools import depth_to_pressure
 
 class TestTools(unittest.TestCase):
   def setUp(self):
@@ -101,38 +101,38 @@ class TestPressureConverterMore10000m(TestTools):
 
 class TestDepthPressure0m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(0), 0.0, 5, "Wrong depth pressure at 0m : %s" % depth_pressure(0))
+    self.assertAlmostEqual(depth_to_pressure(0), 0.0, 5, "Wrong depth pressure at 0m : %s" % depth_to_pressure(0))
 
 class TestDepthPressure10m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(10), 1.01043, 5, "Wrong depth pressure at 10m : %s" % depth_pressure(10))
+    self.assertAlmostEqual(depth_to_pressure(10), 1.01043, 5, "Wrong depth pressure at 10m : %s" % depth_to_pressure(10))
 class TestDepthPressure20m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(20), 2.02086, 5, "Wrong depth pressure at 20m : %s" % depth_pressure(20))
+    self.assertAlmostEqual(depth_to_pressure(20), 2.02086, 5, "Wrong depth pressure at 20m : %s" % depth_to_pressure(20))
 class TestDepthPressure30m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(30), 3.03129, 5, "Wrong depth pressure at 30m : %s" % depth_pressure(30))
+    self.assertAlmostEqual(depth_to_pressure(30), 3.03129, 5, "Wrong depth pressure at 30m : %s" % depth_to_pressure(30))
 class TestDepthPressure40m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(40), 4.04172, 5, "Wrong depth pressure at 40m : %s" % depth_pressure(40))
+    self.assertAlmostEqual(depth_to_pressure(40), 4.04172, 5, "Wrong depth pressure at 40m : %s" % depth_to_pressure(40))
 class TestDepthPressure50m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(50), 5.05215, 5, "Wrong depth pressure at 50m : %s" % depth_pressure(50))
+    self.assertAlmostEqual(depth_to_pressure(50), 5.05215, 5, "Wrong depth pressure at 50m : %s" % depth_to_pressure(50))
 class TestDepthPressure60m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(60), 6.06258, 5, "Wrong depth pressure at 60m : %s" % depth_pressure(60))
+    self.assertAlmostEqual(depth_to_pressure(60), 6.06258, 5, "Wrong depth pressure at 60m : %s" % depth_to_pressure(60))
 class TestDepthPressure70m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(70), 7.07301, 5, "Wrong depth pressure at 70m : %s" % depth_pressure(70))
+    self.assertAlmostEqual(depth_to_pressure(70), 7.07301, 5, "Wrong depth pressure at 70m : %s" % depth_to_pressure(70))
 class TestDepthPressure80m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(80), 8.08344, 5, "Wrong depth pressure at 80m : %s" % depth_pressure(80))
+    self.assertAlmostEqual(depth_to_pressure(80), 8.08344, 5, "Wrong depth pressure at 80m : %s" % depth_to_pressure(80))
 class TestDepthPressure90m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(90), 9.09387, 5, "Wrong depth pressure at 90m : %s" % depth_pressure(90))
+    self.assertAlmostEqual(depth_to_pressure(90), 9.09387, 5, "Wrong depth pressure at 90m : %s" % depth_to_pressure(90))
 class TestDepthPressure100m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(depth_pressure(100), 10.1043, 4, "Wrong depth pressure at 100m : %s" % depth_pressure(100))
+    self.assertAlmostEqual(depth_to_pressure(100), 10.1043, 4, "Wrong depth pressure at 100m : %s" % depth_to_pressure(100))
  
     
 if __name__ == "__main__":

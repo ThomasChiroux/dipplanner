@@ -12,7 +12,7 @@ Dive profile : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
 {{- "%8s"|format(segment.type|upper) }}: at
 {{- "%3d"|format(segment.depth|int) }}m for
 {{- segment.get_time_str() }} [RT:{{ segment.get_run_time_str() }}], on
-{{- segment.tank }}, SP:{{ segment.setpoint }}, END:{{segment.get_end() }}m
+{{- " "+segment.tank|string }}, SP:{{ segment.setpoint }}, END:{{segment.get_end() }}m
 {% endfor %}
 Gas: {% for tank in tanks %}
   {{ tank }}: Total: {{ "%.1f"|format(tank.total_gas) }}l, Used:

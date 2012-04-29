@@ -33,7 +33,7 @@ import logging
 import settings
 from dipp_exception import DipplannerException
 from tools import seconds_to_strtime
-from tools import depth_pressure
+from tools import depth_to_pressure, pressure_to_depth
 
 class UnauthorizedMod(DipplannerException):
   """raised when the MOD is not possible according to the 
@@ -173,10 +173,10 @@ class Segment(object):
     if method == 'simple':
       return float(self.depth)/10 + settings.AMBIANT_PRESSURE_SURFACE
     elif method == 'complex':
-      return depth_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE
+      return depth_to_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE
     else:
       raise ValueError("invalid method of calculation")
-      
+
   def get_end(self):
     """Calculates and returns E.N.D :
     Equivalent Narcosis Depth
@@ -192,6 +192,7 @@ class Segment(object):
     Integer : Equivalient Narcosis Depth in meter
     
     """
+    #TODO: refactor with get_end_for_given_depth in Tank
     p_absolute = self.get_p_absolute()
     # calculate the reference narcotic effect of air
     # Air consists of: Nitrogen N2: 78.08%, Oxygen O2: 20.95%, Argon Ar: 0.934%
@@ -229,9 +230,9 @@ class Segment(object):
                        (self.tank.f_N2 * settings.N2_NARCOTIC_VALUE + \
                         self.tank.f_O2 * settings.O2_NARCOTIC_VALUE + \
                         self.tank.f_He * settings.HE_NARCOTIC_VALUE)
-    if narcotic_index > 0:
-      end = int((narcotic_index / reference_narcotic - 1) * 10)
-    else:
+    end = pressure_to_depth(narcotic_index / reference_narcotic -
+                            settings.AMBIANT_PRESSURE_SURFACE)
+    if end < 0:
       end = 0
     return end
     
@@ -275,7 +276,9 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     self.setpoint = float(setpoint) # for CCR
     self.tank = tank # tank used for this segment
 
-    self.check_mod()
+    if self.setpoint == 0:
+      # check MOD only if OC
+      self.check_mod()
 
     
   def gas_used(self):
@@ -292,7 +295,7 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
       # CCR mode: we do not calculate gas_used
       return 0
     else:
-      pressure = (depth_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (depth_to_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE)
       return ( pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE))
     
 class SegmentDeco(Segment):
@@ -339,10 +342,11 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     # other parameters used in deco mode
     self.gf_used = 0.0 
     self.control_compartment = None 
-    self.mv_max = 0.0 
-    
-    self.check_mod()
+    self.mv_max = 0.0
 
+    if self.setpoint == 0:
+      # check MOD only if OC
+      self.check_mod()
 
   def gas_used(self):
     """calculates returns the quantity (in liter) of gas used for this segment
@@ -357,7 +361,7 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     if self.setpoint > 0 :
       return 0
     else:
-      pressure = (depth_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (depth_to_pressure(self.depth) + settings.AMBIANT_PRESSURE_SURFACE)
       return ( pressure * self.time * float(settings.DECO_CONSUMPTION_RATE))
 
 class SegmentAscDesc(Segment):
@@ -413,8 +417,10 @@ startdepth:%s, enddepth:%s, rate:%ss, tank:%s, sp:%f" % (start_depth,
       self.type = 'ascent' # type of segment
     else:
       self.type = 'descent'
-    
-    self.check_mod()
+
+    if self.setpoint == 0:
+      # check MOD only if OC
+      self.check_mod()
       
   def check_mod(self):
     """checks the mod for this segment according to the used tank.
@@ -460,5 +466,5 @@ startdepth:%s, enddepth:%s, rate:%ss, tank:%s, sp:%f" % (start_depth,
       return 0
     else:
       average_depth = (float(self.start_depth) + float(self.end_depth)) / 2.0
-      pressure = (depth_pressure(average_depth) + settings.AMBIANT_PRESSURE_SURFACE)
+      pressure = (depth_to_pressure(average_depth) + settings.AMBIANT_PRESSURE_SURFACE)
       return pressure * self.time * float(settings.DIVE_CONSUMPTION_RATE)

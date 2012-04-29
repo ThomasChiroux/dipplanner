@@ -62,6 +62,7 @@ AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL
 
 DEFAULT_MAX_PPO2 = 1.6
 DEFAULT_MIN_PPO2 = 0.19
+DEFAULT_MAX_END = 40 # in meter #TODO: add this in config and args and in dive segment sanity checks
 
 DIVE_CONSUMPTION_RATE = 17.0/60 # liter/s
 DECO_CONSUMPTION_RATE = 12.0/60 # liter/s
@@ -69,7 +70,9 @@ DECO_CONSUMPTION_RATE = 12.0/60 # liter/s
 DESCENT_RATE = float(20)/60 # m/s
 ASCENT_RATE = float(10)/60 # m/s
 
-RUN_TIME = True  # if True: segments represents runtime, 
+# Warning : if RUN-TIME is True, the segment duration must include descent time
+# if the duration is too small dipplanner will raise an error
+RUN_TIME = True  # if True: segments represents runtime,
                   # if false, segments represents segtime
               
 USE_OC_DECO = True # if True, use enabled gases of decomp in oc or bailout

@@ -79,7 +79,7 @@ def pressure_converter(altitude):
   return math.pow(1 - 2.25577 * math.pow(10,-5) * altitude, 5.25588) * \
          settings.AMBIANT_PRESSURE_SEA_LEVEL
          
-def depth_pressure(depth):
+def depth_to_pressure(depth):
   """Calculates depth pressure based on depth using a more complex
   method than only /10 
   
@@ -95,3 +95,21 @@ def depth_pressure(depth):
     return settings.WATER_DENSITY * 1E3 * g * float(depth) * 1E-5
   else:
     return float(depth)/10
+
+def pressure_to_depth(pressure):
+  """Calculates depth based on give pressure using a more complex
+  method than only *10
+
+  Keyword Arguments:
+  pressure - float in bar
+
+  Returns:
+  int - depth in meter
+
+  """
+  if settings.METHOD_FOR_DEPTH_CALCULATION == 'complex':
+    g = 9.81
+    # TODO : int or round
+    return int(float(pressure) / (settings.WATER_DENSITY * 1E3 * g * 1E-5))
+  else:
+    return int(float(pressure)*10)

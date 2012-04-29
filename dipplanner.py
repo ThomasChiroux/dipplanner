@@ -477,7 +477,6 @@ The template file should be present in ./templates""")
 if __name__ == "__main__":
   activate_debug()
   (args, tanks, segments) = parse_arguments()
-  
   if tanks and segments:
     profile = Dive(segments, tanks.values())
     try:

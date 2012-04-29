@@ -36,6 +36,7 @@ import re
 # local imports
 import settings
 from dipp_exception import DipplannerException
+from tools import pressure_to_depth, depth_to_pressure
 
 
 class InvalidGas(DipplannerException):
@@ -145,7 +146,9 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
       self.mod = self._calculate_mod(self.max_ppo2)
     
     self.in_use = True
-  
+
+    self._validate()
+
     self.used_gas = 0.0
     if self.tank_vol and self.tank_pressure:
       self.total_gas = self.calculate_real_volume()
@@ -164,7 +167,6 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
       else:
         self.min_gas = 0
     self.logger.debug("minimum gas authorised: %s" % self.min_gas)
-    self._validate()
 
   def calculate_real_volume(self, tank_vol=None, tank_pressure=None,
                                   f_O2=None, f_He=None):
@@ -305,7 +307,7 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     Integer : Maximum Operating Depth in meter
     
     """
-    return int(10*(float(max_ppo2) / self.f_O2)-10)
+    return max(int(10*(float(max_ppo2) / self.f_O2)-10),0)
     
   def _validate(self):
     """Test the validity of the tank informations inside this object
@@ -325,10 +327,10 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     InvalidTank -- when pressure or tank size exceed maximum values or are
                    incorrect (like negatives) values
     """
-    if self.f_O2 < 0 or self.f_He < 0 or self.f_N2 < 0:
-      raise InvalidGas("Proportion of gas should not be < 0")
     if self.f_O2 + self.f_He > 1:
       raise InvalidGas("Proportion of O2+He is more than 100%")
+    if self.f_O2 < 0 or self.f_He < 0 or self.f_N2 < 0:
+      raise InvalidGas("Proportion of gas should not be < 0")
     if self.mod <= 0:
       raise InvalidMod("MOD should be >= 0")
     if self.mod > self._calculate_mod(self.max_ppo2) or \
@@ -396,7 +398,65 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     return 0 if diving from/to surface is ok with this gaz
     """
     return self._calculate_mod(min_ppo2)
-    
+
+  def get_mod_for_given_end(self, end):
+    """calculate a mod based on given end and based on gaz inside the tank
+
+    Keyword arguments:
+    end -- int -- equivalent narcotic depth in meter
+
+    Returns:
+    mod -- int -- depth in meter based on given end
+
+    Raise:
+    <nothing>
+    """
+    # calculate the reference narcotic effect of air
+    # Air consists of: Nitrogen N2: 78.08%, Oxygen O2: 20.95%, Argon Ar: 0.934%
+    reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE *\
+                         (settings.N2_NARCOTIC_VALUE * 0.7808 +\
+                          settings.O2_NARCOTIC_VALUE * 0.2095 +\
+                          settings.AR_NARCOTIC_VALUE * 0.00934)
+    #OC mode
+    narcotic_tank = (self.f_N2 * settings.N2_NARCOTIC_VALUE +\
+                      self.f_O2 * settings.O2_NARCOTIC_VALUE +\
+                      self.f_He * settings.HE_NARCOTIC_VALUE)
+
+    p_absolute = (depth_to_pressure(end) + settings.AMBIANT_PRESSURE_SURFACE) *\
+                 reference_narcotic / narcotic_tank
+    mod = pressure_to_depth(p_absolute - settings.AMBIANT_PRESSURE_SURFACE)
+    return mod
+
+  def get_end_for_given_depth(self, depth):
+    """calculate a end based on given depth and based on gaz inside the tank
+
+    Keyword arguments:
+    depth -- int -- in meter
+
+    Returns:
+    end -- int -- equivalent narcotic depth in meter
+
+    Raise:
+    <nothing>
+    """
+    p_absolute = depth_to_pressure(depth) + settings.AMBIANT_PRESSURE_SURFACE
+    # calculate the reference narcotic effect of air
+    # Air consists of: Nitrogen N2: 78.08%, Oxygen O2: 20.95%, Argon Ar: 0.934%
+    reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE *\
+                         (settings.N2_NARCOTIC_VALUE * 0.7808 +\
+                          settings.O2_NARCOTIC_VALUE * 0.2095 +\
+                          settings.AR_NARCOTIC_VALUE * 0.00934)
+    #OC mode
+    narcotic_index = p_absolute * (self.f_N2 * settings.N2_NARCOTIC_VALUE +\
+                                   self.f_O2 * settings.O2_NARCOTIC_VALUE +\
+                                   self.f_He * settings.HE_NARCOTIC_VALUE)
+
+    end = pressure_to_depth(narcotic_index / reference_narcotic -
+                            settings.AMBIANT_PRESSURE_SURFACE)
+    if end < 0:
+      end = 0
+    return end
+
   def consume_gas(self, gas_consumed):
     """Consume gas inside this tank
     take one argument : gas_consumed, in liter

@@ -37,7 +37,7 @@ import settings
 from dipp_exception import DipplannerException
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from model.buhlmann.model import Model
-from tools import depth_pressure
+from tools import depth_to_pressure
 from jinja2 import Environment, FileSystemLoader
 
 class NothingToProcess(DipplannerException):
@@ -94,7 +94,6 @@ class Dive(object):
   is_repetative_dive -- Flag for repetative dives
   surface_interval -- for surf. int. in seconds
   metadata -- description for the dive
-  
   """
   
   def __init__(self, known_segments, known_tanks, model=None):
@@ -133,7 +132,6 @@ class Dive(object):
     for segment in known_segments:
       if segment.in_use:
         self.input_segments.append(segment)
-        
     # filter lists of gases to make the used list of gases
     self.tanks = []
     for tank in known_tanks:
@@ -251,11 +249,15 @@ class Dive(object):
     run_time_flag = settings.RUN_TIME
      
     # sets initial state
+    #
+
+    #else:
     first_segment = self.input_segments[0]
     self.current_tank = first_segment.tank
+
     # Sort self.tanks based on MOD ? why ? see below ?
     self.tanks.sort()
-    
+
     self.current_depth = 0.0
     self.pp_O2 = first_segment.setpoint
     if self.pp_O2 == 0.0:
@@ -263,15 +265,33 @@ class Dive(object):
     else:
       self.is_closed_circuit = True
     self.in_final_ascent = False
-    
+
+    # check if tank for 1rst segment is suitable for descent (OC mode)
+    if not self.is_closed_circuit:
+      if self.input_segments[0].tank.get_min_od() > 0:
+        # tank is not ok, we need to look for another better tank
+        # at first, try to find a tank suitable from 0m to depth of first segment
+        self.tanks.reverse()
+        for tank in self.tanks:
+          if tank.get_min_od() == 0:
+            if tank.mod >= self.input_segments[0].depth:
+              #TODO: take care of END ? calculate depth at MAX_END and switch at that depth
+              # ok we have a winner
+              self.current_tank = tank
+              break
+        #TODO:ICI !!
+      # not found : we need to stop in the descent to switch from first gas
+      # to bottom gas
+
+    self.tanks.sort()
     for seg in self.input_segments:
       if seg.type == 'const': #only dive segment allowed for input ignore other
         delta_depth = float(seg.depth) - float(self.current_depth)
         #Ascend or descend to dive segment, 
         #using existing gas and ppO2 settings
         if delta_depth > 0.0: # descent
-          self.model.asc_desc(depth_pressure(self.current_depth), #float(self.current_depth)/10, 
-                              depth_pressure(seg.depth), #float(seg.depth)/10, 
+          self.model.asc_desc(depth_to_pressure(self.current_depth), #float(self.current_depth)/10,
+                              depth_to_pressure(seg.depth), #float(seg.depth)/10,
                               settings.DESCENT_RATE,
                               self.current_tank.f_He,
                               self.current_tank.f_N2,
@@ -295,7 +315,7 @@ class Dive(object):
         if seg.time > 0: #only do this if it's not a waypoint
           if run_time_flag:
             run_time_flag = False # do this one only
-            self.model.const_depth(depth_pressure(seg.depth), #float(seg.depth)/10,
+            self.model.const_depth(depth_to_pressure(seg.depth), #float(seg.depth)/10,
                                    seg.time - self.run_time,
                                    self.current_tank.f_He,
                                    self.current_tank.f_N2,
@@ -312,7 +332,7 @@ class Dive(object):
             self.run_time = seg.time 
             self.logger.debug("update run time : %ss" % self.run_time)
           else:
-            self.model.const_depth(depth_pressure(seg.depth), #float(seg.depth)/10,
+            self.model.const_depth(depth_to_pressure(seg.depth), #float(seg.depth)/10,
                                    seg.time,
                                    self.current_tank.f_He,
                                    self.current_tank.f_N2,
@@ -403,7 +423,7 @@ class Dive(object):
     self.model.gradient.set_gf_at_depth(next_stop_depth)
     
     # Remember maxM-Value and controlling compartment
-    max_MV = self.model.m_value(depth_pressure(self.current_depth)) #float(self.current_depth)/10)
+    max_MV = self.model.m_value(depth_to_pressure(self.current_depth)) #float(self.current_depth)/10)
     control = self.model.control_compartment()
     
     while self.current_depth > target_depth:
@@ -459,7 +479,7 @@ class Dive(object):
                                                       self.current_tank.f_N2,
                                                       self.pp_O2,
                                                       self.model.ceiling()))
-        self.model.const_depth(depth_pressure(self.current_depth), #float(self.current_depth)/10,
+        self.model.const_depth(depth_to_pressure(self.current_depth), #float(self.current_depth)/10,
                                stop_time,
                                self.current_tank.f_He,
                                self.current_tank.f_N2,
@@ -496,8 +516,8 @@ class Dive(object):
         # TODO : if we enable this code always (not in rlif, but direct) then
         #        model will ascend between deco stops, but ... 
         #        this causes collateral damage to runtim calculations
-        self.model.asc_desc(depth_pressure(self.current_depth), #float(self.current_depth)/10, 
-                            depth_pressure(next_stop_depth), #float(next_stop_depth)/10,
+        self.model.asc_desc(depth_to_pressure(self.current_depth), #float(self.current_depth)/10,
+                            depth_to_pressure(next_stop_depth), #float(next_stop_depth)/10,
                             settings.ASCENT_RATE,
                             self.current_tank.f_He,
                             self.current_tank.f_N2,
@@ -510,7 +530,7 @@ class Dive(object):
       
       #now we moved up the the next depth
       self.current_depth = next_stop_depth
-      max_MV = self.model.m_value(depth_pressure(self.current_depth)) #float(self.current_depth)/10)
+      max_MV = self.model.m_value(depth_to_pressure(self.current_depth)) #float(self.current_depth)/10)
       control = self.model.control_compartment()
       
       # Check and switch deco gas

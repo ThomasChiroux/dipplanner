@@ -271,18 +271,38 @@ class Dive(object):
       if self.input_segments[0].tank.get_min_od() > 0:
         # tank is not ok, we need to look for another better tank
         # at first, try to find a tank suitable from 0m to depth of first segment
+        self.logger.debug("bottom gaz not ok for descent")
         self.tanks.reverse()
         for tank in self.tanks:
           if tank.get_min_od() == 0:
-            if tank.mod >= self.input_segments[0].depth:
-              #TODO: take care of END ? calculate depth at MAX_END and switch at that depth
+            self.logger.debug("This tank may be suitable:%s, mod:%s, end at d:%s" % (str(tank), tank.mod, tank.get_end_for_given_depth(self.input_segments[0].depth) ))
+
+            if tank.mod >= self.input_segments[0].depth and\
+              tank.get_end_for_given_depth(self.input_segments[0].depth) < settings.DEFAULT_MAX_END:
               # ok we have a winner
+              self.logger.info("Changed tank for descent to:%s" % str(tank))
               self.current_tank = tank
               break
-        #TODO:ICI !!
-      # not found : we need to stop in the descent to switch from first gas
-      # to bottom gas
-
+        if self.current_tank == self.input_segments[0].tank:
+          # not found : we need to stop in the descent to switch from first gas
+          # to bottom gas
+          self.logger.debug("No directly usage tank found, try to stop and change tank")
+          for tank in self.tanks:
+            if tank.get_min_od() ==0:
+              self.logger.debug("This tank may be suitable:%s, mod:%s, end at d:%s" % (str(tank), tank.mod, tank.get_end_for_given_depth(self.input_segments[0].depth) ))
+              if settings.TRAVEL_SWITCH == 'late':
+                depth = min(tank.mod,
+                            tank.get_mod_for_given_end(settings.DEFAULT_MAX_END))
+                self.input_segments.insert(0, SegmentDive(depth=depth, tank=self.input_segments[0].tank, time=0))
+                self.input_segments.insert(0, SegmentDive(depth=depth, tank=tank, time=0))
+                self.current_tank = tank
+                break
+              else: # early
+                depth = self.input_segments[0].tank.get_min_od(min_ppo2=settings.DEFAULT_MIN_PPO2)
+                self.input_segments.insert(0, SegmentDive(depth=depth, tank=self.input_segments[0].tank, time=0))
+                self.input_segments.insert(0, SegmentDive(depth=depth, tank=tank, time=0))
+                self.current_tank = tank
+                break
     self.tanks.sort()
     for seg in self.input_segments:
       if seg.type == 'const': #only dive segment allowed for input ignore other

@@ -35,7 +35,7 @@ SEA_WATER_DENSITY = 1.03
 ABSOLUTE_MAX_PPO2 = 2.0
 ABSOLUTE_MIN_PPO2 = 0.16
 ABSOLUTE_MAX_TANK_PRESSURE = 300 # in bar
-ABSOLUTE_MAX_TANK_SIZE = 30 # in liter
+ABSOLUTE_MAX_TANK_SIZE = 2*20 # in liter
 
 #TODO: what is the good value : 0.014 or 0.0627 ??
 PP_H2O_SURFACE = 0.014 #0.0627 # 0.014 # in bar : eq 10.5mmHG (20°; 60% hum)
@@ -52,6 +52,7 @@ FORCE_ALL_STOPS = True # one deco stop begun, force to stop to each deco depth
                        # stop
 AMBIANT_PRESSURE_SEA_LEVEL = 1.01325 # surface pressure (in bar)
 METHOD_FOR_DEPTH_CALCULATION = 'complex' # either simple (/10) or complex
+TRAVEL_SWITCH = 'late' # "late" or "early"
 
 # ========= User settings ========
 TEMPLATE = "default.tpl"
@@ -61,8 +62,8 @@ WATER_DENSITY = SEA_WATER_DENSITY
 AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL
 
 DEFAULT_MAX_PPO2 = 1.6
-DEFAULT_MIN_PPO2 = 0.19
-DEFAULT_MAX_END = 40 # in meter #TODO: add this in config and args and in dive segment sanity checks
+DEFAULT_MIN_PPO2 = 0.21
+DEFAULT_MAX_END = 30 # in meter
 
 DIVE_CONSUMPTION_RATE = 17.0/60 # liter/s
 DECO_CONSUMPTION_RATE = 12.0/60 # liter/s

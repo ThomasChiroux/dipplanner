@@ -22,7 +22,14 @@
 """main dipplanner module
 runs in command line and output resulting dive profile
 also initiate log files
+
+PROJECT TODO:
+=============
 """
+#TODO: add cc-mode dive tests
+#TODO: add multisegment dive tests
+#TODO: add repetitive dives tests
+#TODO: ResTifying docstrings and add sphinx for doc generation
 
 __version__ = "0.2nightly"
 
@@ -173,6 +180,10 @@ def parse_config_file(filenames):
       if config.get(section, 'method_for_depth_calculation') == 'simple' or \
          config.get(section, 'method_for_depth_calculation') == 'complex':
          settings.METHOD_FOR_DEPTH_CALCULATION = config.get(section, 'method_for_depth_calculation')
+    if config.has_option(section, 'travel_switch'):
+      if config.get(section, 'travel_switch') == 'late' or\
+         config.get(section, 'travel_switch') == 'early':
+        settings.TRAVEL_SWITCH = config.get(section, 'travel_switch')
 
   if config.has_section('output'):
     section = 'output'
@@ -189,6 +200,8 @@ def parse_config_file(filenames):
       settings.DEFAULT_MAX_PPO2 = float(config.get(section, 'max_ppo2'))
     if config.has_option(section, 'min_ppo2'):
       settings.DEFAULT_MIN_PPO2 = float(config.get(section, 'min_ppo2'))
+    if config.has_option(section, 'max_end'):
+      settings.DEFAULT_MAX_END = float(config.get(section, 'max_end'))
     if config.has_option(section, 'descent_rate'):
       settings.DESCENT_RATE = float(config.get(section, 'descent_rate'))/60
     if config.has_option(section, 'ascent_rate'):
@@ -341,6 +354,9 @@ You can specify multiple args like:
     help="max allowed ppo2 for this dive.")
   group2.add_argument("--minppo2", metavar="VAL", type=float,
     help="minimum allowed ppo2 for this dive.")
+  group2.add_argument("--maxend", metavar="VAL", type=float,
+                      help="max END allowed for this dive.")
+
   group2.add_argument("--samegasfordeco", action="store_true",
     help="if set, do not use deco tanks (or bailout) for decompressions")
   group2.add_argument("--forcesegmenttime", action="store_true",
@@ -355,6 +371,13 @@ By default the segment time is shortened by descent or ascent time
           help="""method used for pressure from depth calculation.
           Simple method uses only +10m = +1bar
           Complex methods uses real water density""")
+
+  group3.add_argument("--travelswitch", metavar="late|early",
+                      type=str,
+                      help="""Travel switch method (late or early).
+            if late, it will keep the travel as long as possible
+            if early, it will switch to bottom tank as soon as is it breathable""")
+
   group3.add_argument("--ambiantpressureatsea", metavar="VAL",
                     type=float,
                     help="""Change ambiant pressure at sea level (in bar)""")
@@ -431,7 +454,10 @@ The template file should be present in ./templates""")
 
   if args.minppo2:
     settings.DEFAULT_MIN_PPO2 = args.minppo2
-  
+
+  if args.maxend:
+    settings.DEFAULT_MAX_END = args.maxend
+
   if args.samegasfordeco:
     settings.USE_OC_DECO = False
   
@@ -441,7 +467,11 @@ The template file should be present in ./templates""")
   if args.depthcalcmethod == 'simple' or\
      args.depthcalcmethod == 'complex':
     settings.METHOD_FOR_DEPTH_CALCULATION = args.depthcalcmethod
-  
+
+  if args.travelswitch == 'late' or\
+     args.travelswitch == 'early':
+    settings.TRAVEL_SWITCH = args.travelswitch
+
   if args.ambiantpressureatsea:
     settings.AMBIANT_PRESSURE_SEA_LEVEL = args.ambiantpressureatsea
    

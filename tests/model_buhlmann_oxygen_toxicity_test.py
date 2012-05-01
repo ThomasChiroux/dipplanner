@@ -31,12 +31,13 @@ import unittest
 # import here the module / classes to be tested
 from model.buhlmann.oxygen_toxicity import OxTox
 import dipplanner
+import settings
 
 class TestModelBuhlmannOxTox(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
-    
+    settings.RUN_TIME = True
     self.ox1 = OxTox()
     self.ox2 = OxTox()
 

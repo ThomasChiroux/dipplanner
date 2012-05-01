@@ -54,7 +54,7 @@ class TestTankisAir(TestTank):
     assert self.mytank.get_mod_for_given_end(30) == 31, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 38, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 39, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankNitrox32(TestTank):
   def setUp(self):
@@ -70,7 +70,7 @@ class TestTankNitrox32(TestTank):
     assert self.mytank.get_mod_for_given_end(30) == 31, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 38, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 39, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankisO2(TestTank):
   def setUp(self):
@@ -86,7 +86,7 @@ class TestTankisO2(TestTank):
     assert self.mytank.get_mod_for_given_end(30) == 31, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 38, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 39, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankisTrimix2030(TestTank):
   def setUp(self):
@@ -132,10 +132,10 @@ class TestTankisHeliox2080(TestTank):
     assert self.mytank.mod == 70
 
   def test_mod_at_end(self):
-    assert self.mytank.get_mod_for_given_end(30) == 96, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
+    assert self.mytank.get_mod_for_given_end(30) == 97, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 8, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 9, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankisAir2(TestTank):
   def setUp(self):
@@ -151,7 +151,7 @@ class TestTankisAir2(TestTank):
     assert self.mytank.get_mod_for_given_end(30) == 31, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 38, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 39, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankisNitrox32_2(TestTank):
   def setUp(self):
@@ -167,7 +167,7 @@ class TestTankisNitrox32_2(TestTank):
     assert self.mytank.get_mod_for_given_end(30) == 31, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 38, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 39, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankisO2_2(TestTank):
   def setUp(self):
@@ -183,7 +183,7 @@ class TestTankisO2_2(TestTank):
     assert self.mytank.get_mod_for_given_end(30) == 31, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 38, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 39, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankisTrimix2030_2(TestTank):
   def setUp(self):
@@ -231,10 +231,10 @@ class TestTankisHeliox2080_2(TestTank):
     assert self.mytank.mod == 59
 
   def test_mod_at_end(self):
-    assert self.mytank.get_mod_for_given_end(30) == 96, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
+    assert self.mytank.get_mod_for_given_end(30) == 97, "wrong mod at end:%s" % self.mytank.get_mod_for_given_end(30)
 
   def test_end_at_depth(self):
-    assert self.mytank.get_end_for_given_depth(40) == 8, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
+    assert self.mytank.get_end_for_given_depth(40) == 9, "wrong end at depth:%s" % self.mytank.get_end_for_given_depth(40)
 
 class TestTankVolume1(TestTank):
   def setUp(self):
@@ -279,7 +279,7 @@ class TestTankInvalidGas(TestTank):
 class TestTankInvalidTank1(TestTank):    
   def runTest(self):  
     try:
-      mytank = Tank(f_O2 = 0.8, tank_vol=33)
+      mytank = Tank(f_O2 = 0.8, tank_vol=43)
     except InvalidTank:
       pass
     else:

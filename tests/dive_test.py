@@ -37,12 +37,13 @@ from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
 import dipplanner
 from tools import seconds_to_strtime
+import settings
 
 class TestDive(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
-    
+    settings.RUN_TIME = True
     self.air12l = Tank(tank_vol=12.0, tank_pressure=200) 
     self.airtank = Tank(tank_vol=18.0, tank_pressure=200)
     self.airtank12 = Tank(tank_vol=12.0, tank_pressure=200)
@@ -83,13 +84,13 @@ class TestDiveAirDiveOutput1(TestDive):
     assert str(self.profile1.output_segments[4]) == "    DECO: at  12m for   0:32 [RT: 32:03], on Air,  SP:0.0, END:11m", "bad segment (%s)" % self.profile1.output_segments[4]
 
   def test_segment6(self):
-    assert str(self.profile1.output_segments[5]) == "    DECO: at   9m for   2:45 [RT: 34:48], on Air,  SP:0.0, END:8m", "bad segment (%s)" % self.profile1.output_segments[5]
+    assert str(self.profile1.output_segments[5]) == "    DECO: at   9m for   2:45 [RT: 34:48], on Air,  SP:0.0, END:9m", "bad segment (%s)" % self.profile1.output_segments[5]
 
   def test_segment7(self):
-    assert str(self.profile1.output_segments[6]) == "    DECO: at   6m for   5:03 [RT: 39:51], on Air,  SP:0.0, END:5m", "bad segment (%s)" % self.profile1.output_segments[6]
+    assert str(self.profile1.output_segments[6]) == "    DECO: at   6m for   5:03 [RT: 39:51], on Air,  SP:0.0, END:6m", "bad segment (%s)" % self.profile1.output_segments[6]
 
   def test_segment8(self):
-    assert str(self.profile1.output_segments[7]) == "    DECO: at   3m for   8:40 [RT: 48:31], on Air,  SP:0.0, END:2m", "bad segment (%s)" % self.profile1.output_segments[7]
+    assert str(self.profile1.output_segments[7]) == "    DECO: at   3m for   8:40 [RT: 48:31], on Air,  SP:0.0, END:3m", "bad segment (%s)" % self.profile1.output_segments[7]
 
 class TestDiveAirDiveRunTime1(TestDive):
   def runTest(self):
@@ -112,16 +113,16 @@ class TestDiveAirDiveOutput2(TestDive):
     assert str(self.profile2.output_segments[1]) == "   CONST: at  20m for  29:00 [RT: 30:00], on Air,  SP:0.0, END:19m", "bad segment (%s)" % self.profile2.output_segments[1]
 
   def test_segment3(self):
-    assert str(self.profile2.output_segments[2]) == "  ASCENT: at   9m for   1:06 [RT: 31:06], on Air,  SP:0.0, END:8m", "bad segment (%s)" % self.profile2.output_segments[2]
+    assert str(self.profile2.output_segments[2]) == "  ASCENT: at   9m for   1:06 [RT: 31:06], on Air,  SP:0.0, END:9m", "bad segment (%s)" % self.profile2.output_segments[2]
 
   def test_segment4(self):
-    assert str(self.profile2.output_segments[3]) == "    DECO: at   9m for   0:01 [RT: 31:07], on Air,  SP:0.0, END:8m", "bad segment (%s)" % self.profile2.output_segments[3]
+    assert str(self.profile2.output_segments[3]) == "    DECO: at   9m for   0:01 [RT: 31:07], on Air,  SP:0.0, END:9m", "bad segment (%s)" % self.profile2.output_segments[3]
 
   def test_segment5(self):
-    assert str(self.profile2.output_segments[4]) == "    DECO: at   6m for   0:01 [RT: 31:08], on Air,  SP:0.0, END:5m", "bad segment (%s)" % self.profile2.output_segments[4]
+    assert str(self.profile2.output_segments[4]) == "    DECO: at   6m for   0:01 [RT: 31:08], on Air,  SP:0.0, END:6m", "bad segment (%s)" % self.profile2.output_segments[4]
 
   def test_segment6(self):
-    assert str(self.profile2.output_segments[5]) == "    DECO: at   3m for   0:56 [RT: 32:04], on Air,  SP:0.0, END:2m", "bad segment (%s)" % self.profile2.output_segments[5]
+    assert str(self.profile2.output_segments[5]) == "    DECO: at   3m for   0:56 [RT: 32:04], on Air,  SP:0.0, END:3m", "bad segment (%s)" % self.profile2.output_segments[5]
 
 class TestDiveAirDiveRunTime2(TestDive):
   def runTest(self):
@@ -138,10 +139,10 @@ class TestDiveAirDiveOutput3(TestDive):
     self.profile3.do_dive()
 
   def test_segment1(self):
-    assert str(self.profile3.output_segments[0]) == " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:54m", "bad segment (%s)" % self.profile3.output_segments[0]
+    assert str(self.profile3.output_segments[0]) == " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:53m", "bad segment (%s)" % self.profile3.output_segments[0]
 
   def test_segment2(self):
-    assert str(self.profile3.output_segments[1]) == "   CONST: at  55m for  27:15 [RT: 30:00], on Air,  SP:0.0, END:54m", "bad segment (%s)" % self.profile3.output_segments[1]
+    assert str(self.profile3.output_segments[1]) == "   CONST: at  55m for  27:15 [RT: 30:00], on Air,  SP:0.0, END:53m", "bad segment (%s)" % self.profile3.output_segments[1]
 
   def test_segment3(self):
     assert str(self.profile3.output_segments[2]) == "  ASCENT: at  30m for   2:30 [RT: 32:30], on Air,  SP:0.0, END:29m", "bad segment (%s)" % self.profile3.output_segments[2]
@@ -168,13 +169,13 @@ class TestDiveAirDiveOutput3(TestDive):
     assert str(self.profile3.output_segments[9]) == "    DECO: at  12m for   6:41 [RT: 54:00], on Air,  SP:0.0, END:11m", "bad segment (%s)" % self.profile3.output_segments[9]
 
   def test_segment11(self):
-    assert str(self.profile3.output_segments[10]) == "    DECO: at   9m for  11:28 [RT: 65:28], on Air,  SP:0.0, END:8m", "bad segment (%s)" % self.profile3.output_segments[10]
+    assert str(self.profile3.output_segments[10]) == "    DECO: at   9m for  11:28 [RT: 65:28], on Air,  SP:0.0, END:9m", "bad segment (%s)" % self.profile3.output_segments[10]
 
   def test_segment12(self):
-    assert str(self.profile3.output_segments[11]) == "    DECO: at   6m for  21:59 [RT: 87:27], on Air,  SP:0.0, END:5m", "bad segment (%s)" % self.profile3.output_segments[11]
+    assert str(self.profile3.output_segments[11]) == "    DECO: at   6m for  21:59 [RT: 87:27], on Air,  SP:0.0, END:6m", "bad segment (%s)" % self.profile3.output_segments[11]
 
   def test_segment13(self):
-    assert str(self.profile3.output_segments[12]) == "    DECO: at   3m for  45:01 [RT:132:28], on Air,  SP:0.0, END:2m", "bad segment (%s)" % self.profile3.output_segments[12]
+    assert str(self.profile3.output_segments[12]) == "    DECO: at   3m for  45:01 [RT:132:28], on Air,  SP:0.0, END:3m", "bad segment (%s)" % self.profile3.output_segments[12]
 
 class TestDiveAirDiveRunTime3(TestDive):
   def runTest(self):
@@ -191,10 +192,10 @@ class TestDiveAirDiveOutput4(TestDive):
     self.profile3.do_dive()
 
   def test_segment1(self):
-    assert str(self.profile3.output_segments[0]) == " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:54m", "bad segment (%s)" % self.profile3.output_segments[0]
+    assert str(self.profile3.output_segments[0]) == " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:53m", "bad segment (%s)" % self.profile3.output_segments[0]
 
   def test_segment2(self):
-    assert str(self.profile3.output_segments[1]) == "   CONST: at  55m for  27:15 [RT: 30:00], on Air,  SP:0.0, END:54m", "bad segment (%s)" % self.profile3.output_segments[1]
+    assert str(self.profile3.output_segments[1]) == "   CONST: at  55m for  27:15 [RT: 30:00], on Air,  SP:0.0, END:53m", "bad segment (%s)" % self.profile3.output_segments[1]
 
   def test_segment3(self):
     assert str(self.profile3.output_segments[2]) == "  ASCENT: at  30m for   2:30 [RT: 32:30], on Air,  SP:0.0, END:29m", "bad segment (%s)" % self.profile3.output_segments[2]
@@ -221,13 +222,13 @@ class TestDiveAirDiveOutput4(TestDive):
     assert str(self.profile3.output_segments[9]) == "    DECO: at  12m for   4:17 [RT: 46:45], on Nitrox 50,  SP:0.0, END:11m", "bad segment (%s)" % self.profile3.output_segments[9]
 
   def test_segment11(self):
-    assert str(self.profile3.output_segments[10]) == "    DECO: at   9m for   5:53 [RT: 52:38], on Nitrox 50,  SP:0.0, END:8m", "bad segment (%s)" % self.profile3.output_segments[10]
+    assert str(self.profile3.output_segments[10]) == "    DECO: at   9m for   5:53 [RT: 52:38], on Nitrox 50,  SP:0.0, END:9m", "bad segment (%s)" % self.profile3.output_segments[10]
 
   def test_segment12(self):
-    assert str(self.profile3.output_segments[11]) == "    DECO: at   6m for   6:42 [RT: 59:20], on Oxygen,  SP:0.0, END:5m", "bad segment (%s)" % self.profile3.output_segments[11]
+    assert str(self.profile3.output_segments[11]) == "    DECO: at   6m for   6:42 [RT: 59:20], on Oxygen,  SP:0.0, END:6m", "bad segment (%s)" % self.profile3.output_segments[11]
 
   def test_segment13(self):
-    assert str(self.profile3.output_segments[12]) == "    DECO: at   3m for  11:29 [RT: 70:49], on Oxygen,  SP:0.0, END:2m", "bad segment (%s)" % self.profile3.output_segments[12]
+    assert str(self.profile3.output_segments[12]) == "    DECO: at   3m for  11:29 [RT: 70:49], on Oxygen,  SP:0.0, END:3m", "bad segment (%s)" % self.profile3.output_segments[12]
 
 class TestDiveAirDiveRunTime4(TestDive):
   def runTest(self):
@@ -250,10 +251,11 @@ class TestDiveTxDiveOutput1(TestDive):
     assert str(self.profile1.output_segments[1]) == "   CONST: at  30m for  28:30 [RT: 30:00], on Trimix 21/30,  SP:0.0, END:20m", "bad segment (%s)" % self.profile1.output_segments[1]
 
   def test_segment3(self):
-    assert str(self.profile1.output_segments[2]) == "  ASCENT: at  15m for   1:30 [RT: 31:30], on Trimix 21/30,  SP:0.0, END:8m", "bad segment (%s)" % self.profile1.output_segments[2]
+    assert str(self.profile1.output_segments[2]) == "  ASCENT: at  15m for   1:30 [RT: 31:30], on Trimix 21/30,  SP:0.0, END:9m", "bad segment (%s)" % self.profile1.output_segments[2]
 
   def test_segment4(self):
-    assert str(self.profile1.output_segments[3]) == "    DECO: at  15m for   0:01 [RT: 31:31], on Trimix 21/30,  SP:0.0, END:8m", "bad segment (%s)" % self.profile1.output_segments[3]
+
+    assert str(self.profile1.output_segments[3]) == "    DECO: at  15m for   0:01 [RT: 31:31], on Trimix 21/30,  SP:0.0, END:9m", "bad segment (%s)" % self.profile1.output_segments[3]
 
   def test_segment5(self):
     assert str(self.profile1.output_segments[4]) == "    DECO: at  12m for   0:50 [RT: 32:21], on Trimix 21/30,  SP:0.0, END:6m", "bad segment (%s)" % self.profile1.output_segments[4]
@@ -298,10 +300,10 @@ class TestDiveCCRDiveOutput1(TestDive):
     assert str(self.profile1.output_segments[4]) == "    DECO: at  36m for   0:14 [RT: 32:51], on Trimix 21/30,  SP:1.4, END:26m", "bad segment (%s)" % self.profile1.output_segments[4]
 
   def test_segment6(self):
-    assert str(self.profile1.output_segments[5]) == "    DECO: at  33m for   0:55 [RT: 33:46], on Trimix 21/30,  SP:1.4, END:23m", "bad segment (%s)" % self.profile1.output_segments[5]
+    assert str(self.profile1.output_segments[5]) == "    DECO: at  33m for   0:55 [RT: 33:46], on Trimix 21/30,  SP:1.4, END:24m", "bad segment (%s)" % self.profile1.output_segments[5]
 
   def test_segment7(self):
-    assert str(self.profile1.output_segments[6]) == "    DECO: at  30m for   1:08 [RT: 34:54], on Trimix 21/30,  SP:1.4, END:21m", "bad segment (%s)" % self.profile1.output_segments[6]
+    assert str(self.profile1.output_segments[6]) == "    DECO: at  30m for   1:08 [RT: 34:54], on Trimix 21/30,  SP:1.4, END:22m", "bad segment (%s)" % self.profile1.output_segments[6]
 
   def test_segment8(self):
     assert str(self.profile1.output_segments[7]) == "    DECO: at  27m for   1:26 [RT: 36:20], on Trimix 21/30,  SP:1.4, END:19m", "bad segment (%s)" % self.profile1.output_segments[7]
@@ -325,10 +327,10 @@ class TestDiveCCRDiveOutput1(TestDive):
     assert str(self.profile1.output_segments[13]) == "    DECO: at   9m for   6:53 [RT: 58:46], on Trimix 21/30,  SP:1.4, END:7m", "bad segment (%s)" % self.profile1.output_segments[13]
 
   def test_segment15(self):
-    assert str(self.profile1.output_segments[14]) == "    DECO: at   6m for   8:49 [RT: 67:35], on Oxygen,  SP:0.0, END:5m", "bad segment (%s)" % self.profile1.output_segments[14]
+    assert str(self.profile1.output_segments[14]) == "    DECO: at   6m for   8:49 [RT: 67:35], on Oxygen,  SP:0.0, END:6m", "bad segment (%s)" % self.profile1.output_segments[14]
 
   def test_segment16(self):
-    assert str(self.profile1.output_segments[15]) == "    DECO: at   3m for  16:07 [RT: 83:42], on Oxygen,  SP:0.0, END:2m", "bad segment (%s)" % self.profile1.output_segments[15]
+    assert str(self.profile1.output_segments[15]) == "    DECO: at   3m for  16:07 [RT: 83:42], on Oxygen,  SP:0.0, END:3m", "bad segment (%s)" % self.profile1.output_segments[15]
 
 class TestDiveCCRDiveRunTime1(TestDive):
   def runTest(self):

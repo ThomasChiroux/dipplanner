@@ -33,12 +33,13 @@ import settings
 from model.buhlmann.model import Model
 from model.buhlmann.model_exceptions import ModelStateException
 import dipplanner
+import settings
 
 class TestModelBuhlmannModel(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
-    
+    settings.RUN_TIME = True
     # simples test
     self.model1 = Model()
     

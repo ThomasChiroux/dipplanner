@@ -74,7 +74,7 @@ def activate_debug():
   LOGGER.setLevel(logging.DEBUG)
   # create file handler which logs even debug messages
   fh = logging.FileHandler("dipplanner.log")
-  fh.setLevel(logging.DEBUG)
+  fh.setLevel(logging.INFO)
   # create console handler with a higher log level
   ch = logging.StreamHandler()
   ch.setLevel(logging.WARNING)

@@ -37,12 +37,13 @@ from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
 import dipplanner
 from tools import seconds_to_strtime
+import settings
 
 class TestDive(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
-    
+    settings.RUN_TIME = True
     self.air12l = Tank(tank_vol=12.0, tank_pressure=200) 
     self.airtank = Tank(tank_vol=18.0, tank_pressure=200)
     self.airtank12 = Tank(tank_vol=12.0, tank_pressure=200)

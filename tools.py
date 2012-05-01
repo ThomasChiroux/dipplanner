@@ -110,6 +110,6 @@ def pressure_to_depth(pressure):
   if settings.METHOD_FOR_DEPTH_CALCULATION == 'complex':
     g = 9.81
     # TODO : int or round
-    return int(float(pressure) / (settings.WATER_DENSITY * 1E3 * g * 1E-5))
+    return int(round(float(pressure) / (settings.WATER_DENSITY * 1E3 * g * 1E-5)))
   else:
-    return int(float(pressure)*10)
+    return int(round(float(pressure)*10))

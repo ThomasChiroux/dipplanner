@@ -33,12 +33,13 @@ from tank import Tank
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
 import dipplanner
+import settings
 
 class TestSegment(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
-    
+    settings.RUN_TIME = True
     self.airtank = Tank()
     self.trimixtank1 = Tank(f_O2=0.10, f_He=0.70)
     self.nitroxtank1 = Tank(f_O2=0.40)

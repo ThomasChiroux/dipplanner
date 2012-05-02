@@ -188,6 +188,7 @@ class Dive(object):
       tpl = env.get_template(template)
     text = tpl.render(settings = settings,
                       output_segments = self.output_segments,
+                      input_segments = self.input_segments,
                       tanks = self.tanks,
                       model = self.model
     )

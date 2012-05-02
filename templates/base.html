@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  {% block head %}
+  <style type="text/css">
+    .red { color: #FF0000; }
+    .green { color: #00FF00; }
+    .yellow { color: #FFFF00; }
+    .blue { color: #0000FF; }
+    .pink { color: #FF00FF; }
+
+    #content { font-family: monospace; }
+
+    table { text-align: right; }
+  </style>
+  <title>Dipplanner:{% block title %}{% endblock %}</title>
+  {% endblock %}
+</head>
+<body>
+<div id="content">
+{% block content %}
+  {% block dive_header %}
+  {% endblock %}
+
+  {% block separator %}{% endblock %}
+
+  {% block dive_profile_header %}
+  {% endblock %}
+
+  {{ self.separator() }}
+
+  {% block dive_profile %}
+  {% endblock %}
+
+  {{ self.separator() }}
+
+  {% block dive_gas %}
+  {% endblock %}
+
+  {{ self.separator() }}
+
+  {% block dive_otu_cns %}
+  {% endblock %}
+
+  {{ self.separator() }}
+
+  {% block dive_footer %}
+  {% endblock %}
+{% endblock %}</div>
+<div id="footer">
+{% block footer %}
+<a href="http://dipplanner.org/">dipplanner.org</a>
+{% endblock %}
+</div>
+</body>
+</html>

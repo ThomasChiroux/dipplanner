@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% macro color(text, color="white") %}
+  <span class="{{-color-}}">{{ text }}</span>
+{% endmacro %}
+
+{% block dive_header %}
+{% endblock %}
+
+{% block separator %}
+<hr/>
+{% endblock %}
+
+{% block dive_profile_header %}
+<p>Dive profile : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}</p>
+{% endblock %}
+
+{{ self.separator() }}
+
+{% block dive_profile %}
+  <table>
+  {% for segment in output_segments %}
+    <tr>
+    <td>{{ "%8s"|format(segment.type|upper) }}</td>
+    <td>{{ " at %3d"|format(segment.depth|int) }}m</td>
+    <td>for {{ segment.get_time_str() }}</td>
+    <td>[RT:{{ segment.get_run_time_str() }}]</td>
+    <td>on {{ " %12s"|format(segment.tank|string) }}</td>
+    <td>SP:{{ segment.setpoint }}</td>
+    {% if segment.get_end() > settings.DEFAULT_MAX_END %}
+      <td>{{color(" END:%sm"|format(segment.get_end()), "red") }}</td>
+    {% else %}
+      <td>{{ " END:%sm"|format(segment.get_end()) }}</td>
+    {% endif %}
+    </tr>
+  {% endfor %}
+  </table>
+{% endblock %}
+
+{{ self.separator() }}
+
+{% block dive_gas %}
+  <p>Gas:</p>
+  <table>
+  {% for tank in tanks %}
+    <tr>
+    <td>{{ " %12s : "|format(tank|string) }}</td>
+    <td>Total: {{ "%6.1f"|format(tank.total_gas) }}l</td>
+    <td>Used: {{ "%6.1fl"|format(tank.used_gas) }}</td>
+    <td>{{ " (rem:%6.1fl or "|format(tank.remaining_gas) }} {{ "%db"|format(tank.remaining_gas / tank.tank_vol) }})</td>
+    {% if not tank.check_rule() %}
+      </tr>
+      <tr><td colspan="4">{{color("       WARNING !!! Not enought remaining gas in the %s tank (min:" % tank, "red") }}
+      {{ color("%6.1fl) !"|format(tank.min_gas),"red") }}</td></tr>
+    {% else %}
+      </tr>
+    {% endif %}
+  {% endfor %}
+  </table>
+{% endblock %}
+
+{{ self.separator() }}
+
+{% block dive_otu_cns %}
+  Oxygen Toxicity: OTU:{{ model.ox_tox.otu|int }}, CNS:
+  {{ "%d"|format(model.ox_tox.cns*100)}}%
+{% endblock %}
+
+{{ self.separator() }}
+
+{%- block dive_footer -%}
+{%- endblock -%}

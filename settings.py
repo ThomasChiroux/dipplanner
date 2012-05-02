@@ -27,6 +27,9 @@ __authors__ = [
 ]
 
 # ======= "Internal" Settings ========
+# software version, populated automatically
+__VERSION__ = None
+
 # unless knowing what you're doing, this prefs should not be changed
 # by the user
 # water density kg/l

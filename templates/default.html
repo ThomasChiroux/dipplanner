@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block dive_profile_header %}
-<p>Dive profile : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}</p>
+<p>Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}</p>
 {% endblock %}
 
 {{ self.separator() }}
@@ -68,5 +68,3 @@
 
 {{ self.separator() }}
 
-{%- block dive_footer -%}
-{%- endblock -%}

@@ -1,10 +1,11 @@
 {%- block dive_header -%}
+Dipplanner v{{ settings.__VERSION__ }}
 {%- endblock -%}
 
 {%- block separator -%}{%- endblock -%}
 
 {%- block dive_profile_header %}
-Dive profile : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
+Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
 {%- endblock -%}
 
 {{ self.separator() }}
@@ -47,5 +48,7 @@ Oxygen Toxicity: OTU:{{ model.ox_tox.otu|int }}, CNS:
 
 {{ self.separator() }}
 
-{%- block dive_footer -%}
+{%- block dive_footer %}
+WARNING : This software is highly experimental and
+must not be used for actual dives. Use it at your own risk.
 {%- endblock -%}

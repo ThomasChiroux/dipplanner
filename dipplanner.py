@@ -124,12 +124,12 @@ def parse_config_file(filenames):
     config = SafeConfigParser()
     filesread = config.read(filenames)
   else:
-    LOGGER.warning("No config file found: skip config from files")
+    LOGGER.info("No config file found: skip config from files")
     return (None, None)
 
   missing = set(filenames) - set(filesread)
   if len(filesread) == 0:
-    LOGGER.warning("No config file found: skip config from files")
+    LOGGER.info("No config file found: skip config from files")
     return (None, None)
     
   if len(missing) > 0:

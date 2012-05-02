@@ -1,0 +1,5797 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  -->
+<!-- Project:     UDDF -->
+<!-- Purpose:     XML Schema for Universal Dive Data Format (UDDF) -->
+<!-- File:        uddf.xsd -->
+<!-- Author:      Boris Boesler -->
+<!-- Modified by:  -->
+<!-- Created:     4.6.2007 -->
+<!-- Copyright:   (c) 2007 Boris Boesler -->
+<!-- Licence:     GPL (?) -->
+<!-- CVS-ID:      $Id: uddf.xsd 15 2007-10-21 21:45:37Z borisboesler $ -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   targetNamespace="http://www.streit.cc/uddf"
+	   xmlns="http://www.streit.cc/uddf"
+	   xmlns:uddf="http://www.streit.cc/uddf">
+  
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      The Universal Dive Data Format (UDDF) is the successor of the
+      Universal Dive Computer Format (UDCF) and is designed to manage
+      all dive data - planning, logging, analysing of scuba dives
+      (apnoe, rebreathers, open systems, all possible breathing
+      gases), logbook, calculation of dive tables, archiving etc. -
+      regardless of manufacturer, and independent of the operating
+      system respectively, and to provide its interchangeabilty. UDDF
+      is an open format and is . All interested people, and
+      companies/manufacturers, are encouraged to support the further
+      development. With this a maximum of flexibility and the newest
+      stand of UDDF is obtained - reaction on scientific and
+      technologic improvements is quickly possible. UDDF is freely
+      distributed. The aim of the developers is to establish UDDF
+      worldwide as a standard data format for all types of dive data.
+    </xs:documentation>
+    <xs:documentation xml:lang="de">
+      Das Universal Dive Data Format (UDDF) ist eine Weiterentwicklung
+      des Universal Dive Computer Format (UDCF) und dient dazu,
+      sämtliche anfallenden Tauchdaten — Planung, Loggen, Analyse von
+      Tauchgängen (Apnoe, Kreislaufgeräte, offene Systeme, alle
+      denkbaren Atemgasgemische), Logbuch, Erstellung von
+      Austauchtabellen, Archivierung usw. — Hersteller-
+      bzw. Plattform-unabhängig zu verwalten und untereinander
+      austauschbar zu machen.
+
+      UDDF ist ein offenes Format und wird ständig erweitert. Alle
+      interessierten Personen und Firmen/Hersteller sind aufgefordert
+      zur Weiterentwicklung beizutragen. Dadurch wird ein Maximum an
+      Flexibilität und der jeweils neueste Stand des Formats
+      gewährleistet — auf wissenschaftliche und technische
+      Neuentwicklungen kann so schnell reagiert werden.
+
+      UDDF kann frei verwendet werden. Ziel der Entwickler ist es,
+      UDDF als Standard-Datenaustauschformat für alle Arten
+      anfallender Tauchdaten weltweit zu etablieren.
+    </xs:documentation>
+  </xs:annotation>
+
+
+  <!--
+      "root" type
+      This is the root type (in an object oriented way) of all other types
+  -->
+  <xs:complexType name="UDDF_ROOT">
+    <xs:annotation>
+      <xs:documentation>
+	The basic object type with all basic elements and attributes.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:ID" use="optional">
+      <xs:annotation>
+	<xs:documentation xml:lang="en">
+	  The attribute "id" identifies owners and buddies. These
+	  elements are referenced via the ref attribute in other
+	  elements.
+	</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:anyAttribute namespace="http://www.w3.org/XML/1998/namespace"
+		     processContents="skip"/>
+  </xs:complexType>
+
+  <!--
+      ***
+      *** The root element
+      ***
+  -->
+  <xs:element name="uddf" type="uddfType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Each UDDF file begins with the statement &lt;uddf
+	version="x.y.z"&gt; (with x, y, and z integers), and ends with
+	the &lt;/uddf&gt; as last statement. Inbetween these two
+	statements all other sections are given.
+
+	The current version is 2.1.0.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+
+  <xs:complexType name="namedType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="name" type="xs:string">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;name&gt; the name (e.g. of a piece of equipment
+		or a shop a a diver's spot) is given.
+
+		The &lt;name&gt; element is always the first element.
+	      </xs:documentation>
+	      <xs:documentation xml:lang="de">
+		Innerhalb &lt;name&gt; wird allgemein ein Name (z.B. eines
+		Ausrüstungsteiles, eines Geschäftes oder eines
+		Tauchplatzes) angegeben.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="uddfType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="generator" type="generatorType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;generator&gt; section data concerning
+		the software is given which generates the UDDF file.
+		
+		This is the first section to appear inside an UDDF
+		file.
+	      </xs:documentation>
+	      <xs:documentation xml:lang="de">
+		In der &lt;generator&gt;-Sektion werden Angaben zum
+		die UDDF-Datei erzeugenden Programm gemacht.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="diver" type="diverType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;diver&gt; section all known data of the
+		&lt;owner&gt; of the UDDF file, and the dive buddies
+		(&lt;buddy&gt;) respectively, are stored.
+
+		While only one &lt;owner&gt; is possible, as many as
+		necessary &lt;buddy&gt; elements can appear inside the
+		&lt;diver&gt; section. Here &lt;owner&gt; is the first
+		element to be given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divesite" type="divesiteType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;divesite&gt; section all data concerning dive
+		spots - geography, relevant data to dives etc. - are
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="gasdefinitions" type="gasdefinitionsType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;gasdefinitions&gt; section happens the
+		definition of the different breathing gases used by
+		the &lt;owner&gt; of the UDDF file.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="profiledata" type="profiledataType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;profiledata&gt; section the description of
+		single dives profile data as well as all other
+		specific information concerning individual dives
+		(logbook entries, equipment used, breathing gases,
+		tank pressure at beginning, and end of dive, breathing
+		gas consumption value etc.) are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tablegeneration" type="tablegenerationType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;tablegeneration&gt; section parameters for
+		the generation of ascent profiles
+		(&lt;calculateprofile&gt;), decompression tables
+		(&lt;calculatetable&gt;), and "maximum bottom time" tables
+		(&lt;calculatebottomtimetable&gt;) are put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divetrip" type="divetripType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;divetrip&gt; section all data concerning dive
+		trips are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divecomputercontrol" type="divecomputercontrolType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;divecomputercontrol&gt; section
+		statements for the configuration of a dive computer
+		(&lt;setdcdata&gt;), or reading of data from a dive
+		computer (&lt;getdcdata&gt;) respectively, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+	
+	<xs:attribute name="version" type="xs:string" use="required">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      Version of UDDF-format used.
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** generator
+      ***
+  -->
+  <xs:complexType name="generatorType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="manufacturer" type="manufacturerType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;manufacturer&gt; the manufacturer of a
+		product is given.
+	      </xs:documentation>
+	      <xs:documentation xml:lang="de">
+		In &lt;manufacturer&gt; wird der Hersteller eines
+		Produktes angegeben.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="version" type="versionType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;version&gt; the version number of a product
+		used (dive computer, BCD, software e.g.) is put into
+		brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="date" type="dateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The date at which a dive, or examination, was
+		performed or a profile, or table, was generated by a
+		program, or a photo was taken respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="time" type="timeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;time&gt; indicates the time in hours
+		(&lt;hour&gt;), and minutes &lt;minute&gt;).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** divesite
+      ***
+  -->
+  <xs:complexType name="divesiteType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="site" type="siteType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: id=unique identifier of this dive spot
+
+		Inside &lt;site&gt; a dive spot is described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="siteType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="geography" type="geographyType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;geography&gt; the geographical position of a dive
+		spot, or of a destination of a dive trip, is
+		described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="ecology" type="ecologyType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;ecology&gt; information concerning the ecology of
+		the dive spot is described. Here typically seen
+		animals, and plant species are stored.q
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="sitedata" type="sitedataType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="geographyType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="location" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;location&gt; the description of the dive spot is
+		denoted.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="address" type="addressType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;address&gt; address is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="latitude" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;latitude&gt; the latitude of a dive spot is put
+		into brackets (as a real number). A positive sign (,
+		or no one) indicates an eastern latitude, whereas a
+		minus sign indicates a western latitude.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="longitude" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;latitude&gt; the latitude of a dive spot is put
+		into brackets (as a real number). A positive sign (,
+		or no one) indicates an eastern latitude, whereas a
+		minus sign indicates a western latitude.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="altitude" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;altitude&gt; the height above sea level in
+		metres (given as a real number) is put into
+		brackets. The height can be that of a general
+		described dive spot, then &lt;altitude&gt; stands
+		inside &lt;geography&gt; (&lt;divesite&gt; -&gt;
+		&lt;site&gt; -&gt; &lt;geography&gt;), or that of a
+		certain dive. In this case &lt;altitude&gt; appears
+		inside the &lt;dive&gt; section (&lt;profiledata&gt;
+		-> &lt;repetitiongroup&gt; -&gt;
+		&lt;dive&gt;). Additionally, &lt;altitude&gt; is used
+		to determine the altitude in metres above sea level,
+		for which an ascent table will be generated. In this
+		third case &lt;altitude&gt; stands within
+		&lt;tablescope&gt; (&lt;calculatetable&gt; -&gt;
+		&lt;table&gt; -&gt; &lt;tablescope&gt;). If
+		&lt;altitude&gt; is omitted inside &lt;tablescope&gt;
+		the table is to be calculated for sea level, 0 m.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="timezone" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;timezone&gt; the difference to GMT in hours
+		(given as a real number) is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="sitedataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="arealength" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Gibt die Länge der einen Seite einer untersuchten
+		Fläche (Rechteck) zum Beispiel einer archäologischen
+		Fundstelle oder bei einer biologischen Kartierung in
+		Metern als reelle Zahl an.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="areawidth" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Gibt die Länge der einen Seite einer untersuchten
+		Fläche (Rechteck) zum Beispiel einer archäologischen
+		Fundstelle oder bei einer biologischen Kartierung in
+		Metern als reelle Zahl an.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="averagevisibility" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Gibt die durchschnittliche Sichtweite an diesem
+		Tauchplatz in Metern als reelle Zahl an.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="bottom" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;bottom&gt; informs about the general nature of the
+		ground at the dive spot.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="density" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Density of water in kg/m^3.  Pure freshwater has a
+		density of 1000.0 kg/m^3, whereas the mean density of
+		sea water (salt water) is 1030.0 kg/m^3.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="difficulty" type="difficultyType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;difficulty&gt; a (more or less) personal
+		assessment of the difficulty level of this dive spot
+		is given - this concerns the general conditions, not
+		the ones during a specific dive. The scale ranges from
+		"1" (very easy to dive) through "10" (very difficult
+		to dive).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="globallightintensity"
+		      type="restrictedLightintensityType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Klammert die mittlere, "globale" Lichtintensität des
+		Tauchplatzes. Erlaubte Werte sind hier: 0 — nicht
+		ermittelt, 1 — Sonne, 2 — Halbschatten, 3 — Schatten,
+		4 — kein Licht vorhanden (z.B. in einer Höhle). Im
+		Gegensatz zu &lt;lightintensity&gt; kann bei
+		&lt;globallightintensity&gt; kein Attribut zur genauen
+		gemessenen Lichtstärke in Lux angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="maximumdepth" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;maximumdepth&gt; the maximum depth in
+		metres of the dive spot is put into brackets (not the
+		greatest depth reached during a specific dive - see
+		&lt;greatestdepth&gt;!). See also &lt;arealength&gt;,
+		&lt;areawidth&gt;, and &lt;minimumdepth&gt;.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="maximumvisibility" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Gibt die maximal zu erwartende Sichtweite an diesem
+		Tauchplatz in Metern als reelle Zahl an.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="minimumdepth" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;maximumdepth&gt; the maximum depth in
+		metres of the dive spot is put into brackets (not the
+		greatest depth reached during a specific dive - see
+		&lt;greatestdepth&gt;!). See also &lt;arealength&gt;,
+		&lt;areawidth&gt;, and &lt;minimumdepth&gt;.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="minimumvisibility" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Gibt die minimal angetroffene Sichtweite an diesem
+		Tauchplatz in Metern als reelle Zahl an.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="terrain" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;terrain&gt; information is given about the nature
+		of the ground at the dive spot.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="rating" type="ratingType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;rating&gt; wird eine (mehr oder weniger) persönliche
+		Bewertung der Qualität des Tauchplatzes geklammert -
+		dies betrifft die allgemein hier vorzufindenden
+		Bedingungen, nicht die bei einem speziellen Tauchgang
+		an diesem Ort vorgefundenen. Die Bewertungsskala geht
+		von ,,1'' (niedrigste Qualitätsstufe) bis ,,10''
+		(höchste Qualität).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="wreck" type="wreckType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;wreck&gt; a wreck is described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="cave" type="caveType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;cave&gt; follow information about a cave.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="indoor" type="indoorType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;indoor&gt; accurate information is given about
+		man made inshore waters (for example the
+		Tauch-Gasometer in the Landschaftspark Duisburg-Nord
+		in Germany).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="lake" type="lakeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;lake&gt; information concerning a lake dived is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="river" type="riverType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;river&gt; information concerning a river is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="shore" type="shoreType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;shore&gt; follows information concerning a dive
+		spot lying at the shore.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="ecologyType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="fauna" type="faunaType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;fauna&gt; information is given about
+		normally found animals at a dive spot, or the animals
+		seen during a specific dive. If the membership in
+		classes, and tribes respectively, is known, the
+		information can be given inside the respective
+		elements. If classes, and tribes respectively, are not
+		known the names of the animals are simply put in
+		brackets with the &lt;text&gt; element.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="flora" type="floraType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="floraType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="rhodophyceae" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="phaeophyceae" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="chlorophyceae" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="spermatophyta" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="floravarious" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="faunaType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="invertebrata" type="invertebrataType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Innerhalb &lt;invertebrata&gt; werden alle gesichteten
+		Wirbellosen aufgelistet. Die Sektion ist in weitere
+		Elemente unterteilt.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="vertebrata" type="vertebrataType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;vertebrata&gt; all watched vertebrates are
+		listed. &lt;vertebrata&gt; is subdivided.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="invertebrataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="porifera" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="coelenterata" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="cnidaria" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="ctenophora" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="plathelminthes" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="bryozoa" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="phoronidea" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="ascidiacea" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="echinodermata" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="mollusca" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="crustacea" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="invertebratavarious" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="singleLifeFormType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="species" type="speciesType" minOccurs="0"
+		      maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="speciesType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="trivialname" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;trivialname&gt; the trivial name of an
+		animal, or plant respectively, is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="scientificname" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;scientificname&gt; the scientific (latin)
+		name of an animal or plant is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="lightintensity" type="lightintensityType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Klammert die festgestellte Lichtintensität an einem
+		Ausschnitt des Tauchplatzes (z.B. dem Standort eines
+		sessilen Tieres). Erlaubte Werte sind hier: 0 - nicht
+		ermittelt, 1 - Sonne, 2 - Halbschatten, 3 - Schatten,
+		4 - kein Licht vorhanden (z.B. in einer Höhle). Als
+		Attribut kann &lt;lightintensity&gt; der genaue,
+		gemessene Wert der Lichtintensität beigefügt werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="age" type="xs:positiveInteger" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the ascertained age in years (as an integer)
+		of a plant, or animal respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="abundance" type="abundanceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the abundance of the appearance (number of
+		individuals) of a species seen. Allowed integer values
+		are: 0 - not ascertainable, 1 - single individual, 2 -
+		loser Verband (animals), or group (plants), 3 - swarm
+		(animals), or flächendeckend (plants), 4 - colony. If
+		the number of individuals cannot be ascertained,
+		either &lt;abundance&gt; omitted, or
+		&lt;abundance&gt;0&lt;/abundance&gt; is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <!-- TODO dominance -->
+	  <xs:element name="dominance" type="dominanceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With plants, &lt;dominance&gt; indicates the degree of
+		covering (dominance) of the ground with this
+		plant. Allowed integer values are: 0 - not determined,
+		1 - less than 1/20, 2 - 1/20 up to 1/4, 3 - 1/4 up to
+		1/2, 4 - 1/2 up to 3/4, 5 - greater than 3/4, and "+"
+		in case of single individuals (division according to
+		Emschermann, P., Hoffrichter, O., Körner, H., Zissler,
+		D. (Ed.), Meeresbiologische Exkursion. Gustav Fischer
+		Verlag, Stuttgart, Jena, 1992, ISBN 3-437-20414-9,
+		page 46). If the degree of covering cannot be
+		determined, &lt;dominance&gt; can be omitted, or
+		&lt;dominance&gt;0&lt;/dominance&gt; is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="sex" type="sexType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <!--
+	  <xs:element name="lifestage" type="lifestageType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the life stage of an animal (or
+		plant). Keywords to be used are larva (larval stage),
+		juvenile (young animal), or adult (adult animal)
+		respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  -->
+	  <xs:element name="size" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the length of a plant, or animal
+		watched. Given as a real number in metres.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <!-- nicht mehr benötigt?
+	  <xs:element name="quantity" type="xs:positiveInteger" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the (exact) number of a plant, or animal
+		respectively, observed of this species. Contrarily,
+		&lt;abundance&gt; has a more general
+		character. &lt;quantity&gt; can be given alone or in
+		addition with &lt;abundance&gt;, too.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  -->
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="dominanceType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+      <xs:enumeration value="3"/>
+      <xs:enumeration value="4"/>
+      <xs:enumeration value="5"/>
+      <xs:enumeration value="+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="lifestageType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="larva"/>
+      <xs:enumeration value="juvenile"/>
+      <xs:enumeration value="adult"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="lightintensityType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Klammert die festgestellte Lichtintensität an einem Ausschnitt
+	des Tauchplatzes (z.B. dem Standort eines sessilen
+	Tieres). Erlaubte Werte sind hier: 0 - nicht ermittelt, 1 -
+	Sonne, 2 - Halbschatten, 3 - Schatten, 4 - kein Licht
+	vorhanden (z.B. in einer Höhle). Als Attribut kann
+	&lt;lightintensity&gt; der genaue, gemessene Wert der
+	Lichtintensität beigefügt werden.
+      </xs:documentation>
+    </xs:annotation>
+    <!-- same as base="restrictedLightintensityType"
+	 but cant extend from simpletype -->
+    <xs:simpleContent>
+      <xs:extension base="restrictedLightintensityType">
+	<xs:attribute name="lux" type="xs:float" use="optional">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      Attribute: lux = measured light intensity in Lux (given
+	      as a real number)
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  
+
+  <xs:simpleType name="restrictedLightintensityType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	0 — nicht ermittelt, 1 — Sonne, 2 — Halbschatten, 3 —
+	Schatten, 4 — kein Licht vorhanden (z.B. in einer Höhle)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+
+  <xs:simpleType name="abundanceType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="vertebrataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="chondrichthyes" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="osteichthyes" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="mammalia" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="amphibia" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="reptilia" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="vertebratavarious" type="singleLifeFormType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="wreckType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="shiptype" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;shiptype&gt; the type of a ship (now wreck) is put
+		into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="nationality" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;nationality&gt; wird die Nationalität des Wracks
+		geklammert.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="built" type="builtType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="shipdimension" type="dimensionType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="sunk" type="sunkType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="difficultyType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Restrict numerical difficulty value to 1 &lt;= difficulty &lt;= 10
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="10"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="ratingType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Restrict numerical rating value to 1 &lt;= difficulty &lt;= 10
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="10"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="builtType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="shipyard" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;shipyard&gt; the shipyard where the ship (now
+		wreck) was built is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="launchingdate" type="encapsulatedDateType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;date&gt; the launching date of a ship
+		(now a wreck) is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dimensionType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="length" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;length&gt; the length of a ship (now a wreck) is
+		put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="beam" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;beam&gt; brackets the width of a ship (now wreck :-) )
+		in metres as a real number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="draught" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;draught&gt; describes the draught of the ship (now
+		wreck) in the format of a real number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="displacement" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;displacement&gt; puts the displacement of the ship in kg
+		as a real number in brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tonnage" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;tonnage&gt; the tonnage of a ship is given as a
+		real number in kilograms.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="sunkType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="date" type="dateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The date at which a dive, or examination, was
+		performed or a profile, or table, was generated by a
+		program, or a photo was taken respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="time" type="timeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;time&gt; indicates the time in hours (&lt;hour&gt;), and
+		minutes &lt;minute&gt;). For the sake of clarity this order
+		should be kept.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="lakeType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="wreck" type="wreckType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;wreck&gt; a wreck is described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="riverType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="wreck" type="wreckType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;wreck&gt; a wreck is described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="shoreType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="wreck" type="wreckType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;wreck&gt; a wreck is described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="caveType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="wreck" type="wreckType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;wreck&gt; a wreck is described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="indoorType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="address" type="addressType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;address&gt; the own (&lt;owner&gt; element) address
+		data, or of dive buddies (&lt;buddy&gt; element), or of a
+		shop (&lt;shop&gt; element) respectively, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="contact" type="contactType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;contact&gt; data concerning getting in touch with
+		some one are given, like phone number, email address,
+		language etc.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="wreck" type="wreckType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;wreck&gt; a wreck is described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;contact&gt; data concerning getting in touch with
+		some one are given, like phone number, email address,
+		language etc.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** divetrip
+      ***
+  -->
+  <xs:complexType name="divetripType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="trip" type="tripType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;trip&gt; all data concerning a certain dive trip
+		is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="tripType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="startdate" type="encapsulatedDateType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;startdate&gt; the date of the beginning of a dive
+		trip is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="enddate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;enddate&gt; the date of the end of a dive trip is
+		given. See also &lt;startdate&gt;.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="geography" type="geographyType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;geography&gt; the geographical position of a dive
+		spot, or of a destination of a dive trip, is
+		described.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:choice>
+	    <xs:element name="boattrip" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  <boattrip/> is a switch and indicates that this
+		  journey is a dive trip made on a ship.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	    <xs:element name="hoteltrip" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  The switch <hoteltrip/> indicates that during this
+		  dive trip the nights are spent in a hotel.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	  </xs:choice>
+
+	  <xs:choice>
+	    <xs:element name="individualtrip" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  The switch <individualtrip/> indicates that this
+		  dive trip is an individual one and not a package
+		  holiday.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	    <xs:element name="organizedtrip" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  Der Schalter <organizedtrip/> gibt an, daß es sich
+		  um eine organisierte Tauchfahrt (Pauschalreise o.ä.)
+		  handelt.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	  </xs:choice>
+
+	  <!-- order of vessel? -->
+	  <xs:element name="vessel" type="vesselType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;vessel&gt; information is given about the ship
+		with which a dive trip was made.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="accommodation" type="accommodationType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;accommodation&gt; informations concerning
+		quarters are provided.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="operator" type="operatorType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;operator&gt; werden Daten zum Reiseveranstalter
+		der Tauchfahrt angegeben.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divebase" type="divebaseType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;divebase&gt; data of a dive base, at which the
+		dives during a holiday were made, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+
+	  <xs:element name="relateddives" type="relateddivesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="accommodationType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="category" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;category&gt; the category of a hotel, or a
+		campingground respectively, is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="address" type="addressType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;address&gt; the own (&lt;owner&gt; element) address
+		data, or of dive buddies (&lt;buddy&gt; element), or of a
+		shop (&lt;shop&gt; element) respectively, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="contact" type="contactType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;contact&gt; data concerning getting in touch with
+		some one are given, like phone number, email address,
+		language etc.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="rating" type="ratingType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;rating&gt; wird eine (mehr oder weniger) persönliche
+		Bewertung der Qualität des Tauchplatzes geklammert -
+		dies betrifft die allgemein hier vorzufindenden
+		Bedingungen, nicht die bei einem speziellen Tauchgang
+		an diesem Ort vorgefundenen. Die Bewertungsskala geht
+		von ,,1'' (niedrigste Qualitätsstufe) bis ,,10''
+		(höchste Qualität).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="divebaseType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="address" type="addressType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;address&gt; the own (&lt;owner&gt; element) address
+		data, or of dive buddies (&lt;buddy&gt; element), or of a
+		shop (&lt;shop&gt; element) respectively, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="contact" type="contactType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;contact&gt; data concerning getting in touch with
+		some one are given, like phone number, email address,
+		language etc.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="priceperdive" type="priceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;priceperdive&gt; wird der Preis als reelle Zahl mit
+		zwei Nachkommastellen für einen (1) Tauchgang bei
+		einer Tauchbasis geklammert.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="pricedivepackage" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;pricedivepackage&gt; wird der Preis als reelle Zahl
+		mit zwei Nachkommastellen für ein Tauchpaket bei einer
+		Tauchbasis geklammert.
+	      </xs:documentation>
+	    </xs:annotation>
+	    <xs:complexType>
+	      <xs:simpleContent>
+		<xs:extension base="priceType">
+		  <xs:attribute name="noofdives" type="xs:integer"
+				use="optional">
+		    <xs:annotation>
+		      <xs:documentation xml:lang="en">
+			Anzahl der Tauchgänge, für die dieser Sonderpreis
+			gilt
+		      </xs:documentation>
+		    </xs:annotation>
+		  </xs:attribute>
+		</xs:extension>
+	      </xs:simpleContent>
+	    </xs:complexType>
+	  </xs:element>
+	  <xs:element name="guide" type="guideType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;guide&gt; a guide working at a dive base is
+		described. Any number of &lt;guide&gt; elements can appear
+		one after the other.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="rating" type="ratingType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;rating&gt; wird eine (mehr oder weniger) persönliche
+		Bewertung der Qualität des Tauchplatzes geklammert -
+		dies betrifft die allgemein hier vorzufindenden
+		Bedingungen, nicht die bei einem speziellen Tauchgang
+		an diesem Ort vorgefundenen. Die Bewertungsskala geht
+		von ,,1'' (niedrigste Qualitätsstufe) bis ,,10''
+		(höchste Qualität).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="guideType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="buddyref" type="buddyrefType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		TODO
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="infinityType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="buddyrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="vesselType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="shiptype" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;shiptype&gt; the type of a ship (now wreck) is put
+		into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="shipdimension" type="dimensionType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Innerhalb &lt;shipdimension&gt; werden die technischen
+		Daten eines Schiffs oder Wracks angegeben.
+
+		Wenn &lt;shipdimension&gt; aufgeführt wird, muß
+		zumindest eines seiner Kind-Elemente ebenfalls
+		aufgeführt werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="marina" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;marina&gt; the marina is given where the yacht is
+		lying.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="operatorType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="address" type="addressType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;address&gt; the own (&lt;owner&gt; element) address
+		data, or of dive buddies (&lt;buddy&gt; element), or of a
+		shop (&lt;shop&gt; element) respectively, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="contact" type="contactType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;contact&gt; data concerning getting in touch with
+		some one are given, like phone number, email address,
+		language etc.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="rating" type="ratingType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;rating&gt; wird eine (mehr oder weniger) persönliche
+		Bewertung der Qualität des Tauchplatzes geklammert -
+		dies betrifft die allgemein hier vorzufindenden
+		Bedingungen, nicht die bei einem speziellen Tauchgang
+		an diesem Ort vorgefundenen. Die Bewertungsskala geht
+		von ,,1'' (niedrigste Qualitätsstufe) bis ,,10''
+		(höchste Qualität).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="relateddivesType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="diveref" type="diverefType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="repetitionref" type="referenceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="diverefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** date
+      ***
+  -->
+  <xs:complexType name="encapsulatedTimeType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="time" type="timeType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="encapsulatedDateType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="date" type="dateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dateType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="year" type="xs:positiveInteger" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the year, when a dive was performed, or the
+		profile/table etc. was generated by a software. &lt;year&gt;
+		is given as an integer with four digits.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="month" type="month-1-12Type" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Defines the month when a dive was undertaken, or
+		profile was generated by a software. &lt;month&gt; is given
+		as an integer from 1 through 12, respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="day" type="day-1-31Type" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The day of the month, in which the dive was performed
+		or the profile was generated by a program
+		respectively, given as an integer number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="dayofweek" type="dow-1-7Type" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		"Day of week" of the given date as an integer. Monday
+		as the first day of the week is assigned a "1",
+		Wednesday a "3", Saturday a "6", and Sunday a "7" and
+		so on.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!-- restricted month -->
+
+  <!-- restricted month -->
+  <xs:simpleType name="month-1-12Type">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Restrict numerical month value to 1 &lt;= day &lt;= 12
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="12"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- restricted day of month -->
+  <xs:simpleType name="day-1-31Type">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Restrict numerical day value to 1 &lt;= day &lt;= 31
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="31"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- restricted day of week -->
+  <xs:simpleType name="dow-1-7Type">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Restrict numerical day of week value to 1 &lt;= day &lt;= 7
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="7"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--
+      ***
+      *** time
+      ***
+  -->
+  <xs:complexType name="timeType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="hour" type="hour-0-23Type"/>
+	  <xs:element name="minute" type="minutes-0-59Type" minOccurs="0"/>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!-- restricted hour -->
+  <xs:simpleType name="hour-0-23Type">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Restrict numerical hour value to 0 &lt;= day &lt;= 23
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="23"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- restricted minutes -->
+  <xs:simpleType name="minutes-0-59Type">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	Restrict numerical minutes value to 1 &lt;= day &lt;= 59
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="59"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!--
+      ***
+      *** diver
+      ***
+  -->
+  <xs:complexType name="diverType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="owner" type="ownerType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: id=unique identifier of owner of this
+		UDDF-file. Used as references in other UDDF-files
+		during im- and export.
+		
+		Inside of the &lt;owner&gt; elementes all owners data
+		is given. There can be only one (1) &lt;owner&gt;
+		within the &lt; diver&gt; section.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="buddy" type="buddyType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: id=unique identifier of a dive buddy
+
+		Inside the &lt;buddy&gt; section all known data of a certain
+		dive buddy are put in brackets. Any number of &lt;buddy&gt;
+		elements can be given, which describe the different
+		dive buddies of the &lt;owner&gt; of the UDDF file.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!-- owner and buddy -->
+
+  <xs:complexType name="ownerType">
+    <xs:complexContent>
+      <xs:extension base="personType">
+	<!-- additional owner elements -->
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="buddyType">
+    <xs:complexContent>
+      <xs:extension base="personType">
+	<xs:sequence>
+	  <!-- additional buddy elements -->
+	  <xs:element name="student" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		student of owner?
+	      </xs:documentation>
+	    </xs:annotation>
+	    <xs:complexType>
+	    </xs:complexType>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="individualType">
+    <xs:complexContent>
+      <xs:annotation>
+	<xs:documentation xml:lang="en">
+	</xs:documentation>
+      </xs:annotation>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="personal" type="personalType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;personal&gt; names, titles, sex and
+		birthdate can be given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="address" type="addressType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;address&gt; the own (&lt;owner&gt; element)
+		address data, or of dive buddies (&lt;buddy&gt;
+		element), or of a shop (&lt;shop&gt; element)
+		respectively, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="contact" type="contactType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;contact&gt; data concerning getting in
+		touch with some one are given, like phone number,
+		email address, language etc.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="personType">
+    <xs:complexContent>
+      <xs:annotation>
+	<xs:documentation xml:lang="en">
+	  other order of elements for shop, etc?
+	</xs:documentation>
+      </xs:annotation>
+      <xs:extension base="individualType">
+	<xs:sequence>
+	  <xs:element name="equipment" type="equipmentType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;equipment&gt; section all data
+		concerning the diving equipment are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="medical" type="medicalType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;medical&gt; medical data are stored.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <!-- @@@ clearify: certification in docs? is sibling of education! -->
+	  <xs:element name="education" type="educationType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;education&gt; information concerning the
+		educational level of the diver is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divepermissions" type="divepermissionsType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;divepermissions&gt; data concerning dive
+		permissions are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="diveinsurances" type="diveinsurancesType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;diveinsurances&gt; data concerning taken
+		out dive insurance policies are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; additional data like text, links
+		to web-sites and pictures can be given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="personalType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="firstname" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;firstname&gt; the first name of a person is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="middlename" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;middlename&gt; the second Christian name of a
+		person is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="lastname" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;lastname&gt; a person's last name is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="title" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;title&gt; all titles of a person are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="sex" type="sexType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;sex&gt; the sex of a person is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="birthdate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;birthdate&gt; the date of birh of a person
+		is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="passport" type="passportType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;passport&gt; the number of the passport is
+		put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="sexType">
+    <xs:restriction base="xs:string">
+      <!-- underterminated -->
+      <xs:enumeration value="0"/>
+      <!-- male -->
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="m"/>
+      <xs:enumeration value="male"/>
+      <!-- female -->
+      <xs:enumeration value="2"/>
+      <xs:enumeration value="f"/>
+      <xs:enumeration value="female"/>
+      <!-- hermaphrodite -->
+      <xs:enumeration value="3"/>
+      <xs:enumeration value="h"/>
+      <xs:enumeration value="hermaphrodite"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="birthdateType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="date" type="dateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="addressType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="street" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;street&gt; the name of a street in an
+		address is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="city" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;city&gt; the city of an address is named.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="postcode" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;postcode&gt; the city's postcode is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="province" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Mit &lt;province&gt; wird die Bezeichnung der Provinz
+		oder eines Bundeslandes usw. geklammert.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="country" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;country&gt; the country of a city, or dive
+		spot respectively, are put in brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="passportType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string"/>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="contactType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="language" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;language&gt; the native language of a
+		person is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="phone" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;phone&gt; the phone number of a person is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="mobilephone" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;mobilephone&gt; the number of a mobilephone
+		is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="fax" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;fax&gt; indicates the fax number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="email" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;email&gt; the email address of a person is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="homepage" type="xs:anyURI" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;homepage&gt; puts the URL (Unified Resource
+		Locator) of a homepage in brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="medicalType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="examination" type="examinationType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;examination&gt; data about the divers
+		medical state is stored.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="educationType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="certification" type="certificationType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;certification&gt; data about the
+		certification of a diver is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="certificationType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:choice>
+	    <xs:element name="level" type="xs:string" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  With &lt;level&gt; a dive level is put into
+		  brackets, for example Bronze, Silver, Gold, or OWD,
+		  AOWD, Divemaster etc.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	    <xs:element name="specialty" type="xs:string"
+			minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  Inside &lt;specialty&gt; the name of a specialty is
+		  put into brackets.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	  </xs:choice>
+
+	  <xs:element name="organization" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;organization&gt; wird der Tauchverband
+		angegeben, bei dem die entsprechende Brevetierung
+		erfolgte.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="instructor" type="instructorType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;instructor&gt; information about the dive
+		instructor is given, who issued the level.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="issuedate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;issuedate&gt; the date of issue of a level
+		is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="validdate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;validdate&gt; the date is given until a brevet is
+		valid (if existent).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+
+  <xs:complexType name="instructorType">
+    <xs:complexContent>
+      <xs:extension base="individualType">
+	<xs:sequence>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="divepermissionsType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="permit" type="permitType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;permit&gt; werden Daten bzgl. einer
+		bestimmten Taucherlaubnis angegeben.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="permitType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="region" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;region&gt; wird die Region einer Taucherlaubnis
+		angegeben.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="issuedate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;issuedate&gt; the date of issue of a level is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="validdate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;validdate&gt; the date is given until a brevet is
+		valid (if existent).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="diveinsurancesType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="insurance" type="insuranceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;insurance&gt; information about a certain
+		(diving) insurance is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="insuranceType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="issuedate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;issuedate&gt; the date of issue of a level is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="validdate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;issuedate&gt; the date of issue of a level is
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;notes&gt; können zusätzliche Daten, wie
+		z.B. Anmerkungen (Text), Verweise zu Heimseiten
+		und/oder Fotos angegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      *** ********** ********** ********** **********
+      *** notes stuff
+      ***
+  -->
+
+  <xs:complexType name="notesType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="audio" type="audioType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;audio&gt; an audio sequence is put in
+		brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="image" type="imageType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;image&gt; data concerning a picture - whatever
+		type of - is put into brackets. How the image data
+		are displayed is in the responsibility of the
+		application program, also whether the software is
+		able to display the image data, anyhow. To assist
+		the application program the height (height), the
+		width (width), and the format (format) of the image
+		to be displayed can be given as attributes. The
+		statement can be repeated any times.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="video" type="videoType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;video&gt; a video sequence is put into
+		brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="text" type="notesTextType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;text&gt; general information is given which is
+		to be interpreted as "normal" text.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="notesTextType" mixed="true">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="audioType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="objectname" type="objectnameType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;objectname&gt; the name of a picture, or audio,
+		or video file respectively, is put into
+		brackets. Paths are to be given in Unix notation with
+		a slash "/" as divisor between directories. It is both
+		possible to give either an absolute path, or a
+		relative one respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="videoType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="objectname" type="objectnameType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;objectname&gt; the name of a picture, or audio,
+		or video file respectively, is put into
+		brackets. Paths are to be given in Unix notation with
+		a slash "/" as divisor between directories. It is both
+		possible to give either an absolute path, or a
+		relative one respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="objectnameType">
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+
+
+  <xs:complexType name="imageType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="objectname" type="objectnameType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;objectname&gt; the name of a picture, or audio,
+		or video file respectively, is put into
+		brackets. Paths are to be given in Unix notation with
+		a slash "/" as divisor between directories. It is both
+		possible to give either an absolute path, or a
+		relative one respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="imagedata" type="imagedataType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;imagedata&gt; additional information concerning a
+		picture is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+
+	<xs:attribute name="height" type="xs:positiveInteger" use="optional">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	<xs:attribute name="width" type="xs:positiveInteger" use="optional">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	<xs:attribute name="format" type="xs:string" use="optional">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="imagedataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="aperture" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;aperture&gt; the aperture used for a certain
+		photo is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="date" type="dateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The date at which a dive, or examination, was
+		performed or a profile, or table, was generated by a
+		program, or a photo was taken respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="exposurecompensation" type="xs:double" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;exposurecompensation&gt; the exposure
+		compensation used for a certain photo is put into
+		brackets. The value is given in EV (exposure
+		values). Normally, a range of +-2 EV is used. For
+		UDDF, this value has to be converted to a real number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="filmspeed" type="xs:positiveInteger" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;filmspeed&gt; the film speed used for a
+		certain photo is put into brackets. The parameter is
+		to be given as an integer ISO (ASA) value.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="focallength" type="xs:double" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;focallength&gt; the focal distance of a
+		lens used for a certain photo is put into
+		brackets. The value is to be given as a real number in
+		metres (!).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="focusingdistance" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;focusdistance&gt; the focus distance of the
+		lens used for the photo is put into brackets. The
+		value is to be given as a real number in metres.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="meteringmethod" type="meteringmethodType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;meteringmethod&gt; the metering method used
+		for a certain photo is put into brackets. Allowed
+		values are spot (spot metering), centerweighted
+		(center-weighted metering), matrix (matrix metering).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="shutterspeed" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;shutterspeed&gt; the shutterspeed [s] used
+		for a photo is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="time" type="timeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;time&gt; indicates the time in hours
+		(&lt;hour&gt;), and minutes &lt;minute&gt;). For the
+		sake of clarity this order should be kept.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="meteringmethodType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="spot"/>
+      <xs:enumeration value="centerweighted"/>
+      <xs:enumeration value="matrix"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--
+      *** ********** ********** ********** **********
+  -->
+
+  <xs:complexType name="examinationType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="date" type="dateType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The date at which a dive, or examination, was
+		performed or a profile, or table, was generated by a
+		program, or a photo was taken respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:choice>
+	    <xs:element name="doctor" type="doctorType" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  Attribute: id=unique identifier of the treating doctor
+		  
+		  Inside &lt;doctor&gt; information about the treating doctor
+		  of the dive ability examination are put in brackets.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	    <xs:element name="doctorref" type="doctorrefType" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  Attribute: ref=reference (unique identifier) of the
+		  treating doctor
+		  
+		  Inside &lt;doctor&gt; information about the treating doctor
+		  of the dive ability examination are put in brackets.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	  </xs:choice>
+	  <xs:element name="examinationresult" type="examinationresultType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;examinationresult&gt; the result of a medical
+		examination is put into brackets. The only values
+		allowed are "passed", and "failed" respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0"/>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="doctorType">
+    <xs:complexContent>
+      <xs:extension base="individualType">
+	<xs:sequence>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="doctorrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="examinationresultType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="passed"/>
+      <xs:enumeration value="failed"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!--
+      ***
+      *** gasdefinitons
+      ***
+  -->
+  <xs:complexType name="gasdefinitionsType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="mix" type="mixType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The information put into brackets within &lt;mix&gt;
+		define a breathing gas used. If more than one
+		breathing gas is used, several &lt;mix&gt; sections
+		follow one after the other.
+
+		Within following &lt;tankdata&gt; sections
+		cross-references can be made to breathing gases
+		defined here.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankdata" type="tankdataType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: id=unique identifier for this tank used
+
+		Inside the &lt;tankdata&gt; section information
+		concerning a breathing gas consumption calculation is
+		put into brackets. As many as needed &lt;tankdata&gt;
+		elements can appear one after the other, but all have
+		to stand after the &lt;mix&gt; elements.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="mixType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="o2" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Gibt den Sauerstoff-Anteil des Atemgases an. Die
+		Angabe erfolgt als (Volumen-)Prozentangabe, wobei die
+		Prozentangabe als reelle Zahl kleiner oder gleich 1.0
+		erfolgt.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="n2" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Defines the nitrogen fraction of a breathing gas,
+		given as a real number less or equal 1.0 in percent
+		(of volume).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="he" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The fraction of Helium in the breathing gas, given as
+		a real number less or equal 1.0 in percent (of
+		volume).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="ar" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Specifies the argon fraction of a (breathing) gas,
+		given as a real number less or equal 1.0 in percent
+		(of volume).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="h2" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The fraction of Hydrogen in the breathing gas, given
+		as a real number less or equal 1.0 in percent (of
+		volume).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="priceperlitre" type="priceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Mit &lt;priceperlitre&gt; wird der Preis als reelle Zahl mit
+		zwei Nachkommastellen für einen (1) Liter eines
+		Atemgases geklammert.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:choice>
+	    <xs:element name="maximumpo2" type="xs:float" minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  Gibt den - mehr oder weniger willkürlich gewählten -
+		  Grenzwert des Sauerstoff-Partialdrucks an, ab dem
+		  der Sauerstoff-Gehalt dieses Atemgases giftig
+		  wird. Die Angabe erfolgt als reelle Zahl mit einer
+		  Nachkommastelle. Gebräuchliche Werte liegen zwischen
+		  1.4 und 1.7.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	    <xs:element name="maximumoperationdepth" type="xs:float"
+			minOccurs="0">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		  Defines the maximum operation depth (MOD) of a
+		  breathing gas, given as a real number.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	  </xs:choice>
+	  <xs:element name="equivalentairdepth" type="xs:float"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The "equivalent air depth" of a breathing gas, given
+		as a real number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="tankdataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="mixref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankvolume" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Volume of the tank used in cubicmetres [m^3] - not in
+		litres, as UDDF uses SI units!
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankpressurebegin" type="xs:float" minOccurs="1">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Anfangs-Fülldruck in Pascal der Flasche.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankpressureend" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		End-Fülldruck der Flasche in Pascal nach Beendigung
+		des Tauchgangs.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <!-- or breathingconsumptionvolume -->
+	  <xs:element name="breathingconsumptionvolume" type="xs:float"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the breathing gas consumption volume for
+		this breathing gas. The unit to be used is cubicmeter
+		per second [m^3/s]! A conversion into the unit "litre
+		per minute" which is normally used in dive tables is
+		subject to the executing software - UDDF uses SI units
+		only!
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** equipment
+      ***
+  -->
+  <xs:complexType name="equipmentType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="boots" type="equipmentPieceType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="buoyancycontroldevice" type="equipmentPieceType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: id=unique identifier for this buoyancy control device
+
+		Inside &lt;buoyancycontroldevice&gt; information concerning
+		a buoyancy control device (BCD) used is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="camera" type="cameraType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="compass" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="compressor" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divecomputer" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="fins" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="gloves" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="knife" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="lead" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="light" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="mask" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="rebreather" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="regulator" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="scooter" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="suit" type="equipmentPieceType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tank" type="tankType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="variouspieces" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="videocamera" type="videocameraType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="watch" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="equipmentPieceType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="manufacturer" type="manufacturerType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;manufacturer&gt; the manufacturer of a
+		product is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="model" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;model&gt; the model name of an equipment
+		component is given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="serialnumber" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The serial number
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="purchase" type="purchaseType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;purchase&gt; erfolgen die Angaben zum Kauf
+		eines verwendeten Ausrüstungsteiles.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="serviceinterval" type="xs:positiveInteger"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The service interval, given in days (as integer), when
+		this part has to be serviced again.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="nextservicedate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;nextservicedate&gt; wird das Datum der
+		nächsten Wartung des Ausrüstungsteiles angegeben.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="tankType">
+    <xs:complexContent>
+      <xs:extension base="equipmentPieceType">
+	<xs:sequence>
+	  <xs:element name="tankmaterial" type="tankmaterialType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Tank's material.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="tankmaterialType">
+      <xs:restriction base="xs:string">
+	<xs:enumeration value="aluminium">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      Tank make of aluminium.
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:enumeration>
+	<xs:enumeration value="carbon">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      Tank make of carbon.
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:enumeration>
+	<xs:enumeration value="steel">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      Tank make of steel.
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:enumeration>
+      </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="cameraType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="body" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;body&gt; a (photo, or video camera
+		respectively) body is denoted.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="lens" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;lens&gt; indicates a lens used with a photo, or
+		video camera.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="housing" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;housing&gt; an underwater housing for a
+		photo (&lt;camera&gt;), or video camera
+		(&lt;videocamera&gt;) is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="flash" type="equipmentPieceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;flash&gt; dscribes the flash used with a camera
+		housing.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="videocameraType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="body" type="equipmentPieceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;body&gt; a (photo, or video camera
+		respectively) body is denoted.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="lens" type="equipmentPieceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;lens&gt; indicates a lens used with a photo, or
+		video camera.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="housing" type="equipmentPieceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;housing&gt; an underwater housing for a
+		photo (&lt;camera&gt;), or video camera
+		(&lt;videocamera&gt;) is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="light" type="equipmentPieceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Innerhalb &lt;light&gt; erfolgen die Angaben zu einer
+		verwendeten Unterwasserleuchte. Es können mehrere
+		&lt;light&gt;-Elemente hintereinander aufgeführt
+		werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="purchaseType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="date" type="dateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The date at which a dive, or examination, was
+		performed or a profile, or table, was generated by a
+		program, or a photo was taken respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="price" type="priceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: currency=eindeutiger Bezeichner einer
+		Währung (sollte drei Buchstaben lang sein)
+
+		Mit &lt;price&gt; wird der Preis eines
+		Ausrüstungsteiles als reelle Zahl mit zwei
+		Nachkommastellen geklammert.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="shop" type="shopType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;shop&gt; information is given where an
+		equipment part was purchased.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="shopType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="address" type="addressType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="contact" type="contactType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** profiledata
+      ***
+  -->
+  <xs:complexType name="profiledataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="repetitiongroup" type="repetitiongroupType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;repetitiongroup&gt; puts dives into brackets which
+		"belong together". "Belong together" means, all dives
+		have a finite surface interval (except the first dive)
+		and were made during a diving holiday e.g. The
+		individual dives inside &lt;repetitiongroup&gt; are
+		divided by &lt;dive&gt; elements.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="repetitiongroupType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="dive" type="diveType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		By means of &lt;dive&gt; data concerning a dive
+		profile are given inside a &lt;repetitiongroup&gt;
+		section. Each dive profile is encapsulated with an own
+		&lt;dive&gt; section; several &lt;dive&gt; elements
+		are given one after the other in this case.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="diveType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="equipmentused" type="equipmentusedType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tripmembership" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Mittels &lt;tripmembership&gt; kann die Tauchfahrt
+		bezeichnet werden, währendderen der Tauchgang
+		durchgeführt wurde. Da die &lt;profiledata&gt;-Sektion
+		(in der die Tauchgangsdaten abgelegt werden) in der
+		UDDF-Datei vor der &lt;divetrip&gt;-Sektion steht —
+		damit in letzterer auf die Tauchgangsdaten
+		referenziert werden kann —, kann nicht innerhalb einer
+		&lt;dive&gt;-Anweisung auf eine Tauchfahrt
+		(&lt;trip&gt;) referenziert werden. Um den Tauchgang
+		trotzdem einer Tauchfahrt zuordnen zu können, dient
+		das Element &lt;tripmembership&gt;.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <!--
+	  <xs:element name="tripref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  -->
+	  <xs:element name="siteref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="buddyref" type="referenceType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="date" type="dateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="time" type="timeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divenumber" type="xs:positiveInteger" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;divenumber&gt; the actual number (given as an
+		integer) of this dive is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="altitude" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;altitude&gt; the height above sea level in
+		metres (given as a real number) is put into
+		brackets. The height can be that of a general
+		described dive spot, then &lt;altitude&gt; stands
+		inside &lt;geography&gt; (&lt;divesite&gt; -&gt;
+		&lt;site&gt; -&gt; &lt;geography&gt;), or that of a
+		certain dive. In this case &lt;altitude&gt; appears
+		inside the &lt;dive&gt; section (&lt;profiledata&gt;
+		-> &lt;repetitiongroup&gt; -&gt;
+		&lt;dive&gt;). Additionally, &lt;altitude&gt; is used
+		to determine the altitude in metres above sea level,
+		for which an ascent table will be generated. In this
+		third case &lt;altitude&gt; stands within
+		&lt;tablescope&gt; (&lt;calculatetable&gt; -&gt;
+		&lt;table&gt; -&gt; &lt;tablescope&gt;). If
+		&lt;altitude&gt; is omitted inside &lt;tablescope&gt;
+		the table is to be calculated for sea level, 0 m.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="surfaceinterval" type="surfaceintervalType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The &lt;surfaceinterval&gt; statement puts into
+		brackets subsequent elements concerning the
+		description of what happened during the surface
+		interval (for example travelling to the new dive spot
+		over a mountain, and/or through a valley with altitude
+		and time information).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="airtemperature" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the measured air temperature at begin of
+		dive in Kelvin, given as a real number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="lowesttemperature" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The lowest water temperature during a dive, if
+		known. If unknown, the field &lt;lowesttemperature&gt;
+		is skipped. The temperature is given as a real number,
+		the SI unit is Kelvin.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="greatestdepth" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Within &lt;greatestdepth&gt; the greatest depth in
+		metres reached during a specific dive is put into
+		brackets (not the maximum reacheable depth at this
+		dive spot - see &lt;maximumdepth&gt;!).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="density" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Density of water in kg/m^3.
+
+		Pure freshwater has a density of 1000.0 kg/m^3,
+		whereas the mean density of sea water (salt water) is
+		1030.0 kg/m^3.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="program" type="programType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		unknown, confusing
+
+		Klammerung von zusätzlichen, Programm-spezifischen
+		Informationen, die zur Auswertung der Gewebesättigung
+		notwendig sind bzw. Programm-interne Parameter zur
+		grafischen Darstellung der Daten.
+
+		Ein UDDF-Parser wertet die Daten zwischen
+		&lt;program&gt; und &lt;/program&gt; nicht aus,
+		sondern gibt sie ohne jede weitere Bearbeitung an das
+		rufende Programm weiter. Damit wird es Programmen
+		ermöglicht spezifische Meta-Informationen abzulegen,
+		die UDDF nicht bekannt sind. Die einzige Konvention
+		ist, daß jedes Programm seine Meta-Informationen mit
+		&lt;program&gt; &lt;/program&gt; klammert.
+
+		Anmerkung für Programmierer: bitte dokumentiert, in
+		welcher Form ihr eure Daten zur Gewebesättigung oder
+		andere wichtige Parameter kodiert, damit sie von
+		anderen Programmen korrekt gelesen und
+		weiterverarbeitet werden können!
+
+		Das ist ein Widerspruch!!
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="samples" type="samplesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;samples&gt; the dive profile data (depth,
+		time, temperature, breathing gas used) are
+		given. Inside the first &lt;depth&gt; statement a
+		switchmix attribute must be given to specify the
+		breathing gas used.
+
+		Documentation does not fit to examples!! TODO
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="observations" type="observationsType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;observations&gt; können verschiedene
+		während des Tauchgangs gemachte Beobachtungen
+		aufgeführt werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="equipmentusedType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="bootsref" type="bootsrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="buoyancycontroldeviceref" type="buoyancycontroldevicerefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="cameraref" type="camerarefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="compassref" type="compassrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divecomputerref" type="divecomputerrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="finsref" type="finsrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="glovesref" type="glovesrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="kniferef" type="kniferefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="leadref" type="leadrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="lightref" type="lightrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="maskref" type="maskrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="rebreatherref" type="rebreatherrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="regulatorref" type="regulatorrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="scooterref" type="scooterrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="suitref" type="suitrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankref" type="tankrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankdataref" type="tankdatarefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="variouspiecesref" type="variouspiecesrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="videocameraref" type="videocamerarefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="watchref" type="watchrefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"></xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="bootsrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="buoyancycontroldevicerefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="camerarefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="compassrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="divecomputerrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="finsrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="glovesrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="kniferefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="leadrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="lightrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="maskrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="rebreatherrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="regulatorrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="scooterrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="suitrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="tankrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="tankdatarefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="variouspiecesrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="videocamerarefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="watchrefType">
+    <xs:complexContent>
+      <xs:extension base="referenceType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+
+  <xs:complexType name="surfaceintervalType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:choice>
+	    <xs:element name="infinity" type="infinityType">
+	      <xs:annotation>
+		<xs:documentation xml:lang="en">
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+
+	    <xs:element name="passedtime" type="passedtimeType">
+	      <xs:annotation>
+		<xs:documentation xml:lang="de">
+		  Das Oberflächenintervall zwischen zwei aufeinander
+		  folgenden Tauchgängen.
+
+		  Ist der auf einen Tauchgang folgende Tauchgang ein
+		  ,,Wiederholungs-Tauchgang`` (Gewebe noch nicht
+		  vollständig entsättigt), so wird das
+		  Oberflächenintervall in Sekunden als reelle Zahl von
+		  &lt;passedtime&gt; geklammert. Sind die Gewebe bei
+		  dem nachfolgenden Tauchgang dagegen vollständig
+		  entsättigt, so muß anstatt &lt;passedtime&gt;
+		  &lt;infinity/&gt; verwendet werden.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+	  </xs:choice>
+	  <xs:element name="wayaltitude" type="wayaltitudeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: waytime=absolute time in seconds since
+		beginning of surfaceinterval
+
+		Inside &lt;wayaltitude&gt; an absolute altitude in metres
+		above sealevel is put into brackets (given as a real
+		number).
+
+		Each individual &lt;wayaltitude&gt; element must contain a
+		waytime attribute which indicates the absolute time in
+		seconds (given as a real number), when the altitude
+		was reached.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="programType" mixed="true">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Vorschlag: &lt;program&gt; enthält 2 Kinder: 1)
+	computer:(xs:string) von diesem Ding oder für dieses Ding ist
+	der Rest 2) code:(xs:any, mixed) das ist der "Programm-Code" für
+	&lt;computer&gt;
+
+	Begründung: Für verschiedene "Computer" bedeutet das Einführen
+	eines neues Tags eine Erweiterung der Syntax. Das ist doof.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="passedtimeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="wayaltitudeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+	<xs:attribute name="waytime" type="xs:float" use="required">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      Attribute: waytime=absolute time in seconds since
+	      beginning of surfaceinterval
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="samplesType">
+    <!--
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+    </xs:sequence>
+    -->
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="waypoint" type="waypointType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Innerhalb von &lt;samples&gt; erfolgen die Angaben zu
+		den eigentlichen Profildaten. Ebenso werden hier das
+		verwendete Atemgas bzw. eventuelle Wechsel des
+		Atemgases angegeben.
+
+		Die Angabe eines &lt;switchmix/&gt;-Elementes in der
+		ersten &lt;waypoint&gt;-Anweisung innerhalb
+		&lt;samples&gt; ist zwingend.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="observationsType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="fauna" type="faunaType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="flora" type="floraType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="notes" type="notesType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** tablegeneration
+      ***
+  -->
+
+  <xs:complexType name="tablegenerationType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="calculateprofile" type="calculateprofileType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;calculateprofile&gt; follow statements for an
+		ascent profile to be calculated.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="calculatetable" type="calculatetableType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;calculatetable&gt; statements concerning a
+		decompression table to be calculated are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="calculatebottomtimetable"
+		      type="calculatebottomtimetableType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;calculatebottomtimetable&gt; (calculate
+		bottom time table) statements for one or more "maximum
+		bottom time" tables to be calculated are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="calculateprofileType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="profile" type="profileType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Attribute: id=eindeutiger Bezeichner dieses Profiles
+
+		Inside der &lt;profile&gt; section werden die
+		Parameter zur Erzeugung eines bestimmten
+		Aufstiegsprofiles geklammert.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="profileType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <!--
+	  <xs:element name="diveref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  -->
+	  <xs:element name="mixref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tankdataref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="surfaceinterval" type="surfaceintervalType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The &lt;surfaceinterval&gt; statement puts into
+		brackets subsequent elements concerning the
+		description of what happened during the surface
+		interval (for example travelling to the new dive spot
+		over a mountain, and/or through a valley with altitude
+		and time information).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="density" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The &lt;surfaceinterval&gt; statement puts into
+		brackets subsequent elements concerning the
+		description of what happened during the surface
+		interval (for example travelling to the new dive spot
+		over a mountain, and/or through a valley with altitude
+		and time information).
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="output" type="outputType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;output&gt; werden Vorgaben zum Erstellen
+		einer Ausgabedatei gemacht.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="program" type="programType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="decomodel" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Sets the decompression model for the calculation of an
+		ascent profile, or a decompression table respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="deepstoptime" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Sets the duration in seconds for "deep stops" to be
+		taken into account. Traditionally, a "deep stop" is
+		held at half depth between the deepest depth and the
+		first deco stop, or between two deco stops
+		respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="maximumascendingrate" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;maximumascendingrate&gt; the maximum ascent
+		rate in metres per second (not metres per minute! -
+		the conversion into other units is to be done by the
+		processing software) is put into brackets as a real
+		number.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="inputprofile" type="inputprofileType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;inputprofiledescent&gt; exact information
+		concerning a descent profile (see also
+		&lt;calculateprofile&gt;) is given, for which an
+		ascent profile is to be calculated.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="mixchange" type="mixchangeType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="outputType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="lingo" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;lingo&gt; the output language is set. The
+		coding of the output language consists of two letters
+		according to ISO 639 code (see Code for the
+		Representation of the Names of Languages. From ISO
+		639, revised 1989.)  If the element is not given, or
+		the executing software doesn't support these language,
+		by default English output is generated.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="fileformat" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;fileformat&gt; controls the output format to be
+		generated. Possible formats are: ASCII, HTML, (La)TeX,
+		PDF, Postscript, DocBook... If the specified format is
+		not supported by the executing software, or the
+		&lt;fileformat&gt; statement is missing respectively,
+		output is generated in ASCII format
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="filename" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;filename&gt; a name for the output file to be
+		generated is given. If the element is not given, the
+		software has to choose the name automatically.With
+		&lt;filename&gt; a name for the output file to be
+		generated is given. If the element is not given, the
+		software has to choose the name automatically.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="headline" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;headline&gt; a headline for an ascent
+		profile to be generated, or a decompression table, or
+		a "maximum bottom time" table respectively, can be
+		given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="remark" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;remark&gt; kann eine Beschreibung bzw. ein
+		Kommentar für ein/e zu erzeugende/s Aufstiegsprofil
+		bzw. eine Austauch- oder ,,Maximale
+		Grundzeit''-Tabelle gegeben werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="mixchangeType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="ascent" type="ascentType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="descent" type="descentType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="ascentType">
+    <xs:group ref="waypointseriesType"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="descentType">
+    <xs:group ref="waypointseriesType"/>
+  </xs:complexType>
+
+
+  <xs:group name="waypointseriesType">
+    <xs:sequence>
+      <xs:element name="waypoint" type="waypointType"
+		  minOccurs="0" maxOccurs="unbounded">
+	<xs:annotation>
+	  <xs:documentation xml:lang="de">
+	    Innerhalb von &lt;samples&gt; erfolgen die Angaben zu
+	    den eigentlichen Profildaten. Ebenso werden hier das
+	    verwendete Atemgas bzw. eventuelle Wechsel des
+	    Atemgases angegeben.
+	    
+	    Die Angabe eines &lt;switchmix/&gt;-Elementes in der
+	    ersten &lt;waypoint&gt;-Anweisung innerhalb
+	    &lt;samples&gt; ist zwingend.
+	  </xs:documentation>
+	</xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+
+
+  <!--
+      ***
+      ***
+      ***
+  -->
+  <xs:complexType name="calculatetableType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="table" type="tableType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;table&gt; section parameters for the
+		generation of a certain decompression table are put
+		into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="tableType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="inputprofile" type="inputprofileType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="mixref" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="surfaceinterval" type="surfaceintervalType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="density" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="output" type="outputType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="program" type="programType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="decomodel" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="deepstoptime" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Sets the duration in seconds for "deep stops" to be
+		taken into account. Traditionally, a "deep stop" is
+		held at half depth between the deepest depth and the
+		first deco stop, or between two deco stops
+		respectively.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="maximumascendingrate" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="tablescope" type="tablescopeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;tablescope&gt; element the scope
+		parameters for the generation of decompression tables
+		(see also &lt;calculatetable&gt;) are put into
+		brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <!--
+	  <xs:element name="mixchangeascent" type="mixchangeascentType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The &lt;depth&gt; statements put into brackets within
+		&lt;mixchangeascent&gt; define the breathing gases to
+		be used in different depths during ascent.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="inputprofiledescent" type="inputprofiledescentType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;inputprofiledescent&gt; exact information
+		concerning a descent profile (see also
+		&lt;calculateprofile&gt;) is given, for which an
+		ascent profile is to be calculated.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  -->
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="tablescopeType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="altitude" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;altitude&gt; the height above sea level in
+		metres (given as a real number) is put into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divedepthbegin" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;divedepthbegin&gt; (dive depth begin) sets the
+		shallowest dive depth in metre (as a real number) with
+		which table output shall start.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divedepthend" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;divedepthend&gt; (dive depth end) sets the deepest
+		dive depth in metre (as a real number) with which
+		table output shall end.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divedepthstep" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;divedepthstep&gt; (dive depth step) sets the
+		increment for the dive depth in metre (as a real
+		number) for table output.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="bottomtimemaximum" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;bottomtimemaximum&gt; (bottom time maximum) sets
+		the maximum bottom time in seconds (as a real number)
+		which is to be considered within table output for the
+		shallowest depth.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="bottomtimeminimum" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="bottomtimestepbegin" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;bottomtimestepbegin&gt; (bottom time step begin)
+		defines the increment for the bottom time in seconds
+		(as a real number) which shall be considered in the
+		table output for the minimal (i.e. shallowest) dive
+		depth.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="bottomtimestepend" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;bottomtimestepend&gt; (bottom time step end)
+		defines the increment for the bottom time in seconds
+		(as a real number) which shall be considered in the
+		table output for the maximum (i.e. deepest) dive
+		depth.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="inputprofileType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="diveref" type="diverefType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="repetitiongroupref" type="referenceType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="waypoint" type="waypointType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="waypointType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="alarm" type="alarmType"
+		      minOccurs="0" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Mittels &lt;alarm&gt; werden Alarmmeldungen des
+		Tauchcomputers zu einem Wegpunkt (&lt;waypoint&gt;)
+		geklammert. Es können mehrere &lt;alarm&gt;-Elemente
+		innerhalb einer &lt;waypoint&gt;-Anweisung aufgeführt
+		werden, für jeden Alarmgrund eine Anweisung.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="cns" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Der vom Tauchcomputer berechnete CNS-Prozentwert,
+		angegeben als reelle Zahl.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="depth" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Innerhalb &lt;depth&gt; erfolgt eine Tiefenangabe in
+		Metern als reelle Zahl zu einem Wegpunkt
+		(&lt;waypoint&gt;).
+		
+		Normalerweise muß eine &lt;depth&gt;-Anweisung innerhalb
+		eines jeden Wegpunktes (&lt;waypoint&gt;) stehen. Die
+		einzige Ausnahme von dieser Regel ist die Berechnung
+		eines Aufstiegsprofiles ( siehe
+		&lt;calculateprofile&gt;>) — denn hierbei soll das
+		Profil (Tiefen-/Zeit-Wertepaare) ja erst erzeugt werden.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="divetime" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The absolutely passed time since the beginning of the
+		dive, given in seconds as an integer.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="otu" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Der aktuelle Wert der Sauerstoff-Toxizität (,,Oxygen
+		Toxicity Units``) während des Tauchgangs, angegeben als
+		reelle Zahl.
+		
+		Der OTU-Wert bleibt solange konstant, bis eine neue
+		&lt;otu&gt;-Anweisung den Wert aktualisiert.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setpo2" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Mittels &lt;setpo2&gt; wird beim Kreislaufgerätetauchen
+		der maximal tolerierbare Sauerstoff-Partialdruck
+		vorgegeben. Der Wert wird als reelle Zahl in der
+		SI-Einheit Pascal vorgegeben und bleibt solange
+		konstant, bis durch eine neue &lt;setpo2&gt;-Anweisung
+		ein anderer Sauerstoff-Partialdruck vorgegeben wird.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="switchmix" type="referenceType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="de">
+		Gibt den Wechsel des Atemgases innerhalb eines
+		Wegpunktes (&lt;waypoint&gt;) an. Das Atemgas kann
+		während eines Tauchgangs beliebig oft gewechselt werden,
+		allerdings darf jeweils nur eine (1)
+		&lt;switchmix/&gt;-Anweisung pro &lt;waypoint&gt;-Element
+		angegeben werden.
+		
+		Der erste angegebene Wegpunkt muß eine
+		&lt;switchmix/&gt;-Anweisung enthalten — damit klar ist,
+		mit welchem Atemgas der Tauchgang durchgeführt
+		bzw. begonnen wird.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="temperature" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		The actual water temperature at the specified depth,
+		given in Kelvin as a real number. The temperature is
+		valid until a new temperature attribute is given in a
+		following &lt;depth&gt; statement.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <!--
+	      <xs:attribute name="work" type="workType">
+	      <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      Indicates the workload when using an air integrated dive
+	      computer. At time the following levels in Datatrak files
+	      are recognized: 1, 2, and 4.
+	      </xs:documentation>
+	      </xs:annotation>
+	      </xs:attribute>
+	  -->
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:simpleType name="alarmType">
+    <xs:annotation>
+      <xs:documentation xml:lang="de">
+	Zur Zeit werden folgende Schlüsselwörter erkannt: rbt
+	(verbleibende Grundzeit ist überschritten) error (allgemeiner
+	Fehler (deko-stop verpaßt, etc.))  ascent (zu schneller
+	Aufstieg) deco (Computer meldet "Deko-Stop" notwendig) breath
+	(zu hohe Atemfrequenz) surface (Oberfläche erreicht)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="rbt">
+	<xs:annotation>
+	  <xs:documentation xml:lang="en">
+	    remaining bottom time exceeded
+	  </xs:documentation>
+	</xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="error">
+	<xs:annotation>
+	  <xs:documentation xml:lang="en">
+	    general error (deco stop missed, etc.)
+	  </xs:documentation>
+	</xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ascent">
+	<xs:annotation>
+	  <xs:documentation xml:lang="en">
+	    ascent too fast
+	  </xs:documentation>
+	</xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="deco">
+	<xs:annotation>
+	  <xs:documentation xml:lang="en">
+	    announcement of a deco stop
+	  </xs:documentation>
+	</xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="breath">
+	<xs:annotation>
+	  <xs:documentation xml:lang="en">
+	    breathing frequency too high
+	  </xs:documentation>
+	</xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="surface">
+	<xs:annotation>
+	  <xs:documentation xml:lang="en">
+	    surface reached
+	  </xs:documentation>
+	</xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  
+
+  <xs:simpleType name="workType">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+	<xs:enumeration value="4"/>
+      </xs:restriction>
+  </xs:simpleType>
+
+
+  <!--
+      ***
+      *** calculatebottomtimetable
+      ***
+  -->
+  <xs:complexType name="calculatebottomtimetableType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="bottomtimetable" type="bottomtimetableType"
+		      minOccurs="1" maxOccurs="unbounded">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="bottomtimetableType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="tableref" type="referenceType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		references to tables
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="output" type="outputType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="program" type="programType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="bottomtimetablescope"
+		      type="bottomtimetablescopeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="bottomtimetablescopeType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="divedepthbegin" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="divedepthend" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="divedepthstep" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="breathingconsumptionvolumebegin" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="breathingconsumptionvolumeend" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="breathingconsumptionvolumestep" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="tankvolumebegin" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="tankvolumeend" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="tankvolumestep" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="tankpressurebegin" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	  <xs:element name="tankpressurereserve" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--
+      ***
+      *** divecomputercontrolType
+      ***
+  -->
+  <xs:complexType name="divecomputercontrolType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="setdcdata" type="setdcdataType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside the &lt;setdcdata&gt; section follows
+		information concerning the configuration of a dive
+		computer.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcdata" type="getdcdataType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		By means of &lt;getdcdata&gt; the dive computer is
+		instructed to send data to the calling software. If
+		there are no further elements inside the
+		&lt;getdcdata&gt; section, all data - of all stored
+		dives - are transfered.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="setdcdataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="setdcpassword" type="xs:string" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Via &lt;setdcpassword&gt; a password is set on the
+		dive computer by the owner to protect the data against
+		unautorized access. But How?
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcownerdata" type="simpleTagType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Via &lt;setdcownerdata&gt; all data of the owner of
+		the dive computer which are stored inside the
+		&lt;owner&gt; section, are transferred to the dive
+		computer.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcbuddydata" type="dcbuddydataType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Via &lt;setdcbuddydata&gt; all data of the specified
+		dive buddy which are stored inside the &lt;buddy&gt;
+		section, are transferred to the dive computer.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="setdcdate" type="encapsulatedDateType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;setdcdate&gt; sets the date in the dive computer.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdctime" type="encapsulatedTimeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;setdcdate&gt; sets the date in the dive computer.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+
+	  <xs:element name="setdcalarmtime" type="dcalarmtimeType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;setdcalarmtime&gt; it is possible to set a -
+		absolute (independent from dive time) - time when the
+		dive computer shall give an alarm.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcdivesitedata" type="dcdivesitedataType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Via &lt;setdcdivesitedata&gt; all data given inside
+		the &lt;divesite&gt; section concerning the specified
+		- via the attribute - dive site (&lt;site&gt;) are
+		transferred to the dive computer.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcdivetimealarm" type="dcdivetimealarmType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;setdcdivetimealarm&gt; the dive time in
+		minutes is set when the dive computer shall give an
+		alarm signal.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcdivedepthalarm" type="dcdivedepthalarmType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;setdcdivedepthalarm&gt; a dive depth in
+		metres (given as a real number) is set at which the
+		dive computer shall give a certain alarm.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcdivepo2alarm" type="dcdivepo2alarmType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;setdcdivepo2alarm&gt; allows for setting an oxygen
+		partial pressure at which the dive computer shall give
+		an alarm signal.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcendndtalarm" type="dcendndtalarmType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		&lt;setdcendndtalarm&gt; (,,set dive computer end no
+		decompression time alarm``) tells the dive computer to
+		give an alarm signal when the end of the no
+		decompression time is reached.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcdecomodel" type="dcdecomodelType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Sets the decompression model to be used in the dive
+		computer. This element is for future use.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcaltitude" type="xs:float" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		With &lt;setdcaltitude&gt; the altitude in metres
+		above sea level (given as a real number) can be set in
+		the dive computer for the next dive. This element
+		serves for an easy way to set the altitude for a dive
+		spot in the dive computer without cross referencing to
+		a previous made data base for this lake, or river.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="setdcproprietarydata" type="dcproprietarydataType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;setdcproprietarydata&gt; proprietary data
+		of a dive computer manufacturer can be given. The
+		elements inside &lt;setdcproprietarydata&gt; are
+		neglected by other dive computers.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <!--
+	  <xs:element name="" type="Type" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  -->
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcproprietarydataType" mixed="true">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcdecomodelType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="setdcdecomodelname" type="xs:string">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Puts the name of the decompression model to be used in
+		the dive computer into brackets.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcendndtalarmType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="dcalarm" type="dcalarmType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		By means of &lt;dcalarm&gt; the alarm type for a
+		certain event is defined which a dive computer has to
+		generate.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcdivepo2alarmType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="maximumpo2" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Indicates the - more or less arbitrarily chosen -
+		threshold for the oxygen partial pressure, when the
+		oxygen fraction of this breathing gas starts to be
+		poisonous. The value is given as a real number,
+		normally it ranges between 1.4 and 1.7.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="dcalarm" type="dcalarmType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		By means of &lt;dcalarm&gt; the alarm type for a
+		certain event is defined which a dive computer has to
+		generate.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcdivesitedataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:attribute name="site" type="xs:IDREF" use="required">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      unique identifier of the site which data are to be
+	      transferred to the dive computer
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcbuddydataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:attribute name="buddy" type="xs:IDREF" use="required">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      unique identifier of the buddy whose data are to be
+	      transferred
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcdivedepthalarmType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="dcalarmdepth" type="xs:float">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		a dive depth in metres (given as a real number) is set
+		at which the dive computer shall give a certain alarm.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="dcalarm" type="dcalarmType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		By means of &lt;dcalarm&gt; the alarm type for a
+		certain event is defined which a dive computer has to
+		generate.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="dcdivetimealarmType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="minute" type="xs:positiveInteger">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		dive time in minutes is set when the dive computer
+		shall give an alarm signal
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="dcalarm" type="dcalarmType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		By means of &lt;dcalarm&gt; the alarm type for a
+		certain event is defined which a dive computer has to
+		generate.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+
+  <xs:complexType name="dcalarmtimeType">
+    <xs:complexContent>
+      <xs:extension base="timeType">
+	<xs:sequence>
+	  <xs:element name="dcalarm" type="dcalarmType">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		By means of &lt;dcalarm&gt; the alarm type for a
+		certain event is defined which a dive computer has to
+		generate.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+
+  <xs:simpleType name="dcalarmType">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:annotation>
+	<xs:documentation xml:lang="en">
+	  Further documentation required.
+	</xs:documentation>
+      </xs:annotation>
+    </xs:restriction>
+  </xs:simpleType>
+  
+
+  <xs:complexType name="getdcdataType">
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:sequence>
+	  <xs:element name="getdcalldata" type="simpleTagType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		request for all data stored on the dive computer
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcgeneratordata" type="simpleTagType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en"> request for the
+	      manufacturer's data (see also &lt;generator&gt;
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcownerdata" type="simpleTagType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		request for the owner's data (&lt;owner&gt;) (see also
+		&lt;diver&gt;)
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcbuddydata" type="simpleTagType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		request for all dive buddy data (&lt;buddy&gt;) (see
+		also &lt;diver&gt;)
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcgasdefinitionsdata" type="simpleTagType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		request for all stored breathing gas data (see also
+		&lt;gasdefinitions&gt;)
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcdivesitedata" type="simpleTagType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		request for descriptions of dive spots (see also
+		&lt;divesite&gt;)
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcdivetripdata" type="simpleTagType"
+		      minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		request for descriptions of dive trips (see also
+		&lt;divetrip&gt;)
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="getdcprofiledata" type="simpleTagType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		request for dive profile data (see also
+		&lt;profiledata&gt;)
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="simpleTagType">
+  </xs:complexType>
+
+
+  <!-- ********** ********** ********** ********** -->
+  <!-- ********** ********** ********** ********** -->
+
+  <!-- ************* -->
+  <!-- general types -->
+  <!-- ************* -->
+
+  <xs:complexType name="referenceType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+	The type referenceType is general type with the proper
+	attribute for all types of referneces.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="UDDF_ROOT">
+	<xs:attribute name="ref" type="xs:IDREF" use="required">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      The attribte ref references an element with the proper
+	      id attribute.
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="priceType">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+	<xs:attribute name="currency" type="xs:string"
+		      use="optional">
+	  <xs:annotation>
+	    <xs:documentation xml:lang="en">
+	      eindeutiger Bezeichner einer Währung (sollte
+	      drei Buchstaben lang sein)
+	    </xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="manufacturerType">
+    <xs:complexContent>
+      <xs:extension base="namedType">
+	<xs:sequence>
+	  <xs:element name="address" type="addressType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;address&gt; the own (&lt;owner&gt; element) address
+		data, or of dive buddies (&lt;buddy&gt; element), or of a
+		shop (&lt;shop&gt; element) respectively, are given.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="contact" type="contactType" minOccurs="0">
+	    <xs:annotation>
+	      <xs:documentation xml:lang="en">
+		Inside &lt;contact&gt; data concerning getting in touch with
+		some one are given, like phone number, email address,
+		language etc.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!-- ********** ********** ********** ********** -->
+  <!--
+      ***
+      *** Yes, the following types are all identical.
+      *** But I introduced them in case that the type changes for some reason.
+      ***
+  -->
+
+  <xs:complexType name="versionType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string"/>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+</xs:schema>
+<!--
+-->
+

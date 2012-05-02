@@ -55,7 +55,7 @@ METHOD_FOR_DEPTH_CALCULATION = 'complex' # either simple (/10) or complex
 TRAVEL_SWITCH = 'late' # "late" or "early"
 
 # ========= User settings ========
-TEMPLATE = "default.tpl"
+TEMPLATE = "default-color.tpl"
 
 DECO_MODEL = "ZHL16c"
 WATER_DENSITY = SEA_WATER_DENSITY 

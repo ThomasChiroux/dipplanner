@@ -40,6 +40,7 @@ class TestSegment(unittest.TestCase):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
     settings.RUN_TIME = True
+    settings.SURFACE_TEMP = 12
     self.airtank = Tank()
     self.trimixtank1 = Tank(f_O2=0.10, f_He=0.70)
     self.nitroxtank1 = Tank(f_O2=0.40)

@@ -38,6 +38,7 @@ class TestModelBuhlmannOxTox(unittest.TestCase):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
     settings.RUN_TIME = True
+    settings.SURFACE_TEMP = 12
     self.ox1 = OxTox()
     self.ox2 = OxTox()
 

@@ -39,6 +39,7 @@ class TestModelBuhlmannGradient(unittest.TestCase):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
     settings.RUN_TIME = True
+    settings.SURFACE_TEMP = 12
     self.gradient1 = Gradient(0.3, 0.8)
     self.gradient2 = Gradient(0.35, 0.75)
   

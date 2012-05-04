@@ -155,8 +155,8 @@ def parse_config_file(filenames):
     if config.has_option(section, 'absolute_max_tank_size'):
       settings.ABSOLUTE_MAX_TANK_SIZE = float(config.get(section, 'absolute_max_tank_size'))
           
-    if config.has_option(section, 'pp_h2o_surface'):
-      settings.PP_H2O_SURFACE = float(config.get(section, 'pp_h2o_surface'))
+    if config.has_option(section, 'surface_temp'):
+      settings.SURFACE_TEMP = float(config.get(section, 'surface_temp'))
     if config.has_option(section, 'he_narcotic_value'):
       settings.HE_NARCOTIC_VALUE = float(config.get(section, 'he_narcotic_value'))
     if config.has_option(section, 'n2_narcotic_value'):
@@ -365,7 +365,7 @@ at the full time of the segment.
 By default the segment time is shortened by descent or ascent time
 """)
   
-  group3 = parser.add_argument_group("Internal Parameters")
+  group3 = parser.add_argument_group("Advanced Parameters")
   group3.add_argument("--depthcalcmethod", metavar="simple|complex",
                     type=str,
           help="""method used for pressure from depth calculation.
@@ -377,6 +377,8 @@ By default the segment time is shortened by descent or ascent time
                       help="""Travel switch method (late or early).
             if late, it will keep the travel as long as possible
             if early, it will switch to bottom tank as soon as is it breathable""")
+  group3.add_argument("--surfacetemp", metavar="VAL", type=float,
+                      help="""Temperature at surface in celcius""")
 
   group3.add_argument("--ambiantpressureatsea", metavar="VAL",
                     type=float,
@@ -472,7 +474,11 @@ The template file should be present in ./templates""")
      args.travelswitch == 'early':
     settings.TRAVEL_SWITCH = args.travelswitch
 
+  if args.surfacetemp is not None:
+    settings.SURFACE_TEMP = args.surfacetemp
+
   if args.ambiantpressureatsea:
+    print "---------------- %s ---------------------" % args.ambiantpressureatsea
     settings.AMBIANT_PRESSURE_SEA_LEVEL = args.ambiantpressureatsea
    
   if args.tanks:

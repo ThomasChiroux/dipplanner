@@ -40,8 +40,9 @@ ABSOLUTE_MIN_PPO2 = 0.16
 ABSOLUTE_MAX_TANK_PRESSURE = 300 # in bar
 ABSOLUTE_MAX_TANK_SIZE = 2*20 # in liter
 
-#TODO: what is the good value : 0.014 or 0.0627 ??
-PP_H2O_SURFACE = 0.014 #0.0627 # 0.014 # in bar : eq 10.5mmHG (20°; 60% hum)
+# Temperature at surface.
+# Used to calculate PP_H2O_SURFACE
+SURFACE_TEMP = 20
 
 HE_NARCOTIC_VALUE = 0.23
 N2_NARCOTIC_VALUE = 1.0

@@ -113,3 +113,31 @@ def pressure_to_depth(pressure):
     return int(round(float(pressure) / (settings.WATER_DENSITY * 1E3 * g * 1E-5)))
   else:
     return int(round(float(pressure)*10))
+
+def calculate_ppH2O_surf(temperature=20):
+  """Calculates and return vapor pressure of water at surface
+  using Antoine equation (http://en.wikipedia.org/wiki/Vapour_pressure_of_water)
+
+  Keyword Arguments:
+    temperature - float in ° Celcius
+
+  Returns:
+    float - ppH2O in bar
+  """
+  mmHG_to_bar = 1/750.0615
+
+  if temperature < 1:
+    temperature = 1
+  if temperature >= 1 and temperature <= 100:
+    const_a = 8.07131
+    const_b = 1730.63
+    const_c = 233.426
+  elif temperature > 100 and temperature < 374:
+    const_a = 8.14019
+    const_b = 1810.94
+    const_c = 244.485
+  else:
+    raise ValueError("Temperature is too High")
+
+  pressure_mmHg = 10 ** (const_a - (const_b / (const_c + float(temperature))))
+  return pressure_mmHg * mmHG_to_bar

@@ -93,6 +93,7 @@ class Model(object):
       comp = Compartment()
       comp.set_pp(0.0, 0.79 * (settings.AMBIANT_PRESSURE_SURFACE - \
                                tools.calculate_ppH2O_surf(settings.SURFACE_TEMP)))
+      #TODO: Check above : 0.79 or settings.DEFAULT_AIR_PPN2 (tdb) ?
       self.tissues.append(comp)
     
     self.set_time_constants()
@@ -257,7 +258,7 @@ class Model(object):
       comp_pressure = comp.get_max_amb(self.gradient.gf) - settings.AMBIANT_PRESSURE_SURFACE
       if comp_pressure > pressure:
         pressure = comp_pressure
-    return pressure*10
+    return tools.pressure_to_depth(pressure)
     
   def m_value(self, pressure):
     """Determine the maximum M-Value for a given depth (pressure)

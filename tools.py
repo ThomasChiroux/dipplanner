@@ -110,9 +110,9 @@ def pressure_to_depth(pressure):
   if settings.METHOD_FOR_DEPTH_CALCULATION == 'complex':
     g = 9.81
     # TODO : int or round
-    return int(round(float(pressure) / (settings.WATER_DENSITY * 1E3 * g * 1E-5)))
+    return float(pressure) / (settings.WATER_DENSITY * 1E3 * g * 1E-5)
   else:
-    return int(round(float(pressure)*10))
+    return float(pressure)*10
 
 def calculate_ppH2O_surf(temperature=20):
   """Calculates and return vapor pressure of water at surface

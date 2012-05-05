@@ -307,10 +307,10 @@ class TestDiveTxNormoDecoNx8020m40min(TestDive):
     assert seconds_to_strtime(self.profile1.run_time) == " 45:10", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 17.6528820941, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 17.6400151459, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 8.66236075658, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 8.65773112695, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2092.36307445,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
@@ -368,16 +368,16 @@ class TestDiveTxNormoDecoNx8030m20min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 25:34", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 25:30", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 18.4233369905, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 18.4411607819, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 7.8218866386, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 7.82883108304, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1435.9915599,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1433.7657939, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -393,16 +393,16 @@ class TestDiveTxNormoDecoNx8030m30min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 41:21", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 41:15", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 32.7009873227, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 32.7062729103, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 14.7177199719, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 14.6945718238, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2130.64118775,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2127.52511535, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -418,16 +418,16 @@ class TestDiveTxNormoDecoNx8030m40min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 60:05", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 59:49", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 47.7685346621, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 47.7154457841, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 21.4862384904, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 21.4144792312, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2893.60329135,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2886.01660635, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -460,10 +460,10 @@ class TestDiveTxNormoDecoNx8040m10min(TestDive):
     assert seconds_to_strtime(self.profile1.run_time) == " 14:03", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 10.8611665581, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 10.8550618284, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 4.20498808114, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 4.17721030336, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
     self.assertAlmostEqual(self.txtanknormodbl.used_gas, 952.74372345,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
@@ -482,16 +482,16 @@ class TestDiveTxNormoDecoNx8040m20min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 33:15", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 33:06", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 30.7987474143, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 30.7728799622, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 14.0549446228, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 14.0387409191, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1876.4761188,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1871.6816046,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -507,16 +507,16 @@ class TestDiveTxNormoDecoNx8040m30min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 56:11", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 55:54", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 53.5592629126, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 53.4629142875, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 24.7932912875, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 24.7145875838, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas,2853.16205265,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2844.96910965, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -532,16 +532,16 @@ class TestDiveTxNormoDecoNx8040m40min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 82:41", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 81:57", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 78.1450311723, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 77.9505272597, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 37.0203868041, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 36.9690953811, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3921.51154725, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3900.57365025, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -557,16 +557,16 @@ class TestDiveTxNormoDecoNx8040m50min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == "109:00", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == "108:14", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 103.687491665, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 103.387332588, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 49.8751321043, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 49.6836116365, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 4933.7794242,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 4912.4777724, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -596,16 +596,16 @@ class TestDiveTxNormoDecoNx8050m10min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 16:39", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 16:36", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 14.9072575613, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 14.9281558314, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 6.63108706161, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 6.6611796542, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1183.5343281,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1181.6324637, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -621,16 +621,16 @@ class TestDiveTxNormoDecoNx8050m20min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 42:41", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 42:23", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 43.1370498168, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 43.0133098483, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 19.846157584, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 19.8179168433, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2378.4085485,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2369.1035685, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -646,16 +646,16 @@ class TestDiveTxNormoDecoNx8050m30min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 73:12", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 72:44", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 75.6730984509, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 75.4542431526, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 36.6655178753, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 36.4931494542, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3661.42772955,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3645.97369515, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -671,16 +671,16 @@ class TestDiveTxNormoDecoNx8050m40min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == "111:50", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == "110:35", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 112.88088928, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 112.339449459, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 54.9998746004, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 54.7574525731, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 5112.52849815,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 5076.38076195, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -710,16 +710,16 @@ class TestDiveTxNormoDecoNx8060m10min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 19:14", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 19:11", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 18.3993781205, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 18.4090844697, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 9.28893758666, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 9.29125240148, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1414.3156506, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 1412.2925346, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -735,16 +735,16 @@ class TestDiveTxNormoDecoNx8060m20min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 52:28", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 52:06", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 56.0363863809, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 55.8063867859, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 29.1319195382, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 28.9831865948, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2903.7880302,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 2892.9466326, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -760,16 +760,16 @@ class TestDiveTxNormoDecoNx8060m25min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 71:20", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 70:46", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 76.9901548222, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 76.663595923, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 40.755614298, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 40.5771298925, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3686.87302545,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3667.51647525, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))
@@ -785,16 +785,16 @@ class TestDiveTxNormoDecoNx8060m30min(TestDive):
     self.profile1.do_dive()
     
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 94:51", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_strtime(self.profile1.run_time) == " 93:44", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
   
   def test_OTU(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 100.191383899, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 99.4714732702, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
 
   def test_CNS(self):
-    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 53.0120470465, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 52.5901415884, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
     
   def test_tank_cons(self):
-    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 4587.34384065,7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 4556.43746385, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
 
   def test_tank_cons_rule_0(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[0].check_rule(), self.profile1.tanks[0].name()))

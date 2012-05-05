@@ -17,9 +17,9 @@ Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
     {{- segment.get_time_str() }} [RT:{{ segment.get_run_time_str() -}}], on
     {{- " %12s"|format(segment.tank|string) }}, SP:{{ segment.setpoint -}},
     {%- if segment.get_end() > settings.DEFAULT_MAX_END -%}
-      {{-color(" END:%sm"|format(segment.get_end()), "red") -}}
+      {{-color(" END:%im"|format(segment.get_end()), "red") -}}
     {%- else -%}
-      {{- " END:%sm"|format(segment.get_end()) -}}
+      {{- " END:%im"|format(segment.get_end()) -}}
     {%- endif -%}
   {%- endfor -%}
 {%- endblock -%}

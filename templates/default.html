@@ -28,9 +28,9 @@
     <td>on {{ " %12s"|format(segment.tank|string) }}</td>
     <td>SP:{{ segment.setpoint }}</td>
     {% if segment.get_end() > settings.DEFAULT_MAX_END %}
-      <td>{{color(" END:%sm"|format(segment.get_end()), "red") }}</td>
+      <td>{{color(" END:%im"|format(segment.get_end()), "red") }}</td>
     {% else %}
-      <td>{{ " END:%sm"|format(segment.get_end()) }}</td>
+      <td>{{ " END:%im"|format(segment.get_end()) }}</td>
     {% endif %}
     </tr>
   {% endfor %}

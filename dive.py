@@ -311,8 +311,8 @@ class Dive(object):
         #Ascend or descend to dive segment, 
         #using existing gas and ppO2 settings
         if delta_depth > 0.0: # descent
-          self.model.asc_desc(depth_to_pressure(self.current_depth), #float(self.current_depth)/10,
-                              depth_to_pressure(seg.depth), #float(seg.depth)/10,
+          self.model.asc_desc(depth_to_pressure(self.current_depth),
+                              depth_to_pressure(seg.depth),
                               settings.DESCENT_RATE,
                               self.current_tank.f_He,
                               self.current_tank.f_N2,
@@ -336,7 +336,7 @@ class Dive(object):
         if seg.time > 0: #only do this if it's not a waypoint
           if run_time_flag:
             run_time_flag = False # do this one only
-            self.model.const_depth(depth_to_pressure(seg.depth), #float(seg.depth)/10,
+            self.model.const_depth(depth_to_pressure(seg.depth),
                                    seg.time - self.run_time,
                                    self.current_tank.f_He,
                                    self.current_tank.f_N2,
@@ -353,7 +353,7 @@ class Dive(object):
             self.run_time = seg.time 
             self.logger.debug("update run time : %ss" % self.run_time)
           else:
-            self.model.const_depth(depth_to_pressure(seg.depth), #float(seg.depth)/10,
+            self.model.const_depth(depth_to_pressure(seg.depth),
                                    seg.time,
                                    self.current_tank.f_He,
                                    self.current_tank.f_N2,
@@ -444,7 +444,7 @@ class Dive(object):
     self.model.gradient.set_gf_at_depth(next_stop_depth)
     
     # Remember maxM-Value and controlling compartment
-    max_MV = self.model.m_value(depth_to_pressure(self.current_depth)) #float(self.current_depth)/10)
+    max_MV = self.model.m_value(depth_to_pressure(self.current_depth))
     control = self.model.control_compartment()
     
     while self.current_depth > target_depth:
@@ -500,7 +500,7 @@ class Dive(object):
                                                       self.current_tank.f_N2,
                                                       self.pp_O2,
                                                       self.model.ceiling()))
-        self.model.const_depth(depth_to_pressure(self.current_depth), #float(self.current_depth)/10,
+        self.model.const_depth(depth_to_pressure(self.current_depth),
                                stop_time,
                                self.current_tank.f_He,
                                self.current_tank.f_N2,
@@ -537,8 +537,8 @@ class Dive(object):
         # TODO : if we enable this code always (not in rlif, but direct) then
         #        model will ascend between deco stops, but ... 
         #        this causes collateral damage to runtim calculations
-        self.model.asc_desc(depth_to_pressure(self.current_depth), #float(self.current_depth)/10,
-                            depth_to_pressure(next_stop_depth), #float(next_stop_depth)/10,
+        self.model.asc_desc(depth_to_pressure(self.current_depth),
+                            depth_to_pressure(next_stop_depth),
                             settings.ASCENT_RATE,
                             self.current_tank.f_He,
                             self.current_tank.f_N2,
@@ -551,7 +551,7 @@ class Dive(object):
       
       #now we moved up the the next depth
       self.current_depth = next_stop_depth
-      max_MV = self.model.m_value(depth_to_pressure(self.current_depth)) #float(self.current_depth)/10)
+      max_MV = self.model.m_value(depth_to_pressure(self.current_depth))
       control = self.model.control_compartment()
       
       # Check and switch deco gas

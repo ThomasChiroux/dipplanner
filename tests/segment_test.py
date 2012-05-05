@@ -60,15 +60,15 @@ class TestSegmentGasUsed1(TestSegment):
     
 class TestSegmentGasEnd1(TestSegment):
   def runTest(self):
-    assert self.diveseg1.get_end() == 29, 'wrong E.N.D : %s' % self.diveseg1.get_end()
+    self.assertAlmostEqual(self.diveseg1.get_end(), 29.0057341025, 5, 'wrong E.N.D : %s' % self.diveseg1.get_end())
 
 class TestSegmentGasEnd2(TestSegment):
   def runTest(self):
-    assert self.diveseg2.get_end() == 62, 'wrong E.N.D : %s' % self.diveseg2.get_end()
+    self.assertAlmostEqual(self.diveseg2.get_end(), 61.912489531, 5, 'wrong E.N.D : %s' % self.diveseg2.get_end())
 
 class TestSegmentStr1(TestSegment):
   def runTest(self):
-    assert str(self.diveseg2) == "   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:62m", \
+    assert str(self.diveseg2) == "   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m", \
                                                   'wrong name : %s' % str(self.diveseg2)
 class TestSegmentDeco1(TestSegment):
   def runTest(self):  

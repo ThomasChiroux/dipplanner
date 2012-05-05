@@ -92,7 +92,7 @@ class Segment(object):
     
   def __repr__(self):
     """Returns a string representing the actual segment"""
-    return "%8s: at %3dm for %s [RT:%s], on %s,  SP:%s, END:%sm" % ( 
+    return "%8s: at %3dm for %s [RT:%s], on %s,  SP:%s, END:%im" % (
                                           self.type.upper(),
                                           self.depth,
                                           self.get_time_str(),

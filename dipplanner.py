@@ -26,7 +26,7 @@ also initiate log files
 PROJECT TODO:
 =============
 """
-#TODO: add repetitive dives tests
+#TODO: extend repetitive dives tests
 #TODO: ResTifying docstrings and add sphinx for doc generation
 
 __version__ = "0.2nightly"

@@ -96,7 +96,7 @@ class Dive(object):
   metadata -- description for the dive
   """
   
-  def __init__(self, known_segments, known_tanks, model=None):
+  def __init__(self, known_segments, known_tanks, previous_profile=None):
     """Constructor for Profile class
     
     For fist dive, instanciate the profile class with no model (profile will
@@ -116,7 +116,7 @@ class Dive(object):
     self.logger = logging.getLogger("dipplanner.dive.Dive")
     self.logger.debug("creating an instance of Dive")
     
-    if model is None:
+    if previous_profile is None:
       # new dive : new model
       self.if_repetative_dive = False
       self.model = Model() # buhlman model by default
@@ -124,7 +124,7 @@ class Dive(object):
     else:
       # repetative dive
       self.if_repetative_dive = True
-      self.model = model
+      self.model = previous_profile.model
       self.model.init_gradient()
     
     # filter input segment for only enabled segments
@@ -208,7 +208,7 @@ class Dive(object):
     <Exceptions from model>
     
     """
-    self.model.const_depth(depth=0.0, seg_time=time, 
+    self.model.const_depth(pressure=0.0, seg_time=time,
                             f_He=0.0, f_N2=0.79, pp_O2=0.0)
     self.surface_interval = time
   

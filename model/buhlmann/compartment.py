@@ -52,15 +52,43 @@ class Compartment(object):
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.model.buhlmann.compartment.Compartment")
     self.logger.debug("creating an instance of Compartment")
-    
+
+    self.k_He = 0.0
+    self.k_N2 = 0.0
+    self.a_He = 0.0
+    self.b_He = 0.0
+    self.a_N2 = 0.0
+    self.b_N2 = 0.0
+
     self.pp_He = 0.0
     self.pp_N2 = 0.0
+
+    self.p_He_N2 = 0.0
+    self.a_He_N2 = 0.0
+    self.b_He_N2 = 0.0
+
     if h_He is not None and h_N2 is not None and \
        a_He is not None and b_He is not None and \
        a_N2 is not None and b_N2 is not None:
       self.set_compartment_time_constants(h_He, h_N2, a_He, b_He, a_N2, b_N2)
-  
-  
+
+  def __repr__(self):
+    """Returns a string representing the comp"""
+    return "He:%s N2:%s mv_at:%s MV:%s" % (
+        self.pp_He,
+        self.pp_N2,
+        self.get_m_value_at(settings.AMBIANT_PRESSURE_SURFACE),
+        self.get_mv(settings.AMBIANT_PRESSURE_SURFACE)
+        )
+
+  def __str__(self):
+    """Return a human readable name of the segment"""
+    return self.__repr__()
+
+  def __unicode__(self):
+    """Return a human readable name of the segment in unicode"""
+    return u"%s" % self.__repr__()
+
   def set_compartment_time_constants(self, h_He, h_N2, a_He, b_He, a_N2, b_N2):
     """Sets the compartment's time constants
     
@@ -102,6 +130,15 @@ class Compartment(object):
     else:
       self.pp_He = float(pp_He)
       self.pp_N2 = float(pp_N2)
+
+      #calculate_p_a_b_inert
+      #Calculate and returns p_He_N2, a_He_N2 and b_He_N2
+      #based on current pp_He and pp_N2 of this compartment
+      self.p_He_N2 = self.pp_He + self.pp_N2
+      # calculate adjusted a, b coefficients based on those of He and N2
+      self.a_He_N2 = ((self.a_He * self.pp_He) + (self.a_N2 * self.pp_N2)) / self.p_He_N2
+      self.b_He_N2 = ((self.b_He * self.pp_He) + (self.b_N2 * self.pp_N2)) / self.p_He_N2
+      #self.p_He_N2, self.a_He_N2, self.b_He_N2 = self._calculate_p_a_b_inert()
       
   def const_depth(self, pp_He_inspired, pp_N2_inspired, seg_time):
     """Constant depth calculations. 
@@ -124,8 +161,9 @@ class Compartment(object):
     else:
       new_pp_He = self.pp_He + ((pp_He_inspired - self.pp_He) * (1 - math.exp(-self.k_He*float(seg_time))))
       new_pp_N2 = self.pp_N2 + ((pp_N2_inspired - self.pp_N2) * (1 - math.exp(-self.k_N2*float(seg_time))))
-      self.pp_He = new_pp_He
-      self.pp_N2 = new_pp_N2
+      self.set_pp(new_pp_He, new_pp_N2)
+      #self.pp_He = new_pp_He
+      #self.pp_N2 = new_pp_N2
       
   def asc_desc(self, pp_He_inspired, pp_N2_inspired, rate_he, rate_n2, seg_time):
       """Ascend or descent calculations.
@@ -150,25 +188,26 @@ class Compartment(object):
       else:
         new_pp_He = pp_He_inspired + rate_he * (float(seg_time) - (1.0/self.k_He)) - (pp_He_inspired - self.pp_He - (rate_he/self.k_He)) * math.exp(-self.k_He*float(seg_time))
         new_pp_N2 = pp_N2_inspired + rate_n2 * (float(seg_time) - (1.0/self.k_N2)) - (pp_N2_inspired - self.pp_N2 - (rate_n2/self.k_N2)) * math.exp(-self.k_N2*float(seg_time))
-        self.pp_He = new_pp_He
-        self.pp_N2 = new_pp_N2
+        self.set_pp(new_pp_He, new_pp_N2)
+        #self.pp_He = new_pp_He
+        #self.pp_N2 = new_pp_N2
   
-  def _calculate_p_a_b_inert(self):
-    """Calculate and returns p_He_N2, a_He_N2 and b_He_N2
-    based on current pp_He and pp_N2 of this compartment
-    
-    Keyword arguments:
-    <none>
-    
-    Returns:
-    3 float values : p_He_N2, a_He_N2 and b_He_N2
-    """
-    p_He_N2 = self.pp_He + self.pp_N2
-    # calculate adjusted a, b coefficients based on those of He and N2
-    a_He_N2 = ((self.a_He * self.pp_He) + (self.a_N2 * self.pp_N2)) / p_He_N2
-    b_He_N2 = ((self.b_He * self.pp_He) + (self.b_N2 * self.pp_N2)) / p_He_N2
-    return p_He_N2, a_He_N2, b_He_N2
-    
+#  def _calculate_p_a_b_inert(self):
+#    """Calculate and returns p_He_N2, a_He_N2 and b_He_N2
+#    based on current pp_He and pp_N2 of this compartment
+#
+#    Keyword arguments:
+#    <none>
+#
+#    Returns:
+#    3 float values : p_He_N2, a_He_N2 and b_He_N2
+#    """
+#    p_He_N2 = self.pp_He + self.pp_N2
+#    # calculate adjusted a, b coefficients based on those of He and N2
+#    a_He_N2 = ((self.a_He * self.pp_He) + (self.a_N2 * self.pp_N2)) / p_He_N2
+#    b_He_N2 = ((self.b_He * self.pp_He) + (self.b_N2 * self.pp_N2)) / p_He_N2
+#    return p_He_N2, a_He_N2, b_He_N2
+
   def get_m_value_at(self, pressure):
     """Gets M-Value for given ambient pressure using the Buhlmann equation
     Pm = Pa/b +a         where: Pm = M-Value pressure,
@@ -184,9 +223,9 @@ class Compartment(object):
     float, M_value : maximum tolerated pressure in bar
     
     """
-    p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    mv = float(pressure) / b_He_N2 + a_He_N2
-    return mv
+    #p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
+    return float(pressure) / self.b_He_N2 + self.a_He_N2
+    #return mv
     
   def get_max_amb(self, gf):
     """Gets Tolerated Absolute Pressure for the compartment
@@ -199,11 +238,11 @@ class Compartment(object):
     float, maximum tolerated pressure in bar
     
     """
-    p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
+    #p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
 
     #max_amb = (p_He_N2 - a_He_N2 ) /  b_He_N2 
-    max_amb = (p_He_N2 - a_He_N2 * gf) / (gf / b_He_N2 - gf + 1.0)
-    return max_amb
+    return (self.p_He_N2 - self.a_He_N2 * gf) / (gf / self.b_He_N2 - gf + 1.0)
+    #return max_amb
     
   def get_mv(self, p_amb):
     """Gets M-Value for a compartment, given an ambient pressure
@@ -215,8 +254,7 @@ class Compartment(object):
     float, M-value
     
     """
-    p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
-    mv = p_He_N2 / (float(p_amb) / b_He_N2 + a_He_N2)
+    #p_He_N2, a_He_N2, b_He_N2 = self._calculate_p_a_b_inert()
     #mv = float(p_amb) / b_He_N2 + a_He_N2
-    self.logger.debug("comp m-value for %s : %s" % (p_amb, mv))
-    return mv
+    #self.logger.debug("comp m-value for %s : %s" % (p_amb, mv))
+    return self.p_He_N2 / (float(p_amb) / self.b_He_N2 + self.a_He_N2)

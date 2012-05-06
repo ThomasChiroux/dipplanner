@@ -142,5 +142,5 @@ if __name__ == "__main__":
   #unittest.main() 
   import sys
   suite = unittest.findTestCases(sys.modules[__name__])
-  #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+  #suite = unittest.TestLoader().loadTestsFromTestCase(TestModelBuhlmannModelOutput1)
   unittest.TextTestRunner(verbosity=2).run(suite)

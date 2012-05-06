@@ -90,20 +90,22 @@ class Model(object):
     self.init_gradient()
 
     for comp_number in range(0, self.COMPS):
-      comp = Compartment()
-      comp.set_pp(0.0, 0.79 * (settings.AMBIANT_PRESSURE_SURFACE - \
+      self.tissues.append(Compartment())
+
+    self.set_time_constants()
+
+    for comp in self.tissues:
+      comp.set_pp(0.0, 0.79 * (settings.AMBIANT_PRESSURE_SURFACE -\
                                tools.calculate_ppH2O_surf(settings.SURFACE_TEMP)))
       #TODO: Check above : 0.79 or settings.DEFAULT_AIR_PPN2 (tdb) ?
-      self.tissues.append(comp)
-    
-    self.set_time_constants()
+
     self.metadata = "(none)"
 
   def __repr__(self):
     """Returns a string representing the model"""
     model_string = "" #"Compartment pressures:\n"
     for comp_number in range(0, self.COMPS):
-         model_string += "C:%s He:%s N2:%s gf:%s mv_at:%s max_amb:%s MV:%s\n" % (
+      model_string += "C:%s He:%s N2:%s gf:%s mv_at:%s max_amb:%s MV:%s\n" % (
           comp_number,
           self.tissues[comp_number].pp_He,
           self.tissues[comp_number].pp_N2,
@@ -234,7 +236,7 @@ class Model(object):
     
     for comp_number in range(0, self.COMPS):
       pressure = self.tissues[comp_number].get_max_amb(self.gradient.gf) - settings.AMBIANT_PRESSURE_SURFACE
-      self.logger.debug("pressure:%s" % pressure)
+      #self.logger.debug("pressure:%s" % pressure)
       if pressure > max_pressure:
         control_compartment_number = comp_number
         max_pressure = pressure
@@ -251,7 +253,6 @@ class Model(object):
     
     """
     pressure = 0.0
-    
     for comp in self.tissues:
       #Get compartment tolerated ambient pressure and convert from absolute
       #pressure to depth
@@ -278,7 +279,7 @@ class Model(object):
       compartment_mv = comp.get_mv(p_absolute)
       if compartment_mv > max_mv:
         max_mv = compartment_mv
-    self.logger.debug("max mv : %s" % max_mv)
+    #self.logger.debug("max mv : %s" % max_mv)
     return max_mv
     
   def const_depth(self, pressure, seg_time, f_He, f_N2, pp_O2):

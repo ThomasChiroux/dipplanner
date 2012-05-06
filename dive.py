@@ -451,16 +451,17 @@ class Dive(object):
       self.logger.debug("ascent -- debug : %s, %s" % \
                                            (self.current_depth, target_depth))
       # can we move to the proposed next stop depth ?
-      self.logger.debug("model ceiling: %s" % self.model.ceiling())
-      while force_deco_stop or next_stop_depth < self.model.ceiling():
+      model_ceiling = self.model.ceiling()
+      self.logger.debug("model ceiling: %s" % model_ceiling)
+      while force_deco_stop or next_stop_depth < model_ceiling:
         in_deco_cycle = True
         force_deco_stop = False #Only used for first entry into deco stop
         if in_ascent_cycle: #Finalise last ascent cycle as we are now decomp
           if start_depth > self.current_depth:
             # add ascent segment
-            self.logger.debug("Add AscDesc(1): start_depth:%s, \
-                               current_depth:%s" % \
-                               (start_depth, self.current_depth))
+            #self.logger.debug("Add AscDesc(1): start_depth:%s, \
+            #                   current_depth:%s" % \
+            #                   (start_depth, self.current_depth))
             self.output_segments.append(SegmentAscDesc(start_depth, 
                                                        self.current_depth, 
                                                        settings.ASCENT_RATE,
@@ -475,7 +476,7 @@ class Dive(object):
         #   - otherwise wait until we are finally surfacing before setting it
         if (not settings.MULTILEVEL_MODE or self.in_final_ascent) and \
             (not self.model.gradient.gf_set):
-          self.logger.debug("...set m-value gradient")
+          #self.logger.debug("...set m-value gradient")
           self.model.gradient.set_gf_slope_at_depth(self.current_depth)
           self.model.gradient.set_gf_at_depth(next_stop_depth)
         
@@ -492,14 +493,14 @@ class Dive(object):
           stop_time = settings.STOP_TIME_INCREMENT # in second
 
         # execute the stop
-        self.logger.debug("deco at %sm for %s (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % \
-                                                     (self.current_depth,
-                                                      stop_time,
-                                                      deco_stop_time,
-                                                      self.current_tank.f_He,
-                                                      self.current_tank.f_N2,
-                                                      self.pp_O2,
-                                                      self.model.ceiling()))
+#        self.logger.debug("deco at %sm for %s (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % \
+#                                                     (self.current_depth,
+#                                                      stop_time,
+#                                                      deco_stop_time,
+#                                                      self.current_tank.f_He,
+#                                                      self.current_tank.f_N2,
+#                                                      self.pp_O2,
+#                                                      model_ceiling))
         self.model.const_depth(depth_to_pressure(self.current_depth),
                                stop_time,
                                self.current_tank.f_He,
@@ -510,6 +511,8 @@ class Dive(object):
         # sanity check for infinite loop
         if deco_stop_time > 300000:
           raise InfiniteDeco("Infinite deco error")
+
+        model_ceiling = self.model.ceiling()
           
       # finished decompression loop 
       if in_deco_cycle:

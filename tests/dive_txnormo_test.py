@@ -828,6 +828,30 @@ class TestDiveTxNormoDecoNx8070m10min(TestDive):
     else:
       self.fail("should raise UnauthorizedMod")
 
+# ======================== Multilevel Dive =====================================
+class TestDiveMultilevel(TestDive):
+  def setUp(self):
+    TestDive.setUp(self)
+    diveseg1 = SegmentDive(40, 10*60, self.txtanknormodbl, 0)
+    diveseg2 = SegmentDive(50, 12*60, self.txtanknormodbl, 0)
+    diveseg3 = SegmentDive(30, 15*60, self.txtanknormodbl, 0)
+    self.profile1 = Dive([diveseg1, diveseg2, diveseg3], [self.txtanknormodbl, self.deco1])
+    self.profile1.do_dive()
+
+  def test_RT(self):
+    assert seconds_to_strtime(self.profile1.run_time) == " 70:55", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+
+  def test_OTU(self):
+    self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 66.4704121468, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
+
+  def test_CNS(self):
+    self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 31.4816858252, 7, "bad dive CNS ? (%s)" % (self.profile1.model.ox_tox.cns * 100))
+
+  def test_tank_cons(self):
+    self.assertAlmostEqual(self.txtanknormodbl.used_gas, 3583.0432575, 7, "bad used gas (%s)" % self.txtanknormodbl.used_gas)
+
+  def test_tank_cons_rule(self):
+    self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s)' % self.profile1.tanks[0].check_rule())
 
 
 # ==============================================================================
@@ -836,5 +860,5 @@ class TestDiveTxNormoDecoNx8070m10min(TestDive):
 if __name__ == "__main__":
   import sys
   suite = unittest.findTestCases(sys.modules[__name__])
-  #suite = unittest.TestLoader().loadTestsFromTestCase(TestDiveTxNormoDecoNx8040m60min)
+  #suite = unittest.TestLoader().loadTestsFromTestCase(TestDiveMultilevel)
   unittest.TextTestRunner(verbosity=2).run(suite)

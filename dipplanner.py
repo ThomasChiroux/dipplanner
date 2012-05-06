@@ -26,8 +26,6 @@ also initiate log files
 PROJECT TODO:
 =============
 """
-#TODO: add cc-mode dive tests
-#TODO: add multisegment dive tests
 #TODO: add repetitive dives tests
 #TODO: ResTifying docstrings and add sphinx for doc generation
 

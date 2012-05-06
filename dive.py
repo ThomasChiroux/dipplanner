@@ -432,7 +432,7 @@ class Dive(object):
        self.current_depth < settings.LAST_STOP_DEPTH:
       next_stop_depth = target_depth
     elif next_stop_depth == settings.LAST_STOP_DEPTH:
-      self.logger.debug("next_stop_depth==LAST_STOP_DEPTH !")
+      self.logger.warning("next_stop_depth==LAST_STOP_DEPTH !")
       next_stop_depth = target_depth # TODO: bizarre...
     elif next_stop_depth < settings.LAST_STOP_DEPTH:
       next_stop_depth = settings.LAST_STOP_DEPTH
@@ -537,7 +537,7 @@ class Dive(object):
       elif in_ascent_cycle:
         #self.logger.debug("...in ascent cycle")
         # did not decompress, just ascend
-        # TODO : if we enable this code always (not in rlif, but direct) then
+        # TODO : if we enable this code always (not in elif, but direct) then
         #        model will ascend between deco stops, but ... 
         #        this causes collateral damage to runtim calculations
         self.model.asc_desc(depth_to_pressure(self.current_depth),

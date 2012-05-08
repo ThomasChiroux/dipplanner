@@ -103,7 +103,7 @@ class TestRepetitiveDive2(TestDive):
     diveseg3 = SegmentDive(25, 35*60, self.airtank, 0)
     self.profile2 = Dive([diveseg3], [self.airtank], self.profile1)
     self.profile2.do_surface_interval(60*60)
-    self.profile2.refill_tanks()
+    #self.profile2.refill_tanks()
     self.profile2.do_dive()
 
   def test_RT(self):
@@ -137,13 +137,13 @@ class TestRepetitiveDive3(TestDive):
     diveseg3 = SegmentDive(25, 35*60, self.airtank, 0)
     self.profile2 = Dive([diveseg3], [self.airtank], self.profile1)
     self.profile2.do_surface_interval(60*60)
-    self.profile2.refill_tanks()
+    #self.profile2.refill_tanks()
     self.profile2.do_dive()
 
     diveseg4 = SegmentDive(40, 20*60, self.airtank, 0)
     self.profile3 = Dive([diveseg4], [self.airtank], self.profile2)
     self.profile3.do_surface_interval(12*60*60)
-    self.profile3.refill_tanks()
+    #self.profile3.refill_tanks()
     self.profile3.do_dive()
 
   def test_RT(self):

@@ -22,9 +22,6 @@
 """main dipplanner module
 runs in command line and output resulting dive profile
 also initiate log files
-
-PROJECT TODO:
-=============
 """
 #TODO: ResTifying docstrings and add sphinx for doc generation
 
@@ -37,6 +34,7 @@ __authors__ = [
 
 import sys
 import logging
+from collections import OrderedDict
 
 import settings
 from dive import Dive
@@ -120,12 +118,12 @@ def parse_config_file(filenames):
     filesread = config.read(filenames)
   else:
     LOGGER.info("No config file found: skip config from files")
-    return (None, None)
+    return {}
 
   missing = set(filenames) - set(filesread)
   if len(filesread) == 0:
     LOGGER.info("No config file found: skip config from files")
-    return (None, None)
+    return {}
     
   if len(missing) > 0:
     if len(missing) == 1:
@@ -232,36 +230,84 @@ def parse_config_file(filenames):
       
     if config.has_option(section, 'multilevel_mode'):
       settings.MULTILEVEL_MODE = eval(config.get(section, 'multilevel_mode').title())
-  
-  tanks = {}
-  segments = []
-  if config.has_section('tanks'):
-    section = 'tanks'
-    for parameter_name, parameter_value in config.items(section):
-      (name, fO2, fHe, volume, pressure, rule) = parameter_value.split(";")
-      tanks[name] = Tank(float(fO2), 
-                       float(fHe),
-                       max_ppo2=settings.DEFAULT_MAX_PPO2,
-                       tank_vol=float(eval(volume)), 
-                       tank_pressure=float(eval(pressure)),
-                       tank_rule = rule)
-  
-  if config.has_section('segments'):
-    section = 'segments'
-    for parameter_name, parameter_value in config.items(section):
-      (depth, time, tankname, setpoint) = parameter_value.split(";")
-      try:
-        segments.append(SegmentDive(float(eval(depth)), 
-                                    float(eval(time)), 
-                                    tanks[tankname], 
-                                    float(setpoint)))
-      except KeyError:
-        print "Error : tank name (%s) in not found in tank list !" % tankname
-        sys.exit(0)
-      except:
-        raise
 
-  return (tanks, segments)
+    if config.has_option(section, 'automatic_tank_refill'):
+      settings.AUTOMATIC_TANK_REFILL = eval(config.get(section, 'automatic_tank_refill').title())
+
+  #dives = { 'dive1': { 'tanks': {}, 'segments': {}, 'surface_interval':0} }
+  dives = {}
+  dive_number = 1 # initialization
+  while config.has_section('dive%s' % dive_number):
+    section = 'dive%s' % dive_number
+    dives[section] = { 'tanks': {}, 'segments': {}, 'surface_interval':0}
+    for parameter_name, parameter_value in config.items(section):
+      if parameter_name == 'surface_interval':
+        dives[section]['surface_interval'] = eval(parameter_value)
+      elif parameter_name[0:4] == 'tank':
+        #number = parameter_name[4:]
+        (name, fO2, fHe, volume, pressure, rule) = parameter_value.split(";")
+        dives[section]['tanks'][name] = Tank(float(fO2),
+                                           float(fHe),
+                                           max_ppo2=settings.DEFAULT_MAX_PPO2,
+                                           tank_vol=float(eval(volume)),
+                                           tank_pressure=float(eval(pressure)),
+                                           tank_rule = rule)
+
+    if dives[section]['tanks'] == {}:
+      # no tank provided, try to get the previous tanks
+      try:
+        dives[section]['tanks'] = dives['dive%s' % (dive_number-1)]['tanks']
+      except:
+        print "Error : no tank provided for this dive !"
+        sys.exit(0)
+
+    for parameter_name, parameter_value in config.items(section):
+      if parameter_name[0:7] == 'segment':
+        #number = parameter_name[4:]
+        (depth, time, tankname, setpoint) = parameter_value.split(";")
+        try:
+          dives[section]['segments'][parameter_name] = SegmentDive(float(eval(depth)),
+                                                float(eval(time)),
+                                                dives[section]['tanks'][tankname],
+                                                float(setpoint))
+        except KeyError:
+          print "Error : tank name (%s) in not found in tank list !" % tankname
+          sys.exit(0)
+        except:
+          raise
+
+    dives[section]['segments'] = OrderedDict(
+                        sorted(dives[section]['segments'].items(),
+                        key=lambda t: t[0]))
+    dive_number += 1
+
+#  if config.has_section('tanks'):
+#    section = 'tanks'
+#    for parameter_name, parameter_value in config.items(section):
+#      (name, fO2, fHe, volume, pressure, rule) = parameter_value.split(";")
+#      tanks[name] = Tank(float(fO2),
+#                       float(fHe),
+#                       max_ppo2=settings.DEFAULT_MAX_PPO2,
+#                       tank_vol=float(eval(volume)),
+#                       tank_pressure=float(eval(pressure)),
+#                       tank_rule = rule)
+#
+#  if config.has_section('segments'):
+#    section = 'segments'
+#    for parameter_name, parameter_value in config.items(section):
+#      (depth, time, tankname, setpoint) = parameter_value.split(";")
+#      try:
+#        segments.append(SegmentDive(float(eval(depth)),
+#                                    float(eval(time)),
+#                                    tanks[tankname],
+#                                    float(setpoint)))
+#      except KeyError:
+#        print "Error : tank name (%s) in not found in tank list !" % tankname
+#        sys.exit(0)
+#      except:
+#        raise
+
+  return OrderedDict(sorted(dives.items(), key=lambda t: t[0]))
 
 def parse_arguments():
   """parse all command lines options
@@ -324,6 +370,9 @@ You can specify multiple args like:
 %(prog)s [other_options] -s "30;1000;airtank;0.0" -s "20;800;airtank;0.0"
 """)
 
+  group1.add_argument("--surfaceinterval", dest="surfaceinterval",
+                      type=str, metavar = "SECONDS",
+                      help="""Optional Surface Interval in seconds""")
   group2 = parser.add_argument_group("Dive Parameters")
   group2.add_argument("--model", metavar="VAL", type=str,
                       default = "ZHL16c", choices=['ZHL16b', 'ZHL16c'],
@@ -390,12 +439,10 @@ The template file should be present in ./templates""")
   # parse the options
   args = parser.parse_args()
 
-  tanks, segments = parse_config_file(args.config_files)
-  if tanks is None:
-    tanks = {}
-  if segments is None:
-    segments = []
-    
+  dives = parse_config_file(args.config_files)
+  if dives is None:
+    dives = {}
+
   if args.gflow:
     try:
       settings.GF_LOW = float(eval(args.gflow.strip('%')))/100
@@ -477,35 +524,60 @@ The template file should be present in ./templates""")
   if args.ambiantpressureatsea:
     print "---------------- %s ---------------------" % args.ambiantpressureatsea
     settings.AMBIANT_PRESSURE_SEA_LEVEL = args.ambiantpressureatsea
-   
+
+  # try to find tank(s) and segment(s).
+  # if found, add this dive to the (eventually) other dives defined in config
+  # files.
+  # this will be the last dive
+  tanks = {}
   if args.tanks:
     for tank in args.tanks:
       (name, fO2, fHe, volume, pressure, rule) = tank.split(";")
+
       tanks[name] = Tank(float(fO2), 
                          float(fHe),
                          max_ppo2=settings.DEFAULT_MAX_PPO2,
                          tank_vol=float(eval(volume)), 
                          tank_pressure=float(eval(pressure)),
                          tank_rule = rule)
-  
+
+  if tanks == {}:
+    # no tank provided, try to get the previous tanks
+    try:
+      tanks = dives[dives.items()[-1][0]]['tanks']
+    except:
+      print "Error : no tank provided for this dive !"
+      sys.exit(0)
+
+  segments = {}
   if args.segments:
+    num_seg = 1
     for seg in args.segments:
       (depth, time, tankname, setpoint) = seg.split(";")
       # looks for tank in tanks
       try:
-        segments.append(SegmentDive(float(eval(depth)), 
-                                    float(eval(time)), 
-                                    tanks[tankname], 
-                                    float(setpoint)))
+        #seg_name = 'segment%s' % num_seg
+        #print seg_name
+        segments['segment%s' % num_seg] = SegmentDive(float(eval(depth)),
+                                        float(eval(time)),
+                                        tanks[tankname],
+                                        float(setpoint))
       except KeyError:
+
         parser.error("Error : tank name (%s) in not found in tank list !" % tankname)
       except:
         raise
+      num_seg += 1
+  segments = OrderedDict(sorted(segments.items(), key=lambda t: t[0]))
+  if args.surfaceinterval:
+    dives['diveCLI'] = { 'tanks': tanks, 'segments': segments, 'surface_interval': eval(args.surfaceinterval) }
+  else:
+    dives['diveCLI'] = { 'tanks': tanks, 'segments': segments, 'surface_interval': 0 }
 
   if args.template:
     settings.TEMPLATE = args.template
   # returns
-  return (args, tanks, segments)
+  return (args, dives)
 
 if __name__ == "__main__":
   if sys.version_info < (2, 7):
@@ -514,9 +586,19 @@ if __name__ == "__main__":
   activate_debug()
 
   settings.__VERSION__ = __version__
-  (args, tanks, segments) = parse_arguments()
-  if tanks and segments:
-    profile = Dive(segments, tanks.values())
+  (args, dives) = parse_arguments()
+  previous_dive = None
+  for dive in dives:
+    if previous_dive is None:
+      profile = Dive(dives[dive]['segments'].values(), dives[dive]['tanks'].values())
+    else:
+      profile = Dive(dives[dive]['segments'].values(),
+                     dives[dive]['tanks'].values(),
+                     previous_dive
+                     )
+    if dives[dive]['surface_interval']:
+      profile.do_surface_interval(dives[dive]['surface_interval'])
+
     try:
       profile.do_dive()
     except EmptyTank, err:
@@ -531,6 +613,4 @@ if __name__ == "__main__":
       print "ERROR: " + err.description
     else:
       print profile.output()
-  else:
-    print "Error : you must provide tanks and segments"
-    sys.exit(0)
+      previous_dive = profile

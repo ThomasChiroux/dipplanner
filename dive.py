@@ -37,7 +37,7 @@ import settings
 from dipp_exception import DipplannerException
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from model.buhlmann.model import Model
-from tools import depth_to_pressure
+from tools import depth_to_pressure, seconds_to_strtime
 from jinja2 import Environment, FileSystemLoader
 
 class NothingToProcess(DipplannerException):
@@ -118,12 +118,12 @@ class Dive(object):
     
     if previous_profile is None:
       # new dive : new model
-      self.if_repetative_dive = False
+      self.is_repetitive_dive = False
       self.model = Model() # buhlman model by default
       self.metadata = ""
     else:
       # repetative dive
-      self.if_repetative_dive = True
+      self.is_repetitive_dive = True
       self.model = previous_profile.model
       self.model.init_gradient()
     
@@ -187,6 +187,7 @@ class Dive(object):
     else:
       tpl = env.get_template(template)
     text = tpl.render(settings = settings,
+                      dive = self,
                       output_segments = self.output_segments,
                       input_segments = self.input_segments,
                       tanks = self.tanks,
@@ -211,6 +212,12 @@ class Dive(object):
     self.model.const_depth(pressure=0.0, seg_time=time,
                             f_He=0.0, f_N2=0.79, pp_O2=0.0)
     self.surface_interval = time
+
+    if settings.AUTOMATIC_TANK_REFILL:
+      self.refill_tanks()
+
+  def get_surface_interval(self):
+    return seconds_to_strtime(self.surface_interval)
 
   def refill_tanks(self):
     """refile all tanks defined in this dive

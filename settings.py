@@ -87,3 +87,5 @@ GF_HIGH = 0.80
 
 # TODO: check the usage of the MULTILEVEL_MODE setting
 MULTILEVEL_MODE = False
+
+AUTOMATIC_TANK_REFILL = True

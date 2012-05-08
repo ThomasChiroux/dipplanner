@@ -1,11 +1,16 @@
 {%- block dive_header -%}
+{%- if not dive.is_repetitive_dive -%}
 Dipplanner v{{ settings.__VERSION__ }}
+{%- endif -%}
 {%- endblock -%}
 
 {%- block separator -%}{%- endblock -%}
 
 {%- block dive_profile_header %}
 Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
+{%- if dive.is_repetitive_dive -%}
+{{- color(" - Repetitive dive - surface interval: %s mins" % dive.get_surface_interval(), "yellow") }}
+{%- endif -%}
 {%- endblock -%}
 
 {{ self.separator() }}

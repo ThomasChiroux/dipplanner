@@ -70,7 +70,7 @@ class TestRepetitiveTxDive1(TestDive):
     diveseg2 = SegmentDive(50, 20*60, self.txtank1, 0)
     self.profile1 = Dive([diveseg2], [self.txtank1], self.profile0)
     self.profile1.do_surface_interval(20*60)
-    self.profile1.refill_tanks()
+    #self.profile1.refill_tanks()
     self.profile1.do_dive()
 
   def test_RT(self):
@@ -104,7 +104,7 @@ class TestRepetitiveTxDive2(TestDive):
     diveseg3 = SegmentDive(35, 35*60, self.txtank1, 0)
     self.profile2 = Dive([diveseg3], [self.txtank1], self.profile1)
     self.profile2.do_surface_interval(60*60)
-    self.profile2.refill_tanks()
+    #self.profile2.refill_tanks()
     self.profile2.do_dive()
 
   def test_RT(self):
@@ -138,13 +138,13 @@ class TestRepetitiveTxDive3(TestDive):
     diveseg3 = SegmentDive(35, 35*60, self.txtank1, 0)
     self.profile2 = Dive([diveseg3], [self.txtank1], self.profile1)
     self.profile2.do_surface_interval(60*60)
-    self.profile2.refill_tanks()
+    #self.profile2.refill_tanks()
     self.profile2.do_dive()
 
     diveseg4 = SegmentDive(55, 20*60, self.txtank1, 0)
     self.profile3 = Dive([diveseg4], [self.txtank1], self.profile2)
     self.profile3.do_surface_interval(12*60*60)
-    self.profile3.refill_tanks()
+    #self.profile3.refill_tanks()
     self.profile3.do_dive()
 
   def test_RT(self):

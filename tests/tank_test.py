@@ -266,6 +266,19 @@ class TestTankVolume4(TestTank):
     self.mytank.consume_gas(2800)
     self.assertEqual(self.mytank.check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s)' % self.mytank.check_rule())
 
+class TestTankRefill(TestTank):
+  def setUp(self):
+    self.mytank = Tank(tank_vol=15, tank_pressure=207)
+    self.mytank.consume_gas(405)
+    self.mytank.consume_gas(2800)
+
+  def test_vol(self):
+    self.assertAlmostEqual(self.mytank.remaining_gas, -88.9813390544, 0, 'Wrong Tank Volume : %s' % self.mytank.remaining_gas)
+
+  def test_refill(self):
+    self.mytank.refill()
+    self.assertAlmostEqual(self.mytank.remaining_gas, 3116.01866095, 0, 'Wrong Tank Volume : %s' % self.mytank.remaining_gas)
+
 class TestTankInvalidGas(TestTank):    
   def runTest(self):
     try:
@@ -312,14 +325,15 @@ class TestTankInvalidMod2(TestTank):
       self.fail("should raise Invalid Mod")
   
 if __name__ == "__main__":
-  if __package__ is None:
-    __package__ = "dipplanner"
   import sys
-  suite = unittest.findTestCases(sys.modules[__name__]) 
-  #suite = unittest.TestLoader().loadTestsFromTestCase([TestTankInvalidGas, TestTankInvalidMod1])
-  #suite = unittest.TestSuite()
-  #suite2 = unittest.TestSuite()
-  #suite.addTest(TestTankInvalidGas())
-  #suite2.addTest(TestTankInvalidMod1())
-  #unittest.TextTestRunner(verbosity=2).run(suite2)
+  import argparse
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
+                      help='name of the tests to run (separated by space) [optionnal]')
+  args = parser.parse_args()
+  if args.tests:
+    suite = unittest.TestLoader().loadTestsFromNames(args.tests, sys.modules[__name__])
+  else:
+    suite = unittest.findTestCases(sys.modules[__name__])
   unittest.TextTestRunner(verbosity=2).run(suite)

@@ -460,10 +460,7 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
   def consume_gas(self, gas_consumed):
     """Consume gas inside this tank
     take one argument : gas_consumed, in liter
-    return EmptyTank Exception if all the gas is consumed
-    return remaining gaz in tank (in liter) in other cases
-
-    modification: do not raise empty tank : does the calculation and the
+    return remaining gaz in tank (in liter)
     result may be negative : in this case (result < of choosen tank rules)
     it will display a special warning
     """
@@ -472,6 +469,14 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     #else:
     self.used_gas += gas_consumed
     self.remaining_gas -= gas_consumed
+    return self.remaining_gas
+
+  def refill(self):
+    """Refill the tank
+    return remaining gaz in tank (in liter)
+    """
+    self.used_gas = 0
+    self.remaining_gas = self.total_gas
     return self.remaining_gas
 
   def check_rule(self):

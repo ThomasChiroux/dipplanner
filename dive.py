@@ -211,7 +211,24 @@ class Dive(object):
     self.model.const_depth(pressure=0.0, seg_time=time,
                             f_He=0.0, f_N2=0.79, pp_O2=0.0)
     self.surface_interval = time
-  
+
+  def refill_tanks(self):
+    """refile all tanks defined in this dive
+    it is used for repetitive dives
+
+    Keyword Arguments:
+    <none>
+
+    Returns:
+    <nothing>
+
+    Raise:
+    <nothing>
+    """
+    #TODO: options in arfs and config: 'automatic tank refill between dives'
+    for tank in self.tanks:
+      tank.refill()
+
   def is_dive_segments(self):
     """Returns true if there are loaded dive segments
     else false means there is nothing to process

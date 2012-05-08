@@ -26,7 +26,6 @@ also initiate log files
 PROJECT TODO:
 =============
 """
-#TODO: extend repetitive dives tests
 #TODO: ResTifying docstrings and add sphinx for doc generation
 
 __version__ = "0.2nightly"
@@ -229,10 +228,10 @@ def parse_config_file(filenames):
       settings.RUN_TIME = eval(config.get(section, 'run_time').title())
 
     if config.has_option(section, 'use_oc_deco'):
-      settings.RUN_TIME = eval(config.get(section, 'use_oc_deco').title())
+      settings.USE_OC_DECO = eval(config.get(section, 'use_oc_deco').title())
       
     if config.has_option(section, 'multilevel_mode'):
-      settings.RUN_TIME = eval(config.get(section, 'multilevel_mode').title())
+      settings.MULTILEVEL_MODE = eval(config.get(section, 'multilevel_mode').title())
   
   tanks = {}
   segments = []

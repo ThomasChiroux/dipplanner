@@ -139,8 +139,15 @@ C:15 He:0.0 N2:1.09786259985 gf:0.3 mv_at:1.28237367658 max_amb:1.01708414861 MV
 """, "Error in model output : %s" % str(self.model2)
 
 if __name__ == "__main__":
-  #unittest.main() 
   import sys
-  suite = unittest.findTestCases(sys.modules[__name__])
-  #suite = unittest.TestLoader().loadTestsFromTestCase(TestModelBuhlmannModelOutput1)
+  import argparse
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
+                      help='name of the tests to run (separated by space) [optionnal]')
+  args = parser.parse_args()
+  if args.tests:
+    suite = unittest.TestLoader().loadTestsFromNames(args.tests, sys.modules[__name__])
+  else:
+    suite = unittest.findTestCases(sys.modules[__name__])
   unittest.TextTestRunner(verbosity=2).run(suite)

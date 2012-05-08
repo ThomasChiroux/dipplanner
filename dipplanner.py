@@ -37,10 +37,8 @@ __authors__ = [
 ]
 
 import sys
-#from optparse import OptionParser, OptionGroup
 import logging
-from ConfigParser import SafeConfigParser
-import argparse
+
 import settings
 from dive import Dive
 from dive import ProcessingError, NothingToProcess, InfiniteDeco
@@ -52,8 +50,6 @@ from tools import pressure_converter
 
 LOGGER = logging.getLogger("dipplanner")
 
-# optparse hack...
-    
 def activate_debug():
   """setup the default debug parameters
   
@@ -118,6 +114,8 @@ def parse_config_file(filenames):
   Raise:
   Nothing, but can exit
   """
+  from ConfigParser import SafeConfigParser
+
   if filenames is not None:
     config = SafeConfigParser()
     filesread = config.read(filenames)
@@ -280,6 +278,8 @@ def parse_arguments():
   Raise:
   Nothing, but can exit
   """
+  import argparse
+
   usage = """%(prog)s [options]"""
   description = """%(prog)s calculates and output dive profile
 Thomas Chiroux, 2011-2012 - see http://dipplanner.org
@@ -509,7 +509,11 @@ The template file should be present in ./templates""")
   return (args, tanks, segments)
 
 if __name__ == "__main__":
+  if sys.version_info < (2, 7):
+    raise SystemExit, "ERROR: This programm needs python 2.7 or greater"
+
   activate_debug()
+
   settings.__VERSION__ = __version__
   (args, tanks, segments) = parse_arguments()
   if tanks and segments:

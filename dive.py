@@ -187,12 +187,7 @@ class Dive(object):
     else:
       tpl = env.get_template(template)
     text = tpl.render(settings = settings,
-                      dive = self,
-                      output_segments = self.output_segments,
-                      input_segments = self.input_segments,
-                      tanks = self.tanks,
-                      model = self.model
-    )
+                      dives = [ self, ] )
     return text
 
   def do_surface_interval(self, time):

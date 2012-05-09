@@ -33,8 +33,11 @@ __authors__ = [
 ]
 
 import sys
+import os
 import logging
 from collections import OrderedDict
+
+from jinja2 import Environment, FileSystemLoader
 
 import settings
 from dive import Dive
@@ -568,11 +571,11 @@ The template file should be present in ./templates""")
       except:
         raise
       num_seg += 1
-  segments = OrderedDict(sorted(segments.items(), key=lambda t: t[0]))
-  if args.surfaceinterval:
-    dives['diveCLI'] = { 'tanks': tanks, 'segments': segments, 'surface_interval': eval(args.surfaceinterval) }
-  else:
-    dives['diveCLI'] = { 'tanks': tanks, 'segments': segments, 'surface_interval': 0 }
+    segments = OrderedDict(sorted(segments.items(), key=lambda t: t[0]))
+    if args.surfaceinterval:
+      dives['diveCLI'] = { 'tanks': tanks, 'segments': segments, 'surface_interval': eval(args.surfaceinterval) }
+    else:
+      dives['diveCLI'] = { 'tanks': tanks, 'segments': segments, 'surface_interval': 0 }
 
   if args.template:
     settings.TEMPLATE = args.template
@@ -587,6 +590,7 @@ if __name__ == "__main__":
 
   settings.__VERSION__ = __version__
   (args, dives) = parse_arguments()
+  profiles = []
   previous_dive = None
   for dive in dives:
     if previous_dive is None:
@@ -612,5 +616,12 @@ if __name__ == "__main__":
     except Exception, err:
       print "ERROR: " + err.description
     else:
-      print profile.output()
+      profiles.append(profile)
       previous_dive = profile
+
+  # now Prepare the output
+  env = Environment( loader = FileSystemLoader(os.getcwd() + '/templates/'))
+  tpl = env.get_template(settings.TEMPLATE)
+  text = tpl.render(settings = settings,
+                    dives = profiles )
+  print text

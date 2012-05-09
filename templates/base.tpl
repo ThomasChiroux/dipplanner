@@ -1,22 +1,18 @@
 {%- block dive_header -%}
-{%- if not dive.is_repetitive_dive -%}
 Dipplanner v{{ settings.__VERSION__ }}
-{%- endif -%}
-{%- endblock -%}
+{% endblock -%}
 
-{%- block separator -%}{%- endblock -%}
+{%- for dive in dives -%}
 
-{%- block dive_profile_header %}
+{%- block separator -%}{%- endblock %}
 Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
 {%- if dive.is_repetitive_dive -%}
 {{- color(" - Repetitive dive - surface interval: %s mins" % dive.get_surface_interval(), "yellow") }}
 {%- endif -%}
-{%- endblock -%}
 
 {{ self.separator() }}
 
-{%- block dive_profile -%}
-  {%- for segment in output_segments %}
+  {%- for segment in dive.output_segments %}
     {{ "%8s"|format(segment.type|upper) -}}:
     {{- " at %3d"|format(segment.depth|int) -}}m for
     {{- segment.get_time_str() }} [RT:{{ segment.get_run_time_str() -}}], on
@@ -27,12 +23,9 @@ Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
       {{- " END:%im"|format(segment.get_end()) -}}
     {%- endif -%}
   {%- endfor -%}
-{%- endblock -%}
 
 {{ self.separator() }}
-
-{%- block dive_gas %}
-Gas: {% for tank in tanks %}
+Gas: {% for tank in dive.tanks %}
     {{ " %12s"|format(tank|string) -}}: Total: {{- "%6.1f"|format(tank.total_gas) -}}l, Used:
     {{- "%6.1fl"|format(tank.used_gas) -}}
     {{- " (rem:%6.1fl or "|format(tank.remaining_gas) -}}
@@ -42,16 +35,12 @@ Gas: {% for tank in tanks %}
 {{- color("%6.1fl) !"|format(tank.min_gas),"red") -}}
   {%- endif -%}
   {%- endfor -%}
-{%- endblock -%}
 
 {{ self.separator() }}
-
-{%- block dive_otu_cns %}
-Oxygen Toxicity: OTU:{{ model.ox_tox.otu|int }}, CNS:
-  {{- "%d"|format(model.ox_tox.cns*100)}}%
-{%- endblock -%}
-
-{{ self.separator() }}
+Oxygen Toxicity: OTU:{{ dive.model.ox_tox.otu|int }}, CNS:
+  {{- "%d"|format(dive.model.ox_tox.cns*100)}}%
+{{- self.separator() }}
+{% endfor -%}
 
 {%- block dive_footer %}
 WARNING : This software is highly experimental and

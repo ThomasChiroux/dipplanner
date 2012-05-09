@@ -18,31 +18,12 @@
 </head>
 <body>
 <div id="content">
-{% block content %}
   {% block dive_header %}
+  <h1>Dipplanner v{{ settings.__VERSION__ }}</h1>
   {% endblock %}
 
-  {% block separator %}{% endblock %}
-
-  {% block dive_profile_header %}
+  {% block dive_content %}
   {% endblock %}
-
-  {{ self.separator() }}
-
-  {% block dive_profile %}
-  {% endblock %}
-
-  {{ self.separator() }}
-
-  {% block dive_gas %}
-  {% endblock %}
-
-  {{ self.separator() }}
-
-  {% block dive_otu_cns %}
-  {% endblock %}
-
-  {{ self.separator() }}
 
   {% block dive_footer %}
   <h2>WARNING</h2>
@@ -58,7 +39,7 @@
 
   <p class="red">IF YOU DO NOT UNDERSTAND OR DO NOT AGREE TO THIS STATEMENT DO NOT USE THIS SOFTWARE</p>
   {% endblock %}
-{% endblock %}</div>
+</div>
 <div id="footer">
 {% block footer %}
 <a href="http://dipplanner.org/">dipplanner.org</a>

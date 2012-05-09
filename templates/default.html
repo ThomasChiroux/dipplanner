@@ -4,22 +4,22 @@
   <span class="{{-color-}}">{{ text }}</span>
 {% endmacro %}
 
-{% block dive_header %}
-{% endblock %}
+{% block dive_content %}
+{%- for dive in dives -%}
 
 {% block separator %}
 <hr/>
 {% endblock %}
 
-{% block dive_profile_header %}
 <p>Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}</p>
-{% endblock %}
+{%- if dive.is_repetitive_dive -%}
+<p>{{- color(" - Repetitive dive - surface interval: %s mins" % dive.get_surface_interval(), "yellow") }}</p>
+{%- endif -%}
 
 {{ self.separator() }}
 
-{% block dive_profile %}
   <table>
-  {% for segment in output_segments %}
+  {% for segment in dive.output_segments %}
     <tr>
     <td>{{ "%8s"|format(segment.type|upper) }}</td>
     <td>{{ " at %3d"|format(segment.depth|int) }}m</td>
@@ -35,14 +35,12 @@
     </tr>
   {% endfor %}
   </table>
-{% endblock %}
 
 {{ self.separator() }}
 
-{% block dive_gas %}
   <p>Gas:</p>
   <table>
-  {% for tank in tanks %}
+  {% for tank in dive.tanks %}
     <tr>
     <td>{{ " %12s : "|format(tank|string) }}</td>
     <td>Total: {{ "%6.1f"|format(tank.total_gas) }}l</td>
@@ -57,14 +55,15 @@
     {% endif %}
   {% endfor %}
   </table>
-{% endblock %}
 
 {{ self.separator() }}
 
-{% block dive_otu_cns %}
-  Oxygen Toxicity: OTU:{{ model.ox_tox.otu|int }}, CNS:
-  {{ "%d"|format(model.ox_tox.cns*100)}}%
-{% endblock %}
+  Oxygen Toxicity: OTU:{{ dive.model.ox_tox.otu|int }}, CNS:
+  {{ "%d"|format(dive.model.ox_tox.cns*100)}}%
 
 {{ self.separator() }}
+{% endfor %}
+{% endblock %}
+
+
 

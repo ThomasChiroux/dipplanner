@@ -109,21 +109,34 @@ class Segment(object):
     """Return a human readable name of the segment in unicode"""
     return u"%s" % self.__repr__()
   
-  def check_mod(self):
+  def check_mod(self,  max_ppo2=None):
     """checks the mod for this segment according to the used tank.
-    checks both Max Operating Depth and Min Operating Depth (hypoxic cases)
-    
+
     Keyword arguments:
-    <none>
-    
+    max_ppo2 -- float - max tolerated ppo2
+
     Returns:
     <nothing>
     
     Raise:
     UnauthorizedMod -- if segments goes below max mod or upper min mod
     """
-    if self.depth > self.tank.get_mod():
+    if self.depth > self.tank.get_mod(max_ppo2):
       raise UnauthorizedMod("depth is exceeding the maximum MOD")
+
+  def check_min_od(self):
+    """checks the minimum od for this segment according to the used tank.
+    (hypoxic cases)
+
+    Keyword arguments:
+    <none>
+
+    Returns:
+    <nothing>
+
+    Raise:
+    UnauthorizedMod -- if segments goes below max mod or upper min mod
+    """
     if self.depth < self.tank.get_min_od(): # checks minimum operating depth
       raise UnauthorizedMod("depth is too low for the minimum MOD")
 
@@ -279,6 +292,9 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     if self.setpoint == 0:
       # check MOD only if OC
       self.check_mod()
+      self.check_min_od()
+    else:
+      self.check_mod(self.setpoint)
 
     
   def gas_used(self):
@@ -347,6 +363,9 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     if self.setpoint == 0:
       # check MOD only if OC
       self.check_mod()
+      self.check_min_od()
+    else:
+      self.check_mod(self.setpoint)
 
   def gas_used(self):
     """calculates returns the quantity (in liter) of gas used for this segment
@@ -421,13 +440,15 @@ startdepth:%s, enddepth:%s, rate:%ss, tank:%s, sp:%f" % (start_depth,
     if self.setpoint == 0:
       # check MOD only if OC
       self.check_mod()
+      self.check_min_od()
+    else:
+      self.check_mod(self.setpoint)
       
-  def check_mod(self):
+  def check_mod(self, max_ppo2=None):
     """checks the mod for this segment according to the used tank.
-    checks both Max Operating Depth and Min Operating Depth (hypoxic cases)
     
     Keyword arguments:
-    <none>
+    max_ppo2 -- float - max tolerated ppo2
     
     Returns:
     <nothing>
@@ -438,13 +459,30 @@ startdepth:%s, enddepth:%s, rate:%ss, tank:%s, sp:%f" % (start_depth,
     """
     if self.type == 'ascent':
       max_depth = self.start_depth
-      min_depth = self.end_depth
     else:
-      min_depth = self.start_depth
       max_depth = self.end_depth
 
     if max_depth > self.tank.get_mod():
       raise UnauthorizedMod("depth is exceeding the maximum MOD")
+
+  def check_min_od(self):
+    """checks the minimum od for this segment according to the used tank.
+    (hypoxic cases)
+
+    Keyword arguments:
+    <none>
+
+    Returns:
+    <nothing>
+
+    Raise:
+    UnauthorizedMod -- if segments goes below max mod or upper min mod
+    """
+    if self.type == 'ascent':
+      min_depth = self.end_depth
+    else:
+      min_depth = self.start_depth
+
     if min_depth < self.tank.get_min_od(): # checks minimum operating depth
       raise UnauthorizedMod("depth is too low for the minimum MOD")
 

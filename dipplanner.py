@@ -25,7 +25,7 @@ also initiate log files
 """
 #TODO: ResTifying docstrings and add sphinx for doc generation
 
-__version__ = "0.2nightly"
+__version__ = "0.2"
 
 __authors__ = [
   # alphabetical order by last name

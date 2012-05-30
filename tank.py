@@ -253,7 +253,8 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     else:
       n_left = approx_n / 2
       n_right = approx_n
-      
+
+    n_mid = (n_left + n_right) / 2
     while round(tank_pressure_mid,2) != round(tank_pressure,2):
       n_mid = (n_left + n_right) / 2
       # new pressure calculated using:

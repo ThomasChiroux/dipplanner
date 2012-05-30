@@ -247,7 +247,7 @@ class TestTankVolume2(TestTank):
     self.mytank = Tank(tank_vol=18, tank_pressure=230)
 
   def test_vol(self):
-    self.assertAlmostEqual(self.mytank.total_gas, 4064, 0, 'Wrong Tank Volume : %s' % self.mytank.total_gas)
+    self.assertAlmostEqual(self.mytank.total_gas, 4064.6008, 4, 'Wrong Tank Volume : %s' % self.mytank.total_gas)
 
 class TestTankVolume3(TestTank):
   def setUp(self):

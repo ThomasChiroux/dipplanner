@@ -38,7 +38,6 @@ import settings
 from dipp_exception import DipplannerException
 from tools import pressure_to_depth, depth_to_pressure
 
-
 class InvalidGas(DipplannerException):
   """Exception raised when the gas informations provided for the Tank
   are invalid
@@ -169,7 +168,7 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     self.logger.debug("minimum gas authorised: %s" % self.min_gas)
 
   def calculate_real_volume(self, tank_vol=None, tank_pressure=None,
-                                  f_O2=None, f_He=None):
+                                  f_O2=None, f_He=None, temp=15):
     """
     Calculate the real gas volume of the tank (in liter) based
     on Van der waals equation:
@@ -213,38 +212,38 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     vm_N2 = 28.01348
     vm_He = 4.0020602
     R = 0.0831451
-    T = 273.15+15 # temp at 15°C
+    T = 273.15+temp # default temp at 15°C
     
     # at first, calculate a and b values for this gas    
-    a_gas = math.sqrt(a_O2 * a_O2 * f_O2 * f_O2 + \
-                      a_O2 * a_He * f_O2 * f_He + \
-                      a_O2 * a_N2 * f_O2 * f_N2 + \
-                      a_He * a_O2 * f_He * f_O2 + \
-                      a_He * a_He * f_He * f_He + \
-                      a_He * a_N2 * f_He * f_N2 + \
-                      a_N2 * a_O2 * f_N2 * f_O2 + \
-                      a_N2 * a_He * f_N2 * f_He + \
-                      a_N2 * a_N2 * f_N2 * f_N2)
-    
-    b_gas = math.sqrt(b_O2 * b_O2 * f_O2 * f_O2 + \
-                      b_O2 * b_He * f_O2 * f_He + \
-                      b_O2 * b_N2 * f_O2 * f_N2 + \
-                      b_He * b_O2 * f_He * f_O2 + \
-                      b_He * b_He * f_He * f_He + \
-                      b_He * b_N2 * f_He * f_N2 + \
-                      b_N2 * b_O2 * f_N2 * f_O2 + \
-                      b_N2 * b_He * f_N2 * f_He + \
-                      b_N2 * b_N2 * f_N2 * f_N2)
+    a_gas = math.sqrt(a_O2 * a_O2) * f_O2 * f_O2 +\
+            math.sqrt(a_O2 * a_He) * f_O2 * f_He +\
+            math.sqrt(a_O2 * a_N2) * f_O2 * f_N2 +\
+            math.sqrt(a_He * a_O2) * f_He * f_O2 +\
+            math.sqrt(a_He * a_He) * f_He * f_He +\
+            math.sqrt(a_He * a_N2) * f_He * f_N2 +\
+            math.sqrt(a_N2 * a_O2) * f_N2 * f_O2 +\
+            math.sqrt(a_N2 * a_He) * f_N2 * f_He +\
+            math.sqrt(a_N2 * a_N2) * f_N2 * f_N2
+    #print "a: %s" % a_gas
+    b_gas = math.sqrt(b_O2 * b_O2) * f_O2 * f_O2 +\
+            math.sqrt(b_O2 * b_He) * f_O2 * f_He +\
+            math.sqrt(b_O2 * b_N2) * f_O2 * f_N2 +\
+            math.sqrt(b_He * b_O2) * f_He * f_O2 +\
+            math.sqrt(b_He * b_He) * f_He * f_He +\
+            math.sqrt(b_He * b_N2) * f_He * f_N2 +\
+            math.sqrt(b_N2 * b_O2) * f_N2 * f_O2 +\
+            math.sqrt(b_N2 * b_He) * f_N2 * f_He +\
+            math.sqrt(b_N2 * b_N2) * f_N2 * f_N2
 
     # now approximate n (quantities of molecules of gas in the tank in mol)
     # using perfect gas law : PV = nRT : n = PV/RT
     approx_n = (float(tank_pressure) * float(tank_vol)) / (R * T)
-    
+
     # recalculate pressure on the tank whith approx_n
     # P=n.R.T/(V-n.b)-n2.a/V2)
     tank_pressure_mid = (approx_n * R * T) / (tank_vol - approx_n * b_gas) - \
                         (approx_n * approx_n * a_gas) / (tank_vol * tank_vol)
-    
+
     # now try to approx tank_pressure with new_tank_pressure by
     # variating approx_n
     # start with *2 or /2 value (which is enormous !)
@@ -257,6 +256,8 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
       
     while round(tank_pressure_mid,2) != round(tank_pressure,2):
       n_mid = (n_left + n_right) / 2
+      # new pressure calculated using:
+      # P = nRT/(V - nb) - n2a/V2
       tank_pressure_mid = (n_mid * R * T) / (tank_vol - n_mid * b_gas) - \
                           (n_mid * n_mid * a_gas) / (tank_vol * tank_vol)
       if tank_pressure_mid > tank_pressure:
@@ -265,8 +266,12 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
       else:
         n_left = n_mid
 
-    # now recalculate the real liters in the tank based on n
-    total_gas_volume = n_mid * R * T / settings.AMBIANT_PRESSURE_SURFACE
+    # recalculate volume using van der waals again
+    # V = nR3T3/(PR2T2+aP2) + nb
+    total_gas_volume = n_mid * pow(R,3) * pow(T,3) / \
+                       (settings.AMBIANT_PRESSURE_SURFACE * pow(R,2) * pow(T,2) +\
+                       a_gas * pow(settings.AMBIANT_PRESSURE_SURFACE,2)) + \
+                       n_mid * b_gas
     self.logger.debug("real total gas volume : %02fl instead of %02fl" % \
                         (total_gas_volume, tank_vol*tank_pressure))
     return total_gas_volume
@@ -375,8 +380,8 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
     15l-90% (2800/3000l)
     """
     if self.total_gas > 0:
-      return "%sl-%s%% (%s/%sl)" % (self.tank_vol, 
-                                 int(100*self.remaining_gas/self.total_gas),
+      return "%sl-%s%% (%02.02f/%02.02fl)" % (self.tank_vol,
+                                 round(100*self.remaining_gas/self.total_gas,1),
                                  self.remaining_gas,
                                  self.total_gas)
     else:

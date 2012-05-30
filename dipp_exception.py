@@ -38,3 +38,55 @@ class DipplannerException(Exception):
   
   def __str__(self):
     return repr(self.description)
+
+# TODO: ça ne va pas : continuer plutôt à utiliser les Exceptions, et les
+#       gerer en try: except: pour les ajouter dans une liste dans Dive()
+
+
+class DipplannerError(object):
+  """Base Error class
+    Error is not an exception (in python terms):
+    it is not raisable, neither try able
+    Errors are created when an abnormal functionnal situation appears:
+      it is not not error or problems in program execution, but
+      for example possible dive problems (diving below MOD, etc...)
+  """
+
+  def __init__(self, description=None):
+    """Generic constructor
+
+       type can be, like logging:
+       - DEBUG
+       - INFO
+       - WARNING
+       - ERROR
+       - CRITICAL
+    """
+    self.logger = logging.getLogger("dipplanner.DipplannerError")
+    self.description = description
+
+
+class DipplannerErrorDebug(DipplannerError):
+  def __init__(self, description):
+    super(DipplannerErrorDebug, self).__init__(description)
+    self.type = "DEBUG"
+
+class DipplannerErrorInfo(DipplannerError):
+  def __init__(self, description):
+    super(DipplannerErrorInfo, self).__init__(description)
+    self.type = "INFO"
+
+class DipplannerErrorWarning(DipplannerError):
+  def __init__(self, description):
+    super(DipplannerErrorWarning, self).__init__(description)
+    self.type = "WARNING"
+
+class DipplannerErrorError(DipplannerError):
+  def __init__(self, description):
+    super(DipplannerErrorError, self).__init__(description)
+    self.type = "ERROR"
+
+class DipplannerErrorCritical(DipplannerError):
+  def __init__(self, description):
+    super(DipplannerErrorCritical, self).__init__(description)
+    self.type = "CRITICAL"

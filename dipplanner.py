@@ -25,7 +25,7 @@ also initiate log files
 """
 #TODO: ResTifying docstrings and add sphinx for doc generation
 
-__version__ = "0.2"
+__version__ = "0.3nightly"
 
 __authors__ = [
   # alphabetical order by last name
@@ -283,33 +283,6 @@ def parse_config_file(filenames):
                         sorted(dives[section]['segments'].items(),
                         key=lambda t: t[0]))
     dive_number += 1
-
-#  if config.has_section('tanks'):
-#    section = 'tanks'
-#    for parameter_name, parameter_value in config.items(section):
-#      (name, fO2, fHe, volume, pressure, rule) = parameter_value.split(";")
-#      tanks[name] = Tank(float(fO2),
-#                       float(fHe),
-#                       max_ppo2=settings.DEFAULT_MAX_PPO2,
-#                       tank_vol=float(eval(volume)),
-#                       tank_pressure=float(eval(pressure)),
-#                       tank_rule = rule)
-#
-#  if config.has_section('segments'):
-#    section = 'segments'
-#    for parameter_name, parameter_value in config.items(section):
-#      (depth, time, tankname, setpoint) = parameter_value.split(";")
-#      try:
-#        segments.append(SegmentDive(float(eval(depth)),
-#                                    float(eval(time)),
-#                                    tanks[tankname],
-#                                    float(setpoint)))
-#      except KeyError:
-#        print "Error : tank name (%s) in not found in tank list !" % tankname
-#        sys.exit(0)
-#      except:
-#        raise
-
   return OrderedDict(sorted(dives.items(), key=lambda t: t[0]))
 
 def parse_arguments():
@@ -566,7 +539,6 @@ The template file should be present in ./templates""")
                                         tanks[tankname],
                                         float(setpoint))
       except KeyError:
-
         parser.error("Error : tank name (%s) in not found in tank list !" % tankname)
       except:
         raise

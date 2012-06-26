@@ -22,7 +22,7 @@
 
 Contains:
 seconds_to_strtime -- function
-pressure_converter -- function
+altitude_to_pressure -- function
 """
 
 __authors__ = [
@@ -55,8 +55,28 @@ def seconds_to_strtime(duration):
     
   text = "%3d:%02d" % (int(duration/60), int(duration % 60))
   return text
-  
-def pressure_converter(altitude):
+
+def altitude_or_depth_to_absolute_pressure(altitude_or_depth):
+  """output aboslute pressure for give "depth" in meter.
+  If depth is positive it's considered altitude depth
+  If depth is negative it's considered depth in water
+
+  Keyword Arguments:
+  altitude_or_depth - int (signed) : in meter
+
+  Returns:
+  float - resulting absolute pressure in bar
+
+  Raise:
+  ValueError if altitude > 10000m
+  """
+  if altitude_or_depth < 0:
+    return depth_to_pressure(-altitude_or_depth) + \
+            settings.AMBIANT_PRESSURE_SURFACE
+  else:
+    return altitude_to_pressure(altitude_or_depth)
+
+def altitude_to_pressure(altitude):
   """Convert a given altitude in pressure in bar
   uses the formula:
   p = 101325.(1-2.25577.10^-5.h)^5.25588

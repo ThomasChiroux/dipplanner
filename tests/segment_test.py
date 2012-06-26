@@ -98,6 +98,7 @@ class TestSegmentWrongMod1(TestSegment):
   def runTest(self):
     try:
       baddiveseg = SegmentDive(150, 10*60, self.airtank,0)
+      baddiveseg.check()
     except UnauthorizedMod:
       pass
     else:
@@ -107,6 +108,7 @@ class TestSegmentWrongMod2(TestSegment):
   def runTest(self):  
     try:
       baddiveseg = SegmentDeco(3, 10*60, self.trimixtank1,0)
+      baddiveseg.check()
     except UnauthorizedMod:
       pass
     else:
@@ -116,6 +118,7 @@ class TestSegmentWrongMod3(TestSegment):
   def runTest(self):
     try:
       baddiveseg = SegmentAscDesc(150, 3, 10, self.nitroxtank1,0)
+      baddiveseg.check()
     except UnauthorizedMod:
       pass
     else:
@@ -125,6 +128,7 @@ class TestSegmentWrongMod4(TestSegment):
   def runTest(self):
     try:
       baddiveseg = SegmentAscDesc(3, 150, 10, self.trimixtank1,0)
+      baddiveseg.check()
     except UnauthorizedMod:
       pass
     else:

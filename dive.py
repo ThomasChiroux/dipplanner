@@ -301,8 +301,6 @@ class Dive(object):
       self.dive_exceptions.append(exc)
     except ModelException as exc:
       self.dive_exceptions.append(exc)
-    except NothingToProcess as exc:
-      self.dive_exceptions.append(exc)
     except UnauthorizedMod as exc:
       self.dive_exceptions.append(exc)
     except EmptyTank as exc:
@@ -312,6 +310,14 @@ class Dive(object):
     except InvalidTank as exc:
       self.dive_exceptions.append(exc)
     except InvalidMod as exc:
+      self.dive_exceptions.append(exc)
+    except ProcessingError as exc:
+      self.dive_exceptions.append(exc)
+    except NothingToProcess as exc:
+      self.dive_exceptions.append(exc)
+    except InstanciationError as exc:
+      self.dive_exceptions.append(exc)
+    except InfiniteDeco as exc:
       self.dive_exceptions.append(exc)
     except Exception as exc: # unknown generic exception
       self.dive_exceptions.append(

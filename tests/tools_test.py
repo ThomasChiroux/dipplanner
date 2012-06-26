@@ -31,8 +31,9 @@ import unittest
 # import here the module / classes to be tested
 import dipplanner
 
-from tools import pressure_converter
+from tools import altitude_to_pressure
 from tools import depth_to_pressure
+from tools import altitude_or_depth_to_absolute_pressure
 from tools import pressure_to_depth
 from tools import calculate_ppH2O_surf
 
@@ -40,54 +41,80 @@ class TestTools(unittest.TestCase):
   def setUp(self):
     # temporary hack (tests):
     dipplanner.activate_debug_for_tests()
-      
+
+class TestAltOrDepthToAbsPressure0m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(0), 1.01325, 5, "Wrong pressure at 0m : %s" % altitude_or_depth_to_absolute_pressure(0))
+class TestAltOrDepthToAbsPressure1000m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(1000), 0.898745604274, 5, "Wrong pressure at 1000m : %s" % altitude_or_depth_to_absolute_pressure(1000))
+class TestAltOrDepthToAbsPressure3000m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(3000), 0.701085204119, 5, "Wrong pressure at 3000m : %s" % altitude_or_depth_to_absolute_pressure(3000))
+class TestAltOrDepthToAbsPressure7000m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(7000), 0.4106070795, 5, "Wrong pressure at 7000m : %s" % altitude_or_depth_to_absolute_pressure(7000))
+class TestAltOrDepthToAbsPressure_minus10m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(-10), 2.02368, 5, "Wrong pressure at -10m : %s" % altitude_or_depth_to_absolute_pressure(-10))
+class TestAltOrDepthToAbsPressure_minus30m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(-30), 4.04454, 5, "Wrong pressure at -30m : %s" % altitude_or_depth_to_absolute_pressure(-30))
+class TestAltOrDepthToAbsPressur_minus100m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(-100), 11.11755, 5, "Wrong pressure at -100m : %s" % altitude_or_depth_to_absolute_pressure(-100))
+class TestAltOrDepthToAbsPressure_minus160m(TestTools):
+  def runTest(self):
+    self.assertAlmostEqual(altitude_or_depth_to_absolute_pressure(-160), 17.18013, 5, "Wrong pressure at -160m : %s" % altitude_or_depth_to_absolute_pressure(-160))
+
+
 class TestPressureConverter0m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(0), 1.01325, 5, "Wrong pressure at 0m : %s" % pressure_converter(0))
+    self.assertAlmostEqual(altitude_to_pressure(0), 1.01325, 5, "Wrong pressure at 0m : %s" % altitude_to_pressure(0))
 class TestPressureConverter100m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(100), 1.00129437467, 10, "Wrong pressure at 100m : %s" % pressure_converter(100))
+    self.assertAlmostEqual(altitude_to_pressure(100), 1.00129437467, 10, "Wrong pressure at 100m : %s" % altitude_to_pressure(100))
 class TestPressureConverter500m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(500), 0.954608340287, 10, "Wrong pressure at 500m : %s" % pressure_converter(500))
+    self.assertAlmostEqual(altitude_to_pressure(500), 0.954608340287, 10, "Wrong pressure at 500m : %s" % altitude_to_pressure(500))
 class TestPressureConverter1000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(1000), 0.898745604274, 10, "Wrong pressure at 1000m : %s" % pressure_converter(1000))
+    self.assertAlmostEqual(altitude_to_pressure(1000), 0.898745604274, 10, "Wrong pressure at 1000m : %s" % altitude_to_pressure(1000))
 class TestPressureConverter1500m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(1500), 0.845559905236, 10, "Wrong pressure at 1500m : %s" % pressure_converter(1500))
+    self.assertAlmostEqual(altitude_to_pressure(1500), 0.845559905236, 10, "Wrong pressure at 1500m : %s" % altitude_to_pressure(1500))
 class TestPressureConverter2000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(2000), 0.794951974353, 10, "Wrong pressure at 2000m : %s" % pressure_converter(2000))
+    self.assertAlmostEqual(altitude_to_pressure(2000), 0.794951974353, 10, "Wrong pressure at 2000m : %s" % altitude_to_pressure(2000))
 class TestPressureConverter3000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(3000), 0.701085204119, 10, "Wrong pressure at 3000m : %s" % pressure_converter(3000))
+    self.assertAlmostEqual(altitude_to_pressure(3000), 0.701085204119, 10, "Wrong pressure at 3000m : %s" % altitude_to_pressure(3000))
 class TestPressureConverter4000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(4000), 0.616402064441, 10, "Wrong pressure at 4000m : %s" % pressure_converter(4000))
+    self.assertAlmostEqual(altitude_to_pressure(4000), 0.616402064441, 10, "Wrong pressure at 4000m : %s" % altitude_to_pressure(4000))
 class TestPressureConverter5000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(5000), 0.540198800085, 10, "Wrong pressure at 5000m : %s" % pressure_converter(5000))
+    self.assertAlmostEqual(altitude_to_pressure(5000), 0.540198800085, 10, "Wrong pressure at 5000m : %s" % altitude_to_pressure(5000))
 class TestPressureConverter6000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(6000), 0.471809934056, 10, "Wrong pressure at 6000m : %s" % pressure_converter(6000))
+    self.assertAlmostEqual(altitude_to_pressure(6000), 0.471809934056, 10, "Wrong pressure at 6000m : %s" % altitude_to_pressure(6000))
 class TestPressureConverter7000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(7000), 0.4106070795, 10, "Wrong pressure at 7000m : %s" % pressure_converter(7000))
+    self.assertAlmostEqual(altitude_to_pressure(7000), 0.4106070795, 10, "Wrong pressure at 7000m : %s" % altitude_to_pressure(7000))
 class TestPressureConverter8000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(8000), 0.355997759308, 10, "Wrong pressure at 8000m : %s" % pressure_converter(8000))
+    self.assertAlmostEqual(altitude_to_pressure(8000), 0.355997759308, 10, "Wrong pressure at 8000m : %s" % altitude_to_pressure(8000))
 class TestPressureConverter9000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(9000), 0.307424233586, 10, "Wrong pressure at 9000m : %s" % pressure_converter(9000))
+    self.assertAlmostEqual(altitude_to_pressure(9000), 0.307424233586, 10, "Wrong pressure at 9000m : %s" % altitude_to_pressure(9000))
 class TestPressureConverter10000m(TestTools):
   def runTest(self):
-    self.assertAlmostEqual(pressure_converter(10000), 0.264362335127, 10, "Wrong pressure at 10000m : %s" % pressure_converter(10000))
+    self.assertAlmostEqual(altitude_to_pressure(10000), 0.264362335127, 10, "Wrong pressure at 10000m : %s" % altitude_to_pressure(10000))
 
 class TestPressureConverternegative(TestTools):
   def runTest(self):
     try:
-      pressure_converter(-10)
+      altitude_to_pressure(-10)
     except ValueError:
       pass
     else:
@@ -96,7 +123,7 @@ class TestPressureConverternegative(TestTools):
 class TestPressureConverterMore10000m(TestTools):
   def runTest(self):
     try:
-      pressure_converter(15000)
+      altitude_to_pressure(15000)
     except ValueError:
       pass
     else:

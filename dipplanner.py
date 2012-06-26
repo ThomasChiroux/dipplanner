@@ -46,7 +46,7 @@ from tank import Tank
 from tank import InvalidGas, InvalidTank, InvalidMod, EmptyTank
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
-from tools import pressure_converter
+from tools import altitude_to_pressure
 
 LOGGER = logging.getLogger("dipplanner")
 
@@ -223,7 +223,7 @@ def parse_config_file(filenames):
 
     if config.has_option(section, 'altitude'):
       settings.AMBIANT_PRESSURE_SURFACE = \
-                    pressure_converter(float(config.get(section, 'altitude')))  
+                    altitude_to_pressure(float(config.get(section, 'altitude')))
 
     if config.has_option(section, 'run_time'):
       settings.RUN_TIME = eval(config.get(section, 'run_time').title())
@@ -443,7 +443,7 @@ The template file should be present in ./templates""")
       settings.WATER_DENSITY = settings.FRESH_WATER_DENSITY
       
   if args.altitude:
-    settings.AMBIANT_PRESSURE_SURFACE = pressure_converter(args.altitude)
+    settings.AMBIANT_PRESSURE_SURFACE = altitude_to_pressure(args.altitude)
 
   if args.diveconsrate:
     try:

@@ -35,8 +35,12 @@ import logging
 # local imports
 import settings
 from dipp_exception import DipplannerException
+from model.buhlmann.model_exceptions import ModelException, ModelStateException
+from tank import InvalidGas, InvalidTank, InvalidMod, EmptyTank
+from segment import UnauthorizedMod
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
-from model.buhlmann.model import Model
+from model.buhlmann.model import Model as BuhlmannModel
+
 from tools import depth_to_pressure, seconds_to_strtime
 from jinja2 import Environment, FileSystemLoader
 
@@ -47,6 +51,16 @@ class NothingToProcess(DipplannerException):
     DipplannerException.__init__(self, description)
     self.logger = logging.getLogger("dipplanner.dipp_exception.NothingToProcess")
     self.logger.error("Raising an exception: NothingToProcess ! (%s)" % description)
+
+class InstanciationError(DipplannerException):
+  """raised when the Dive constructor encounters a problem.
+     In this case, it can not continue
+  """
+  def __init__(self, description=""):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.dipp_exception.InstanciationError")
+    self.logger.error("Raising an exception: InstanciationError ! (%s)" % description)
 
 class ProcessingError(DipplannerException):
   """raised when the is no input segments to process"""
@@ -110,34 +124,57 @@ class Dive(object):
     
     Return:
     <nothing>
-        
+
+    .. note:: the constructor should not fail. If something if wrong, it
+              MUST still instanciate itself, with errors in his own object
     """
+
     #initiate class logger
     self.logger = logging.getLogger("dipplanner.dive.Dive")
     self.logger.debug("creating an instance of Dive")
-    
+
+    # initiate dive exception list
+    self.dive_exceptions = []
+
     if previous_profile is None:
       # new dive : new model
       self.is_repetitive_dive = False
-      self.model = Model() # buhlman model by default
+      try:
+        self.model = BuhlmannModel() # buhlman model by default
+      except Exception:
+        self.dive_exceptions.append(
+                          InstanciationError("Unable to instanciate model"))
       self.metadata = ""
     else:
       # repetative dive
       self.is_repetitive_dive = True
       self.model = previous_profile.model
-      self.model.init_gradient()
+      try:
+        self.model.init_gradient()
+      except Exception:
+        self.dive_exceptions.append(
+          InstanciationError("Unable to reset model gradients"))
     
     # filter input segment for only enabled segments
     self.input_segments = []
-    for segment in known_segments:
-      if segment.in_use:
-        self.input_segments.append(segment)
+    try:
+      for segment in known_segments:
+        if segment.in_use:
+          self.input_segments.append(segment)
+    except:
+      self.dive_exceptions.append(
+                          InstanciationError("Problem while adding segments"))
+
     # filter lists of gases to make the used list of gases
     self.tanks = []
-    for tank in known_tanks:
-      if tank.in_use:
-        self.tanks.append(tank)
-        
+    try:
+      for tank in known_tanks:
+        if tank.in_use:
+          self.tanks.append(tank)
+    except:
+      self.dive_exceptions.append(
+                          InstanciationError("Problem while adding tanks"))
+
     # initalise output_segment list
     self.output_segments = []
     
@@ -204,8 +241,13 @@ class Dive(object):
     <Exceptions from model>
     
     """
-    self.model.const_depth(pressure=0.0, seg_time=time,
-                            f_He=0.0, f_N2=0.79, pp_O2=0.0)
+    try:
+      self.model.const_depth(pressure=0.0, seg_time=time,
+                             f_He=0.0, f_N2=0.79, pp_O2=0.0)
+    except Exception:
+      self.dive_exceptions.append(
+                              ModelException("Unable to do surface interval"))
+
     self.surface_interval = time
 
     if settings.AUTOMATIC_TANK_REFILL:
@@ -247,7 +289,36 @@ class Dive(object):
       return True
     else:
       return False
-      
+
+  def do_dive_without_exceptions(self):
+    """Call do_dive, and handle exceptions internally : do not raise any
+    "dive related" exception : add the exception inside self.dive_expceptions
+    instead.
+    """
+    try:
+      self.do_dive()
+    except ModelStateException as exc:
+      self.dive_exceptions.append(exc)
+    except ModelException as exc:
+      self.dive_exceptions.append(exc)
+    except NothingToProcess as exc:
+      self.dive_exceptions.append(exc)
+    except UnauthorizedMod as exc:
+      self.dive_exceptions.append(exc)
+    except EmptyTank as exc:
+      self.dive_exceptions.append(exc)
+    except InvalidGas as exc:
+      self.dive_exceptions.append(exc)
+    except InvalidTank as exc:
+      self.dive_exceptions.append(exc)
+    except InvalidMod as exc:
+      self.dive_exceptions.append(exc)
+    except Exception as exc: # unknown generic exception
+      self.dive_exceptions.append(
+                  DipplannerException("Unknown exception occured: %s (%s)" % (
+                                                          exc.__repr__(),
+                                                          exc.message)))
+
   def do_dive(self):
     """Process the dive
     
@@ -265,7 +336,11 @@ class Dive(object):
     """
     if self.is_dive_segments() == False:
       raise NothingToProcess
-    
+
+    # check the segments:
+    for seg in self.input_segments:
+      seg.check()
+
     run_time_flag = settings.RUN_TIME
      
     # sets initial state

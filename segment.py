@@ -108,7 +108,20 @@ class Segment(object):
   def __unicode__(self):
     """Return a human readable name of the segment in unicode"""
     return u"%s" % self.__repr__()
-  
+
+  def check(self):
+    """check if it's a valid segment
+    Should be executed before calculating dives
+
+    Can raise DiveExceptions
+    """
+    if self.setpoint == 0:
+      # check MOD only if OC
+      self.check_mod()
+      self.check_min_od()
+    else:
+      self.check_mod(self.setpoint)
+
   def check_mod(self,  max_ppo2=None):
     """checks the mod for this segment according to the used tank.
 
@@ -288,14 +301,6 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     
     self.setpoint = float(setpoint) # for CCR
     self.tank = tank # tank used for this segment
-
-    if self.setpoint == 0:
-      # check MOD only if OC
-      self.check_mod()
-      self.check_min_od()
-    else:
-      self.check_mod(self.setpoint)
-
     
   def gas_used(self):
     """calculates returns the quantity (in liter) of gas used for this segment
@@ -359,13 +364,6 @@ depth:%s, time:%ss, tank:%s, sp:%f" % (depth, time, tank, setpoint))
     self.gf_used = 0.0 
     self.control_compartment = None 
     self.mv_max = 0.0
-
-    if self.setpoint == 0:
-      # check MOD only if OC
-      self.check_mod()
-      self.check_min_od()
-    else:
-      self.check_mod(self.setpoint)
 
   def gas_used(self):
     """calculates returns the quantity (in liter) of gas used for this segment
@@ -437,13 +435,6 @@ startdepth:%s, enddepth:%s, rate:%ss, tank:%s, sp:%f" % (start_depth,
     else:
       self.type = 'descent'
 
-    if self.setpoint == 0:
-      # check MOD only if OC
-      self.check_mod()
-      self.check_min_od()
-    else:
-      self.check_mod(self.setpoint)
-      
   def check_mod(self, max_ppo2=None):
     """checks the mod for this segment according to the used tank.
     

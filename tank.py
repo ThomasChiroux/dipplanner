@@ -234,7 +234,7 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
             math.sqrt(b_N2 * b_O2) * f_N2 * f_O2 +\
             math.sqrt(b_N2 * b_He) * f_N2 * f_He +\
             math.sqrt(b_N2 * b_N2) * f_N2 * f_N2
-
+    #print "b: %s" % b_gas
     # now approximate n (quantities of molecules of gas in the tank in mol)
     # using perfect gas law : PV = nRT : n = PV/RT
     approx_n = (float(tank_pressure) * float(tank_vol)) / (R * T)
@@ -266,7 +266,7 @@ max_ppo2:%f, mod:%s, tank_vol:%f, tank_pressure:%d" % (f_O2, f_He, max_ppo2,
         n_right = n_mid
       else:
         n_left = n_mid
-
+    #print "n_mid:%s" % n_mid
     # recalculate volume using van der waals again
     # V = nR3T3/(PR2T2+aP2) + nb
     total_gas_volume = n_mid * pow(R,3) * pow(T,3) / \

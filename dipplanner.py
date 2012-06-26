@@ -294,7 +294,12 @@ def parse_arguments():
   none
   
   Returns:
-  a list with args, tanks and segments
+  two elements :
+    - parsed args
+    - a dict of dives like this:
+    dives = { 'dive1': { 'tanks': {}, 'segments': {}, 'surface_interval':0},
+              'dive2': { 'tanks': {}, 'segments': {}, 'surface_interval':60}
+            }
   
   Raise:
   Nothing, but can exit
@@ -541,7 +546,7 @@ The template file should be present in ./templates""")
       except KeyError:
         parser.error("Error : tank name (%s) in not found in tank list !" % tankname)
       except:
-        raise
+        pass
       num_seg += 1
     segments = OrderedDict(sorted(segments.items(), key=lambda t: t[0]))
     if args.surfaceinterval:
@@ -566,30 +571,21 @@ if __name__ == "__main__":
   previous_dive = None
   for dive in dives:
     if previous_dive is None:
-      profile = Dive(dives[dive]['segments'].values(), dives[dive]['tanks'].values())
+      current_dive = Dive(dives[dive]['segments'].values(), dives[dive]['tanks'].values())
     else:
-      profile = Dive(dives[dive]['segments'].values(),
+      current_dive = Dive(dives[dive]['segments'].values(),
                      dives[dive]['tanks'].values(),
                      previous_dive
                      )
     if dives[dive]['surface_interval']:
-      profile.do_surface_interval(dives[dive]['surface_interval'])
+      current_dive.do_surface_interval(dives[dive]['surface_interval'])
 
-    try:
-      profile.do_dive()
-    except EmptyTank, err:
-      print "ERROR: " + err.description
-    except InvalidGas, err:
-      print "ERROR: " + err.description
-    except InvalidTank, err:
-      print "ERROR: " + err.description
-    except InvalidMod, err:
-      print "ERROR: " + err.description
-    except Exception, err:
-      print "ERROR: " + err.description
-    else:
-      profiles.append(profile)
-      previous_dive = profile
+    current_dive.do_dive_without_exceptions()
+    profiles.append(current_dive)
+    previous_dive = current_dive
+    # now, dive exceptins do not stop the program anymore, but can be
+    # displayed in the output template instead. The used MUST take care of
+    # the result.
 
   # now Prepare the output
   env = Environment( loader = FileSystemLoader(os.getcwd() + '/templates/'))

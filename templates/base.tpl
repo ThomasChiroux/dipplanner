@@ -11,6 +11,11 @@ Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
 {%- endif -%}
 
 {{ self.separator() }}
+  {%- for exc in dive.dive_exceptions %}
+  {{ color("Exception: ", "red")-}}
+  {{ color(exc.__repr__(), "red") -}}
+  : {{ color(exc.description, "red") }}
+  {%- endfor -%}
 
   {%- for segment in dive.output_segments %}
     {{ "%8s"|format(segment.type|upper) -}}:

@@ -34,6 +34,14 @@ import logging
 import settings
 from dipp_exception import DipplannerException
 
+class ModelException(DipplannerException):
+  """Generic Model Exception"""
+  def __init__(self, description):
+    """constructor : call the upper constructor and set the logger"""
+    DipplannerException.__init__(self, description)
+    self.logger = logging.getLogger("dipplanner.DipplannerException.ModelException")
+    self.logger.error("Raising an exception: ModelException ! (%s)" % description)
+
 class ModelStateException(DipplannerException):
   """Model State Exception"""
   def __init__(self, description):

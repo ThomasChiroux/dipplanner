@@ -18,6 +18,11 @@
 
 {{ self.separator() }}
 
+  {% for exc in dive.dive_exceptions %}
+  <h2> {{ color("Exception: ", "red")-}}
+  {{ color(exc.__repr__(), "red") -}}
+  : {{ color(exc.description, "red") }} </h2>
+  {%- endfor -%}
   <table>
   {% for segment in dive.output_segments %}
     <tr>

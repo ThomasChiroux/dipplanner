@@ -59,7 +59,7 @@ You can provide more than one tank and of course multiple segments (they will be
 Deco tanks will be automaticaly choosen if appropriate.
 Here is below a sample for a trimix dive : bi 12l-cylinder of Tx21/30 and Deco Nx80 (S80), 50m - 20mins:
 
- ./dipplanner.py -t "tx;0.21;0.30;24;200" -t "deco;0.8;0.0;12;200" -s "50;20*60;tx;0.0" 
+ ./dipplanner.py -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"
 
 Change some parameters of the dive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -32,16 +32,19 @@ __authors__ = [
 
 import os
 import logging
+import copy
 # local imports
 import settings
 from dipp_exception import DipplannerException
 from model.buhlmann.model_exceptions import ModelException, ModelStateException
 from tank import InvalidGas, InvalidTank, InvalidMod, EmptyTank
+from tank import Tank
 from segment import UnauthorizedMod
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from model.buhlmann.model import Model as BuhlmannModel
 
-from tools import depth_to_pressure, seconds_to_strtime
+from tools import depth_to_pressure, seconds_to_mmss
+from tools import altitude_or_depth_to_absolute_pressure
 from jinja2 import Environment, FileSystemLoader
 
 class NothingToProcess(DipplannerException):
@@ -254,7 +257,7 @@ class Dive(object):
       self.refill_tanks()
 
   def get_surface_interval(self):
-    return seconds_to_strtime(self.surface_interval)
+    return seconds_to_mmss(self.surface_interval)
 
   def refill_tanks(self):
     """refile all tanks defined in this dive
@@ -488,7 +491,72 @@ class Dive(object):
     self.model.metadata = self.metadata
     # recalculate the gas consumptions
     self.do_gas_calcs()
-    
+
+  def no_flight_time(self, altitude=settings.FLIGHT_ALTITUDE, tank = None):
+    """Evaluate the no flight time by 'ascending' to the choosen
+    flight altitude. Ascending will generate the necessary 'stop' at the
+    current depth (which is 0m). The stop time represents the no flight
+    time
+
+    Keyword Arguments:
+    altitude - int - in meter : altitude used for the calculation
+    flight_ascent_rate - float - in m/s
+    tank - Tank - optional : posibily to provide a tank while calling
+                             no_flight_time to force "no flight deco" with
+                             another mix than air.
+                             In this case, we will 'consume' the tank
+                             When the tank is empty, it automaticaly switch to air
+
+    Returns:
+    int - no fight time in seconds
+
+    Raise:
+    InfiniteDeco - if the no flight time can not achieve enough decompression
+                    to be able to go to give altitude
+    """
+    no_flight_time = 0
+    deco_uses_tank = False # set to true when deco is using a tank
+    # need to change gaz to air:
+    # create a 'dummy' air tank
+    no_flight_air_tank = Tank(tank_vol=settings.ABSOLUTE_MAX_TANK_SIZE,
+                              tank_pressure=settings.ABSOLUTE_MAX_TANK_PRESSURE,
+                              tank_rule="30b")
+
+    if tank is not None:
+      no_flight_tank = tank
+      deco_uses_tank = True
+      self.logger.info("Accelerating no flight time using a tank:%s" % tank)
+    else:
+      no_flight_tank = no_flight_air_tank
+
+    next_stop_pressure = altitude_or_depth_to_absolute_pressure(altitude)
+    # bigger stop time to speed up calculation (precision is not necesary here)
+    stop_time = 60 # in second -
+
+    #TODO: Duplicate self.model and work on the copy in order not to affect further calculation (successive dives for example)
+    model_copy = copy.copy(self.model) #TODO: inutile et deepcopy ne marche pas : le faire à la main...
+    model_ceiling = model_copy.ceiling_in_pabs()
+    while model_ceiling > next_stop_pressure: # loop for "deco" calculation based on the new ceiling
+      model_copy.const_depth(0.0,
+                             stop_time,
+                             no_flight_tank.f_He, # f_He
+                             no_flight_tank.f_N2, # f_N2
+                             0.0) # ppo2 (for cc)
+      no_flight_time += stop_time
+      model_ceiling = model_copy.ceiling_in_pabs()
+      if deco_uses_tank:
+        if no_flight_tank.remaining_gas <= 0:
+          no_flight_tank = no_flight_air_tank
+          deco_uses_tank = False
+          self.logger.info("Tank used for accelerating no flight time is empty, swithing to air at %s s" % no_flight_time)
+        else:
+          no_flight_tank.consume_gas(settings.DECO_CONSUMPTION_RATE * stop_time)
+      if no_flight_time > 300000:
+        raise InfiniteDeco("Infinite deco error")
+
+    #self.no_flight_time = no_flight_time
+    return no_flight_time
+
   def ascend(self, target_depth):
     """Ascend to target depth, decompressing if necessary. 
     If inFinalAscent then gradient factors start changing, 
@@ -582,7 +650,7 @@ class Dive(object):
         
         #calculate stop_time
         if deco_stop_time == 0 and \
-           self.run_time % settings.STOP_TIME_INCREMENT > 0:
+                self.run_time % settings.STOP_TIME_INCREMENT > 0:
           stop_time = int(self.run_time / settings.STOP_TIME_INCREMENT) *\
                       settings.STOP_TIME_INCREMENT +\
                       settings.STOP_TIME_INCREMENT -\
@@ -593,14 +661,14 @@ class Dive(object):
           stop_time = settings.STOP_TIME_INCREMENT # in second
 
         # execute the stop
-#        self.logger.debug("deco at %sm for %s (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % \
-#                                                     (self.current_depth,
-#                                                      stop_time,
-#                                                      deco_stop_time,
-#                                                      self.current_tank.f_He,
-#                                                      self.current_tank.f_N2,
-#                                                      self.pp_O2,
-#                                                      model_ceiling))
+        #self.logger.debug("deco at %sm for %s (total:%s) (fhe:%s, fN2:%s, ppo2:%s), ceiling:%s" % \
+        #                                             (self.current_depth,
+        #                                              stop_time,
+        #                                              deco_stop_time,
+        #                                              self.current_tank.f_He,
+        #                                              self.current_tank.f_N2,
+        #                                              self.pp_O2,
+        #                                              model_ceiling))
         self.model.const_depth(depth_to_pressure(self.current_depth),
                                stop_time,
                                self.current_tank.f_He,

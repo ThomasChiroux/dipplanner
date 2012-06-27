@@ -265,7 +265,7 @@ class Compartment(object):
     gf -- gradient factor : 0.1 to 1.0, typical 0.2 - 0.95
     
     Return:
-    float, maximum tolerated pressure in bar
+    float, maximum tolerated pressure (absolute) in bar
     
     """
     return ((self.pp_He + self.pp_N2) - self.a_He_N2 * gf) / (gf / self.b_He_N2 - gf + 1.0)

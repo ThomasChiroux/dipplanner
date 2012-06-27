@@ -34,7 +34,7 @@ from tank import Tank, EmptyTank
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
 import dipplanner
-from tools import seconds_to_strtime
+from tools import seconds_to_mmss
 import settings
 
 class TestDive(unittest.TestCase):
@@ -73,7 +73,7 @@ class TestRepetitiveDive1(TestDive):
     self.profile1.do_dive()
 
   def test_RT(self):
-    assert seconds_to_strtime(self.profile1.run_time) == " 68:09", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_mmss(self.profile1.run_time) == " 68:09", "bad dive runtime ? (%s)" % seconds_to_mmss(self.profile1.run_time)
 
   def test_OTU(self):
     self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 40.0702502936, 7, "bad dive OTU ? (%s)" % self.profile1.model.ox_tox.otu)
@@ -107,7 +107,7 @@ class TestRepetitiveDive2(TestDive):
     self.profile2.do_dive()
 
   def test_RT(self):
-    assert seconds_to_strtime(self.profile2.run_time) == " 70:18", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile2.run_time)
+    assert seconds_to_mmss(self.profile2.run_time) == " 70:18", "bad dive runtime ? (%s)" % seconds_to_mmss(self.profile2.run_time)
 
   def test_OTU(self):
     self.assertAlmostEqual(self.profile2.model.ox_tox.otu, 66.8427163401, 7, "bad dive OTU ? (%s)" % self.profile2.model.ox_tox.otu)
@@ -147,7 +147,7 @@ class TestRepetitiveDive3(TestDive):
     self.profile3.do_dive()
 
   def test_RT(self):
-    assert seconds_to_strtime(self.profile3.run_time) == " 38:36", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile3.run_time)
+    assert seconds_to_mmss(self.profile3.run_time) == " 38:36", "bad dive runtime ? (%s)" % seconds_to_mmss(self.profile3.run_time)
 
   def test_OTU(self):
     self.assertAlmostEqual(self.profile3.model.ox_tox.otu, 86.8657204829, 7, "bad dive OTU ? (%s)" % self.profile3.model.ox_tox.otu)

@@ -260,7 +260,26 @@ class Model(object):
       if comp_pressure > pressure:
         pressure = comp_pressure
     return tools.pressure_to_depth(pressure)
-    
+
+  def ceiling_in_pabs(self):
+    """Determine the current ceiling
+
+    Keyword arguments:
+    <none>
+
+    Returns:
+    Float, ceiling in bar (absolute pressure)
+
+    """
+    pressure = 0.0
+    for comp in self.tissues:
+      #Get compartment tolerated ambient pressure and convert from absolute
+      #pressure to depth
+      comp_pressure = comp.get_max_amb(self.gradient.gf)
+      if comp_pressure > pressure:
+        pressure = comp_pressure
+    return pressure
+
   def m_value(self, pressure):
     """Determine the maximum M-Value for a given depth (pressure)
     

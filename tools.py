@@ -21,7 +21,7 @@
 """tools modules
 
 Contains:
-seconds_to_strtime -- function
+seconds_to_mmss -- function
 altitude_to_pressure -- function
 """
 
@@ -34,12 +34,12 @@ import math
 
 import settings
 
-def seconds_to_strtime(duration):
+def seconds_to_mmss(duration):
   """Convert a value in seconds into a string representing the time in
   minutes and seconds
   (like 2:06)
   It does returns only minutes and seconds, not hours, minutes and seconds
-  
+
   Keyword Arguments:
   duration - the duration in seconds
   
@@ -55,6 +55,29 @@ def seconds_to_strtime(duration):
     
   text = "%3d:%02d" % (int(duration/60), int(duration % 60))
   return text
+
+def seconds_to_hhmmss(duration):
+  """Convert a value in seconds into a string representing the time
+  in hour:minutes and seconds
+  like 22:34:44
+
+  Keyword Arguments:
+  duration - the duration in seconds
+
+  Returns:
+  <string> : the time in hour - minutes and seconds
+
+  Raise:
+  ValueError: when bad time values is given
+  """
+  if duration < 0:
+    raise ValueError("time can not be negative")
+
+  hours = seconds // (60*60)
+  seconds %= (60*60)
+  minutes = seconds // 60
+  seconds %= 60
+  return "%02i:%02i:%02i" % (hours, minutes, seconds)
 
 def altitude_or_depth_to_absolute_pressure(altitude_or_depth):
   """output aboslute pressure for give "depth" in meter.

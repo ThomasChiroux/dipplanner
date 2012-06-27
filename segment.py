@@ -32,7 +32,7 @@ import logging
 # local import
 import settings
 from dipp_exception import DipplannerException
-from tools import seconds_to_strtime
+from tools import seconds_to_mmss
 from tools import depth_to_pressure, pressure_to_depth
 
 class UnauthorizedMod(DipplannerException):
@@ -165,7 +165,7 @@ class Segment(object):
     Raise:
     <nothing>
     """
-    return seconds_to_strtime(self.time)
+    return seconds_to_mmss(self.time)
 
   def get_run_time_str(self):
     """returns runtime in the form MMM:SS
@@ -179,7 +179,7 @@ class Segment(object):
     Raise:
     <nothing>
     """
-    return seconds_to_strtime(self.run_time)
+    return seconds_to_mmss(self.run_time)
 
   def get_p_absolute(self, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     """returns the absolute pression in bar

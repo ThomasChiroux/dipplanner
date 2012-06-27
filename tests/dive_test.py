@@ -36,7 +36,7 @@ from tank import Tank, EmptyTank
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from segment import UnauthorizedMod
 import dipplanner
-from tools import seconds_to_strtime
+from tools import seconds_to_mmss
 import settings
 
 class TestDive(unittest.TestCase):
@@ -98,7 +98,7 @@ class TestDiveAirDiveRunTime1(TestDive):
     diveseg1 = SegmentDive(30, 30*60, self.airtank, 0)
     self.profile1 = Dive([diveseg1], [self.airtank])
     self.profile1.do_dive()
-    assert seconds_to_strtime(self.profile1.run_time) == " 48:24", "bad dive runtime ? (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_mmss(self.profile1.run_time) == " 48:24", "bad dive runtime ? (%s)" % seconds_to_mmss(self.profile1.run_time)
 
 class TestDiveAirDiveOutput2(TestDive):
   def setUp(self):
@@ -130,7 +130,7 @@ class TestDiveAirDiveRunTime2(TestDive):
     diveseg2 = SegmentDive(20, 30*60, self.airtank, 0)
     self.profile2 = Dive([diveseg2], [self.airtank])
     self.profile2.do_dive()
-    assert seconds_to_strtime(self.profile2.run_time) == " 32:04", "bad dive runtime (%s)" % seconds_to_strtime(self.profile2.run_time)
+    assert seconds_to_mmss(self.profile2.run_time) == " 32:04", "bad dive runtime (%s)" % seconds_to_mmss(self.profile2.run_time)
 
 class TestDiveAirDiveOutput3(TestDive):
   def setUp(self):
@@ -183,7 +183,7 @@ class TestDiveAirDiveRunTime3(TestDive):
     diveseg3 = SegmentDive(55, 30*60, self.airdouble, 0)
     self.profile3 = Dive([diveseg3], [self.airdouble])
     self.profile3.do_dive()
-    assert seconds_to_strtime(self.profile3.run_time) == "131:05", "bad dive runtime (%s)" % seconds_to_strtime(self.profile3.run_time)
+    assert seconds_to_mmss(self.profile3.run_time) == "131:05", "bad dive runtime (%s)" % seconds_to_mmss(self.profile3.run_time)
  
 class TestDiveAirDiveOutput4(TestDive):
   def setUp(self):
@@ -236,7 +236,7 @@ class TestDiveAirDiveRunTime4(TestDive):
     diveseg3 = SegmentDive(55, 30*60, self.airdouble, 0)
     self.profile3 = Dive([diveseg3], [self.airdouble, self.deco2, self.decoo2 ])
     self.profile3.do_dive()
-    assert seconds_to_strtime(self.profile3.run_time) == " 70:21", "bad dive runtime (%s)" % seconds_to_strtime(self.profile3.run_time)
+    assert seconds_to_mmss(self.profile3.run_time) == " 70:21", "bad dive runtime (%s)" % seconds_to_mmss(self.profile3.run_time)
 
 class TestDiveTxDiveOutput1(TestDive):
   def setUp(self):
@@ -274,7 +274,7 @@ class TestDiveTxDiveRunTime1(TestDive):
     diveseg1 = SegmentDive(30, 30*60, self.txtank1, 0)
     self.profile1 = Dive([diveseg1], [self.txtank1])
     self.profile1.do_dive()
-    assert seconds_to_strtime(self.profile1.run_time) == " 55:03", "bad dive runtime (%s)" % seconds_to_strtime(self.profile1.run_time)
+    assert seconds_to_mmss(self.profile1.run_time) == " 55:03", "bad dive runtime (%s)" % seconds_to_mmss(self.profile1.run_time)
   
 class TestDiveCCRDiveOutput1(TestDive):
   def setUp(self):

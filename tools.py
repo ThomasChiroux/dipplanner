@@ -34,7 +34,7 @@ import math
 
 import settings
 
-def seconds_to_mmss(duration):
+def seconds_to_mmss(seconds):
   """Convert a value in seconds into a string representing the time in
   minutes and seconds
   (like 2:06)
@@ -50,19 +50,19 @@ def seconds_to_mmss(duration):
   ValueError: when bad time values
   
   """
-  if duration < 0:
+  if seconds < 0:
     raise ValueError("time can not be negative")
     
-  text = "%3d:%02d" % (int(duration/60), int(duration % 60))
+  text = "%3d:%02d" % (int(seconds/60), int(seconds % 60))
   return text
 
-def seconds_to_hhmmss(duration):
+def seconds_to_hhmmss(seconds):
   """Convert a value in seconds into a string representing the time
   in hour:minutes and seconds
   like 22:34:44
 
   Keyword Arguments:
-  duration - the duration in seconds
+  seconds - the duration in seconds
 
   Returns:
   <string> : the time in hour - minutes and seconds
@@ -70,7 +70,7 @@ def seconds_to_hhmmss(duration):
   Raise:
   ValueError: when bad time values is given
   """
-  if duration < 0:
+  if seconds < 0:
     raise ValueError("time can not be negative")
 
   hours = seconds // (60*60)

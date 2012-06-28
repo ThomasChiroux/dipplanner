@@ -58,7 +58,15 @@ class OxTox(object):
     self.cns = 0.0
     self.otu = 0.0
     self.max_ox = 0.0
-    
+
+  def __deepcopy__(self, memo):
+    """deepcopy method will be called by copy.deepcopy"""
+    newobj = OxTox()
+    newobj.cns = self.cns
+    newobj.otu = self.otu
+    newobj.max_ox = self.max_ox
+    return newobj
+
   def add_O2(self, time, pp_O2):
     """Adds oxygen load into model. 
     Uses NOAA lookup table to add percentage based on time and ppO2.

@@ -72,7 +72,15 @@ class Gradient(object):
     self.gf_slope = 1.0
     self.gf = gf_low
     self.gf_set = False
-    
+
+  def __deepcopy__(self, memo):
+    """deepcopy method will be called by copy.deepcopy"""
+    newobj = Gradient(self.gf_low, self.gf_high)
+    newobj.gf = self.gf
+    newobj.gf_slope = self.gf_slope
+    newobj.gf_set = self.gf_set
+    return newobj
+
   def get_gradient_factor(self):
     """Returns current GF with bounds checking
     if gf < gf_low, returns gf_low

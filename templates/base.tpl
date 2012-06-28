@@ -45,6 +45,12 @@ Gas: {% for tank in dive.tanks %}
 Oxygen Toxicity: OTU:{{ dive.model.ox_tox.otu|int }}, CNS:
   {{- "%d"|format(dive.model.ox_tox.cns*100)}}%
 {{- self.separator() }}
+
+{%- if dive.no_flight_time_value %}
+{{ self.separator() }}
+No-flight time: {{ dive.get_no_flight_hhmmss() }}
+{{- self.separator() }}
+{%- endif -%}
 {% endfor -%}
 
 {%- block dive_footer %}

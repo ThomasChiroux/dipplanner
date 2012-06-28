@@ -31,6 +31,7 @@ __authors__ = [
 ]
 
 import logging
+import copy
 # local imports
 import settings
 from model_exceptions import ModelStateException
@@ -87,6 +88,7 @@ class Model(object):
     self.units = 'metric'
     self.tissues = []
     self.ox_tox = OxTox()
+    self.gradient = None
     self.init_gradient()
 
     for comp_number in range(0, self.COMPS):
@@ -100,6 +102,17 @@ class Model(object):
       #TODO: Check above : 0.79 or settings.DEFAULT_AIR_PPN2 (tdb) ?
 
     self.metadata = "(none)"
+
+  def __deepcopy__(self, memo):
+    """deepcopy method will be called by copy.deepcopy"""
+    newobj = Model()
+    newobj.units = self.units
+    newobj.ox_tox = copy.deepcopy(self.ox_tox)
+    newobj.gradient = copy.deepcopy(self.gradient)
+    newobj.metadata = self.metadata
+    for i in range(0, len(self.tissues)):
+      newobj.tissues[i] = copy.deepcopy(self.tissues[i])
+    return newobj
 
   def __repr__(self):
     """Returns a string representing the model"""

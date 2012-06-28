@@ -43,7 +43,7 @@ from segment import UnauthorizedMod
 from segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from model.buhlmann.model import Model as BuhlmannModel
 
-from tools import depth_to_pressure, seconds_to_mmss
+from tools import depth_to_pressure, seconds_to_mmss, seconds_to_hhmmss
 from tools import altitude_or_depth_to_absolute_pressure
 from jinja2 import Environment, FileSystemLoader
 
@@ -110,6 +110,7 @@ class Dive(object):
   in_final_ascent -- flag for final ascent
   is_repetative_dive -- Flag for repetative dives
   surface_interval -- for surf. int. in seconds
+  no_flight_time_value -- calculated no flight time
   metadata -- description for the dive
   """
   
@@ -183,6 +184,7 @@ class Dive(object):
     
     # other initialisations
     self.surface_interval = 0
+    self.no_flight_time_value = None
     self.is_closed_circuit = False # OC by default
     self.pp_O2 = 0.0 # OC by default
     self.current_tank = None
@@ -492,6 +494,58 @@ class Dive(object):
     # recalculate the gas consumptions
     self.do_gas_calcs()
 
+  def get_no_flight_hhmmss(self):
+    """Returns no flight time (if calculated) in hhmmss format
+    instead of an int in seconds
+
+    This method does not calculated no_flight_time
+
+    Keyword Arguments:
+    <none>
+
+    Returns:
+    str -- "hh:mm:ss" no flight time
+    """
+    if self.no_flight_time_value is not None:
+      return seconds_to_hhmmss(self.no_flight_time_value)
+    else:
+      return ""
+
+  def no_flight_time_without_exception(self):
+    """Call no_flight_time, and handle exceptions internally : do not raise any
+    "dive related" exception : add the exception inside self.dive_expceptions
+    instead.
+    """
+    try:
+      self.no_flight_time()
+    except ModelStateException as exc:
+      self.dive_exceptions.append(exc)
+    except ModelException as exc:
+      self.dive_exceptions.append(exc)
+    except UnauthorizedMod as exc:
+      self.dive_exceptions.append(exc)
+    except EmptyTank as exc:
+      self.dive_exceptions.append(exc)
+    except InvalidGas as exc:
+      self.dive_exceptions.append(exc)
+    except InvalidTank as exc:
+      self.dive_exceptions.append(exc)
+    except InvalidMod as exc:
+      self.dive_exceptions.append(exc)
+    except ProcessingError as exc:
+      self.dive_exceptions.append(exc)
+    except NothingToProcess as exc:
+      self.dive_exceptions.append(exc)
+    except InstanciationError as exc:
+      self.dive_exceptions.append(exc)
+    except InfiniteDeco as exc:
+      self.dive_exceptions.append(exc)
+    except Exception as exc: # unknown generic exception
+      self.dive_exceptions.append(
+        DipplannerException("Unknown exception occured: %s (%s)" % (
+          exc.__repr__(),
+          exc.message)))
+
   def no_flight_time(self, altitude=settings.FLIGHT_ALTITUDE, tank = None):
     """Evaluate the no flight time by 'ascending' to the choosen
     flight altitude. Ascending will generate the necessary 'stop' at the
@@ -533,8 +587,7 @@ class Dive(object):
     # bigger stop time to speed up calculation (precision is not necesary here)
     stop_time = 60 # in second -
 
-    #TODO: Duplicate self.model and work on the copy in order not to affect further calculation (successive dives for example)
-    model_copy = copy.copy(self.model) #TODO: inutile et deepcopy ne marche pas : le faire à la main...
+    model_copy = copy.deepcopy(self.model)
     model_ceiling = model_copy.ceiling_in_pabs()
     while model_ceiling > next_stop_pressure: # loop for "deco" calculation based on the new ceiling
       model_copy.const_depth(0.0,
@@ -554,7 +607,7 @@ class Dive(object):
       if no_flight_time > 300000:
         raise InfiniteDeco("Infinite deco error")
 
-    #self.no_flight_time = no_flight_time
+    self.no_flight_time_value = no_flight_time
     return no_flight_time
 
   def ascend(self, target_depth):

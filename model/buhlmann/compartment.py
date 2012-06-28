@@ -53,6 +53,8 @@ class Compartment(object):
     self.logger = logging.getLogger("dipplanner.model.buhlmann.compartment.Compartment")
     self.logger.debug("creating an instance of Compartment")
 
+    self.h_He = 0.0
+    self.h_N2 = 0.0
     self.k_He = 0.0
     self.k_N2 = 0.0
     self.a_He = 0.0
@@ -75,6 +77,29 @@ class Compartment(object):
        a_He is not None and b_He is not None and \
        a_N2 is not None and b_N2 is not None:
       self.set_compartment_time_constants(h_He, h_N2, a_He, b_He, a_N2, b_N2)
+
+  def __deepcopy__(self, memo):
+    """deepcopy method will be called by copy.deepcopy"""
+    newobj = Compartment(self.h_He, self.h_N2,
+                         self.a_He, self.b_He,
+                         self.a_N2, self.b_N2)
+    newobj.h_He = self.h_He
+    newobj.h_N2 = self.h_N2
+    newobj.k_He = self.k_He
+    newobj.k_N2 = self.k_N2
+    newobj.a_He = self.a_He
+    newobj.b_He = self.b_He
+    newobj.a_N2 = self.a_N2
+    newobj.b_N2 = self.b_N2
+    newobj.pp_He = self.pp_He
+    newobj.pp_N2 = self.pp_N2
+    newobj.a_He_N2 = self.a_He_N2
+    newobj.b_He_N2 = self.b_He_N2
+    newobj._const_exp_const_depth_He = self._const_exp_const_depth_He
+    newobj._const_exp_const_depth_N2 = self._const_exp_const_depth_N2
+    newobj._old_kHe = self._old_kHe
+    newobj._old_seg_time = self._old_seg_time
+    return newobj
 
   def __repr__(self):
     """Returns a string representing the comp"""
@@ -107,6 +132,8 @@ class Compartment(object):
     Returns:
     <nothing>
     """
+    self.h_He = h_He
+    self.h_N2 = h_N2
     self.k_He = math.log(2) / (float(h_He)*60)
     self.k_N2 = math.log(2) / (float(h_N2)*60)
     self.a_He = float(a_He) / 10

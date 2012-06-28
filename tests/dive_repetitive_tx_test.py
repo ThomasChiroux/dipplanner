@@ -88,6 +88,10 @@ class TestRepetitiveTxDive1(TestDive):
   def test_tank_cons_rule(self):
     self.assertEqual(self.profile1.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s)' % self.profile1.tanks[0].check_rule())
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 12660, "Bad no flight time: %s" % no_flight_time)
+
 class TestRepetitiveTxDive2(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -121,6 +125,10 @@ class TestRepetitiveTxDive2(TestDive):
 
   def test_tank_cons_rule(self):
     self.assertEqual(self.profile2.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s)' % self.profile2.tanks[0].check_rule())
+
+  def test_no_flight(self):
+    no_flight_time = self.profile2.no_flight_time()
+    self.assertEqual(no_flight_time, 18960, "Bad no flight time: %s" % no_flight_time)
 
 class TestRepetitiveTxDive3(TestDive):
   def setUp(self):
@@ -161,6 +169,10 @@ class TestRepetitiveTxDive3(TestDive):
 
   def test_tank_cons_rule(self):
     self.assertEqual(self.profile3.tanks[0].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s)' % self.profile2.tanks[0].check_rule())
+
+  def test_no_flight(self):
+    no_flight_time = self.profile3.no_flight_time()
+    self.assertEqual(no_flight_time, 7380, "Bad no flight time: %s" % no_flight_time)
 
 # ==============================================================================
 # ========================== M A I N ===========================================

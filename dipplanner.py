@@ -180,6 +180,8 @@ def parse_config_file(filenames):
       if config.get(section, 'travel_switch') == 'late' or\
          config.get(section, 'travel_switch') == 'early':
         settings.TRAVEL_SWITCH = config.get(section, 'travel_switch')
+    if config.has_option(section, 'flight_altitude'):
+      settings.FLIGHT_ALTITUDE = float(config.get(section, 'flight_altitude'))
 
   if config.has_section('output'):
     section = 'output'
@@ -586,6 +588,12 @@ if __name__ == "__main__":
     # now, dive exceptins do not stop the program anymore, but can be
     # displayed in the output template instead. The used MUST take care of
     # the result.
+
+  # now calculate no flight time based on the last dive
+  try:
+    current_dive.no_flight_time_without_exception()
+  except:
+    pass
 
   # now Prepare the output
   env = Environment( loader = FileSystemLoader(os.getcwd() + '/templates/'))

@@ -80,6 +80,10 @@ class TestDiveTxHypo50m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 1200, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo50m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -107,6 +111,10 @@ class TestDiveTxHypo50m20min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 4500, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo50m30min(TestDive):
   def setUp(self):
@@ -136,6 +144,10 @@ class TestDiveTxHypo50m30min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 8400, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo50m40min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -163,6 +175,10 @@ class TestDiveTxHypo50m40min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 13620, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo50m50min(TestDive):
   def setUp(self):
@@ -209,6 +225,10 @@ class TestDiveTxHypo60m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 1680, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo60m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -237,6 +257,10 @@ class TestDiveTxHypo60m20min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 6240, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo60m30min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -264,6 +288,10 @@ class TestDiveTxHypo60m30min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 12600, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo60m40min(TestDive):
   def setUp(self):
@@ -310,6 +338,10 @@ class TestDiveTxHypo70m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 2400, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo70m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -337,6 +369,10 @@ class TestDiveTxHypo70m20min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 8520, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo70m30min(TestDive):
   def setUp(self):
@@ -383,6 +419,10 @@ class TestDiveTxHypo80m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 3300, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo80m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -410,6 +450,10 @@ class TestDiveTxHypo80m20min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 11760, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo80m30min(TestDive):
   def setUp(self):
@@ -456,6 +500,10 @@ class TestDiveTxHypo90m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 4680, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo90m20min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -483,6 +531,10 @@ class TestDiveTxHypo90m20min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 14640, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo90m30min(TestDive):
   def setUp(self):
@@ -529,6 +581,10 @@ class TestDiveTxHypo100m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 5820, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo100m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -556,6 +612,10 @@ class TestDiveTxHypo100m15min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 11880, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo100m20min(TestDive):
   def setUp(self):
@@ -602,6 +662,10 @@ class TestDiveTxHypo110m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 6840, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo110m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -629,6 +693,10 @@ class TestDiveTxHypo110m15min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 14160, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo110m20min(TestDive):
   def setUp(self):
@@ -675,6 +743,10 @@ class TestDiveTxHypo120m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 8580, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo120m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -719,6 +791,10 @@ class TestDiveTxHypo130m10min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), True, 'Wrong tank status : it should pass the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 10800, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo130m15min(TestDive):
   def setUp(self):
@@ -765,6 +841,10 @@ class TestDiveTxHypo140m10min(TestDive):
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
 
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 13020, "Bad no flight time: %s" % no_flight_time)
+
 class TestDiveTxHypo140m15min(TestDive):
   def setUp(self):
     TestDive.setUp(self)
@@ -809,6 +889,10 @@ class TestDiveTxHypo150m10min(TestDive):
 
   def test_tank_cons_rule_2(self):
     self.assertEqual(self.profile1.tanks[2].check_rule(), False, 'Wrong tank status : it should fail the remaining gas rule test (result:%s on %s)' % (self.profile1.tanks[2].check_rule(), self.profile1.tanks[2].name()))
+
+  def test_no_flight(self):
+    no_flight_time = self.profile1.no_flight_time()
+    self.assertEqual(no_flight_time, 15060, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveTxHypo150m15min(TestDive):
   def setUp(self):

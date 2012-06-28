@@ -75,7 +75,7 @@ class TestDiveCCAir10m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir10m20min(TestDive):
   def setUp(self):
@@ -101,7 +101,7 @@ class TestDiveCCAir10m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir10m30min(TestDive):
   def setUp(self):
@@ -127,7 +127,7 @@ class TestDiveCCAir10m30min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir10m40min(TestDive):
   def setUp(self):
@@ -153,7 +153,7 @@ class TestDiveCCAir10m40min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir10m50min(TestDive):
   def setUp(self):
@@ -179,7 +179,7 @@ class TestDiveCCAir10m50min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir10m60min(TestDive):
   def setUp(self):
@@ -205,7 +205,7 @@ class TestDiveCCAir10m60min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir10m70min(TestDive):
   def setUp(self):
@@ -246,7 +246,7 @@ class TestDiveCCAir20m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 420, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir20m20min(TestDive):
   def setUp(self):
@@ -272,7 +272,7 @@ class TestDiveCCAir20m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir20m30min(TestDive):
   def setUp(self):
@@ -298,7 +298,7 @@ class TestDiveCCAir20m30min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 0, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir20m40min(TestDive):
   def setUp(self):
@@ -324,7 +324,7 @@ class TestDiveCCAir20m40min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 180, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir20m50min(TestDive):
   def setUp(self):
@@ -361,7 +361,7 @@ class TestDiveCCAir30m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 60, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir30m20min(TestDive):
   def setUp(self):
@@ -387,7 +387,7 @@ class TestDiveCCAir30m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 540, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir30m30min(TestDive):
   def setUp(self):
@@ -413,7 +413,7 @@ class TestDiveCCAir30m30min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 1200, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir30m40min(TestDive):
   def setUp(self):
@@ -439,7 +439,7 @@ class TestDiveCCAir30m40min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 2040, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir30m50min(TestDive):
   def setUp(self):
@@ -476,7 +476,7 @@ class TestDiveCCAir40m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 300, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir40m20min(TestDive):
   def setUp(self):
@@ -502,7 +502,7 @@ class TestDiveCCAir40m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 1260, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir40m30min(TestDive):
   def setUp(self):
@@ -528,7 +528,7 @@ class TestDiveCCAir40m30min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 2400, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCAir40m40min(TestDive):
   def setUp(self):
@@ -582,7 +582,7 @@ class TestDiveCCHypo50m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 840, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo50m20min(TestDive):
   def setUp(self):
@@ -608,7 +608,7 @@ class TestDiveCCHypo50m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 2640, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo50m30min(TestDive):
   def setUp(self):
@@ -634,7 +634,7 @@ class TestDiveCCHypo50m30min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 5520, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo50m40min(TestDive):
   def setUp(self):
@@ -660,7 +660,7 @@ class TestDiveCCHypo50m40min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 8580, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo50m50min(TestDive):
   def setUp(self):
@@ -697,7 +697,7 @@ class TestDiveCCHypo60m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 1200, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo60m20min(TestDive):
   def setUp(self):
@@ -723,7 +723,7 @@ class TestDiveCCHypo60m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 4500, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo60m30min(TestDive):
   def setUp(self):
@@ -749,7 +749,7 @@ class TestDiveCCHypo60m30min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 8340, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo60m40min(TestDive):
   def setUp(self):
@@ -786,7 +786,7 @@ class TestDiveCCHypo70m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 1800, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo70m20min(TestDive):
   def setUp(self):
@@ -812,7 +812,7 @@ class TestDiveCCHypo70m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 6000, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo70m30min(TestDive):
   def setUp(self):
@@ -849,7 +849,7 @@ class TestDiveCCHypo80m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 2520, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo80m20min(TestDive):
   def setUp(self):
@@ -875,7 +875,7 @@ class TestDiveCCHypo80m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 8700, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo80m30min(TestDive):
   def setUp(self):
@@ -912,7 +912,7 @@ class TestDiveCCHypo90m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 3600, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo90m20min(TestDive):
   def setUp(self):
@@ -939,7 +939,7 @@ class TestDiveCCHypo90m20min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 11580, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo90m30min(TestDive):
   def setUp(self):
@@ -976,7 +976,7 @@ class TestDiveCCHypo100m10min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 4860, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo100m15min(TestDive):
   def setUp(self):
@@ -1002,7 +1002,7 @@ class TestDiveCCHypo100m15min(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 9480, "Bad no flight time: %s" % no_flight_time)
 
 class TestDiveCCHypo100m20min(TestDive):
   def setUp(self):
@@ -1056,7 +1056,7 @@ class TestDiveMultilevel(TestDive):
 
   def test_no_flight(self):
     no_flight_time = self.profile1.no_flight_time()
-    self.assertEqual(no_flight_time, 3420, "Bad no flight time: %s" % no_flight_time)
+    self.assertEqual(no_flight_time, 2820, "Bad no flight time: %s" % no_flight_time)
 
 # ==============================================================================
 # ========================== M A I N ===========================================

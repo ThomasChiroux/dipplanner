@@ -183,3 +183,33 @@ def calculate_ppH2O_surf(temperature=20):
 
   pressure_mmHg = 10 ** (const_a - (const_b / (const_c + float(temperature))))
   return pressure_mmHg * mmHG_to_bar
+
+def convert_bar_to_psi(value):
+  """SI - imperial conversion function
+  """
+  return float(value) * 14.5037744
+
+def convert_psi_to_bar(value):
+  """SI - imperial conversion function
+  """
+  return float(value) / 14.5037744
+
+def convert_liter_to_cubicfeet(value):
+  """SI - imperial conversion function
+  """
+  return float(value) / (math.pow(0.3048,3) * 1000)
+
+def convert_cubicfeet_to_liter(value):
+  """SI - imperial conversion function
+  """
+  return float(value) * (math.pow(0.3048,3) * 1000)
+
+def convert_meter_to_feet(value):
+  """SI - imperial conversion function
+  """
+  return float(value) / 0.3048
+
+def convert_feet_to_meter(value):
+  """SI - imperial conversion function
+  """
+  return float(value) * 0.3048

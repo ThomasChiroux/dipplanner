@@ -53,7 +53,7 @@ Planning one dive
 To plan a dive, you should at least provide one tank and one dive segment.
 Here is below a sample for a 12l tank with 200b of air and a dive of 25min at 30m
 
-./dipplanner.py -t "airtank;0.21;0.0;12;200" -s "30;25*60;airtank;0.0" 
+./dipplanner.py -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"
 
 You can provide more than one tank and of course multiple segments (they will be processed in the order you provided it)
 Deco tanks will be automaticaly choosen if appropriate.
@@ -66,11 +66,46 @@ Change some parameters of the dive
 
 See --help output to see all available parameters
 
+Config files
+^^^^^^^^^^^^
+
+You can provide one or several config files to the program.
+The config file can overide any default parameter.
+see config/default_config.cfg for all the details
+
+parameter are changed using this order:
+1) default parameter
+2) parameter set in config files
+3) parameter set in command line
+
+Units : SI or Imperial
+----------------------
+
+dipplanner uses only SI unit internally.
+However a config parameter or a command line parameter can change this behaviour.
+and use imperial Units
+
+if imperial unit is set in a config file :
+   all the parameters from this config file and all the config files
+   read after will be considered imperial (including command line parameters)
+   But all the parameter in previous config files will still be considered as SI
+   All the ouput will be done in imperial units
+
+if imperial unit is set in command line :
+   all the parameter given in command line will be considered imperial,
+   but not the parameters eventually given using config files
+   All the output will be done in imperial units
+
+SI and imperial unit converter uses the following correspondances:
+* bar <--> psi
+* liter <--> cubic feet
+* meter <--> feet
+
 References
 ----------
 
     at first this program is a python rewrite of MV-Plan a dive planning tool written in java by Guy Wittig
-    ref used for programming and understand algorythms
+    ref used for programming and understand algorithms
 
 Open Source and Licence
 -----------------------

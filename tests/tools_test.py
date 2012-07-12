@@ -36,6 +36,12 @@ from tools import depth_to_pressure
 from tools import altitude_or_depth_to_absolute_pressure
 from tools import pressure_to_depth
 from tools import calculate_ppH2O_surf
+from tools import convert_bar_to_psi
+from tools import convert_cubicfeet_to_liter
+from tools import convert_feet_to_meter
+from tools import convert_liter_to_cubicfeet
+from tools import convert_meter_to_feet
+from tools import convert_psi_to_bar
 
 class TestTools(unittest.TestCase):
   def setUp(self):
@@ -246,6 +252,105 @@ class TestCalculate_ppH2O_surf(TestTools):
       pass
     else:
       self.fail("Should raise ValueError")
+
+class TestConversionsImperialSi(TestTools):
+  def setUp(self):
+    TestTools.setUp(self)
+
+  def test_convert_bar_to_psi_1(self):
+    self.assertAlmostEqual(convert_bar_to_psi(1), 14.5037744, 7, "Wrong conversion:%s" % convert_bar_to_psi(1))
+
+  def test_convert_bar_to_psi_35(self):
+    self.assertAlmostEqual(convert_bar_to_psi(35), 507.632104, 7, "Wrong conversion:%s" % convert_bar_to_psi(35))
+
+  def test_convert_bar_to_psi_100(self):
+    self.assertAlmostEqual(convert_bar_to_psi(100), 1450.37744, 7, "Wrong conversion:%s" % convert_bar_to_psi(100))
+
+  def test_convert_bar_to_psi_230(self):
+    self.assertAlmostEqual(convert_bar_to_psi(230), 3335.868112, 7, "Wrong conversion:%s" % convert_bar_to_psi(230))
+
+  def test_convert_bar_to_psi_300(self):
+    self.assertAlmostEqual(convert_bar_to_psi(300), 4351.13232, 7, "Wrong conversion:%s" % convert_bar_to_psi(300))
+
+  def test_convert_psi_to_bar_1(self):
+    self.assertAlmostEqual(convert_psi_to_bar(14.5037744), 1, 7, "Wrong conversion:%s" % convert_psi_to_bar(14.5037744))
+
+  def test_convert_psi_to_bar_35(self):
+    self.assertAlmostEqual(convert_psi_to_bar(507.632104), 35, 7, "Wrong conversion:%s" % convert_psi_to_bar(507.632104))
+
+  def test_convert_psi_to_bar_100(self):
+    self.assertAlmostEqual(convert_psi_to_bar(1450.37744), 100, 7, "Wrong conversion:%s" % convert_psi_to_bar(1450.37744))
+
+  def test_convert_psi_to_bar_230(self):
+    self.assertAlmostEqual(convert_psi_to_bar(3335.868112), 230, 7, "Wrong conversion:%s" % convert_psi_to_bar(3335.868112))
+
+  def test_convert_psi_to_bar_300(self):
+    self.assertAlmostEqual(convert_psi_to_bar(4351.13232), 300, 7, "Wrong conversion:%s" % convert_psi_to_bar(4351.13232))
+
+  def test_convert_liter_to_cubicfeet_1(self):
+    self.assertAlmostEqual(convert_liter_to_cubicfeet(1), 0.0353146667215, 7, "Wrong conversion:%s" % convert_liter_to_cubicfeet(1))
+
+  def test_convert_liter_to_cubicfeet_6(self):
+    self.assertAlmostEqual(convert_liter_to_cubicfeet(6), 0.211888000329, 7, "Wrong conversion:%s" % convert_liter_to_cubicfeet(6))
+
+  def test_convert_liter_to_cubicfeet_12(self):
+    self.assertAlmostEqual(convert_liter_to_cubicfeet(12), 0.423776000658, 7, "Wrong conversion:%s" % convert_liter_to_cubicfeet(12))
+
+  def test_convert_liter_to_cubicfeet_15(self):
+    self.assertAlmostEqual(convert_liter_to_cubicfeet(15), 0.529720000822, 7, "Wrong conversion:%s" % convert_liter_to_cubicfeet(15))
+
+  def test_convert_liter_to_cubicfeet_18(self):
+    self.assertAlmostEqual(convert_liter_to_cubicfeet(18), 0.635664000987, 7, "Wrong conversion:%s" % convert_liter_to_cubicfeet(18))
+
+  def test_convert_cubicfeet_to_liter_1(self):
+    self.assertAlmostEqual(convert_cubicfeet_to_liter(0.0353146667215), 1, 7, "Wrong conversion:%s" %  convert_cubicfeet_to_liter(0.0353146667215))
+
+  def test_convert_cubicfeet_to_liter_6(self):
+    self.assertAlmostEqual(convert_cubicfeet_to_liter(0.211888000329), 6, 7, "Wrong conversion:%s" %  convert_cubicfeet_to_liter(0.211888000329))
+
+  def test_convert_cubicfeet_to_liter_12(self):
+    self.assertAlmostEqual(convert_cubicfeet_to_liter(0.423776000658), 12, 7, "Wrong conversion:%s" %  convert_cubicfeet_to_liter(0.423776000658))
+
+  def test_convert_cubicfeet_to_liter_15(self):
+    self.assertAlmostEqual(convert_cubicfeet_to_liter(0.529720000822), 15, 7, "Wrong conversion:%s" %  convert_cubicfeet_to_liter(0.529720000822))
+
+  def test_convert_cubicfeet_to_liter_18(self):
+    self.assertAlmostEqual(convert_cubicfeet_to_liter(0.635664000987), 18, 7, "Wrong conversion:%s" %  convert_cubicfeet_to_liter(0.635664000987))
+
+  def test_convert_meter_to_feet_1(self):
+    self.assertAlmostEqual(convert_meter_to_feet(1), 3.28083989501, 7, "Wrong conversion:%s" % convert_meter_to_feet(1))
+
+  def test_convert_meter_to_feet_15(self):
+    self.assertAlmostEqual(convert_meter_to_feet(15), 49.2125984252, 7, "Wrong conversion:%s" % convert_meter_to_feet(15))
+
+  def test_convert_meter_to_feet_30(self):
+    self.assertAlmostEqual(convert_meter_to_feet(30), 98.4251968504, 7, "Wrong conversion:%s" % convert_meter_to_feet(30))
+
+  def test_convert_meter_to_feet_50(self):
+    self.assertAlmostEqual(convert_meter_to_feet(50), 164.041994751, 7, "Wrong conversion:%s" % convert_meter_to_feet(50))
+
+  def test_convert_meter_to_feet_70(self):
+    self.assertAlmostEqual(convert_meter_to_feet(70), 229.658792651, 7, "Wrong conversion:%s" % convert_meter_to_feet(70))
+
+  def test_convert_feet_to_meter_1(self):
+    self.assertAlmostEqual(convert_feet_to_meter(3.28083989501), 1, 7, "Wrong conversion:%s" % convert_feet_to_meter(3.28083989501))
+
+  def test_convert_feet_to_meter_15(self):
+    self.assertAlmostEqual(convert_feet_to_meter(49.2125984252), 15, 7, "Wrong conversion:%s" % convert_feet_to_meter(49.2125984252))
+
+  def test_convert_feet_to_meter_30(self):
+    self.assertAlmostEqual(convert_feet_to_meter(98.4251968504), 30, 7, "Wrong conversion:%s" % convert_feet_to_meter(98.4251968504))
+
+  def test_convert_feet_to_meter_50(self):
+    self.assertAlmostEqual(convert_feet_to_meter(164.041994751), 50, 7, "Wrong conversion:%s" % convert_feet_to_meter(164.041994751))
+
+  def test_convert_feet_to_meter_70(self):
+    self.assertAlmostEqual(convert_feet_to_meter(229.658792651), 70, 7, "Wrong conversion:%s" % convert_feet_to_meter(229.658792651))
+
+
+    #from tools import convert_feet_to_meter
+  #from tools import convert_meter_to_feet
+
 
 if __name__ == "__main__":
   import sys

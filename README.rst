@@ -173,6 +173,7 @@ The config file can overide any default parameter.
 see config/default_config.cfg for all the details
 
 parameter are changed using this order:
+
 1) default parameter
 2) parameter set in config files
 3) parameter set in command line
@@ -196,6 +197,7 @@ if imperial unit is set in command line :
    All the output will be done in imperial units
 
 SI and imperial unit converter uses the following correspondances:
+
 * bar <--> psi
 * liter <--> cubic feet
 * meter <--> feet
@@ -204,7 +206,8 @@ References
 ----------
 
 at first this program is a python rewrite of MV-Plan a dive planning tool written in java by Guy Wittig
-.. _ref used for programming and understand algorithms : https://github.com/ThomasChiroux/dipplanner/wiki/Reference-used-for-programming-and-understand-algorithms
+`ref used for programming and understand algorithms
+<https://github.com/ThomasChiroux/dipplanner/wiki/Reference-used-for-programming-and-understand-algorithms/>`_.
 
 Open Source and Licence
 -----------------------

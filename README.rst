@@ -15,6 +15,78 @@ This software and the decompression schedules it produces are tools for experien
 
 IF YOU DO NOT UNDERSTAND OR DO NOT AGREE TO THIS STATEMENT DO NOT USE THIS SOFTWARE
 
+Description
+-----------
+
+Model supported
+^^^^^^^^^^^^^^^
+
+* Bülhmann ZH-L16B with Gradient Factor
+* Bülhmann ZH-L16C with Gradient Factor
+
+Gases
+^^^^^
+
+any mix of oxygen, helium and nitrogen is supported, this include:
+* Air
+* Nitrox
+* Oxygen
+* Trimix
+* Heliox
+* ...
+
+Other Features
+^^^^^^^^^^^^^^
+
+* Open Circuit Dives
+* CCR Dives
+  * setpoint
+  * bailout
+* Tank planification
+  * Tank size and pressure
+  * Simple or Double Tank
+  * gaz consumption rate
+  * rules for warning (rules of third, rules in remaining pressure, etc..)
+  * automatic (or non automatic) refill of Tank between successive dives
+* Multigaz (multi Tank)
+* Automatic selection of best gaz
+* Multilevel Dives
+* Altitude Dives
+* Successive Dives
+* No Flight Time Calculation
+* CNS Tracking
+* OTU Tracking
+* MOD Calculation
+* END Calculation
+* Adjustable gradient factor and stop depth level
+
+Calculations
+^^^^^^^^^^^^
+
+The main principe of dipplanner calculation are to be as accurate as possible,
+using the most precise algorithm.
+
+* All internal calculation in SI Units
+* Most precise calculations (trying to avoid any approximation):
+  * second to second decompression time calculation (adjustable)
+  * real water density calculation
+  * real gaz pressure calculation in tanks using van der waals
+  * real surface pressure calculation (using Antoine equation for ppH2O)
+  * ...
+* Every parameter is adjustable
+
+.. warning:: in result of the "precise" calculations, the planned dives may be
+             shorter than other equivalent dive planification programs.
+
+             Users of dipplanner MUST be aware of this difference and adjust
+             the conservatisms to their wishes.
+
+             On the other way, with the most precise calculations, dipplanner
+             try to avoid unexpected effects (or worse: unseen effects) of
+             approximations. (approximation effect to conservatism are sometimes
+             counter-intuitive and may in some cases reduce the conservatism
+             without warning)
+
 Get the sources
 ---------------
 
@@ -37,15 +109,31 @@ This version if currently only usable in command line
 Run the program
 ^^^^^^^^^^^^^^^
 
-    for linux or macos (or if you want, windows with python installed) :
-    Run the program (from dipplanner directory) : dipplanner.py
-    ex: python dipplanner.py --help
-    or : ./dipplanner.py --help
+for linux or macos (or if you want, windows with python installed) :
+Run the program (from dipplanner directory) : dipplanner.py
+ex:
 
-    for windows
-    Run the programm : dipplanner.exe
-    ex: dipplanner --help
-    or: dipplanner.exe --help
+::
+
+    python dipplanner.py --help
+or:
+
+::
+
+    ./dipplanner.py --help
+
+for windows
+Run the programm : dipplanner.exe
+ex:
+
+::
+
+    dipplanner --help
+or:
+
+::
+
+    dipplanner.exe --help
 
 Planning one dive
 ^^^^^^^^^^^^^^^^^
@@ -53,13 +141,17 @@ Planning one dive
 To plan a dive, you should at least provide one tank and one dive segment.
 Here is below a sample for a 12l tank with 200b of air and a dive of 25min at 30m
 
-./dipplanner.py -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"
+::
+
+    ./dipplanner.py -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"
 
 You can provide more than one tank and of course multiple segments (they will be processed in the order you provided it)
 Deco tanks will be automaticaly choosen if appropriate.
 Here is below a sample for a trimix dive : bi 12l-cylinder of Tx21/30 and Deco Nx80 (S80), 50m - 20mins:
 
- ./dipplanner.py -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"
+::
+
+    ./dipplanner.py -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"
 
 Change some parameters of the dive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -104,8 +196,8 @@ SI and imperial unit converter uses the following correspondances:
 References
 ----------
 
-    at first this program is a python rewrite of MV-Plan a dive planning tool written in java by Guy Wittig
-    ref used for programming and understand algorithms
+at first this program is a python rewrite of MV-Plan a dive planning tool written in java by Guy Wittig
+.. _ref used for programming and understand algorithms : https://github.com/ThomasChiroux/dipplanner/wiki/Reference-used-for-programming-and-understand-algorithms
 
 Open Source and Licence
 -----------------------

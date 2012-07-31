@@ -28,6 +28,7 @@ Gases
 ^^^^^
 
 any mix of oxygen, helium and nitrogen is supported, this include:
+
 * Air
 * Nitrox
 * Oxygen
@@ -40,14 +41,18 @@ Other Features
 
 * Open Circuit Dives
 * CCR Dives
+
   * setpoint
   * bailout
+
 * Tank planification
+
   * Tank size and pressure
   * Simple or Double Tank
   * gaz consumption rate
   * rules for warning (rules of third, rules in remaining pressure, etc..)
   * automatic (or non automatic) refill of Tank between successive dives
+
 * Multigaz (multi Tank)
 * Automatic selection of best gaz
 * Multilevel Dives
@@ -68,11 +73,13 @@ using the most precise algorithm.
 
 * All internal calculation in SI Units
 * Most precise calculations (trying to avoid any approximation):
+
   * second to second decompression time calculation (adjustable)
   * real water density calculation
   * real gaz pressure calculation in tanks using van der waals
   * real surface pressure calculation (using Antoine equation for ppH2O)
   * ...
+
 * Every parameter is adjustable
 
 .. warning:: in result of the "precise" calculations, the planned dives may be

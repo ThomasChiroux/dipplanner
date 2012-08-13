@@ -7,16 +7,16 @@
 # it under the terms of the GNU General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.
 # If not, see <http://www.gnu.org/licenses/gpl.html>
-# 
+#
 # This module is part of dipplanner, a Dive planning Tool written in python
 """
 Test for Model class
@@ -36,67 +36,67 @@ import dipplanner
 import settings
 
 class TestModelBuhlmannModel(unittest.TestCase):
-  def setUp(self):
-    # temporary hack (tests):
-    dipplanner.activate_debug_for_tests()
-    settings.RUN_TIME = True
-    settings.SURFACE_TEMP = 12
-    # simples test
-    self.model1 = Model()
-    
-    # OC tests
-    self.model2 = Model()
-    self.model2.const_depth(30, 12*60, 0.0, 0.79, 0.0)
-  
+    def setUp(self):
+        # temporary hack (tests):
+        dipplanner.activate_debug_for_tests()
+        settings.RUN_TIME = True
+        settings.SURFACE_TEMP = 12
+        # simples test
+        self.model1 = Model()
+
+        # OC tests
+        self.model2 = Model()
+        self.model2.const_depth(30, 12*60, 0.0, 0.79, 0.0)
+
 class TestModelBuhlmannModelSimple1(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.units == "metric", "Error in model unit : %s" % self.model1.units
-  
+    def runTest(self):
+        assert self.model1.units == "metric", "Error in model unit : %s" % self.model1.units
+
 class TestModelBuhlmannModelSimple2(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.gradient.gf_low == settings.GF_LOW, "Error in model gradient gf low : %s" % self.model1.gradient.gf_low
+    def runTest(self):
+        assert self.model1.gradient.gf_low == settings.GF_LOW, "Error in model gradient gf low : %s" % self.model1.gradient.gf_low
 
 class TestModelBuhlmannModelSimple3(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.gradient.gf_high == settings.GF_HIGH, "Error in model gradient gf high : %s" % self.model1.gradient.gf_high
+    def runTest(self):
+        assert self.model1.gradient.gf_high == settings.GF_HIGH, "Error in model gradient gf high : %s" % self.model1.gradient.gf_high
 
 class TestModelBuhlmannModelSimple3b(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.gradient.gf == settings.GF_LOW, "Error in model gradient gf : %s" % self.model1.gradient.gf
-    
+    def runTest(self):
+        assert self.model1.gradient.gf == settings.GF_LOW, "Error in model gradient gf : %s" % self.model1.gradient.gf
+
 class TestModelBuhlmannModelSimple4(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.metadata == "(none)", "Error in model metadata : %s" % self.model1.metadata
+    def runTest(self):
+        assert self.model1.metadata == "(none)", "Error in model metadata : %s" % self.model1.metadata
 
 class TestModelBuhlmannModelSimple5(TestModelBuhlmannModel):
-  def runTest(self):
-    assert len(self.model1.tissues) == 16, "Error in tissues number : %s" % len(self.model1.tissues)
+    def runTest(self):
+        assert len(self.model1.tissues) == 16, "Error in tissues number : %s" % len(self.model1.tissues)
 
 class TestModelBuhlmannModelSimple6(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.ox_tox.otu == 0.0, "Error in model ox tox otu : %s" % self.model1.ox_tox_otu
+    def runTest(self):
+        assert self.model1.ox_tox.otu == 0.0, "Error in model ox tox otu : %s" % self.model1.ox_tox_otu
 
 class TestModelBuhlmannModelSimple7(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.validate_model() == self.model1.MODEL_VALIDATION_SUCCESS, "Error in model validation : %s" % self.model1.validate_model()
+    def runTest(self):
+        assert self.model1.validate_model() == self.model1.MODEL_VALIDATION_SUCCESS, "Error in model validation : %s" % self.model1.validate_model()
 
 class TestModelBuhlmannModelSimple8(TestModelBuhlmannModel):
-  def runTest(self):
-    # empty model should have the first compartement for control compartment ??
-    assert self.model1.control_compartment() == 1, "Error in control compartement : %s" % self.model1.control_compartment()
+    def runTest(self):
+        # empty model should have the first compartement for control compartment ??
+        assert self.model1.control_compartment() == 1, "Error in control compartement : %s" % self.model1.control_compartment()
 
 class TestModelBuhlmannModelSimple9(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model1.ceiling() == 0.0, "Error in model ceiling : %s" % self.model1.ceiling()
+    def runTest(self):
+        assert self.model1.ceiling() == 0.0, "Error in model ceiling : %s" % self.model1.ceiling()
 
 class TestModelBuhlmannModelSimple10(TestModelBuhlmannModel):
-  def runTest(self):
-    mv = self.model1.m_value(12)
-    self.assertAlmostEqual(mv,0.0575659327931, 13, "Error in model m_value : %s" % mv)
+    def runTest(self):
+        mv = self.model1.m_value(12)
+        self.assertAlmostEqual(mv,0.0575659327931, 13, "Error in model m_value : %s" % mv)
 
 class TestModelBuhlmannModelOutput1(TestModelBuhlmannModel):
-  def runTest(self):
-    assert str(self.model1) == """C:0 He:0.0 N2:0.789444359701 gf:0.3 mv_at:2.98611129437 max_amb:0.354301769605 MV:0.264372048419
+    def runTest(self):
+        assert str(self.model1) == """C:0 He:0.0 N2:0.789444359701 gf:0.3 mv_at:2.98611129437 max_amb:0.354301769605 MV:0.264372048419
 C:1 He:0.0 N2:0.789444359701 gf:0.3 mv_at:2.55549585508 max_amb:0.421736098719 MV:0.30892022702
 C:2 He:0.0 N2:0.789444359701 gf:0.3 mv_at:2.26480470784 max_amb:0.4759777647 MV:0.348570610512
 C:3 He:0.0 N2:0.789444359701 gf:0.3 mv_at:2.05108817891 max_amb:0.519283115855 MV:0.384890502425
@@ -115,12 +115,12 @@ C:15 He:0.0 N2:0.789444359701 gf:0.3 mv_at:1.28237367658 max_amb:0.711956470078 
 """, "Error in model output : %s" % str(self.model1)
 
 class TestModelBuhlmannModelGf1(TestModelBuhlmannModel):
-  def runTest(self):
-    assert self.model2.gradient.gf == settings.GF_LOW, "Error in model gf : %s" % self.model2.gradient.gf
-  
+    def runTest(self):
+        assert self.model2.gradient.gf == settings.GF_LOW, "Error in model gf : %s" % self.model2.gradient.gf
+
 class TestModelBuhlmannModelOutput2(TestModelBuhlmannModel):
-  def runTest(self):
-    assert str(self.model2) == """C:0 He:0.0 N2:19.9991340314 gf:0.3 mv_at:2.98611129437 max_amb:15.8731803417 MV:6.6973840088
+    def runTest(self):
+        assert str(self.model2) == """C:0 He:0.0 N2:19.9991340314 gf:0.3 mv_at:2.98611129437 max_amb:15.8731803417 MV:6.6973840088
 C:1 He:0.0 N2:16.1102290026 gf:0.3 mv_at:2.55549585508 max_amb:13.6230894631 MV:6.3041499248
 C:2 He:0.0 N2:12.3062955138 gf:0.3 mv_at:2.26480470784 max_amb:10.8013122031 MV:5.43371155634
 C:3 He:0.0 N2:9.37174702982 gf:0.3 mv_at:2.05108817891 max_amb:8.44101928733 MV:4.56915852091
@@ -139,15 +139,15 @@ C:15 He:0.0 N2:1.09786259985 gf:0.3 mv_at:1.28237367658 max_amb:1.01708414861 MV
 """, "Error in model output : %s" % str(self.model2)
 
 if __name__ == "__main__":
-  import sys
-  import argparse
+    import sys
+    import argparse
 
-  parser = argparse.ArgumentParser()
-  parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                      help='name of the tests to run (separated by space) [optionnal]')
-  args = parser.parse_args()
-  if args.tests:
-    suite = unittest.TestLoader().loadTestsFromNames(args.tests, sys.modules[__name__])
-  else:
-    suite = unittest.findTestCases(sys.modules[__name__])
-  unittest.TextTestRunner(verbosity=2).run(suite)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
+                        help='name of the tests to run (separated by space) [optionnal]')
+    args = parser.parse_args()
+    if args.tests:
+        suite = unittest.TestLoader().loadTestsFromNames(args.tests, sys.modules[__name__])
+    else:
+        suite = unittest.findTestCases(sys.modules[__name__])
+    unittest.TextTestRunner(verbosity=2).run(suite)

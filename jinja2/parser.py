@@ -14,7 +14,7 @@ from jinja2.utils import next
 from jinja2.lexer import describe_token, describe_token_expr
 
 
-#: statements that callinto 
+#: statements that callinto
 _statement_keywords = frozenset(['for', 'if', 'block', 'extends', 'print',
                                  'macro', 'include', 'from', 'import',
                                  'set'])

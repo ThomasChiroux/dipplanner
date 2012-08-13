@@ -101,7 +101,9 @@ latest source code (unstable)
 
 please use git to clone the repository :
 
-git clone git://github.com/ThomasChiroux/dipplanner.git
+::
+
+    git clone git://github.com/ThomasChiroux/dipplanner.git
 
 Installing
 ----------

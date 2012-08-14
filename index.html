@@ -28,6 +28,7 @@
         <p>Dive planner and decompression calculation program written in python</p>
         <p class="view"><a href="https://github.com/ThomasChiroux/dipplanner">View the Project on GitHub <small>ThomasChiroux/dipplanner</small></a></p>
         <ul>
+            <li><a href="http://dipplanner.org/doc/html/index.html">Full Documentation</a></li>
           <li><a href="https://github.com/ThomasChiroux/dipplanner/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/ThomasChiroux/dipplanner/tarball/master">Download <strong>TAR Ball</strong></a></li>
           <li><a href="https://github.com/ThomasChiroux/dipplanner">View On <strong>GitHub</strong></a></li>
@@ -47,64 +48,100 @@ This software and the decompression schedules it produces are tools for experien
 
 <p class="red-text-color">IF YOU DO NOT UNDERSTAND OR DO NOT AGREE TO THIS STATEMENT DO NOT USE THIS SOFTWARE</p>
 
-<h2>Get the sources</h2>
+          <div class="section" id="description">
+              <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+              <div class="section" id="model-supported">
+                  <h3>Model supported<a class="headerlink" href="#model-supported" title="Permalink to this headline">¶</a></h3>
+                  <ul class="simple">
+                      <li>Bülhmann ZH-L16B with Gradient Factor</li>
+                      <li>Bülhmann ZH-L16C with Gradient Factor</li>
+                  </ul>
+              </div>
+              <div class="section" id="gases">
+                  <h3>Gases<a class="headerlink" href="#gases" title="Permalink to this headline">¶</a></h3>
+                  <p>any mix of oxygen, helium and nitrogen is supported, this include:</p>
+                  <ul class="simple">
+                      <li>Air</li>
+                      <li>Nitrox</li>
+                      <li>Oxygen</li>
+                      <li>Trimix</li>
+                      <li>Heliox</li>
+                      <li>...</li>
+                  </ul>
+              </div>
+              <div class="section" id="other-features">
+                  <h3>Other Features<a class="headerlink" href="#other-features" title="Permalink to this headline">¶</a></h3>
+                  <ul class="simple">
+                      <li>Open Circuit Dives</li>
+                      <li>CCR Dives<ul>
+                          <li>setpoint</li>
+                          <li>bailout</li>
+                      </ul>
+                      </li>
+                      <li>Tank planification<ul>
+                          <li>Tank size and pressure</li>
+                          <li>Simple or Double Tank</li>
+                          <li>gaz consumption rate</li>
+                          <li>rules for warning (rules of third, rules in remaining pressure, etc..)</li>
+                          <li>automatic (or non automatic) refill of Tank between successive dives</li>
+                      </ul>
+                      </li>
+                      <li>Multigaz (multi Tank)</li>
+                      <li>Automatic selection of best gaz</li>
+                      <li>Multilevel Dives</li>
+                      <li>Altitude Dives</li>
+                      <li>Successive Dives</li>
+                      <li>No Flight Time Calculation</li>
+                      <li>CNS Tracking</li>
+                      <li>OTU Tracking</li>
+                      <li>MOD Calculation</li>
+                      <li>END Calculation</li>
+                      <li>Adjustable gradient factor and stop depth level</li>
+                  </ul>
+              </div>
+              <div class="section" id="calculations">
+                  <h3>Calculations<a class="headerlink" href="#calculations" title="Permalink to this headline">¶</a></h3>
+                  <p>The main principe of dipplanner calculation are to be as accurate as possible,
+                      using the most precise algorithm.</p>
+                  <ul class="simple">
+                      <li>All internal calculation in SI Units</li>
+                      <li>Most precise calculations (trying to avoid any approximation):<ul>
+                          <li>second to second decompression time calculation (adjustable)</li>
+                          <li>real water density calculation</li>
+                          <li>real gaz pressure calculation in tanks using van der waals</li>
+                          <li>real surface pressure calculation (using Antoine equation for ppH2O)</li>
+                          <li>...</li>
+                      </ul>
+                      </li>
+                      <li>Every parameter is adjustable</li>
+                  </ul>
+                  <div class="admonition warning">
+                      <p class="first admonition-title">Warning</p>
+                      <p>in result of the &#8220;precise&#8221; calculations, the planned dives may be
+                          shorter than other equivalent dive planification programs.</p>
+                      <p>Users of dipplanner MUST be aware of this difference and adjust
+                          the conservatisms to their wishes.</p>
+                      <p class="last">On the other way, with the most precise calculations, dipplanner
+                          try to avoid unexpected effects (or worse: unseen effects) of
+                          approximations. (approximation effect to conservatism are sometimes
+                          counter-intuitive and may in some cases reduce the conservatism
+                          without warning)</p>
+                  </div>
+              </div>
+          </div>
+          <div class="section" id="get-the-sources">
+              <h2>Get the sources<a class="headerlink" href="#get-the-sources" title="Permalink to this headline">¶</a></h2>
+              <p>latest source code (unstable)</p>
+              <p>please use git to clone the repository :</p>
+              <div class="highlight-python"><pre>git clone git://github.com/ThomasChiroux/dipplanner.git</pre>
+              </div>
+          </div>
+          <div class="section" id="installing">
+              <h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+              <p>There is no full installation yet</p>
+          </div>
 
-<p>latest source code (unstable)</p>
-
-<p>please use git to clone the repository :</p>
-
-<p>git clone git://github.com/ThomasChiroux/dipplanner.git</p>
-
-<h2>Installing</h2>
-
-<p>There is no installation yet, so to use dipplanner, just get the code and run dipplanner.py (or dipplanner.exe if you've downloaded the windows package)</p>
-
-<h2>Using</h2>
-
-<p>This version if currently only usable in command line</p>
-
-<h3>Run the program</h3>
-
-for linux or macos (or if you want, windows with python installed) :
-Run the program (from dipplanner directory) : dipplanner.py
-ex: 
-<pre><code>python dipplanner.py --help</code></pre>
-or : 
-<pre><code>./dipplanner.py --help</code></pre>
-
-for windows
-Run the programm : dipplanner.exe
-
-ex: 
-<pre><code>dipplanner --help</code></pre>
-or: 
-<pre><code>dipplanner.exe --help</code></pre>
-
-<h3>Planning one dive</h3>
-
-<p>To plan a dive, you should at least provide one tank and one dive segment.
-Here is below a sample for a 12l tank with 200b of air and a dive of 25min at 30m</p>
-
-<pre><code>./dipplanner.py -t "airtank;0.21;0.0;12;200" -s "30;25*60;airtank;0.0"</code></pre>
-
-<p>You can provide more than one tank and of course multiple segments (they will be processed in the order you provided it)
-Deco tanks will be automaticaly choosen if appropriate.
-Here is below a sample for a trimix dive : bi 12l-cylinder of Tx21/30 and Deco Nx80 (S80), 50m - 20mins:</p>
-
-<pre><code>./dipplanner.py -t "tx;0.21;0.30;24;200" -t "deco;0.8;0.0;12;200" -s "50;20*60;tx;0.0" </code></pre>
-
-<h3>Change some parameters of the dive</h3>
-
-<p>See --help output to see all available parameters</p>
-
-<h2>References</h2>
-
-<ul>
-<li>at first this program is a python rewrite of <a href="http://www.users.on.net/~wittig/diving/mvplan.html">MV-Plan</a> a dive planning tool written in java by Guy Wittig</li>
-<li><a href="https://github.com/ThomasChiroux/dipplanner/wiki/Reference-used-for-programming-and-understand-algorythms">ref used for programming and understand algorythms</a></li>
-</ul>
-
-<h2>Open Source and Licence</h2>
+          <h2>Open Source and Licence</h2>
 
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
 

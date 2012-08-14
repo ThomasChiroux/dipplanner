@@ -4,3 +4,5 @@
 *.tmproj
 .idea/*
 *.log
+venv/*
+build/*

@@ -1,9 +1,32 @@
 To run tests, use the following commands from main module directory :
 
-Run all tests :
-./tests/run_all_tests.py
+Before running tests, you MAY need to setup the develop environment,
+eventually using virtualenv.
+see README for more infos.
 
-Run one test in particular (and with tank_test module) :
-PYTHONPATH=. python tests/module_test.py
 
-PYTHONPATH=. python tests/tank_test.py
+Run all tests:
+==============
+
+python test/run_all_tests.py
+
+or
+
+python setup.py test
+
+
+Run one test in particular:
+===========================
+
+python test/module_test.py
+
+Run one sub-test in particular:
+===============================
+
+python test/module_test.py submodule
+
+Example of sub-module test
+==========================
+
+python test/dive_test.py TestDiveAirDiveRunTime1
+

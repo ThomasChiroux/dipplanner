@@ -108,7 +108,7 @@ please use git to clone the repository :
 Installing
 ----------
 
-There is no installation yet, so to use dipplanner, just get the code and run dipplanner.py (or dipplanner.exe if you've downloaded the windows package)
+There is no full installation yet
 
 Using
 -----
@@ -118,31 +118,42 @@ This version if currently only usable in command line
 Run the program
 ^^^^^^^^^^^^^^^
 
-for linux or macos (or if you want, windows with python installed) :
-Run the program (from dipplanner directory) : dipplanner.py
+Preparation: virtualvenv
+""""""""""""""""""""""""
+
+It is recommended to setup a virtualvenv before running or installing.
+In this way, you will not break or change your real environment.
+So after getting the source, go in the dipplanner directory:
+
+::
+
+   cd dipplanner
+   mkdir venv
+   virtualenv venv
+   source venv/bin/activate
+
+Installation
+""""""""""""
+for linux or macos (or  windows with python installed) :
+
+::
+
+    python setup.py develop
+
+setup.py develop will install all needed dependencies and add dipplanner
+in your python path
+
+Running the program
+"""""""""""""""""""
+
+an executable wrapper is in bin/ directory, run the program:
+
 ex:
 
 ::
 
-    python dipplanner.py --help
-or:
+    bin/dipplanner --help
 
-::
-
-    ./dipplanner.py --help
-
-for windows
-Run the programm : dipplanner.exe
-ex:
-
-::
-
-    dipplanner --help
-or:
-
-::
-
-    dipplanner.exe --help
 
 Planning one dive
 ^^^^^^^^^^^^^^^^^
@@ -152,7 +163,7 @@ Here is below a sample for a 12l tank with 200b of air and a dive of 25min at 30
 
 ::
 
-    ./dipplanner.py -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"
+    bin/dipplanner -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"
 
 You can provide more than one tank and of course multiple segments (they will be processed in the order you provided it)
 Deco tanks will be automaticaly choosen if appropriate.
@@ -160,7 +171,7 @@ Here is below a sample for a trimix dive : bi 12l-cylinder of Tx21/30 and Deco N
 
 ::
 
-    ./dipplanner.py -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"
+    bin/dipplanner -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"
 
 Change some parameters of the dive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

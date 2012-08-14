@@ -41,8 +41,12 @@ install_requires = [
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
     'readline',
     'jinja2',
-    'pylint',
-    'pep8', ]
+    # below are dependencies for develop phaes only
+    # TODO: find a way not to install this dev in setup.py install
+    "ipython",
+    "pylint",
+    "pep8",
+    "sphinx", ]
 
 # readline is always here on linux
 if sys.platform.startswith('linux'):
@@ -70,7 +74,5 @@ setup(name='dipplanner',
       test_suite = 'test.run_all_tests.run_all_tests',
       extras_require = {
           'doc':  ["sphinx", ],
-          'ipython':  ["ipython", ],
-          'pylint': ["pylint", ],
-          'pep8': ["pep8", ],
+          'devel_tools':  ["ipython", "pylint", "pep8" ],
       },)

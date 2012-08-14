@@ -9,16 +9,23 @@
 # (by setting ":compiler pyunit"), any failure will deliver your cursor to the
 # line that breaks the unit tests.
 #
-# Place this file somewhere where it can be run, such as ${HOME}/bin/alltests.py
+# Place this file somewhere where it can be run, such
+# as ${HOME}/bin/alltests.py
 
-import unittest, sys, os, re, traceback
+import unittest
+import sys
+import os
+import re
+import traceback
+
 
 def find_all_test_files():
     t_py_re = re.compile('^(test_.*|.*_test)\.py$')
     is_test = lambda filename: t_py_re.match(filename)
     drop_dot_py = lambda filename: filename[:-3]
     return [drop_dot_py(module) for module in
-            filter(is_test, os.listdir(os.getcwd()+'/tests/'))]
+            filter(is_test, os.listdir(os.getcwd() + '/tests/'))]
+
 
 def suite():
     sys.path.append(os.curdir)
@@ -28,6 +35,7 @@ def suite():
     for module in map(__import__, modules_to_test):
         alltests.addTest(unittest.findTestCases(module))
     return alltests
+
 
 if __name__ == '__main__':
     try:
@@ -50,3 +58,4 @@ if __name__ == '__main__':
         tb = traceback.format_tb(exceptionTraceback)
         for line in reversed(tb):
             sys.stderr.write(line)
+

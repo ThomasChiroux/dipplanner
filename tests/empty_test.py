@@ -23,18 +23,19 @@ Test for XXXXX class
 """
 
 __authors__ = [
-  # alphabetical order by last name
-  'Thomas Chiroux',
-]
+    # alphabetical order by last name
+    'Thomas Chiroux', ]
 
 import unittest
 # import here the module / classes to be tested
 import dipplanner
 
+
 class TestXXXXXXX(unittest.TestCase):
     def setUp(self):
         # temporary hack (tests):
         dipplanner.activate_debug_for_tests()
+
 
 class TestXXXXXXXSimple1(TestXXXXXXX):
     def runTest(self):
@@ -46,10 +47,12 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run (separated by space) [optionnal]')
+                        help='name of the tests to run '
+                             '(separated by space) [optionnal]')
     args = parser.parse_args()
     if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests, sys.modules[__name__])
+        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
+                                                         sys.modules[__name__])
     else:
         suite = unittest.findTestCases(sys.modules[__name__])
     unittest.TextTestRunner(verbosity=2).run(suite)

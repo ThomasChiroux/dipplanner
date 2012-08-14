@@ -23,15 +23,15 @@ Test for oxygen toxicity class
 """
 
 __authors__ = [
-  # alphabetical order by last name
-  'Thomas Chiroux',
-]
+    # alphabetical order by last name
+    'Thomas Chiroux', ]
 
 import unittest
 # import here the module / classes to be tested
 from model.buhlmann.oxygen_toxicity import OxTox
 import dipplanner
 import settings
+
 
 class TestModelBuhlmannOxTox(unittest.TestCase):
     def setUp(self):
@@ -42,62 +42,86 @@ class TestModelBuhlmannOxTox(unittest.TestCase):
         self.ox1 = OxTox()
         self.ox2 = OxTox()
 
+
 class TestModelBuhlmannOxToxCns(TestModelBuhlmannOxTox):
     def runTest(self):
-        assert self.ox1.cns == 0.0, "bad cns value : %s" % self.ox1.cns
+        self.assertEqual(self.ox1.cns, 0.0,
+                         "bad cns value : %s" % self.ox1.cns)
+
 
 class TestModelBuhlmannOxToxOtu(TestModelBuhlmannOxTox):
     def runTest(self):
-        assert self.ox1.otu == 0.0, "bad otu value : %s" % self.ox1.otu
+        self.assertEqual(self.ox1.otu, 0.0,
+                         "bad otu value : %s" % self.ox1.otu)
+
 
 class TestModelBuhlmannOxToxMaxOx(TestModelBuhlmannOxTox):
     def runTest(self):
-        assert self.ox1.max_ox == 0.0, "bad max_ox value : %s" % self.ox1.max_ox
+        self.assertEqual(self.ox1.max_ox, 0.0,
+                         "bad max_ox value : %s" % self.ox1.max_ox)
+
 
 class TestModelBuhlmannOxToxCns2(TestModelBuhlmannOxTox):
     def runTest(self):
-        self.ox1.add_o2(10*60, 1.3)
-        assert round(self.ox1.cns,13) == 0.0555555555556, "bad cns value : %s" % self.ox1.cns
+        self.ox1.add_o2(10 * 60, 1.3)
+        self.assertEqual(round(self.ox1.cns, 13), 0.0555555555556,
+                         "bad cns value : %s" % self.ox1.cns)
+
 
 class TestModelBuhlmannOxToxOtu2(TestModelBuhlmannOxTox):
     def runTest(self):
-        self.ox1.add_o2(10*60, 1.3)
-        assert round(self.ox1.otu,10) == 14.7944872366, "bad otu value : %s" % self.ox1.otu
+        self.ox1.add_o2(10 * 60, 1.3)
+        self.assertEqual(round(self.ox1.otu, 10), 14.7944872366,
+                         "bad otu value : %s" % self.ox1.otu)
+
 
 class TestModelBuhlmannOxToxCns2(TestModelBuhlmannOxTox):
     def runTest(self):
-        self.ox1.add_o2(10*60, 1.3)
-        self.ox1.remove_o2(4*60*60)
-        assert round(self.ox1.cns,14) == 0.00874945594818, "bad cns value : %s" % self.ox1.cns
+        self.ox1.add_o2(10 * 60, 1.3)
+        self.ox1.remove_o2(4 * 60 * 60)
+        self.assertEqual(round(self.ox1.cns, 14), 0.00874945594818,
+                         "bad cns value : %s" % self.ox1.cns)
+
 
 class TestModelBuhlmannOxToxOtu3(TestModelBuhlmannOxTox):
     def runTest(self):
-        self.ox1.add_o2(10*60, 1.3)
-        self.ox1.remove_o2(4*60*60)
-        assert round(self.ox1.otu,10) == 14.7944872366, "bad otu value : %s" % self.ox1.otu
+        self.ox1.add_o2(10 * 60, 1.3)
+        self.ox1.remove_o2(4 * 60 * 60)
+        self.assertEqual(round(self.ox1.otu, 10), 14.7944872366,
+                         "bad otu value : %s" % self.ox1.otu)
+
 
 class TestModelBuhlmannOxToxCns3(TestModelBuhlmannOxTox):
     def runTest(self):
-        self.ox1.add_o2(10*60, 1.3)
-        self.ox1.remove_o2(25*60*60)
-        assert round(self.ox1.cns,7) == 0.0000005, "bad cns value : %s" % round(self.ox1.cns,7)
+        self.ox1.add_o2(10 * 60, 1.3)
+        self.ox1.remove_o2(25 * 60 * 60)
+        self.assertEqual(round(self.ox1.cns, 7), 0.0000005,
+                         "bad cns value : %s" % round(self.ox1.cns, 7))
+
 
 class TestModelBuhlmannOxToxOtu4(TestModelBuhlmannOxTox):
     def runTest(self):
-        self.ox1.add_o2(10*60, 1.3)
-        self.ox1.remove_o2(25*60*60)
-        assert round(self.ox1.otu,11) == 0.0, "bad otu value : %s" % self.ox1.otu
+        self.ox1.add_o2(10 * 60, 1.3)
+        self.ox1.remove_o2(25 * 60 * 60)
+        self.assertEqual(round(self.ox1.otu, 11), 0.0,
+                         "bad otu value : %s" % self.ox1.otu)
 
-if __name__ == "__main__":
+
+def main():
     import sys
     import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run (separated by space) [optionnal]')
+                        help='name of the tests to run '
+                             '(separated by space) [optionnal]')
     args = parser.parse_args()
     if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests, sys.modules[__name__])
+        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
+                                                         sys.modules[__name__])
     else:
         suite = unittest.findTestCases(sys.modules[__name__])
     unittest.TextTestRunner(verbosity=2).run(suite)
+
+if __name__ == "__main__":
+    main()

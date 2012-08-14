@@ -23,9 +23,8 @@ Test for XXXXX class
 """
 
 __authors__ = [
-  # alphabetical order by last name
-  'Thomas Chiroux',
-]
+    # alphabetical order by last name
+    'Thomas Chiroux', ]
 
 import unittest
 # import here the module / classes to be tested
@@ -33,6 +32,7 @@ import unittest
 from model.buhlmann.gradient import Gradient
 import dipplanner
 import settings
+
 
 class TestModelBuhlmannGradient(unittest.TestCase):
     def setUp(self):
@@ -43,43 +43,61 @@ class TestModelBuhlmannGradient(unittest.TestCase):
         self.gradient1 = Gradient(0.3, 0.8)
         self.gradient2 = Gradient(0.35, 0.75)
 
+
 class TestModelBuhlmannGradientSimple1(TestModelBuhlmannGradient):
     def runTest(self):
-        assert self.gradient1.gf_low == 0.3, "wrong gw_low : %s" % self.gradient1.gf_low
+        self.assertEqual(self.gradient1.gf_low, 0.3,
+                         "wrong gw_low : %s" % self.gradient1.gf_low)
+
 
 class TestModelBuhlmannGradientSimple2(TestModelBuhlmannGradient):
     def runTest(self):
-        assert self.gradient1.gf_high == 0.8, "wrong gw_high : %s" % self.gradient1.gf_high
+        self.assertEqual(self.gradient1.gf_high, 0.8,
+                         "wrong gw_high : %s" % self.gradient1.gf_high)
+
 
 class TestModelBuhlmannGradientSimple3(TestModelBuhlmannGradient):
     def runTest(self):
-        assert self.gradient1.gf_slope == 1.0, "wrong gw_slope : %s" % self.gradient1.gf_slope
+        self.assertEqual(self.gradient1.gf_slope, 1.0,
+                         "wrong gw_slope : %s" % self.gradient1.gf_slope)
+
 
 class TestModelBuhlmannGradientSimple4(TestModelBuhlmannGradient):
     def runTest(self):
-        assert self.gradient1.gf == 0.3, "wrong gw_low : %s" % self.gradient1.gf
+        self.assertEqual(self.gradient1.gf, 0.3,
+                         "wrong gw_low : %s" % self.gradient1.gf)
+
 
 class TestModelBuhlmannGradientSimple5(TestModelBuhlmannGradient):
     def runTest(self):
         self.gradient2.set_gf_slope_at_depth(12)
-        assert round(self.gradient2.gf_slope, 13) == -0.0333333333333, "wrong gw_slope : %s" % self.gradient2.gf_slope
+        self.assertEqual(round(self.gradient2.gf_slope, 13), -0.0333333333333,
+                         "wrong gw_slope : %s" % self.gradient2.gf_slope)
+
 
 class TestModelBuhlmannGradientSimple6(TestModelBuhlmannGradient):
     def runTest(self):
         self.gradient2.set_gf_slope_at_depth(6)
         self.gradient2.set_gf_at_depth(6)
-        assert self.gradient2.gf == 0.35, "wrong gw_low : %s" % self.gradient2.gf
+        self.assertEqual(self.gradient2.gf, 0.35,
+                         "wrong gw_low : %s" % self.gradient2.gf)
 
-if __name__ == "__main__":
+
+def main():
     import sys
     import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run (separated by space) [optionnal]')
+                        help='name of the tests to run '
+                             '(separated by space) [optionnal]')
     args = parser.parse_args()
     if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests, sys.modules[__name__])
+        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
+                                                         sys.modules[__name__])
     else:
         suite = unittest.findTestCases(sys.modules[__name__])
     unittest.TextTestRunner(verbosity=2).run(suite)
+
+if __name__ == "__main__":
+    main()

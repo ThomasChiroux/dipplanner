@@ -198,15 +198,15 @@ class Compartment(object):
         if self.old_seg_time is None:
             self.old_seg_time = seg_time
             self.const_exp_const_depth_he = (1 - math.exp(-self.k_he *
-                                                           float(seg_time)))
+                                                          float(seg_time)))
             self.const_exp_const_depth_n2 = (1 - math.exp(-self.k_n2 *
-                                                           float(seg_time)))
+                                                          float(seg_time)))
         elif self.old_seg_time != seg_time:
             self.old_seg_time = seg_time
             self.const_exp_const_depth_he = (1 - math.exp(-self.k_he *
-                                                           float(seg_time)))
+                                                          float(seg_time)))
             self.const_exp_const_depth_n2 = (1 - math.exp(-self.k_n2 *
-                                                           float(seg_time)))
+                                                          float(seg_time)))
 
         if pp_he_inspired < 0 or pp_n2_inspired < 0 or seg_time < 0:
             raise ModelStateException(

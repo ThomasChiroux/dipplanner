@@ -189,7 +189,7 @@ def calculate_pp_h2o_surf(temperature=20):
         raise ValueError("Temperature is too High")
 
     pressure_mm_hg = 10 ** (const_a - (const_b / (const_c +
-                                                 float(temperature))))
+                                                  float(temperature))))
     return pressure_mm_hg * mm_hg_to_bar
 
 

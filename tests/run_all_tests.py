@@ -58,4 +58,3 @@ if __name__ == '__main__':
         tb = traceback.format_tb(exceptionTraceback)
         for line in reversed(tb):
             sys.stderr.write(line)
-

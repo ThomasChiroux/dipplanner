@@ -18,7 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
 """
 Contains a Tank Class
 
@@ -99,7 +98,7 @@ class Tank(object):
     contains breathing Gas
     We provide proportion of N2, O2, He, calculates MOD and volumes during the
     dives
-    We can also (optionnaly) provide the type of tanks : volume and pressure
+    We can also (optionally) provide the type of tanks : volume and pressure
 
     """
 
@@ -108,37 +107,50 @@ class Tank(object):
                  mod=None, tank_vol=12.0, tank_pressure=200,
                  tank_rule="30b"):
         """Constructor for Tank class
+
         If nothing is provided, create a default 'Air' with 12l/200b tank
         and max_ppo2 to 1.6 (used to calculate mod)
         if mod not provided, mod is calculed based on max tolerable ppo2
 
-        Keyword arguments:
-        f_o2 -- Fraction of O2 in the gaz in % : between 0.0 and 1.0
-        f_he -- Fraction of He in the gaz in % : between 0.0 and 1.0
-        max_ppo2 -- sets the maximum ppo2 you want for this tank
-                    (default: settings.DEFAULT_MAX_PPO2)
-        mod -- Specify the mod you want.
-                if not provided, calculates the mod based on max_ppo2
-                if provided and not compatible with max_ppo2: raise InvalidMod
-        tank_vol -- Volume of the tank in liter
-        Tank_pressure -- Pressure of the tank, in bar
-        tank_rule -- rule for warning in the tank consumption
+        *Keyword arguments:*
+            :f_o2: (float) -- Fraction of O2 in the gaz in %
+                              value between 0.0 and 1.0
+            :f_he: (float) -- Fraction of He in the gaz in %
+                              value between 0.0 and 1.0
+            :max_ppo2: (float) -- sets the maximum ppo2 you want for this tank
+                                  (default: settings.DEFAULT_MAX_PPO2)
+            :mod: (float) -- Specify the mod you want.
+                    * if not provided, calculates the mod based on max_ppo2
+
+                    * if provided and not compatible
+                      with max_ppo2: raise InvalidMod
+
+            :tank_vol: (float) -- Volume of the tank in liter
+            :tank_pressure: (float) -- Pressure of the tank, in bar
+            :tank_rule: (float) -- rule for warning in the tank consumption
                      must be either :
+
                      * xxxb (ex: 50b means 50 bar minimum at
                              the end of the dive)
-                     * 1/x (ex : 1/3 for rule of thirds:
-                              1/3 for way in,
-                              1/3 for way out,
-                              1/3 remains at the end of the dive)
-                           ( ex2: 1/6 rule: 1/6 way IN,
-                                  1/6 wau OUT, 2/3 remains)
-        Returns:
-        <nothing>
+                     * 1/x
+                        * ex : 1/3 for rule of thirds:
+                            * 1/3 for way in,
+                            * 1/3 for way out,
+                            * 1/3 remains at the end of the dive)
+                        * ex2: 1/6 rule:
+                            * 1/6 way IN,
+                            * 1/6 wau OUT,
+                            * 2/3 remains
 
-        Raise:
-        InvalidGas -- see validate()
-        InvalidMod -- if mod > max mod based on max_ppo2 and see validate()
-        InvalidTank -- see validate()
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+
+            * InvalidGas -- see validate()
+            * InvalidMod -- if mod > max mod based on max_ppo2 and see validate()
+            * InvalidTank -- see validate()
+
         """
         #initiate class logger
         self.logger = logging.getLogger("dipplanner.tank.Tank")
@@ -193,21 +205,22 @@ class Tank(object):
         on Van der waals equation:
         (P+n2.a/V2).(V-n.b)=n.R.T
 
-        Keyword arguments:
-        tank_vol -- Volume of the tank in liter
-                    optionnal : if not provided, use self.tank_vol
-        tank_pressure -- Pressure of the tank in bar
-                         optionnal : if not provided, use self.tank_pressure
-        f_o2 -- fraction of O2 in the gas
-                optionnal : if not provided, use self.f_o2
-        f_he -- fraction of He in the gas
-                optionnal : if not provided, use self.f_he
+        *Keyword arguments:*
+            :tank_vol: (float) -- Volume of the tank in liter
+                    optional : if not provided, use self.tank_vol
+            :tank_pressure: (float) -- Pressure of the tank in bar
+                    optional : if not provided, use self.tank_pressure
+            :f_o2: (float) -- fraction of O2 in the gas
+                    optional : if not provided, use self.f_o2
+            :f_he: (float) -- fraction of He in the gas
+                    optional : if not provided, use self.f_he
 
-        Returns:
-        float -- total gas volume of the tank in liter
+        *Returns:*
+            float -- total gas volume of the tank in liter
 
-        Raise:
-        <nothing>
+        *Raise:*
+            <nothing>
+
         """
         # handle parameters
         if tank_vol is None:
@@ -325,12 +338,12 @@ class Tank(object):
         """calculate and returns mod for a given ppo2 based on this tank info
         result in meter
 
-        Keyword arguments:
-        max_ppo2 -- maximum ppo2 accepted (float).
-                    Any value accepted, but should be > 0.0
+        *Keyword arguments:*
+            :max_ppo2: -- maximum ppo2 accepted (float).
+                Any value accepted, but should be > 0.0
 
-        Returns:
-        Integer : Maximum Operating Depth in meter
+        *Returns:*
+            integer -- Maximum Operating Depth in meter
 
         """
         return max(int(10 * (float(max_ppo2) / self.f_o2) - 10), 0)
@@ -339,19 +352,19 @@ class Tank(object):
         """Test the validity of the tank informations inside this object
         if validity check fails raise an Exception 'InvalidTank'
 
-        Keyword arguments:
-        <nothing>
+        *Keyword arguments:*
+            <nothing>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        InvalidGas -- When proportions of gas exceed
+        *Raise:*
+            * InvalidGas -- When proportions of gas exceed
                       100% for example (or negatives values)
-        InvalidMod -- if mod > max mod based on max_ppo2 or ABSOLUTE_MAX_MOD
+            * InvalidMod -- if mod > max mod based on max_ppo2 or ABSOLUTE_MAX_MOD
                       ABSOLUTE_MAX_MOD is a global settings which can not be
                       exceeded.
-        InvalidTank -- when pressure or tank size exceed maximum values or are
+            * InvalidTank -- when pressure or tank size exceed maximum values or are
                        incorrect (like negatives) values
         """
         if self.f_o2 + self.f_he > 1:

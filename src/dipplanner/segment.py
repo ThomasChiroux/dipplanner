@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
+
 """Segment classes
 A segment is a portion of a dive in the same depth (depth + duration)
 """
@@ -51,35 +51,38 @@ class UnauthorizedMod(DipplannerException):
 class Segment(object):
     """Base class for all types of segments
 
-    Attributes:
-    type -- type of segment
-            types of segments can be :
-            const = "Constant Depth"
-            ascent = "Ascent"
-            descent = "Descent"
-            deco = "Decompression"
-            waypoint = "Waypoint"
-            surf = "Surface"
-    in_use -- boolean : True if segment is used
-    depth -- float : depth of this segment, in meter
-    time -- duration of this segment, in seconds
-    run_time -- runtime in profile
-    setpoint -- setpoint for CCR
-    tank -- refer to tank object used in this segment
+    *Attributes:*
+
+        * type (str) -- type of segment
+
+          types of segments can be :
+
+          * const = "Constant Depth"
+          * ascent = "Ascent"
+          * descent = "Descent"
+          * deco = "Decompression"
+          * waypoint = "Waypoint"
+          * surf = "Surface"
+        * in_use (boolean) -- True if segment is used
+        * depth (float) -- depth of this segment, in meter
+        * time (float) -- duration of this segment, in seconds
+        * run_time (float) -- runtime in profile
+        * setpoint (float) -- setpoint for CCR
+        * tank (Tank) -- refer to tank object used in this segment
     """
     types = ['const', 'ascent', 'descent', 'deco', 'waypoint', 'surf']
 
     def __init__(self):
         """constructor for Segment base class, just defines all the parameters
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        <nothing>
+        *Raise:*
+            <nothing>
         """
         #initiate class logger
         self.logger = logging.getLogger("dipplanner.segment.Segment")
@@ -94,7 +97,19 @@ class Segment(object):
         self.tank = None  # tank used for this segment
 
     def __repr__(self):
-        """Returns a string representing the actual segment"""
+        """Returns a string representing the actual segment
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- representation of the segment in the form:
+            "   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m"
+
+        *Raise:*
+            <nothing>
+
+        """
         return "%8s: at %3dm for %s [RT:%s], on %s,  SP:%s, END:%im" % (
             self.type.upper(),
             self.depth,
@@ -105,18 +120,50 @@ class Segment(object):
             self.get_end())
 
     def __str__(self):
-        """Return a human readable name of the segment"""
+        """Return a human readable name of the segment
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- representation of the segment in the form:
+            (see __repr__)
+
+        *Raise:*
+            <nothing>
+        """
         return self.__repr__()
 
     def __unicode__(self):
-        """Return a human readable name of the segment in unicode"""
+        """Return a human readable name of the segment in unicode
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- representation of the segment in the form:
+            (see __repr__)
+
+        *Raise:*
+            <nothing>
+        """
         return u"%s" % self.__repr__()
 
     def check(self):
         """check if it's a valid segment
         Should be executed before calculating dives
 
-        Can raise DiveExceptions
+        the check does not return anything if nok, but raises Exceptions
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            True (bool) -- if check is ok
+
+        *Raise:*
+            <DiveExceptions>
+
         """
         if self.setpoint == 0:
             # check MOD only if OC
@@ -124,80 +171,84 @@ class Segment(object):
             self.check_min_od()
         else:
             self.check_mod(self.setpoint)
+        return True
 
     def check_mod(self,  max_ppo2=None):
         """checks the mod for this segment according to the used tank.
 
-        Keyword arguments:
-        max_ppo2 -- float - max tolerated ppo2
+        *Keyword arguments:*
+            :max_ppo2: (float) -- max tolerated ppo2
 
-        Returns:
-        <nothing>
+        *Returns:*
+            True (bool) -- if check is ok
 
-        Raise:
-        UnauthorizedMod -- if segments goes below max mod or upper min mod
+        *Raise:*
+            UnauthorizedMod -- if segments goes below max mod or upper min mod
         """
         if self.depth > self.tank.get_mod(max_ppo2):
             raise UnauthorizedMod("depth is exceeding the maximum MOD")
+        return True
 
     def check_min_od(self):
         """checks the minimum od for this segment according to the used tank.
         (hypoxic cases)
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            True (bool) -- if check is ok
 
-        Raise:
-        UnauthorizedMod -- if segments goes below max mod or upper min mod
+        *Raise:*
+            UnauthorizedMod -- if segments goes below max mod or upper min mod
         """
         if self.depth < self.tank.get_min_od():  # checks mini operating depth
             raise UnauthorizedMod("depth is too low for the minimum MOD")
+        return True
 
     def get_time_str(self):
         """returns segment time in the form MMM:SS
 
-        Keyword Arguments:
-        <none>
+        *Keyword Arguments:*
+            <none>
 
-        Returns:
-        string -- segment time in the form MMM:SS
+        *Returns:*
+            string -- segment time in the form MMM:SS
 
-        Raise:
-        <nothing>
+        *Raise:*
+            <nothing>
         """
         return seconds_to_mmss(self.time)
 
     def get_run_time_str(self):
         """returns runtime in the form MMM:SS
 
-        Keyword Arguments:
-        <none>
+        *Keyword Arguments:*
+            <none>
 
-        Returns:
-        string -- segment time in the form MMM:SS
+        *Returns:*
+            string -- segment time in the form MMM:SS
 
-        Raise:
-        <nothing>
+        *Raise:*
+            <nothing>
         """
         return seconds_to_mmss(self.run_time)
 
     def get_p_absolute(self, method=settings.METHOD_FOR_DEPTH_CALCULATION):
         """returns the absolute pression in bar
         (1atm = 1ATA = 1.01325 bar = 14.70psi)
+
         Simple method : 10m = +1 bar
         Complex method : use real density of water, T°, etc...
 
-        Keyword arguments:
-        method -- 'simple' or 'complex'. simple is default
+        *Keyword arguments:*
+            method -- 'simple' or 'complex'
 
-        Returns:
-        a float indicating the absolute pressure in bar
+        *Returns:*
+            float -- indicating the absolute pressure in bar
 
-        Raise:
-        ValueError -- when providing a bad method
+        *Raise:*
+            ValueError -- when providing a bad method
         """
         if method == 'simple':
             return float(self.depth) / 10 + settings.AMBIANT_PRESSURE_SURFACE
@@ -210,18 +261,21 @@ class Segment(object):
     def get_end(self):
         """Calculates and returns E.N.D :
         Equivalent Narcosis Depth
+
         Instead of Mvplan, it uses a 'calculation method' based on
         narcosis effet of all gas used, assuming there is no trace of
         other gases (like argon) in the breathing gas, but compare the narcotic
         effect with surface gas, wich is 'air' and contains
         a small amount of argon
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        Integer : Equivalient Narcosis Depth in meter
+        *Returns:*
+            integer -- Equivalent Narcosis Depth in meter
 
+        *Raise:*
+            <nothing>
         """
         #TODO: refactor with get_end_for_given_depth in Tank
         p_absolute = self.get_p_absolute()
@@ -273,7 +327,10 @@ class Segment(object):
         return end
 
     def gas_used(self):
-        """returns the quantity (in liter) of gas used for this segment"""
+        """returns the quantity (in liter) of gas used for this segment
+
+        (this method is empty)
+        """
         pass
 
 
@@ -284,19 +341,20 @@ class SegmentDive(Segment):
         """Constructor for SegmentDive class.
         Look at base class for more explanations
 
-        Keyword arguments:
-        depth -- in meter, the (constant) depth for this segment
-        time -- in second, duration of this segment
-        tank -- object instance of Tank class :
-                describe the tank used in this segment
-        setpoint -- float, for CCR, setpoint used for this segment
-                    for OC : setpoint should be zero
+        *Keyword arguments:*
+            :depth: (float) -- in meter, the (constant) depth for this segment
+            :time: (float) -- in second, duration of this segment
+            :tank: (Tank) -- object instance of Tank class :
+                             describe the tank used in this segment
+            :setpoint: (float) -- for CCR, setpoint used for this segment
+                                  for OC : setpoint should be zero
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        UnauthorizedMod -- if depth is incompatible with either min or max mod
+        *Raise:*
+            UnauthorizedMod -- if depth is incompatible
+                               with either min or max mod
 
         """
         Segment.__init__(self)
@@ -317,11 +375,11 @@ class SegmentDive(Segment):
         """calculates returns the quantity (in liter)
         of gas used for this segment
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        float, in liter, quantity of gas used
+        *Returns:*
+            float -- in liter, quantity of gas used
 
         """
         if self.setpoint > 0:
@@ -342,23 +400,25 @@ class SegmentDeco(Segment):
         Look at base class for more explanations
 
         In deco segment, we also have to manage some new parameters :
-        gf_used : which gradient factor is used
-        control_compartment : who is the control compartement
-        mv_max : max M-value for the compartment
 
-        Keyword arguments:
-        depth -- in meter, the (constant) depth for this segment
-        time -- in second, duration of this segment
-        tank -- object instance of Tank class :
-                describe the tank used in this segment
-        setpoint -- float, for CCR, setpoint used for this segment
-                    for OC : setpoint should be zero
+        * gf_used : which gradient factor is used
+        * control_compartment : who is the control compartement
+        * mv_max : max M-value for the compartment
 
-        Returns:
-        <nothing>
+        *Keyword arguments:*
+            :depth: (float) -- in meter, the (constant) depth for this segment
+            :time: (float) -- in second, duration of this segment
+            :tank: (Tank) -- object instance of Tank class :
+                             describe the tank used in this segment
+            :setpoint: (float) -- for CCR, setpoint used for this segment
+                                  for OC : setpoint should be zero
 
-        Raise:
-        UnauthorizedMod -- if depth is incompatible with either min or max mod
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            UnauthorizedMod -- if depth is incompatible
+                               with either min or max mod
 
         """
         Segment.__init__(self)
@@ -384,11 +444,11 @@ class SegmentDeco(Segment):
         """calculates returns the quantity (in liter)
         of gas used for this segment
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        float, in liter, quantity of gas used
+        *Returns:*
+            float -- in liter, quantity of gas used
 
         """
         if self.setpoint > 0:
@@ -412,20 +472,23 @@ class SegmentAscDesc(Segment):
         The comparaison between start and end depth determine if asc or desc
         rate is given in m/min
 
-        Keyword arguments:
-        start_depth -- in meter, the starting depth for this segment
-        end_depth -- in meter, the ending depth for this segment
-        rate -- in m/s, rate of ascending or descending
-        tank -- object instance of Tank class :
-                describe the tank used in this segment
-        setpoint -- float, for CCR, setpoint used for this segment
-                    for OC : setpoint should be zero
+        *Keyword arguments:*
+            :start_depth: (float) -- in meter, the starting depth
+                                     for this segment
+            :end_depth: (float) -- in meter, the ending depth
+                                     for this segment
+            :rate: (float) -- in m/s, rate of ascending or descending
+            :tank: (Tank) -- object instance of Tank class :
+                             describe the tank used in this segment
+            :setpoint: (float) -- for CCR, setpoint used for this segment
+                                  for OC : setpoint should be zero
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        UnauthorizedMod -- if depth is incompatible with either min or max mod
+        *Raise:*
+            UnauthorizedMod -- if depth is incompatible
+                               with either min or max mod
 
         """
         Segment.__init__(self)
@@ -459,14 +522,14 @@ class SegmentAscDesc(Segment):
     def check_mod(self, max_ppo2=None):
         """checks the mod for this segment according to the used tank.
 
-        Keyword arguments:
-        max_ppo2 -- float - max tolerated ppo2
+        *Keyword arguments:*
+            :max_ppo2: (float) -- max tolerated ppo2
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        UnauthorizedMod -- if segments goes below max mod or upper min mod
+        *Raise:*
+            UnauthorizedMod -- if segments goes below max mod or upper min mod
 
         """
         if self.type == 'ascent':
@@ -481,14 +544,14 @@ class SegmentAscDesc(Segment):
         """checks the minimum od for this segment according to the used tank.
         (hypoxic cases)
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        UnauthorizedMod -- if segments goes below max mod or upper min mod
+        *Raise:*
+            UnauthorizedMod -- if segments goes below max mod or upper min mod
         """
         if self.type == 'ascent':
             min_depth = self.end_depth
@@ -505,11 +568,11 @@ class SegmentAscDesc(Segment):
         Because the rate is the same during all the segment, we can use the
         consumption at the average depth of the segment
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        float, in liter, quantity of gas used
+        *Returns:*
+            float -- in liter, quantity of gas used
 
         """
         if self.setpoint > 0:

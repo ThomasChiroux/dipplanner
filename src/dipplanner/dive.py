@@ -18,11 +18,11 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
 """dive class module
 
-Contains:
-Dive -- class
+Each Dive represent one dive (and only one)
+For successive dives, it is possible to provide the parameters of the
+previous dive in order to calculate the next one.
 """
 
 __authors__ = [
@@ -104,8 +104,8 @@ class Dive(object):
     dive segments are processed then calls ascend(0.0) to
     return to the surface.
 
-    The Model can be either null in which case a new model is created,
-    or can be an existing model with tissue loadings.
+    The previous_profile (Model) can be either null in which case a
+    new model is created, or can be an existing model with tissue loadings.
 
     Gas switching is done on the final ascent if OC deco or
     bailout is specified.
@@ -113,24 +113,25 @@ class Dive(object):
     Outputs profile to a List of dive segments
 
     Attributes:
-    input_segments -- (list) Stores enabled input dive segment objects
-    output_segments -- (list) Stores output segments produced by this class
-    tanks -- (list) Stores enabled dive tank objects
-    current_tank -- current tank object
-    current_depth -- current dive depth
-    ambiant_pressure -- (current) ambiant pressure
-    current_f_he -- current gas fraction of He
-    current_f_n2 -- current gas fraction of N2
-    current_f_o2 -- current gas fraction of O2
-    model -- model used for this dive
-    run_time -- runTime
-    pp_o2 -- CCR ppO2, if OC : 0.0
-    is_closed_circuit -- Flag to store CC or OC
-    in_final_ascent -- flag for final ascent
-    is_repetative_dive -- Flag for repetative dives
-    surface_interval -- for surf. int. in seconds
-    no_flight_time_value -- calculated no flight time
-    metadata -- description for the dive
+
+    * input_segments -- (list) Stores enabled input dive segment objects
+    * output_segments -- (list) Stores output segments produced by this class
+    * tanks -- (list) Stores enabled dive tank objects
+    * current_tank -- current tank object
+    * current_depth -- current dive depth
+    * ambiant_pressure -- (current) ambiant pressure
+    * current_f_he -- current gas fraction of He
+    * current_f_n2 -- current gas fraction of N2
+    * current_f_o2 -- current gas fraction of O2
+    * model -- model used for this dive
+    * run_time -- runTime
+    * pp_o2 -- CCR ppO2, if OC : 0.0
+    * is_closed_circuit -- Flag to store CC or OC
+    * in_final_ascent -- flag for final ascent
+    * is_repetative_dive -- Flag for repetative dives
+    * surface_interval -- for surf. int. in seconds
+    * no_flight_time_value -- calculated no flight time
+    * metadata -- description for the dive
     """
 
     def __init__(self, known_segments, known_tanks, previous_profile=None):
@@ -140,16 +141,16 @@ class Dive(object):
         (profile will create one for you)
         For repetative dives, instanciate profile class with the previous model
 
-        Keyword Arguments:
-        known_segments -- list of input segments
-        known_tanks -- list of tanks for this dive
-        model -- model object
+        *Keyword Arguments:*
+            :known_segments: -- list of input segments
+            :known_tanks: -- list of tanks for this dive
+            :previous_profile: (Model) -- model object of the precedent dive
 
         Return:
-        <nothing>
+            <nothing>
 
         .. note:: the constructor should not fail. If something if wrong, it
-                  MUST still instanciate itself, with errors in his own object
+                  MUST still instantiate itself, with errors in his own object
         """
 
         #initiate class logger
@@ -215,32 +216,74 @@ class Dive(object):
     def __repr__(self):
         """Returns a string representing the result of the dive using default
            template
+
+        *Keyword Arguments:*
+            <none>
+
+        *Return:*
+            str -- a string with the result of the calculation of the dives
+                   using the default template
+        *Raise:*
+            <nothing>
         """
         return self.output("default.tpl")
 
     def __str__(self):
-        """Return a human readable name of the segment"""
+        """Return a human readable name of the segment
+
+        *Keyword Arguments:*
+            <none>
+
+        *Return:*
+            str -- a string with the result of the calculation of the dives
+                   using the default template
+        *Raise:*
+            <nothing>
+        """
         return self.__repr__()
 
     def __unicode__(self):
-        """Return a human readable name of the segment in unicode"""
+        """Return a human readable name of the segment in unicode
+
+        *Keyword Arguments:*
+            <none>
+
+        *Return:*
+            ustr -- an unicode string with the result of the calculation of
+                    the dives using the default template
+
+        *Raise:*
+            <nothing>
+        """
         return u"%s" % self.__repr__()
 
     def __cmp__(self, otherdive):
         """Compare a dive to another dive, based on run_time
 
-        Keyword arguments:
-        otherdive -- another dive object
+        *Keyword arguments:*
+            otherdive (Dive) -- another dive object
 
-        Returns:
-        Integer -- result of cmp()
+        *Returns:*
+            Integer -- result of cmp()
 
+        *Raise:*
+            <nothing>
         """
         return cmp(self.run_time, otherdive.run_time)
 
     def output(self, template=None):
         """Returns the dive profile calculated, using the template given
-        in settings or command lines
+        in settings or command lines.
+        (and not only the default template)
+
+        *Keyword Arguments:*
+            <none>
+
+        *Return:*
+            str -- a string with the result of the calculation of the dives
+                   using the choosen template
+        *Raise:*
+            <nothing>
         """
         env = Environment(loader=PackageLoader('dipplanner', 'templates'))
         if template is None:
@@ -255,14 +298,14 @@ class Dive(object):
         """Conducts a surface interval
         by performing a constant depth calculation on air at zero meters
 
-        Keyword Arguments:
-        time -- duration of the interval, in seconds
+        *Keyword Arguments:*
+            :time: (int) -- duration of the interval, in seconds
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        <Exceptions from model>
+        *Raise:*
+            <Exceptions from model>
 
         """
         try:
@@ -278,17 +321,16 @@ class Dive(object):
             self.refill_tanks()
 
     def get_surface_interval(self):
-        """Returns surface interval in
-        mm:ss format
+        """Returns surface interval in mm:ss format
 
-        Keyword Arguments:
-        <nothing>
+        *Keyword Arguments:*
+            <nothing>
 
-        Returns:
-        str -- surface interval time in mmm:ss format
+        *Returns:*
+            str -- surface interval time in mmm:ss format
 
-        Raise:
-        <nothing>
+        *Raise:*
+            <nothing>
         """
         return seconds_to_mmss(self.surface_interval)
 
@@ -296,16 +338,15 @@ class Dive(object):
         """refile all tanks defined in this dive
         it is used for repetitive dives
 
-        Keyword Arguments:
-        <none>
+        *Keyword Arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        <nothing>
+        *Raise:*
+            <nothing>
         """
-        #TODO: options in arg and config: 'automatic tank refill between dives'
         for tank in self.tanks:
             tank.refill()
 
@@ -313,13 +354,15 @@ class Dive(object):
         """Returns true if there are loaded dive segments
         else false means there is nothing to process
 
-        Keyword Arguments:
-        <none>
+        *Keyword Arguments:*
+            <none>
 
-        Returns:
-        True -- if there is at least one input dive segment to process
-        False -- if there is no dive segment to process
+        *Returns:*
+            True (bool) -- if there is at least one input dive segment to process
+            False (bool) -- if there is no dive segment to process
 
+        *Raise:*
+            <nothing>
         """
         if len(self.input_segments) > 0:
             return True
@@ -330,6 +373,15 @@ class Dive(object):
         """Call do_dive, and handle exceptions internally : do not raise any
         "dive related" exception : add the exception inside
         self.dive_exceptions instead.
+
+        *Keyword Arguments:*
+            <none>
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
         """
         try:
             self.do_dive()
@@ -364,16 +416,16 @@ class Dive(object):
     def do_dive(self):
         """Process the dive
 
-        Keyword Arguments:
-        <none>
+        *Keyword Arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Return:*
+            <nothing>
 
-        Raise:
-        NothingToProcess -- if there is no input segment to process
-        +
-        <Exceptions from model>
+        *Raise:*
+            NothingToProcess -- if there is no input segment to process
+            or
+            <Exceptions from model>
 
         """
         if self.is_dive_segments() is False:
@@ -584,26 +636,49 @@ class Dive(object):
         """Returns no flight time (if calculated) in hhmmss format
         instead of an int in seconds
 
-        This method does not calculated no_flight_time
+        .. note::
 
-        Keyword Arguments:
-        <none>
+           This method does not calculate no_flight_time
+           you need to call no_flight_time() or
+           no_flight_time_without_exception() before.
+
+        *Keyword Arguments:*
+            <none>
 
         Returns:
-        str -- "hh:mm:ss" no flight time
+            str -- "hh:mm:ss" no flight time
+            str -- "" if no flight time is not calculated
         """
         if self.no_flight_time_value is not None:
             return seconds_to_hhmmss(self.no_flight_time_value)
         else:
             return ""
 
-    def no_flight_time_without_exception(self):
+    def no_flight_time_without_exception(self,
+                                         altitude=settings.FLIGHT_ALTITUDE,
+                                         tank=None):
         """Call no_flight_time, and handle exceptions internally:
         do not raise any "dive related" exception: add the
         exception inside self.dive_exceptions instead.
+
+        *Keyword Arguments:*
+            :altitude: (int) -- in meter : altitude used for the calculation
+            :flight_ascent_rate: (float) -- in m/s
+            :tank: (Tank) -- optionnal:
+                    it is possible to provide a tank while calling
+                    no_flight_time to force "no flight deco" with
+                    another mix than air.
+                    In this case, we will 'consume' the tank
+                    When the tank is empty, it automatically switch to air
+
+        *Returns:*
+            int -- no fight time in seconds
+
+        *Raise:*
+            <nothing>
         """
         try:
-            self.no_flight_time()
+            self.no_flight_time(altitude, tank)
         except ModelStateException as exc:
             self.dive_exceptions.append(exc)
         except ModelException as exc:
@@ -638,22 +713,22 @@ class Dive(object):
         current depth (which is 0m). The stop time represents the no flight
         time
 
-        Keyword Arguments:
-        altitude - int - in meter : altitude used for the calculation
-        flight_ascent_rate - float - in m/s
-        tank - Tank - optional :
-            posibily to provide a tank while calling
-            no_flight_time to force "no flight deco" with
-            another mix than air.
-            In this case, we will 'consume' the tank
-            When the tank is empty, it automaticaly switch to air
+        *Keyword Arguments:*
+            :altitude: (int) -- in meter : altitude used for the calculation
+            :flight_ascent_rate: (float) -- in m/s
+            :tank: (Tank) -- optionnal:
+                    it is possible to provide a tank while calling
+                    no_flight_time to force "no flight deco" with
+                    another mix than air.
+                    In this case, we will 'consume' the tank
+                    When the tank is empty, it automatically switch to air
 
-        Returns:
-        int - no fight time in seconds
+        *Returns:*
+            int -- no fight time in seconds
 
-        Raise:
-        InfiniteDeco - if the no flight time can not achieve enough
-                       decompression to be able to go to give altitude
+        *Raise:*
+            InfiniteDeco - if the no flight time can not achieve enough
+                           decompression to be able to go to give altitude
         """
         no_flight_time = 0
         deco_uses_tank = False  # set to true when deco is using a tank
@@ -711,8 +786,10 @@ class Dive(object):
         If inFinalAscent then gradient factors start changing,
         and automatic gas selection is made.
 
-        Keyword Arguments:
-        target_depth -- in meter, target depth for the ascend
+        This method is called by do_dive()
+
+        *Keyword Arguments:*
+            :target_depth: (float) -- in meter, target depth for the ascend
 
         Returns:
         <nothing>
@@ -939,14 +1016,14 @@ class Dive(object):
         """Estimate gas consumption for all output segments
         and set this into the respective gas objects
 
-        Keyword Arguments:
-        <none>
+        *Keyword Arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        <Exceptions from tank>
+        *Raise:*
+            <Exceptions from tank>
 
         """
         for seg in self.output_segments:
@@ -956,14 +1033,15 @@ class Dive(object):
         """Select appropriate deco gas for the depth specified
         Returns true if a gas switch occured
 
-        Keyword Arguments:
-        depth -- target depth to make the choice
+        *Keyword Arguments:*
+            :depth: (float) -- target depth to make the choice
 
-        Returns:
-        True -- if gas swich occured, False if not
+        *Returns:*
+            True -- if gas swich occured
+            False -- if no gas switch occured
 
-        Raise:
-        <Exceptions from tank>
+        *Raise:*
+            <Exceptions from tank>
 
         """
         gas_switch = False

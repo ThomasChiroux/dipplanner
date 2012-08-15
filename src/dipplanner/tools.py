@@ -145,14 +145,14 @@ def depth_to_pressure(depth):
 
 
 def pressure_to_depth(pressure):
-    """Calculates depth based on give pressure using a more complex
+    """calculates depth based on give pressure using a more complex
     method than only *10
 
-    Keyword Arguments:
-    pressure - float in bar
+    *Keyword Arguments:*
+        :pressure: - float in bar
 
-    Returns:
-    int - depth in meter
+    *Returns:*
+        int - depth in meter
 
     """
     if settings.METHOD_FOR_DEPTH_CALCULATION == 'complex':

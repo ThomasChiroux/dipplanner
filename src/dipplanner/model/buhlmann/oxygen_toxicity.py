@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
+
 """Oxygen Toxicity model
 """
 
@@ -33,11 +33,12 @@ import logging
 class OxTox(object):
     """Defines a Oxygen Toxicity model
 
-    Attributes:
-    cns -- central nervous system toxicity
+    *Attributes:*
+
+    :cns: (float) -- central nervous system toxicity
         (see http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms)
-    otu -- Oxygen toxicity Units
-    max_ox -- maximum ppo2
+    :otu: (float- -- Oxygen toxicity Units
+    :max_ox: (float) -- maximum ppo2
 
     """
 

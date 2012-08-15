@@ -55,8 +55,9 @@
 <div class="section" id="module-dipplanner.dive">
 <span id="dive"></span><h2>dive<a class="headerlink" href="#module-dipplanner.dive" title="Permalink to this headline">¶</a></h2>
 <p>dive class module</p>
-<p>Contains:
-Dive &#8211; class</p>
+<p>Each Dive represent one dive (and only one)
+For successive dives, it is possible to provide the parameters of the
+previous dive in order to calculate the next one.</p>
 <dl class="exception">
 <dt id="dipplanner.dive.NothingToProcess">
 <em class="property">exception </em><tt class="descclassname">dipplanner.dive.</tt><tt class="descname">NothingToProcess</tt><big>(</big><em>description=''</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#NothingToProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.NothingToProcess" title="Permalink to this definition">¶</a></dt>
@@ -84,6 +85,20 @@ Dive &#8211; class</p>
 <dt id="dipplanner.dive.NothingToProcess.__repr__">
 <tt class="descname">__repr__</tt><a class="headerlink" href="#dipplanner.dive.NothingToProcess.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.dive.NothingToProcess.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.dive.NothingToProcess.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -118,6 +133,20 @@ In this case, it can not continue</p>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="dipplanner.dive.InstanciationError.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.dive.InstanciationError.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="exception">
@@ -147,6 +176,20 @@ In this case, it can not continue</p>
 <dt id="dipplanner.dive.ProcessingError.__repr__">
 <tt class="descname">__repr__</tt><a class="headerlink" href="#dipplanner.dive.ProcessingError.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.dive.ProcessingError.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.dive.ProcessingError.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -180,6 +223,20 @@ In this case, it can not continue</p>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="dipplanner.dive.InfiniteDeco.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.dive.InfiniteDeco.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -189,30 +246,32 @@ In this case, it can not continue</p>
 Iterates through dive segments updating the Model. When all
 dive segments are processed then calls ascend(0.0) to
 return to the surface.</p>
-<p>The Model can be either null in which case a new model is created,
-or can be an existing model with tissue loadings.</p>
+<p>The previous_profile (Model) can be either null in which case a
+new model is created, or can be an existing model with tissue loadings.</p>
 <p>Gas switching is done on the final ascent if OC deco or
 bailout is specified.</p>
 <p>Outputs profile to a List of dive segments</p>
-<p>Attributes:
-input_segments &#8211; (list) Stores enabled input dive segment objects
-output_segments &#8211; (list) Stores output segments produced by this class
-tanks &#8211; (list) Stores enabled dive tank objects
-current_tank &#8211; current tank object
-current_depth &#8211; current dive depth
-ambiant_pressure &#8211; (current) ambiant pressure
-current_f_he &#8211; current gas fraction of He
-current_f_n2 &#8211; current gas fraction of N2
-current_f_o2 &#8211; current gas fraction of O2
-model &#8211; model used for this dive
-run_time &#8211; runTime
-pp_o2 &#8211; CCR ppO2, if OC : 0.0
-is_closed_circuit &#8211; Flag to store CC or OC
-in_final_ascent &#8211; flag for final ascent
-is_repetative_dive &#8211; Flag for repetative dives
-surface_interval &#8211; for surf. int. in seconds
-no_flight_time_value &#8211; calculated no flight time
-metadata &#8211; description for the dive</p>
+<p>Attributes:</p>
+<ul class="simple">
+<li>input_segments &#8211; (list) Stores enabled input dive segment objects</li>
+<li>output_segments &#8211; (list) Stores output segments produced by this class</li>
+<li>tanks &#8211; (list) Stores enabled dive tank objects</li>
+<li>current_tank &#8211; current tank object</li>
+<li>current_depth &#8211; current dive depth</li>
+<li>ambiant_pressure &#8211; (current) ambiant pressure</li>
+<li>current_f_he &#8211; current gas fraction of He</li>
+<li>current_f_n2 &#8211; current gas fraction of N2</li>
+<li>current_f_o2 &#8211; current gas fraction of O2</li>
+<li>model &#8211; model used for this dive</li>
+<li>run_time &#8211; runTime</li>
+<li>pp_o2 &#8211; CCR ppO2, if OC : 0.0</li>
+<li>is_closed_circuit &#8211; Flag to store CC or OC</li>
+<li>in_final_ascent &#8211; flag for final ascent</li>
+<li>is_repetative_dive &#8211; Flag for repetative dives</li>
+<li>surface_interval &#8211; for surf. int. in seconds</li>
+<li>no_flight_time_value &#8211; calculated no flight time</li>
+<li>metadata &#8211; description for the dive</li>
+</ul>
 <dl class="method">
 <dt id="dipplanner.dive.Dive.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>known_segments</em>, <em>known_tanks</em>, <em>previous_profile=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.__init__" title="Permalink to this definition">¶</a></dt>
@@ -220,16 +279,29 @@ metadata &#8211; description for the dive</p>
 <p>For fist dive, instanciate the profile class with no model
 (profile will create one for you)
 For repetative dives, instanciate profile class with the previous model</p>
-<p>Keyword Arguments:
-known_segments &#8211; list of input segments
-known_tanks &#8211; list of tanks for this dive
-model &#8211; model object</p>
-<p>Return:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">known_segments:</th><td class="field-body">&#8211; list of input segments</td>
+</tr>
+<tr class="field-even field"><th class="field-name">known_tanks:</th><td class="field-body">&#8211; list of tanks for this dive</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">previous_profile:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">(Model) &#8211; model object of the precedent dive</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>Return:</dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">the constructor should not fail. If something if wrong, it
-MUST still instanciate itself, with errors in his own object</p>
+MUST still instantiate itself, with errors in his own object</p>
 </div>
 </dd></dl>
 
@@ -238,29 +310,70 @@ MUST still instanciate itself, with errors in his own object</p>
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string representing the result of the dive using default
 template</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd><dl class="first last docutils">
+<dt>str &#8211; a string with the result of the calculation of the dives</dt>
+<dd>using the default template</dd>
+</dl>
+</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.dive.Dive.__unicode__">
 <tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.__unicode__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.__unicode__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a human readable name of the segment in unicode</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd><dl class="first last docutils">
+<dt>ustr &#8211; an unicode string with the result of the calculation of</dt>
+<dd>the dives using the default template</dd>
+</dl>
+</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.dive.Dive.__cmp__">
 <tt class="descname">__cmp__</tt><big>(</big><em>otherdive</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.__cmp__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.__cmp__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare a dive to another dive, based on run_time</p>
-<p>Keyword arguments:
-otherdive &#8211; another dive object</p>
-<p>Returns:
-Integer &#8211; result of cmp()</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>otherdive (Dive) &#8211; another dive object</dd>
+<dt><em>Returns:</em></dt>
+<dd>Integer &#8211; result of cmp()</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.dive.Dive.output">
 <tt class="descname">output</tt><big>(</big><em>template=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the dive profile calculated, using the template given
-in settings or command lines</p>
+in settings or command lines.
+(and not only the default template)</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd><dl class="first last docutils">
+<dt>str &#8211; a string with the result of the calculation of the dives</dt>
+<dd>using the choosen template</dd>
+</dl>
+</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -268,25 +381,36 @@ in settings or command lines</p>
 <tt class="descname">do_surface_interval</tt><big>(</big><em>time</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.do_surface_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.do_surface_interval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Conducts a surface interval
 by performing a constant depth calculation on air at zero meters</p>
-<p>Keyword Arguments:
-time &#8211; duration of the interval, in seconds</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-&lt;Exceptions from model&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">time:</th><td class="field-body">(int) &#8211; duration of the interval, in seconds</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;Exceptions from model&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.dive.Dive.get_surface_interval">
 <tt class="descname">get_surface_interval</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.get_surface_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.get_surface_interval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns surface interval in
-mm:ss format</p>
-<p>Keyword Arguments:
-&lt;nothing&gt;</p>
-<p>Returns:
-str &#8211; surface interval time in mmm:ss format</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dd><p>Returns surface interval in mm:ss format</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; surface interval time in mmm:ss format</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -294,12 +418,14 @@ str &#8211; surface interval time in mmm:ss format</p>
 <tt class="descname">refill_tanks</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.refill_tanks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.refill_tanks" title="Permalink to this definition">¶</a></dt>
 <dd><p>refile all tanks defined in this dive
 it is used for repetitive dives</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -307,11 +433,15 @@ it is used for repetitive dives</p>
 <tt class="descname">is_dive_segments</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.is_dive_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.is_dive_segments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns true if there are loaded dive segments
 else false means there is nothing to process</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-True &#8211; if there is at least one input dive segment to process
-False &#8211; if there is no dive segment to process</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if there is at least one input dive segment to process
+False (bool) &#8211; if there is no dive segment to process</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -320,20 +450,30 @@ False &#8211; if there is no dive segment to process</p>
 <dd><p>Call do_dive, and handle exceptions internally : do not raise any
 &#8220;dive related&#8221; exception : add the exception inside
 self.dive_exceptions instead.</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.dive.Dive.do_dive">
 <tt class="descname">do_dive</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.do_dive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.do_dive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the dive</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-NothingToProcess &#8211; if there is no input segment to process
-+
-&lt;Exceptions from model&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>NothingToProcess &#8211; if there is no input segment to process
+or
+&lt;Exceptions from model&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -341,19 +481,53 @@ NothingToProcess &#8211; if there is no input segment to process
 <tt class="descname">get_no_flight_hhmmss</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.get_no_flight_hhmmss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.get_no_flight_hhmmss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns no flight time (if calculated) in hhmmss format
 instead of an int in seconds</p>
-<p>This method does not calculated no_flight_time</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-str &#8211; &#8220;hh:mm:ss&#8221; no flight time</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method does not calculate no_flight_time
+you need to call no_flight_time() or
+no_flight_time_without_exception() before.</p>
+</div>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt>Returns:</dt>
+<dd>str &#8211; &#8220;hh:mm:ss&#8221; no flight time
+str &#8211; &#8220;&#8221; if no flight time is not calculated</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.dive.Dive.no_flight_time_without_exception">
-<tt class="descname">no_flight_time_without_exception</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.no_flight_time_without_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.no_flight_time_without_exception" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">no_flight_time_without_exception</tt><big>(</big><em>altitude=2450</em>, <em>tank=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.no_flight_time_without_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.no_flight_time_without_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call no_flight_time, and handle exceptions internally:
 do not raise any &#8220;dive related&#8221; exception: add the
 exception inside self.dive_exceptions instead.</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">altitude:</th><td class="field-body">(int) &#8211; in meter : altitude used for the calculation</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">flight_ascent_rate:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">(float) &#8211; in m/s</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">tank:</th><td class="field-body">(Tank) &#8211; optionnal:
+it is possible to provide a tank while calling
+no_flight_time to force &#8220;no flight deco&#8221; with
+another mix than air.
+In this case, we will &#8216;consume&#8217; the tank
+When the tank is empty, it automatically switch to air</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>int &#8211; no fight time in seconds</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -363,22 +537,36 @@ exception inside self.dive_exceptions instead.</p>
 flight altitude. Ascending will generate the necessary &#8216;stop&#8217; at the
 current depth (which is 0m). The stop time represents the no flight
 time</p>
-<p>Keyword Arguments:
-altitude - int - in meter : altitude used for the calculation
-flight_ascent_rate - float - in m/s
-tank - Tank - optional :</p>
-<blockquote>
-<div>posibily to provide a tank while calling
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">altitude:</th><td class="field-body">(int) &#8211; in meter : altitude used for the calculation</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">flight_ascent_rate:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">(float) &#8211; in m/s</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">tank:</th><td class="field-body">(Tank) &#8211; optionnal:
+it is possible to provide a tank while calling
 no_flight_time to force &#8220;no flight deco&#8221; with
 another mix than air.
 In this case, we will &#8216;consume&#8217; the tank
-When the tank is empty, it automaticaly switch to air</div></blockquote>
-<p>Returns:
-int - no fight time in seconds</p>
-<p>Raise:
-InfiniteDeco - if the no flight time can not achieve enough</p>
-<blockquote>
-<div>decompression to be able to go to give altitude</div></blockquote>
+When the tank is empty, it automatically switch to air</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>int &#8211; no fight time in seconds</dd>
+<dt><em>Raise:</em></dt>
+<dd><dl class="first last docutils">
+<dt>InfiniteDeco - if the no flight time can not achieve enough</dt>
+<dd>decompression to be able to go to give altitude</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -387,8 +575,19 @@ InfiniteDeco - if the no flight time can not achieve enough</p>
 <dd><p>Ascend to target depth, decompressing if necessary.
 If inFinalAscent then gradient factors start changing,
 and automatic gas selection is made.</p>
-<p>Keyword Arguments:
-target_depth &#8211; in meter, target depth for the ascend</p>
+<p>This method is called by do_dive()</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">target_depth:</th><td class="field-body">(float) &#8211; in meter, target depth for the ascend</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
 <p>Returns:
 &lt;nothing&gt;</p>
 <p>Raise:
@@ -400,12 +599,14 @@ target_depth &#8211; in meter, target depth for the ascend</p>
 <tt class="descname">do_gas_calcs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.do_gas_calcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.do_gas_calcs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Estimate gas consumption for all output segments
 and set this into the respective gas objects</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-&lt;Exceptions from tank&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;Exceptions from tank&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -413,12 +614,23 @@ and set this into the respective gas objects</p>
 <tt class="descname">set_deco_gas</tt><big>(</big><em>depth</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.set_deco_gas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.set_deco_gas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select appropriate deco gas for the depth specified
 Returns true if a gas switch occured</p>
-<p>Keyword Arguments:
-depth &#8211; target depth to make the choice</p>
-<p>Returns:
-True &#8211; if gas swich occured, False if not</p>
-<p>Raise:
-&lt;Exceptions from tank&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">depth:</th><td class="field-body">(float) &#8211; target depth to make the choice</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>True &#8211; if gas swich occured
+False &#8211; if no gas switch occured</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;Exceptions from tank&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -458,50 +670,96 @@ depth(s) of the segment</p>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="dipplanner.segment.UnauthorizedMod.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.UnauthorizedMod.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="dipplanner.segment.Segment">
 <em class="property">class </em><tt class="descclassname">dipplanner.segment.</tt><tt class="descname">Segment</tt><a class="reference internal" href="_modules/dipplanner/segment.html#Segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all types of segments</p>
-<p>Attributes:
-type &#8211; type of segment</p>
+<p><em>Attributes:</em></p>
 <blockquote>
-<div>types of segments can be :
-const = &#8220;Constant Depth&#8221;
-ascent = &#8220;Ascent&#8221;
-descent = &#8220;Descent&#8221;
-deco = &#8220;Decompression&#8221;
-waypoint = &#8220;Waypoint&#8221;
-surf = &#8220;Surface&#8221;</div></blockquote>
-<p>in_use &#8211; boolean : True if segment is used
-depth &#8211; float : depth of this segment, in meter
-time &#8211; duration of this segment, in seconds
-run_time &#8211; runtime in profile
-setpoint &#8211; setpoint for CCR
-tank &#8211; refer to tank object used in this segment</p>
+<div><ul>
+<li><p class="first">type (str) &#8211; type of segment</p>
+<p>types of segments can be :</p>
+<ul class="simple">
+<li>const = &#8220;Constant Depth&#8221;</li>
+<li>ascent = &#8220;Ascent&#8221;</li>
+<li>descent = &#8220;Descent&#8221;</li>
+<li>deco = &#8220;Decompression&#8221;</li>
+<li>waypoint = &#8220;Waypoint&#8221;</li>
+<li>surf = &#8220;Surface&#8221;</li>
+</ul>
+</li>
+<li><p class="first">in_use (boolean) &#8211; True if segment is used</p>
+</li>
+<li><p class="first">depth (float) &#8211; depth of this segment, in meter</p>
+</li>
+<li><p class="first">time (float) &#8211; duration of this segment, in seconds</p>
+</li>
+<li><p class="first">run_time (float) &#8211; runtime in profile</p>
+</li>
+<li><p class="first">setpoint (float) &#8211; setpoint for CCR</p>
+</li>
+<li><p class="first">tank (Tank) &#8211; refer to tank object used in this segment</p>
+</li>
+</ul>
+</div></blockquote>
 <dl class="method">
 <dt id="dipplanner.segment.Segment.__init__">
 <tt class="descname">__init__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>constructor for Segment base class, just defines all the parameters</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string representing the actual segment</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+&#8221;   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m&#8221;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.__unicode__">
 <tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.__unicode__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.__unicode__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a human readable name of the segment in unicode</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+(see __repr__)</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -509,19 +767,37 @@ tank &#8211; refer to tank object used in this segment</p>
 <tt class="descname">check</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>check if it&#8217;s a valid segment
 Should be executed before calculating dives</p>
-<p>Can raise DiveExceptions</p>
+<p>the check does not return anything if nok, but raises Exceptions</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;DiveExceptions&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.check_mod">
 <tt class="descname">check_mod</tt><big>(</big><em>max_ppo2=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.check_mod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.check_mod" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the mod for this segment according to the used tank.</p>
-<p>Keyword arguments:
-max_ppo2 &#8211; float - max tolerated ppo2</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">max_ppo2:</th><td class="field-body">(float) &#8211; max tolerated ppo2</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -529,73 +805,86 @@ UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
 <tt class="descname">check_min_od</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.check_min_od"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.check_min_od" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the minimum od for this segment according to the used tank.
 (hypoxic cases)</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.get_time_str">
 <tt class="descname">get_time_str</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.get_time_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.get_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns segment time in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.get_run_time_str">
 <tt class="descname">get_run_time_str</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.get_run_time_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.get_run_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns runtime in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.get_p_absolute">
 <tt class="descname">get_p_absolute</tt><big>(</big><em>method='complex'</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.get_p_absolute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.get_p_absolute" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the absolute pression in bar
-(1atm = 1ATA = 1.01325 bar = 14.70psi)
-Simple method : 10m = +1 bar
+(1atm = 1ATA = 1.01325 bar = 14.70psi)</p>
+<p>Simple method : 10m = +1 bar
 Complex method : use real density of water, T°, etc...</p>
-<p>Keyword arguments:
-method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;. simple is default</p>
-<p>Returns:
-a float indicating the absolute pressure in bar</p>
-<p>Raise:
-ValueError &#8211; when providing a bad method</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; indicating the absolute pressure in bar</dd>
+<dt><em>Raise:</em></dt>
+<dd>ValueError &#8211; when providing a bad method</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.get_end">
 <tt class="descname">get_end</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.get_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.get_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates and returns E.N.D :
-Equivalent Narcosis Depth
-Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
+Equivalent Narcosis Depth</p>
+<p>Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
 narcosis effet of all gas used, assuming there is no trace of
 other gases (like argon) in the breathing gas, but compare the narcotic
 effect with surface gas, wich is &#8216;air&#8217; and contains
 a small amount of argon</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-Integer : Equivalient Narcosis Depth in meter</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>integer &#8211; Equivalent Narcosis Depth in meter</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.Segment.gas_used">
 <tt class="descname">gas_used</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.gas_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.gas_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the quantity (in liter) of gas used for this segment</p>
+<p>(this method is empty)</p>
 </dd></dl>
 
 </dd></dl>
@@ -609,20 +898,34 @@ Integer : Equivalient Narcosis Depth in meter</p>
 <tt class="descname">__init__</tt><big>(</big><em>depth</em>, <em>time</em>, <em>tank</em>, <em>setpoint=0</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDive.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDive.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor for SegmentDive class.
 Look at base class for more explanations</p>
-<p>Keyword arguments:
-depth &#8211; in meter, the (constant) depth for this segment
-time &#8211; in second, duration of this segment
-tank &#8211; object instance of Tank class :</p>
-<blockquote>
-<div>describe the tank used in this segment</div></blockquote>
 <dl class="docutils">
-<dt>setpoint &#8211; float, for CCR, setpoint used for this segment</dt>
-<dd>for OC : setpoint should be zero</dd>
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">depth:</th><td class="field-body">(float) &#8211; in meter, the (constant) depth for this segment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">time:</th><td class="field-body">(float) &#8211; in second, duration of this segment</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">tank:</th><td class="field-body">(Tank) &#8211; object instance of Tank class :
+describe the tank used in this segment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">setpoint:</th><td class="field-body">(float) &#8211; for CCR, setpoint used for this segment
+for OC : setpoint should be zero</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><dl class="first last docutils">
+<dt>UnauthorizedMod &#8211; if depth is incompatible</dt>
+<dd>with either min or max mod</dd>
 </dl>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if depth is incompatible with either min or max mod</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -630,22 +933,42 @@ UnauthorizedMod &#8211; if depth is incompatible with either min or max mod</p>
 <tt class="descname">gas_used</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDive.gas_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDive.gas_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculates returns the quantity (in liter)
 of gas used for this segment</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-float, in liter, quantity of gas used</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; in liter, quantity of gas used</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string representing the actual segment</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+&#8221;   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m&#8221;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.__unicode__">
 <tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.__unicode__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a human readable name of the segment in unicode</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+(see __repr__)</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -653,7 +976,15 @@ float, in liter, quantity of gas used</p>
 <tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>check if it&#8217;s a valid segment
 Should be executed before calculating dives</p>
-<p>Can raise DiveExceptions</p>
+<p>the check does not return anything if nok, but raises Exceptions</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;DiveExceptions&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -661,79 +992,101 @@ Should be executed before calculating dives</p>
 <tt class="descname">check_min_od</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.check_min_od" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the minimum od for this segment according to the used tank.
 (hypoxic cases)</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.check_mod">
 <tt class="descname">check_mod</tt><big>(</big><em>max_ppo2=None</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.check_mod" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the mod for this segment according to the used tank.</p>
-<p>Keyword arguments:
-max_ppo2 &#8211; float - max tolerated ppo2</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">max_ppo2:</th><td class="field-body">(float) &#8211; max tolerated ppo2</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.get_end">
 <tt class="descname">get_end</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.get_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates and returns E.N.D :
-Equivalent Narcosis Depth
-Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
+Equivalent Narcosis Depth</p>
+<p>Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
 narcosis effet of all gas used, assuming there is no trace of
 other gases (like argon) in the breathing gas, but compare the narcotic
 effect with surface gas, wich is &#8216;air&#8217; and contains
 a small amount of argon</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-Integer : Equivalient Narcosis Depth in meter</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>integer &#8211; Equivalent Narcosis Depth in meter</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.get_p_absolute">
 <tt class="descname">get_p_absolute</tt><big>(</big><em>method='complex'</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.get_p_absolute" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the absolute pression in bar
-(1atm = 1ATA = 1.01325 bar = 14.70psi)
-Simple method : 10m = +1 bar
+(1atm = 1ATA = 1.01325 bar = 14.70psi)</p>
+<p>Simple method : 10m = +1 bar
 Complex method : use real density of water, T°, etc...</p>
-<p>Keyword arguments:
-method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;. simple is default</p>
-<p>Returns:
-a float indicating the absolute pressure in bar</p>
-<p>Raise:
-ValueError &#8211; when providing a bad method</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; indicating the absolute pressure in bar</dd>
+<dt><em>Raise:</em></dt>
+<dd>ValueError &#8211; when providing a bad method</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.get_run_time_str">
 <tt class="descname">get_run_time_str</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.get_run_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns runtime in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.get_time_str">
 <tt class="descname">get_time_str</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.get_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns segment time in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -747,24 +1100,40 @@ string &#8211; segment time in the form MMM:SS</p>
 <tt class="descname">__init__</tt><big>(</big><em>depth</em>, <em>time</em>, <em>tank</em>, <em>setpoint=0</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDeco.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDeco.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor for SegmentDeco class.
 Look at base class for more explanations</p>
-<p>In deco segment, we also have to manage some new parameters :
-gf_used : which gradient factor is used
-control_compartment : who is the control compartement
-mv_max : max M-value for the compartment</p>
-<p>Keyword arguments:
-depth &#8211; in meter, the (constant) depth for this segment
-time &#8211; in second, duration of this segment
-tank &#8211; object instance of Tank class :</p>
-<blockquote>
-<div>describe the tank used in this segment</div></blockquote>
+<p>In deco segment, we also have to manage some new parameters :</p>
+<ul class="simple">
+<li>gf_used : which gradient factor is used</li>
+<li>control_compartment : who is the control compartement</li>
+<li>mv_max : max M-value for the compartment</li>
+</ul>
 <dl class="docutils">
-<dt>setpoint &#8211; float, for CCR, setpoint used for this segment</dt>
-<dd>for OC : setpoint should be zero</dd>
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">depth:</th><td class="field-body">(float) &#8211; in meter, the (constant) depth for this segment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">time:</th><td class="field-body">(float) &#8211; in second, duration of this segment</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">tank:</th><td class="field-body">(Tank) &#8211; object instance of Tank class :
+describe the tank used in this segment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">setpoint:</th><td class="field-body">(float) &#8211; for CCR, setpoint used for this segment
+for OC : setpoint should be zero</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><dl class="first last docutils">
+<dt>UnauthorizedMod &#8211; if depth is incompatible</dt>
+<dd>with either min or max mod</dd>
 </dl>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if depth is incompatible with either min or max mod</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -772,22 +1141,42 @@ UnauthorizedMod &#8211; if depth is incompatible with either min or max mod</p>
 <tt class="descname">gas_used</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDeco.gas_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDeco.gas_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculates returns the quantity (in liter)
 of gas used for this segment</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-float, in liter, quantity of gas used</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; in liter, quantity of gas used</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string representing the actual segment</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+&#8221;   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m&#8221;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.__unicode__">
 <tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.__unicode__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a human readable name of the segment in unicode</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+(see __repr__)</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -795,7 +1184,15 @@ float, in liter, quantity of gas used</p>
 <tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>check if it&#8217;s a valid segment
 Should be executed before calculating dives</p>
-<p>Can raise DiveExceptions</p>
+<p>the check does not return anything if nok, but raises Exceptions</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;DiveExceptions&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -803,79 +1200,101 @@ Should be executed before calculating dives</p>
 <tt class="descname">check_min_od</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.check_min_od" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the minimum od for this segment according to the used tank.
 (hypoxic cases)</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.check_mod">
 <tt class="descname">check_mod</tt><big>(</big><em>max_ppo2=None</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.check_mod" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the mod for this segment according to the used tank.</p>
-<p>Keyword arguments:
-max_ppo2 &#8211; float - max tolerated ppo2</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">max_ppo2:</th><td class="field-body">(float) &#8211; max tolerated ppo2</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.get_end">
 <tt class="descname">get_end</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.get_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates and returns E.N.D :
-Equivalent Narcosis Depth
-Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
+Equivalent Narcosis Depth</p>
+<p>Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
 narcosis effet of all gas used, assuming there is no trace of
 other gases (like argon) in the breathing gas, but compare the narcotic
 effect with surface gas, wich is &#8216;air&#8217; and contains
 a small amount of argon</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-Integer : Equivalient Narcosis Depth in meter</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>integer &#8211; Equivalent Narcosis Depth in meter</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.get_p_absolute">
 <tt class="descname">get_p_absolute</tt><big>(</big><em>method='complex'</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.get_p_absolute" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the absolute pression in bar
-(1atm = 1ATA = 1.01325 bar = 14.70psi)
-Simple method : 10m = +1 bar
+(1atm = 1ATA = 1.01325 bar = 14.70psi)</p>
+<p>Simple method : 10m = +1 bar
 Complex method : use real density of water, T°, etc...</p>
-<p>Keyword arguments:
-method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;. simple is default</p>
-<p>Returns:
-a float indicating the absolute pressure in bar</p>
-<p>Raise:
-ValueError &#8211; when providing a bad method</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; indicating the absolute pressure in bar</dd>
+<dt><em>Raise:</em></dt>
+<dd>ValueError &#8211; when providing a bad method</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.get_run_time_str">
 <tt class="descname">get_run_time_str</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.get_run_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns runtime in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.get_time_str">
 <tt class="descname">get_time_str</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.get_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns segment time in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -893,33 +1312,60 @@ in this segment, we do not specify time, but rate (of ascending
 or descending) and start_depth and end_depth
 The comparaison between start and end depth determine if asc or desc
 rate is given in m/min</p>
-<p>Keyword arguments:
-start_depth &#8211; in meter, the starting depth for this segment
-end_depth &#8211; in meter, the ending depth for this segment
-rate &#8211; in m/s, rate of ascending or descending
-tank &#8211; object instance of Tank class :</p>
-<blockquote>
-<div>describe the tank used in this segment</div></blockquote>
 <dl class="docutils">
-<dt>setpoint &#8211; float, for CCR, setpoint used for this segment</dt>
-<dd>for OC : setpoint should be zero</dd>
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">start_depth:</th><td class="field-body">(float) &#8211; in meter, the starting depth
+for this segment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">end_depth:</th><td class="field-body">(float) &#8211; in meter, the ending depth
+for this segment</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rate:</th><td class="field-body">(float) &#8211; in m/s, rate of ascending or descending</td>
+</tr>
+<tr class="field-even field"><th class="field-name">tank:</th><td class="field-body">(Tank) &#8211; object instance of Tank class :
+describe the tank used in this segment</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">setpoint:</th><td class="field-body">(float) &#8211; for CCR, setpoint used for this segment
+for OC : setpoint should be zero</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><dl class="first last docutils">
+<dt>UnauthorizedMod &#8211; if depth is incompatible</dt>
+<dd>with either min or max mod</dd>
 </dl>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if depth is incompatible with either min or max mod</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.check_mod">
 <tt class="descname">check_mod</tt><big>(</big><em>max_ppo2=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentAscDesc.check_mod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.check_mod" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the mod for this segment according to the used tank.</p>
-<p>Keyword arguments:
-max_ppo2 &#8211; float - max tolerated ppo2</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">max_ppo2:</th><td class="field-body">(float) &#8211; max tolerated ppo2</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -927,24 +1373,44 @@ UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
 <tt class="descname">check_min_od</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentAscDesc.check_min_od"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.check_min_od" title="Permalink to this definition">¶</a></dt>
 <dd><p>checks the minimum od for this segment according to the used tank.
 (hypoxic cases)</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string representing the actual segment</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+&#8221;   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m&#8221;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.__unicode__">
 <tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.__unicode__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a human readable name of the segment in unicode</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>str &#8211; representation of the segment in the form:
+(see __repr__)</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -952,7 +1418,15 @@ UnauthorizedMod &#8211; if segments goes below max mod or upper min mod</p>
 <tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>check if it&#8217;s a valid segment
 Should be executed before calculating dives</p>
-<p>Can raise DiveExceptions</p>
+<p>the check does not return anything if nok, but raises Exceptions</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>True (bool) &#8211; if check is ok</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;DiveExceptions&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -963,65 +1437,77 @@ in this segment because it&#8217;s ascend or descent,
 the gas is not used at the same rate during the segment
 Because the rate is the same during all the segment, we can use the
 consumption at the average depth of the segment</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-float, in liter, quantity of gas used</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; in liter, quantity of gas used</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.get_end">
 <tt class="descname">get_end</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.get_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates and returns E.N.D :
-Equivalent Narcosis Depth
-Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
+Equivalent Narcosis Depth</p>
+<p>Instead of Mvplan, it uses a &#8216;calculation method&#8217; based on
 narcosis effet of all gas used, assuming there is no trace of
 other gases (like argon) in the breathing gas, but compare the narcotic
 effect with surface gas, wich is &#8216;air&#8217; and contains
 a small amount of argon</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-Integer : Equivalient Narcosis Depth in meter</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>integer &#8211; Equivalent Narcosis Depth in meter</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.get_p_absolute">
 <tt class="descname">get_p_absolute</tt><big>(</big><em>method='complex'</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.get_p_absolute" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the absolute pression in bar
-(1atm = 1ATA = 1.01325 bar = 14.70psi)
-Simple method : 10m = +1 bar
+(1atm = 1ATA = 1.01325 bar = 14.70psi)</p>
+<p>Simple method : 10m = +1 bar
 Complex method : use real density of water, T°, etc...</p>
-<p>Keyword arguments:
-method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;. simple is default</p>
-<p>Returns:
-a float indicating the absolute pressure in bar</p>
-<p>Raise:
-ValueError &#8211; when providing a bad method</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>method &#8211; &#8216;simple&#8217; or &#8216;complex&#8217;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; indicating the absolute pressure in bar</dd>
+<dt><em>Raise:</em></dt>
+<dd>ValueError &#8211; when providing a bad method</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.get_run_time_str">
 <tt class="descname">get_run_time_str</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.get_run_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns runtime in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.get_time_str">
 <tt class="descname">get_time_str</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.get_time_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns segment time in the form MMM:SS</p>
-<p>Keyword Arguments:
-&lt;none&gt;</p>
-<p>Returns:
-string &#8211; segment time in the form MMM:SS</p>
-<p>Raise:
-&lt;nothing&gt;</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; segment time in the form MMM:SS</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1068,6 +1554,20 @@ are invalid</p>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="dipplanner.tank.InvalidGas.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.InvalidGas.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="exception">
@@ -1097,6 +1597,20 @@ are invalid</p>
 <dt id="dipplanner.tank.InvalidTank.__repr__">
 <tt class="descname">__repr__</tt><a class="headerlink" href="#dipplanner.tank.InvalidTank.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.tank.InvalidTank.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.InvalidTank.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1131,6 +1645,20 @@ provided for the tank</p>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="dipplanner.tank.InvalidMod.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.InvalidMod.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="exception">
@@ -1163,6 +1691,20 @@ remaining gas</p>
 <dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="dipplanner.tank.EmptyTank.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.EmptyTank.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1172,57 +1714,99 @@ remaining gas</p>
 contains breathing Gas
 We provide proportion of N2, O2, He, calculates MOD and volumes during the
 dives
-We can also (optionnaly) provide the type of tanks : volume and pressure</p>
+We can also (optionally) provide the type of tanks : volume and pressure</p>
 <dl class="method">
 <dt id="dipplanner.tank.Tank.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>f_o2=0.21</em>, <em>f_he=0.0</em>, <em>max_ppo2=1.6</em>, <em>mod=None</em>, <em>tank_vol=12.0</em>, <em>tank_pressure=200</em>, <em>tank_rule='30b'</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor for Tank class
-If nothing is provided, create a default &#8216;Air&#8217; with 12l/200b tank
+<dd><p>Constructor for Tank class</p>
+<p>If nothing is provided, create a default &#8216;Air&#8217; with 12l/200b tank
 and max_ppo2 to 1.6 (used to calculate mod)
 if mod not provided, mod is calculed based on max tolerable ppo2</p>
-<p>Keyword arguments:
-f_o2 &#8211; Fraction of O2 in the gaz in % : between 0.0 and 1.0
-f_he &#8211; Fraction of He in the gaz in % : between 0.0 and 1.0
-max_ppo2 &#8211; sets the maximum ppo2 you want for this tank</p>
-<blockquote>
-<div>(default: settings.DEFAULT_MAX_PPO2)</div></blockquote>
 <dl class="docutils">
-<dt>mod &#8211; Specify the mod you want.</dt>
-<dd>if not provided, calculates the mod based on max_ppo2
-if provided and not compatible with max_ppo2: raise InvalidMod</dd>
-</dl>
-<p>tank_vol &#8211; Volume of the tank in liter
-Tank_pressure &#8211; Pressure of the tank, in bar
-tank_rule &#8211; rule for warning in the tank consumption</p>
-<blockquote>
-<div><p>must be either :
-* xxxb (ex: 50b means 50 bar minimum at</p>
-<blockquote>
-<div>the end of the dive)</div></blockquote>
-<ul>
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">f_o2:</th><td class="field-body"><p class="first">(float) &#8211; Fraction of O2 in the gaz in %
+value between 0.0 and 1.0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">f_he:</th><td class="field-body"><p class="first">(float) &#8211; Fraction of He in the gaz in %
+value between 0.0 and 1.0</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">max_ppo2:</th><td class="field-body"><p class="first">(float) &#8211; sets the maximum ppo2 you want for this tank
+(default: settings.DEFAULT_MAX_PPO2)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">mod:</th><td class="field-body"><p class="first">(float) &#8211; Specify the mod you want.
+* if not provided, calculates the mod based on max_ppo2</p>
+<ul class="simple">
+<li>if provided and not compatible
+with max_ppo2: raise InvalidMod</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">tank_vol:</th><td class="field-body"><p class="first">(float) &#8211; Volume of the tank in liter</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">tank_pressure:</th><td class="field-body"><p class="first">(float) &#8211; Pressure of the tank, in bar</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">tank_rule:</th><td class="field-body"><p class="first">(float) &#8211; rule for warning in the tank consumption
+must be either :</p>
+<ul class="last">
 <li><dl class="first docutils">
-<dt>1/x (ex <span class="classifier-delimiter">:</span> <span class="classifier">1/3 for rule of thirds:</span></dt>
-<dd><blockquote class="first">
-<div><p>1/3 for way in,
-1/3 for way out,
-1/3 remains at the end of the dive)</p>
-</div></blockquote>
-<dl class="last docutils">
-<dt>( ex2: 1/6 rule: 1/6 way IN,</dt>
-<dd><p class="first last">1/6 wau OUT, 2/3 remains)</p>
+<dt>xxxb (ex: 50b means 50 bar minimum at</dt>
+<dd><p class="first last">the end of the dive)</p>
 </dd>
 </dl>
+</li>
+<li><dl class="first docutils">
+<dt>1/x</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>ex <span class="classifier-delimiter">:</span> <span class="classifier">1/3 for rule of thirds:</span></dt>
+<dd><ul class="first last simple">
+<li>1/3 for way in,</li>
+<li>1/3 for way out,</li>
+<li>1/3 remains at the end of the dive)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>ex2: 1/6 rule:</dt>
+<dd><ul class="first last simple">
+<li>1/6 way IN,</li>
+<li>1/6 wau OUT,</li>
+<li>2/3 remains</li>
+</ul>
 </dd>
 </dl>
 </li>
 </ul>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+<p><em>Raise:</em></p>
+<blockquote>
+<div><ul class="simple">
+<li>InvalidGas &#8211; see validate()</li>
+<li>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2 and see validate()</li>
+<li>InvalidTank &#8211; see validate()</li>
+</ul>
 </div></blockquote>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-InvalidGas &#8211; see validate()
-InvalidMod &#8211; if mod &gt; max mod based on max_ppo2 and see validate()
-InvalidTank &#8211; see validate()</p>
 </dd></dl>
 
 <dl class="method">
@@ -1231,22 +1815,32 @@ InvalidTank &#8211; see validate()</p>
 <dd><p>Calculate the real gas volume of the tank (in liter) based
 on Van der waals equation:
 (P+n2.a/V2).(V-n.b)=n.R.T</p>
-<p>Keyword arguments:
-tank_vol &#8211; Volume of the tank in liter</p>
-<blockquote>
-<div>optionnal : if not provided, use self.tank_vol</div></blockquote>
 <dl class="docutils">
-<dt>tank_pressure &#8211; Pressure of the tank in bar</dt>
-<dd>optionnal : if not provided, use self.tank_pressure</dd>
-<dt>f_o2 &#8211; fraction of O2 in the gas</dt>
-<dd>optionnal : if not provided, use self.f_o2</dd>
-<dt>f_he &#8211; fraction of He in the gas</dt>
-<dd>optionnal : if not provided, use self.f_he</dd>
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">tank_vol:</th><td class="field-body">(float) &#8211; Volume of the tank in liter
+optional : if not provided, use self.tank_vol</td>
+</tr>
+<tr class="field-even field"><th class="field-name">tank_pressure:</th><td class="field-body">(float) &#8211; Pressure of the tank in bar
+optional : if not provided, use self.tank_pressure</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">f_o2:</th><td class="field-body">(float) &#8211; fraction of O2 in the gas
+optional : if not provided, use self.f_o2</td>
+</tr>
+<tr class="field-even field"><th class="field-name">f_he:</th><td class="field-body">(float) &#8211; fraction of He in the gas
+optional : if not provided, use self.f_he</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; total gas volume of the tank in liter</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
 </dl>
-<p>Returns:
-float &#8211; total gas volume of the tank in liter</p>
-<p>Raise:
-&lt;nothing&gt;</p>
 </dd></dl>
 
 <dl class="method">
@@ -1276,12 +1870,21 @@ Integer &#8211; result of cmp()</p>
 <tt class="descname">_calculate_mod</tt><big>(</big><em>max_ppo2</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank._calculate_mod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank._calculate_mod" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate and returns mod for a given ppo2 based on this tank info
 result in meter</p>
-<p>Keyword arguments:
-max_ppo2 &#8211; maximum ppo2 accepted (float).</p>
-<blockquote>
-<div>Any value accepted, but should be &gt; 0.0</div></blockquote>
-<p>Returns:
-Integer : Maximum Operating Depth in meter</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">max_ppo2:</th><td class="field-body">&#8211; maximum ppo2 accepted (float).
+Any value accepted, but should be &gt; 0.0</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>integer &#8211; Maximum Operating Depth in meter</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1289,20 +1892,34 @@ Integer : Maximum Operating Depth in meter</p>
 <tt class="descname">_validate</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank._validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank._validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the validity of the tank informations inside this object
 if validity check fails raise an Exception &#8216;InvalidTank&#8217;</p>
-<p>Keyword arguments:
-&lt;nothing&gt;</p>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-InvalidGas &#8211; When proportions of gas exceed</p>
-<blockquote>
-<div>100% for example (or negatives values)</div></blockquote>
 <dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>InvalidGas &#8211; When proportions of gas exceed</dt>
+<dd><p class="first last">100% for example (or negatives values)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
 <dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2 or ABSOLUTE_MAX_MOD</dt>
-<dd>ABSOLUTE_MAX_MOD is a global settings which can not be
-exceeded.</dd>
+<dd><p class="first last">ABSOLUTE_MAX_MOD is a global settings which can not be
+exceeded.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
 <dt>InvalidTank &#8211; when pressure or tank size exceed maximum values or are</dt>
-<dd>incorrect (like negatives) values</dd>
+<dd><p class="first last">incorrect (like negatives) values</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1406,23 +2023,32 @@ False if rule NOK</p>
 <dd><p>constructor : call the upper constructor and set the logger</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.model_exceptions.ModelException.__getitem__">
-<tt class="descname">__getitem__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelException.__getitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
+<dl class="method">
+<dt id="dipplanner.model.buhlmann.model_exceptions.ModelException.__str__">
+<tt class="descname">__str__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelException.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>String representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>str &#8211; a string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.model_exceptions.ModelException.__getslice__">
-<tt class="descname">__getslice__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelException.__getslice__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__getslice__(i, j) &lt;==&gt; x[i:j]</p>
-<p>Use of negative indices is not supported.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.model_exceptions.ModelException.__repr__">
-<tt class="descname">__repr__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelException.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
+<dl class="method">
+<dt id="dipplanner.model.buhlmann.model_exceptions.ModelException.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelException.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1437,23 +2063,32 @@ False if rule NOK</p>
 <dd><p>constructor : call the upper constructor and set the logger</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.model_exceptions.ModelStateException.__getitem__">
-<tt class="descname">__getitem__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelStateException.__getitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
+<dl class="method">
+<dt id="dipplanner.model.buhlmann.model_exceptions.ModelStateException.__str__">
+<tt class="descname">__str__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelStateException.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>String representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>str &#8211; a string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.model_exceptions.ModelStateException.__getslice__">
-<tt class="descname">__getslice__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelStateException.__getslice__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__getslice__(i, j) &lt;==&gt; x[i:j]</p>
-<p>Use of negative indices is not supported.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.model_exceptions.ModelStateException.__repr__">
-<tt class="descname">__repr__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelStateException.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
+<dl class="method">
+<dt id="dipplanner.model.buhlmann.model_exceptions.ModelStateException.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.model.buhlmann.model_exceptions.ModelStateException.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1563,10 +2198,15 @@ ModelStateException &#8211; if pp or time &lt; 0</p>
 <dt id="dipplanner.model.buhlmann.compartment.Compartment.get_m_value_at">
 <tt class="descname">get_m_value_at</tt><big>(</big><em>pressure</em><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/compartment.html#Compartment.get_m_value_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.compartment.Compartment.get_m_value_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets M-Value for given ambient pressure using the Buhlmann equation
-Pm = Pa/b +a         where: Pm = M-Value pressure,</p>
+Pm = Pa/b +a
+where:</p>
 <blockquote>
-<div>Pa = ambiant pressure
-a,b co-efficients</div></blockquote>
+<div><ul class="simple">
+<li>Pm = M-Value pressure,</li>
+<li>Pa = ambiant pressure</li>
+<li>a,b co-efficients</li>
+</ul>
+</div></blockquote>
 <p>Not used for decompression but for display of M-value limit line
 Note that this does not factor gradient factors.</p>
 <p>Keyword arguments:
@@ -1709,12 +2349,20 @@ ValueError &#8211; if gf_high has wrong value</p>
 <dt id="dipplanner.model.buhlmann.oxygen_toxicity.OxTox">
 <em class="property">class </em><tt class="descclassname">dipplanner.model.buhlmann.oxygen_toxicity.</tt><tt class="descname">OxTox</tt><a class="reference internal" href="_modules/dipplanner/model/buhlmann/oxygen_toxicity.html#OxTox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.oxygen_toxicity.OxTox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a Oxygen Toxicity model</p>
-<p>Attributes:
-cns &#8211; central nervous system toxicity</p>
-<blockquote>
-<div>(see <a class="reference external" href="http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms">http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms</a>)</div></blockquote>
-<p>otu &#8211; Oxygen toxicity Units
-max_ox &#8211; maximum ppo2</p>
+<p><em>Attributes:</em></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Cns :</th><td class="field-body">(float) &#8211; central nervous system toxicity
+(see <a class="reference external" href="http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms">http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms</a>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Otu :</th><td class="field-body">(float- &#8211; Oxygen toxicity Units</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Max_ox :</th><td class="field-body">(float) &#8211; maximum ppo2</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__init__">
 <tt class="descname">__init__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/oxygen_toxicity.html#OxTox.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__init__" title="Permalink to this definition">¶</a></dt>
@@ -1860,12 +2508,16 @@ self.MODEL_VALIDATION_FAILURE &#8211; if not OK</p>
 <dt id="dipplanner.model.buhlmann.model.Model.control_compartment">
 <tt class="descname">control_compartment</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/model.html#Model.control_compartment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.model.Model.control_compartment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine the controlling compartment at ceiling (1-16)</p>
-<p>Keyword arguments:
-&lt;none&gt;</p>
-<p>Returns:
-Integer : reference number of the controlling</p>
-<blockquote>
-<div>compartment (between 1 to 16)</div></blockquote>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd><dl class="first last docutils">
+<dt>integer <span class="classifier-delimiter">:</span> <span class="classifier">reference number of the controlling</span></dt>
+<dd>compartment (between 1 to 16)</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1903,18 +2555,32 @@ float, max M-Value</p>
 <tt class="descname">const_depth</tt><big>(</big><em>pressure</em>, <em>seg_time</em>, <em>f_he</em>, <em>f_n2</em>, <em>pp_o2</em><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/model.html#Model.const_depth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.model.Model.const_depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constant depth profile.
 Calls Compartment.constDepth for each compartment to update the model.</p>
-<p>Kerword arguments:
-pressure &#8211; pressure of this depth of segment in bar
-seg_time &#8211; Time of segment in seconds
-f_he &#8211; Fraction of inert gas Helium in inspired gas mix
-f_n2 &#8211; Fraction of inert gas Nitrogen in inspired gas mix
-pp_o2 &#8211; For CCR mode, partial pressure of oxygen in bar.</p>
+<p><em>Keyword arguments:</em></p>
 <blockquote>
-<div>If == 0.0, then open circuit</div></blockquote>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-ModelStateException</p>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">pressure:</th><td class="field-body">&#8211; pressure of this depth of segment in bar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">seg_time:</th><td class="field-body">&#8211; Time of segment in seconds</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">f_he:</th><td class="field-body">&#8211; Fraction of inert gas Helium in inspired gas mix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">f_n2:</th><td class="field-body">&#8211; Fraction of inert gas Nitrogen in inspired gas mix</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">pp_o2:</th><td class="field-body">&#8211; For CCR mode, partial pressure of oxygen in bar.
+If == 0.0, then open circuit</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<dl class="docutils">
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>ModelStateException</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1922,19 +2588,32 @@ ModelStateException</p>
 <tt class="descname">asc_desc</tt><big>(</big><em>start</em>, <em>finish</em>, <em>rate</em>, <em>f_he</em>, <em>f_n2</em>, <em>pp_o2</em><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/model.html#Model.asc_desc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.model.Model.asc_desc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ascend/Descend profile.
 Calls Compartment.asc_desc to update compartments</p>
-<p>Kerword arguments:
-start &#8211; start pressure of this segment in bar (WARNING: not meter !)
-finish &#8211; finish pressure of this segment in bar (WARNING: not meter !)
-rate &#8211; rate of ascent or descent in m/s
-f_he &#8211; Fraction of inert gas Helium in inspired gas mix
-f_n2 &#8211; Fraction of inert gas Nitrogen in inspired gas mix
-pp_o2 &#8211; For CCR mode, partial pressure of oxygen in bar.</p>
-<blockquote>
-<div>If == 0.0, then open circuit</div></blockquote>
-<p>Returns:
-&lt;nothing&gt;</p>
-<p>Raise:
-ModelStateException</p>
+<p><em>Keyword arguments:</em></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Start :</th><td class="field-body">&#8211; start pressure of this segment in bar (WARNING: not meter !)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Finish :</th><td class="field-body">&#8211; finish pressure of this segment in bar (WARNING: not meter !)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Rate :</th><td class="field-body">&#8211; rate of ascent or descent in m/s</td>
+</tr>
+<tr class="field-even field"><th class="field-name">F_he :</th><td class="field-body">&#8211; Fraction of inert gas Helium in inspired gas mix</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">F_n2 :</th><td class="field-body">&#8211; Fraction of inert gas Nitrogen in inspired gas mix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Pp_o2 :</th><td class="field-body">&#8211; For CCR mode, partial pressure of oxygen in bar.
+If == 0.0, then open circuit</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>ModelStateException</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1948,6 +2627,42 @@ ModelStateException</p>
 <dt id="dipplanner.dipp_exception.DipplannerException">
 <em class="property">exception </em><tt class="descclassname">dipplanner.dipp_exception.</tt><tt class="descname">DipplannerException</tt><big>(</big><em>description</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dipp_exception.html#DipplannerException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dipp_exception.DipplannerException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base exception class for dipplanner</p>
+<dl class="method">
+<dt id="dipplanner.dipp_exception.DipplannerException.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>description</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dipp_exception.html#DipplannerException.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dipp_exception.DipplannerException.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>DipplannerException constructor</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">description:</th><td class="field-body">(str) &#8211; text describing the error</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Return:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.dipp_exception.DipplannerException.__unicode__">
+<tt class="descname">__unicode__</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.dipp_exception.DipplannerException.__unicode__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unicode string representing the object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>ustr &#8211; a unicode string describing the Exception</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="dipplanner.dipp_exception.DipplannerException.__getitem__">
 <tt class="descname">__getitem__</tt><a class="headerlink" href="#dipplanner.dipp_exception.DipplannerException.__getitem__" title="Permalink to this definition">¶</a></dt>
@@ -2047,12 +2762,25 @@ float - depth pressure in bar</p>
 <dl class="function">
 <dt id="dipplanner.tools.pressure_to_depth">
 <tt class="descclassname">dipplanner.tools.</tt><tt class="descname">pressure_to_depth</tt><big>(</big><em>pressure</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tools.html#pressure_to_depth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tools.pressure_to_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates depth based on give pressure using a more complex
+<dd><p>calculates depth based on give pressure using a more complex
 method than only <a href="#id2"><span class="problematic" id="id3">*</span></a>10</p>
-<p>Keyword Arguments:
-pressure - float in bar</p>
-<p>Returns:
-int - depth in meter</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">pressure:</th><td class="field-body"><ul class="first last simple">
+<li>float in bar</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>int - depth in meter</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -2106,6 +2834,122 @@ using Antoine equation
 </dd></dl>
 
 </div>
+<div class="section" id="module-dipplanner.main">
+<span id="main"></span><h2>main<a class="headerlink" href="#module-dipplanner.main" title="Permalink to this headline">¶</a></h2>
+<p>main dipplanner module for command line usage.</p>
+<p>This module is used by the only &#8220;executable&#8221; of the project:
+bin/dipplanner (which is an empty shell)</p>
+<p>runs in command line and output resulting dive profile
+also initiate log files</p>
+<dl class="function">
+<dt id="dipplanner.main.activate_debug">
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">activate_debug</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#activate_debug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.activate_debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup the default debug parameters</p>
+<p>it&#8217;s mainly used for test cases who needs also logging to be set</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dipplanner.main.activate_debug_for_tests">
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">activate_debug_for_tests</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#activate_debug_for_tests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.activate_debug_for_tests" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup the default debug parameters</p>
+<p>it&#8217;s mainly used for test cases who needs also logging to be set</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dipplanner.main.parse_config_file">
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">parse_config_file</tt><big>(</big><em>filenames</em><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#parse_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.parse_config_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse a config file and change default settings values</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">filename:</th><td class="field-body">(str) &#8211; name (and path) of the config file to be parsed</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>Nothing, but can exit</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dipplanner.main.parse_arguments">
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">parse_arguments</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#parse_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.parse_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse all command lines options</p>
+<p>could also exit from program because of wrong arguments</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd><dl class="first last docutils">
+<dt>a tuple of two dicts:</dt>
+<dd><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">args:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">dives:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>args is the result of argpaser</li>
+<li>dives dict is in the following form:</li>
+</ul>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">dives</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;dive1&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;tanks&#39;</span><span class="p">:</span> <span class="p">{},</span>
+                     <span class="s">&#39;segments&#39;</span><span class="p">:</span> <span class="p">{},</span>
+                     <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span><span class="mi">0</span> <span class="p">},</span>
+          <span class="s">&#39;dive2&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;tanks&#39;</span><span class="p">:</span> <span class="p">{},</span>
+                     <span class="s">&#39;segments&#39;</span><span class="p">:</span> <span class="p">{},</span>
+                     <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span><span class="mi">60</span> <span class="p">}}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt><em>Raise:</em></dt>
+<dd>Nothing, but can exit</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dipplanner.main.main">
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>main uses the parameters, tanks and dives given in config file(s)
+and/or command line, calculates the dives and return the output in stdout.</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Return:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -2131,6 +2975,7 @@ using Antoine equation
 </li>
 <li><a class="reference internal" href="#id1">Exceptions</a></li>
 <li><a class="reference internal" href="#module-dipplanner.tools">tools</a></li>
+<li><a class="reference internal" href="#module-dipplanner.main">main</a></li>
 </ul>
 </li>
 </ul>

@@ -57,7 +57,7 @@ Exceptions
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 compartment
 ^^^^^^^^^^^
@@ -118,6 +118,17 @@ tools
 -----
 
 .. automodule:: dipplanner.tools
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :member-order: bysource
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+
+main
+----
+
+.. automodule:: dipplanner.main
    :members:
    :private-members:
    :special-members:

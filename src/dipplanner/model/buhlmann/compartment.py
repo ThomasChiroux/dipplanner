@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
+
 """Defines a Buhlmann compartment
 """
 
@@ -295,9 +295,13 @@ class Compartment(object):
 
     def get_m_value_at(self, pressure):
         """Gets M-Value for given ambient pressure using the Buhlmann equation
-        Pm = Pa/b +a         where: Pm = M-Value pressure,
-                                    Pa = ambiant pressure
-                                    a,b co-efficients
+        Pm = Pa/b +a
+        where:
+
+            * Pm = M-Value pressure,
+            * Pa = ambiant pressure
+            * a,b co-efficients
+
         Not used for decompression but for display of M-value limit line
         Note that this does not factor gradient factors.
 

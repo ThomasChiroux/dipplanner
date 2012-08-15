@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
+
 """Buhlmann model module
 
 Contains:
@@ -273,12 +273,12 @@ mv_at:%s max_amb:%s MV:%s\n" % \
     def control_compartment(self):
         """Determine the controlling compartment at ceiling (1-16)
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        Integer : reference number of the controlling
-                  compartment (between 1 to 16)
+        *Returns:*
+            integer : reference number of the controlling
+                      compartment (between 1 to 16)
 
         """
         control_compartment_number = 0
@@ -357,19 +357,20 @@ mv_at:%s max_amb:%s MV:%s\n" % \
         """Constant depth profile.
         Calls Compartment.constDepth for each compartment to update the model.
 
-        Kerword arguments:
-        pressure -- pressure of this depth of segment in bar
-        seg_time -- Time of segment in seconds
-        f_he -- Fraction of inert gas Helium in inspired gas mix
-        f_n2 -- Fraction of inert gas Nitrogen in inspired gas mix
-        pp_o2 -- For CCR mode, partial pressure of oxygen in bar.
-                 If == 0.0, then open circuit
+        *Keyword arguments:*
 
-        Returns:
-        <nothing>
+            :pressure: -- pressure of this depth of segment in bar
+            :seg_time: -- Time of segment in seconds
+            :f_he: -- Fraction of inert gas Helium in inspired gas mix
+            :f_n2: -- Fraction of inert gas Nitrogen in inspired gas mix
+            :pp_o2: -- For CCR mode, partial pressure of oxygen in bar.
+                       If == 0.0, then open circuit
 
-        Raise:
-        ModelStateException
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            ModelStateException
 
         """
         ambiant_pressure = pressure + settings.AMBIANT_PRESSURE_SURFACE
@@ -430,20 +431,21 @@ mv_at:%s max_amb:%s MV:%s\n" % \
         """Ascend/Descend profile.
         Calls Compartment.asc_desc to update compartments
 
-        Kerword arguments:
-        start -- start pressure of this segment in bar (WARNING: not meter !)
-        finish -- finish pressure of this segment in bar (WARNING: not meter !)
-        rate -- rate of ascent or descent in m/s
-        f_he -- Fraction of inert gas Helium in inspired gas mix
-        f_n2 -- Fraction of inert gas Nitrogen in inspired gas mix
-        pp_o2 -- For CCR mode, partial pressure of oxygen in bar.
-                 If == 0.0, then open circuit
+        *Keyword arguments:*
 
-        Returns:
-        <nothing>
+        :start: -- start pressure of this segment in bar (WARNING: not meter !)
+        :finish: -- finish pressure of this segment in bar (WARNING: not meter !)
+        :rate: -- rate of ascent or descent in m/s
+        :f_he: -- Fraction of inert gas Helium in inspired gas mix
+        :f_n2: -- Fraction of inert gas Nitrogen in inspired gas mix
+        :pp_o2: -- For CCR mode, partial pressure of oxygen in bar.
+            If == 0.0, then open circuit
 
-        Raise:
-        ModelStateException
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            ModelStateException
 
         """
         # rem: here we do not bother of PP_H2O like in constant_depth : WHY ?

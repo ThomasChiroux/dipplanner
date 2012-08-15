@@ -18,7 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
 """Base Class for exceptions for dipplanner module
 """
 
@@ -33,9 +32,45 @@ class DipplannerException(Exception):
     """Base exception class for dipplanner
     """
     def __init__(self, description):
+        """DipplannerException constructor
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         Exception.__init__(self)
         self.logger = logging.getLogger("dipplanner.DipplannerException")
         self.description = description
 
     def __str__(self):
-        return repr(self.description)
+        """String representing the object
+
+        *Keyword Arguments:*
+            <none>
+
+        *Return:*
+            str -- a string describing the Exception
+
+        *Raise:*
+            <nothing>
+        """
+        return ''.join(self.description)
+
+    def __unicode__(self):
+        """unicode string representing the object
+
+        *Keyword Arguments:*
+            <none>
+
+        *Return:*
+            ustr -- a unicode string describing the Exception
+
+        *Raise:*
+            <nothing>
+        """
+        return u''.join(self.description)

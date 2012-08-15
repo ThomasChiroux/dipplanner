@@ -18,12 +18,16 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-# Strongly inspired by Guy Wittig's MVPlan
-"""main dipplanner module
+
+"""main dipplanner module for command line usage.
+
+This module is used by the only "executable" of the project:
+bin/dipplanner (which is an empty shell)
+
 runs in command line and output resulting dive profile
 also initiate log files
 """
-#TODO: ResTifying docstrings and add sphinx for doc generation
+#TODO: ResTifying docstrings
 
 __version__ = "0.3nightly"
 
@@ -54,14 +58,14 @@ def activate_debug():
 
     it's mainly used for test cases who needs also logging to be set
 
-    Keyword Arguments:
-    <none>
+    *Keyword Arguments:*
+        <none>
 
-    Return:
-    <nothing>
+    *Return:*
+        <nothing>
 
-    Raise:
-    <nothing>
+    *Raise:*
+        <nothing>
 
     """
     LOGGER.setLevel(logging.DEBUG)
@@ -86,15 +90,14 @@ def activate_debug_for_tests():
 
     it's mainly used for test cases who needs also logging to be set
 
-    Keyword Arguments:
-    <none>
+    *Keyword Arguments:*
+        <none>
 
-    Return:
-    <nothing>
+    *Return:*
+        <nothing>
 
-    Raise:
-    <nothing>
-
+    *Raise:*
+        <nothing>
     """
     LOGGER.setLevel(logging.CRITICAL)
     stream_handler = logging.StreamHandler()
@@ -108,14 +111,14 @@ def activate_debug_for_tests():
 def parse_config_file(filenames):
     """parse a config file and change default settings values
 
-    Keyword Arguments:
-    filename -- name (and path) of the config file to be parsed
+    *Keyword Arguments:*
+        :filename: (str) -- name (and path) of the config file to be parsed
 
-    Returns:
-    <nothing>
+    *Returns:*
+        <nothing>
 
-    Raise:
-    Nothing, but can exit
+    *Raise:*
+        Nothing, but can exit
     """
     from ConfigParser import SafeConfigParser
 
@@ -325,19 +328,29 @@ def parse_arguments():
 
     could also exit from program because of wrong arguments
 
-    Keyword Arguments:
-    none
+    *Keyword Arguments:*
+        <none>
 
-    Returns:
-    two elements :
-      - parsed args
-      - a dict of dives like this:
-      dives = { 'dive1': { 'tanks': {}, 'segments': {}, 'surface_interval':0},
-                'dive2': { 'tanks': {}, 'segments': {}, 'surface_interval':60}
-              }
+    *Returns:*
+        a tuple of two dicts:
+            :args:
+            :dives:
 
-    Raise:
-    Nothing, but can exit
+            * args is the result of argpaser
+
+            * dives dict is in the following form:
+
+            .. code-block:: python
+
+                dives = { 'dive1': { 'tanks': {},
+                                     'segments': {},
+                                     'surface_interval':0 },
+                          'dive2': { 'tanks': {},
+                                     'segments': {},
+                                     'surface_interval':60 }}
+
+    *Raise:*
+        Nothing, but can exit
     """
     import argparse
 
@@ -629,7 +642,19 @@ def parse_arguments():
 
 
 def main():
-    """main function
+    """main
+
+    main uses the parameters, tanks and dives given in config file(s)
+    and/or command line, calculates the dives and return the output in stdout.
+
+    *Keyword Arguments:*
+        <none>
+
+    *Return:*
+        <nothing>
+
+    *Raise:*
+        <nothing>
     """
     activate_debug()
 

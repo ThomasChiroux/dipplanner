@@ -3,6 +3,7 @@
 *.pyc
 *.tmproj
 .idea/*
+.coverage
 *.log
 venv/*
 build/*

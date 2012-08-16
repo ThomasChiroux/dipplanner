@@ -40,7 +40,17 @@ class UnauthorizedMod(DipplannerException):
     depth(s) of the segment"""
 
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.DipplannerException.UnauthorizedMod")
@@ -69,6 +79,7 @@ class Segment(object):
         * run_time (float) -- runtime in profile
         * setpoint (float) -- setpoint for CCR
         * tank (Tank) -- refer to tank object used in this segment
+
     """
     types = ['const', 'ascent', 'descent', 'deco', 'waypoint', 'surf']
 

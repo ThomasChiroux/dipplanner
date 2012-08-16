@@ -20,9 +20,6 @@
 # This module is part of dipplanner, a Dive planning Tool written in python
 
 """gradient module
-
-Contains:
-Gradient -- class
 """
 
 __authors__ = [
@@ -41,26 +38,26 @@ class Gradient(object):
     a GF for any depth between its initialisation depth (see setGfAtDepth())
     and the surface.
 
-    Attributes (self.):
-    gf_low -- low Gradient factor, from 0.0 to 1.0
-    gf_high -- high Gradient factor, from 0.0 to 1.0
-    gf -- current gf
-    gf_slope -- slope of the linear equation
-    gf_set -- Indicates that gf Slope has been initialised
+    *Attributes (self.):*
+        * gf_low (float) -- low Gradient factor, from 0.0 to 1.0
+        * gf_high (float) -- high Gradient factor, from 0.0 to 1.0
+        * gf (float) -- current gf
+        * gf_slope (float) -- slope of the linear equation
+        * gf_set (float) -- Indicates that gf Slope has been initialised
     """
 
     def __init__(self, gf_low, gf_high):
         """Constructor for Gradient object
 
-        Keyword arguments:
-        gf_low -- low Gradient factor, from 0.0 to 1.0
-        gf_high -- high Gradient factor, from 0.0 to 1.0
+        *Keyword arguments:*
+            :gf_low: (float) -- low Gradient factor, from 0.0 to 1.0
+            :gf_high: (float) -- high Gradient factor, from 0.0 to 1.0
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        ValueError -- if either gf_low of gf_high has wrong value
+        *Raise:*
+            ValueError -- if either gf_low of gf_high has wrong value
 
         """
         #initiate class logger
@@ -75,7 +72,19 @@ class Gradient(object):
         self.gf_set = False
 
     def __deepcopy__(self, memo):
-        """deepcopy method will be called by copy.deepcopy"""
+        """deepcopy method will be called by copy.deepcopy
+
+        Used for "cloning" the object into another new object.
+
+        *Keyword Arguments:*
+            :memo: -- not used here
+
+        *Returns:*
+            Gradient -- Gradient object copy of itself
+
+        *Raise:*
+            <nothing>
+        """
         newobj = Gradient(self.gf_low, self.gf_high)
         newobj.gf = self.gf
         newobj.gf_slope = self.gf_slope
@@ -86,12 +95,14 @@ class Gradient(object):
         """Returns current GF with bounds checking
         if gf < gf_low, returns gf_low
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        float, gf
+        *Returns:*
+            float -- gf
 
+        *Raise:*
+            <nothing>
         """
         if self.gf >= self.gf_low:
             return self.gf
@@ -102,12 +113,14 @@ class Gradient(object):
         """Sets the gf for a given depth.
         Must be called after setGfSlope() has initialised slope
 
-        Keyword arguments:
-        depth -- current depth, in meter
+        *Keyword arguments:*
+            :depth: (float) -- current depth, in meter
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
+        *Raise:*
+            <nothing>
         """
         if (self.gf_slope < 1.0) and (depth >= 0.0):
             self.gf = (depth * self.gf_slope) + self.gf_high
@@ -116,12 +129,14 @@ class Gradient(object):
         """Set gf Slope at specified depth.
         Typically called once to initialise the GF slope.
 
-        Keyword arguments:
-        depth -- current depth, in meter
+        *Keyword arguments:*
+            :depth: (float) -- current depth, in meter
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
+        *Raise:*
+            <nothing>
         """
         if depth > 0:
             self.gf_slope = (self.gf_high - self.gf_low) / (0.0 - depth)
@@ -130,14 +145,14 @@ class Gradient(object):
     def set_gf_low(self, gf_low):
         """Sets gf low setting
 
-        Keyword arguments:
-        gf_low -- low Gf, between 0.0 and 1.0
+        *Keyword arguments:*
+            :gf_low: (float) -- low Gf, between 0.0 and 1.0
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        ValueError -- if either gf_low of gf_high has wrong value
+        *Raise:*
+            ValueError -- if either gf_low of gf_high has wrong value
 
         """
         if gf_low < 0.0 or gf_low > 1.0:
@@ -148,14 +163,14 @@ class Gradient(object):
     def set_gf_high(self, gf_high):
         """Sets gf high setting
 
-        Keyword arguments:
-        gf_high -- high Gf, between 0.0 and 1.0
+        *Keyword arguments:*
+            :gf_high: (float) -- high Gf, between 0.0 and 1.0
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
-        Raise:
-        ValueError -- if gf_high has wrong value
+        *Raise:*
+            ValueError -- if gf_high has wrong value
 
         """
         if gf_high < 0.0 or gf_high > 1.0:

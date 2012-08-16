@@ -69,7 +69,7 @@
 <span class="c"># If not, see &lt;http://www.gnu.org/licenses/gpl.html&gt;</span>
 <span class="c">#</span>
 <span class="c"># This module is part of dipplanner, a Dive planning Tool written in python</span>
-<span class="c"># Strongly inspired by Guy Wittig&#39;s MVPlan</span>
+
 <span class="sd">&quot;&quot;&quot;Segment classes</span>
 <span class="sd">A segment is a portion of a dive in the same depth (depth + duration)</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -91,7 +91,17 @@
 <span class="sd">    depth(s) of the segment&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="UnauthorizedMod.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.UnauthorizedMod.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :description: (str) -- text describing the error</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">DipplannerException</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="s">&quot;dipplanner.DipplannerException.UnauthorizedMod&quot;</span><span class="p">)</span>
@@ -102,35 +112,39 @@
 <div class="viewcode-block" id="Segment"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment">[docs]</a><span class="k">class</span> <span class="nc">Segment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for all types of segments</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">    type -- type of segment</span>
-<span class="sd">            types of segments can be :</span>
-<span class="sd">            const = &quot;Constant Depth&quot;</span>
-<span class="sd">            ascent = &quot;Ascent&quot;</span>
-<span class="sd">            descent = &quot;Descent&quot;</span>
-<span class="sd">            deco = &quot;Decompression&quot;</span>
-<span class="sd">            waypoint = &quot;Waypoint&quot;</span>
-<span class="sd">            surf = &quot;Surface&quot;</span>
-<span class="sd">    in_use -- boolean : True if segment is used</span>
-<span class="sd">    depth -- float : depth of this segment, in meter</span>
-<span class="sd">    time -- duration of this segment, in seconds</span>
-<span class="sd">    run_time -- runtime in profile</span>
-<span class="sd">    setpoint -- setpoint for CCR</span>
-<span class="sd">    tank -- refer to tank object used in this segment</span>
+<span class="sd">    *Attributes:*</span>
+
+<span class="sd">        * type (str) -- type of segment</span>
+
+<span class="sd">          types of segments can be :</span>
+
+<span class="sd">          * const = &quot;Constant Depth&quot;</span>
+<span class="sd">          * ascent = &quot;Ascent&quot;</span>
+<span class="sd">          * descent = &quot;Descent&quot;</span>
+<span class="sd">          * deco = &quot;Decompression&quot;</span>
+<span class="sd">          * waypoint = &quot;Waypoint&quot;</span>
+<span class="sd">          * surf = &quot;Surface&quot;</span>
+<span class="sd">        * in_use (boolean) -- True if segment is used</span>
+<span class="sd">        * depth (float) -- depth of this segment, in meter</span>
+<span class="sd">        * time (float) -- duration of this segment, in seconds</span>
+<span class="sd">        * run_time (float) -- runtime in profile</span>
+<span class="sd">        * setpoint (float) -- setpoint for CCR</span>
+<span class="sd">        * tank (Tank) -- refer to tank object used in this segment</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;const&#39;</span><span class="p">,</span> <span class="s">&#39;ascent&#39;</span><span class="p">,</span> <span class="s">&#39;descent&#39;</span><span class="p">,</span> <span class="s">&#39;deco&#39;</span><span class="p">,</span> <span class="s">&#39;waypoint&#39;</span><span class="p">,</span> <span class="s">&#39;surf&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="Segment.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;constructor for Segment base class, just defines all the parameters</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c">#initiate class logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;dipplanner.segment.Segment&quot;</span><span class="p">)</span>
@@ -144,8 +158,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setpoint</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c"># for CCR</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tank</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># tank used for this segment</span>
 </div>
-<div class="viewcode-block" id="Segment.__repr__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a string representing the actual segment&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a string representing the actual segment</span>
+
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Returns:*</span>
+<span class="sd">            str -- representation of the segment in the form:</span>
+<span class="sd">            &quot;   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m&quot;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s">&quot;</span><span class="si">%8s</span><span class="s">: at </span><span class="si">%3d</span><span class="s">m for </span><span class="si">%s</span><span class="s"> [RT:</span><span class="si">%s</span><span class="s">], on </span><span class="si">%s</span><span class="s">,  SP:</span><span class="si">%s</span><span class="s">, END:</span><span class="si">%i</span><span class="s">m&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
@@ -154,20 +180,52 @@
             <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tank</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setpoint</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_end</span><span class="p">())</span>
-</div>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
 
+<div class="viewcode-block" id="Segment.__str__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.__str__">[docs]</a>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment</span>
+
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Returns:*</span>
+<span class="sd">            str -- representation of the segment in the form:</span>
+<span class="sd">            (see __repr__)</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
+</div>
 <div class="viewcode-block" id="Segment.__unicode__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.__unicode__">[docs]</a>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment in unicode&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment in unicode</span>
+
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Returns:*</span>
+<span class="sd">            str -- representation of the segment in the form:</span>
+<span class="sd">            (see __repr__)</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s">u&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="Segment.check"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;check if it&#39;s a valid segment</span>
 <span class="sd">        Should be executed before calculating dives</span>
 
-<span class="sd">        Can raise DiveExceptions</span>
+<span class="sd">        the check does not return anything if nok, but raises Exceptions</span>
+
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Returns:*</span>
+<span class="sd">            True (bool) -- if check is ok</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;DiveExceptions&gt;</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setpoint</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c"># check MOD only if OC</span>
@@ -175,80 +233,84 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">check_min_od</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">check_mod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
 </div>
 <div class="viewcode-block" id="Segment.check_mod"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.check_mod">[docs]</a>    <span class="k">def</span> <span class="nf">check_mod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">max_ppo2</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;checks the mod for this segment according to the used tank.</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        max_ppo2 -- float - max tolerated ppo2</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            :max_ppo2: (float) -- max tolerated ppo2</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            True (bool) -- if check is ok</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">get_mod</span><span class="p">(</span><span class="n">max_ppo2</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">UnauthorizedMod</span><span class="p">(</span><span class="s">&quot;depth is exceeding the maximum MOD&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
 </div>
 <div class="viewcode-block" id="Segment.check_min_od"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.check_min_od">[docs]</a>    <span class="k">def</span> <span class="nf">check_min_od</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;checks the minimum od for this segment according to the used tank.</span>
 <span class="sd">        (hypoxic cases)</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            True (bool) -- if check is ok</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">get_min_od</span><span class="p">():</span>  <span class="c"># checks mini operating depth</span>
             <span class="k">raise</span> <span class="n">UnauthorizedMod</span><span class="p">(</span><span class="s">&quot;depth is too low for the minimum MOD&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
 </div>
 <div class="viewcode-block" id="Segment.get_time_str"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.get_time_str">[docs]</a>    <span class="k">def</span> <span class="nf">get_time_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;returns segment time in the form MMM:SS</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        string -- segment time in the form MMM:SS</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            string -- segment time in the form MMM:SS</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">seconds_to_mmss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Segment.get_run_time_str"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.get_run_time_str">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_time_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;returns runtime in the form MMM:SS</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        string -- segment time in the form MMM:SS</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            string -- segment time in the form MMM:SS</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">seconds_to_mmss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_time</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Segment.get_p_absolute"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.get_p_absolute">[docs]</a>    <span class="k">def</span> <span class="nf">get_p_absolute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">METHOD_FOR_DEPTH_CALCULATION</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;returns the absolute pression in bar</span>
 <span class="sd">        (1atm = 1ATA = 1.01325 bar = 14.70psi)</span>
+
 <span class="sd">        Simple method : 10m = +1 bar</span>
 <span class="sd">        Complex method : use real density of water, T°, etc...</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        method -- &#39;simple&#39; or &#39;complex&#39;. simple is default</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            method -- &#39;simple&#39; or &#39;complex&#39;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        a float indicating the absolute pressure in bar</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            float -- indicating the absolute pressure in bar</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        ValueError -- when providing a bad method</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            ValueError -- when providing a bad method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;simple&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SURFACE</span>
@@ -261,18 +323,21 @@
 <div class="viewcode-block" id="Segment.get_end"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.get_end">[docs]</a>    <span class="k">def</span> <span class="nf">get_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculates and returns E.N.D :</span>
 <span class="sd">        Equivalent Narcosis Depth</span>
+
 <span class="sd">        Instead of Mvplan, it uses a &#39;calculation method&#39; based on</span>
 <span class="sd">        narcosis effet of all gas used, assuming there is no trace of</span>
 <span class="sd">        other gases (like argon) in the breathing gas, but compare the narcotic</span>
 <span class="sd">        effect with surface gas, wich is &#39;air&#39; and contains</span>
 <span class="sd">        a small amount of argon</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        Integer : Equivalient Narcosis Depth in meter</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            integer -- Equivalent Narcosis Depth in meter</span>
 
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c">#TODO: refactor with get_end_for_given_depth in Tank</span>
         <span class="n">p_absolute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_p_absolute</span><span class="p">()</span>
@@ -324,7 +389,10 @@
         <span class="k">return</span> <span class="n">end</span>
 </div>
 <div class="viewcode-block" id="Segment.gas_used"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.Segment.gas_used">[docs]</a>    <span class="k">def</span> <span class="nf">gas_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;returns the quantity (in liter) of gas used for this segment&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;returns the quantity (in liter) of gas used for this segment</span>
+
+<span class="sd">        (this method is empty)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
 </div></div>
@@ -335,19 +403,20 @@
         <span class="sd">&quot;&quot;&quot;Constructor for SegmentDive class.</span>
 <span class="sd">        Look at base class for more explanations</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        depth -- in meter, the (constant) depth for this segment</span>
-<span class="sd">        time -- in second, duration of this segment</span>
-<span class="sd">        tank -- object instance of Tank class :</span>
-<span class="sd">                describe the tank used in this segment</span>
-<span class="sd">        setpoint -- float, for CCR, setpoint used for this segment</span>
-<span class="sd">                    for OC : setpoint should be zero</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            :depth: (float) -- in meter, the (constant) depth for this segment</span>
+<span class="sd">            :time: (float) -- in second, duration of this segment</span>
+<span class="sd">            :tank: (Tank) -- object instance of Tank class :</span>
+<span class="sd">                             describe the tank used in this segment</span>
+<span class="sd">            :setpoint: (float) -- for CCR, setpoint used for this segment</span>
+<span class="sd">                                  for OC : setpoint should be zero</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        UnauthorizedMod -- if depth is incompatible with either min or max mod</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            UnauthorizedMod -- if depth is incompatible</span>
+<span class="sd">                               with either min or max mod</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Segment</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -368,11 +437,11 @@
         <span class="sd">&quot;&quot;&quot;calculates returns the quantity (in liter)</span>
 <span class="sd">        of gas used for this segment</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        float, in liter, quantity of gas used</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            float -- in liter, quantity of gas used</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setpoint</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -393,23 +462,25 @@
 <span class="sd">        Look at base class for more explanations</span>
 
 <span class="sd">        In deco segment, we also have to manage some new parameters :</span>
-<span class="sd">        gf_used : which gradient factor is used</span>
-<span class="sd">        control_compartment : who is the control compartement</span>
-<span class="sd">        mv_max : max M-value for the compartment</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        depth -- in meter, the (constant) depth for this segment</span>
-<span class="sd">        time -- in second, duration of this segment</span>
-<span class="sd">        tank -- object instance of Tank class :</span>
-<span class="sd">                describe the tank used in this segment</span>
-<span class="sd">        setpoint -- float, for CCR, setpoint used for this segment</span>
-<span class="sd">                    for OC : setpoint should be zero</span>
+<span class="sd">        * gf_used : which gradient factor is used</span>
+<span class="sd">        * control_compartment : who is the control compartement</span>
+<span class="sd">        * mv_max : max M-value for the compartment</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            :depth: (float) -- in meter, the (constant) depth for this segment</span>
+<span class="sd">            :time: (float) -- in second, duration of this segment</span>
+<span class="sd">            :tank: (Tank) -- object instance of Tank class :</span>
+<span class="sd">                             describe the tank used in this segment</span>
+<span class="sd">            :setpoint: (float) -- for CCR, setpoint used for this segment</span>
+<span class="sd">                                  for OC : setpoint should be zero</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        UnauthorizedMod -- if depth is incompatible with either min or max mod</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            UnauthorizedMod -- if depth is incompatible</span>
+<span class="sd">                               with either min or max mod</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Segment</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -435,11 +506,11 @@
         <span class="sd">&quot;&quot;&quot;calculates returns the quantity (in liter)</span>
 <span class="sd">        of gas used for this segment</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        float, in liter, quantity of gas used</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            float -- in liter, quantity of gas used</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setpoint</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -463,20 +534,23 @@
 <span class="sd">        The comparaison between start and end depth determine if asc or desc</span>
 <span class="sd">        rate is given in m/min</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        start_depth -- in meter, the starting depth for this segment</span>
-<span class="sd">        end_depth -- in meter, the ending depth for this segment</span>
-<span class="sd">        rate -- in m/s, rate of ascending or descending</span>
-<span class="sd">        tank -- object instance of Tank class :</span>
-<span class="sd">                describe the tank used in this segment</span>
-<span class="sd">        setpoint -- float, for CCR, setpoint used for this segment</span>
-<span class="sd">                    for OC : setpoint should be zero</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            :start_depth: (float) -- in meter, the starting depth</span>
+<span class="sd">                                     for this segment</span>
+<span class="sd">            :end_depth: (float) -- in meter, the ending depth</span>
+<span class="sd">                                     for this segment</span>
+<span class="sd">            :rate: (float) -- in m/s, rate of ascending or descending</span>
+<span class="sd">            :tank: (Tank) -- object instance of Tank class :</span>
+<span class="sd">                             describe the tank used in this segment</span>
+<span class="sd">            :setpoint: (float) -- for CCR, setpoint used for this segment</span>
+<span class="sd">                                  for OC : setpoint should be zero</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        UnauthorizedMod -- if depth is incompatible with either min or max mod</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            UnauthorizedMod -- if depth is incompatible</span>
+<span class="sd">                               with either min or max mod</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Segment</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -510,14 +584,14 @@
 <div class="viewcode-block" id="SegmentAscDesc.check_mod"><a class="viewcode-back" href="../../autodoc.html#dipplanner.segment.SegmentAscDesc.check_mod">[docs]</a>    <span class="k">def</span> <span class="nf">check_mod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_ppo2</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;checks the mod for this segment according to the used tank.</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        max_ppo2 -- float - max tolerated ppo2</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            :max_ppo2: (float) -- max tolerated ppo2</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s">&#39;ascent&#39;</span><span class="p">:</span>
@@ -532,14 +606,14 @@
         <span class="sd">&quot;&quot;&quot;checks the minimum od for this segment according to the used tank.</span>
 <span class="sd">        (hypoxic cases)</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            UnauthorizedMod -- if segments goes below max mod or upper min mod</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s">&#39;ascent&#39;</span><span class="p">:</span>
             <span class="n">min_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_depth</span>
@@ -556,11 +630,11 @@
 <span class="sd">        Because the rate is the same during all the segment, we can use the</span>
 <span class="sd">        consumption at the average depth of the segment</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        float, in liter, quantity of gas used</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            float -- in liter, quantity of gas used</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setpoint</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>

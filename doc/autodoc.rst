@@ -10,7 +10,7 @@ dive
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 segment
 -------
@@ -21,7 +21,7 @@ segment
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 settings
 --------
@@ -32,7 +32,7 @@ settings
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 tank
 ----
@@ -43,7 +43,7 @@ tank
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 model: buhlmann
 ----------------
@@ -68,7 +68,7 @@ compartment
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 gradient
 ^^^^^^^^
@@ -79,7 +79,7 @@ gradient
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 oxygen toxicity
 ^^^^^^^^^^^^^^^
@@ -90,7 +90,7 @@ oxygen toxicity
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 model
 ^^^^^
@@ -101,7 +101,7 @@ model
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 Exceptions
 ----------
@@ -112,7 +112,7 @@ Exceptions
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 tools
 -----
@@ -123,7 +123,7 @@ tools
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
 main
 ----
@@ -134,4 +134,4 @@ main
    :special-members:
    :inherited-members:
    :member-order: bysource
-   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __str__, __subclasshook__
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__

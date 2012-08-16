@@ -69,7 +69,7 @@
 <span class="c"># If not, see &lt;http://www.gnu.org/licenses/gpl.html&gt;</span>
 <span class="c">#</span>
 <span class="c"># This module is part of dipplanner, a Dive planning Tool written in python</span>
-<span class="c"># Strongly inspired by Guy Wittig&#39;s MVPlan</span>
+
 <span class="sd">&quot;&quot;&quot;Defines a Buhlmann compartment</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -155,18 +155,18 @@
         <span class="n">newobj</span><span class="o">.</span><span class="n">old_seg_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_seg_time</span>
         <span class="k">return</span> <span class="n">newobj</span>
 </div>
-<div class="viewcode-block" id="Compartment.__repr__"><a class="viewcode-back" href="../../../../autodoc.html#dipplanner.model.buhlmann.compartment.Compartment.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a string representing the comp&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s">&quot;He:</span><span class="si">%s</span><span class="s"> N2:</span><span class="si">%s</span><span class="s"> mv_at:</span><span class="si">%s</span><span class="s"> MV:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pp_he</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pp_n2</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_m_value_at</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SURFACE</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_mv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SURFACE</span><span class="p">))</span>
-</div>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Compartment.__str__"><a class="viewcode-back" href="../../../../autodoc.html#dipplanner.model.buhlmann.compartment.Compartment.__str__">[docs]</a>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
-
+</div>
 <div class="viewcode-block" id="Compartment.__unicode__"><a class="viewcode-back" href="../../../../autodoc.html#dipplanner.model.buhlmann.compartment.Compartment.__unicode__">[docs]</a>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment in unicode&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s">u&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
@@ -346,9 +346,13 @@
 </div>
 <div class="viewcode-block" id="Compartment.get_m_value_at"><a class="viewcode-back" href="../../../../autodoc.html#dipplanner.model.buhlmann.compartment.Compartment.get_m_value_at">[docs]</a>    <span class="k">def</span> <span class="nf">get_m_value_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pressure</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets M-Value for given ambient pressure using the Buhlmann equation</span>
-<span class="sd">        Pm = Pa/b +a         where: Pm = M-Value pressure,</span>
-<span class="sd">                                    Pa = ambiant pressure</span>
-<span class="sd">                                    a,b co-efficients</span>
+<span class="sd">        Pm = Pa/b +a</span>
+<span class="sd">        where:</span>
+
+<span class="sd">            * Pm = M-Value pressure,</span>
+<span class="sd">            * Pa = ambiant pressure</span>
+<span class="sd">            * a,b co-efficients</span>
+
 <span class="sd">        Not used for decompression but for display of M-value limit line</span>
 <span class="sd">        Note that this does not factor gradient factors.</span>
 

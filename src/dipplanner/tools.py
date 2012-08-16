@@ -20,9 +20,7 @@
 # This module is part of dipplanner, a Dive planning Tool written in python
 """tools modules
 
-Contains:
-seconds_to_mmss -- function
-altitude_to_pressure -- function
+This modules contains some utility functions like unit conversions, etc...
 """
 
 __authors__ = [
@@ -40,15 +38,18 @@ def seconds_to_mmss(seconds):
     (like 2:06)
     It does returns only minutes and seconds, not hours, minutes and seconds
 
-    Keyword Arguments:
-    duration - the duration in seconds
+    "Keyword Arguments:"
+        :seconds: (float) -- the duration in seconds
 
-    Returns:
-    <string> : the time in minutes and seconds
+    *Returns:*
+        str -- the time in minutes and seconds
+               ex:
+               "23:45"
+               "112:33"
+               ...
 
-    Raise:
-    ValueError: when bad time values
-
+    *Raise:*
+        ValueError: when bad time values
     """
     if seconds < 0:
         raise ValueError("time can not be negative")
@@ -62,14 +63,17 @@ def seconds_to_hhmmss(seconds):
     in hour:minutes and seconds
     like 22:34:44
 
-    Keyword Arguments:
-    seconds - the duration in seconds
+    *Keyword Arguments:*
+        :seconds: (float) -- the duration in seconds
 
-    Returns:
-    <string> : the time in hour - minutes and seconds
+    *Returns:*
+        str -- the time in hour - minutes and seconds
+               ex:
+               "00:23:45"
+               "01:52:33"
 
-    Raise:
-    ValueError: when bad time values is given
+    *Raise:*
+        ValueError: when bad time values is given
     """
     if seconds < 0:
         raise ValueError("time can not be negative")
@@ -82,18 +86,19 @@ def seconds_to_hhmmss(seconds):
 
 
 def altitude_or_depth_to_absolute_pressure(altitude_or_depth):
-    """output aboslute pressure for give "depth" in meter.
-    If depth is positive it's considered altitude depth
-    If depth is negative it's considered depth in water
+    """output absolute pressure for give "depth" in meter.
 
-    Keyword Arguments:
-    altitude_or_depth - int (signed) : in meter
+    * If depth is positive it's considered altitude depth
+    * If depth is negative it's considered depth in water
 
-    Returns:
-    float - resulting absolute pressure in bar
+    *Keyword Arguments:*
+        :altitude_or_depth: (float (signed)) -- in meter
 
-    Raise:
-    ValueError if altitude > 10000m
+    *Returns:*
+        float -- resulting absolute pressure in bar
+
+    *Raise:*
+        ValueError if altitude > 10000m
     """
     if altitude_or_depth < 0:
         return depth_to_pressure(-altitude_or_depth) + \
@@ -107,14 +112,14 @@ def altitude_to_pressure(altitude):
     uses the formula:
     p = 101325.(1-2.25577.10^-5.h)^5.25588
 
-    Keyword Arguments:
-    altitude - current altitude in meter
+    *Keyword Arguments:*
+        :altitude: (float) -- current altitude in meter
 
-    Returns:
-    float - resulting pressure in bar
+    *Returns:*
+        float -- resulting pressure in bar
 
-    Raise:
-    ValueError: when bad altitude is given (bad or <0 or > 10000 m)
+    *Raise:*
+        ValueError: when bad altitude is given (bad or <0 or > 10000 m)
 
     """
     if altitude < 0:
@@ -126,36 +131,40 @@ def altitude_to_pressure(altitude):
         settings.AMBIANT_PRESSURE_SEA_LEVEL
 
 
-def depth_to_pressure(depth):
+def depth_to_pressure(depth, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     """Calculates depth pressure based on depth using a more complex
     method than only /10
 
-    Keyword Arguments:
-    depth - in meter
+    *Keyword Arguments:*
+        :depth: (float) -- in meter
 
-    Returns:
-    float - depth pressure in bar
+    *Returns:*
+        float -- depth pressure in bar
 
+    *Raise:*
+        <nothing>
     """
-    if settings.METHOD_FOR_DEPTH_CALCULATION == 'complex':
+    if method == 'complex':
         g = 9.81
         return settings.WATER_DENSITY * 1E3 * g * float(depth) * 1E-5
     else:
         return float(depth) / 10
 
 
-def pressure_to_depth(pressure):
+def pressure_to_depth(pressure, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     """calculates depth based on give pressure using a more complex
     method than only *10
 
     *Keyword Arguments:*
-        :pressure: - float in bar
+        :pressure: (float) -- pressure in bar
 
     *Returns:*
-        int - depth in meter
+        float -- depth in meter
 
+    *Raise:*
+        <nothing>
     """
-    if settings.METHOD_FOR_DEPTH_CALCULATION == 'complex':
+    if method == 'complex':
         g = 9.81
         return float(pressure) / (settings.WATER_DENSITY * 1E3 * g * 1E-5)
     else:
@@ -167,13 +176,17 @@ def calculate_pp_h2o_surf(temperature=20):
     using Antoine equation
     (http://en.wikipedia.org/wiki/Vapour_pressure_of_water)
 
-    Keyword Arguments:
-      temperature - float in ° Celcius
+    *Keyword Arguments:*
+        :temperature: (float) [OPTIONNAL] --  in ° Celcius
 
-    Returns:
-      float - ppH2O in bar
+    *Returns:*
+        float -- ppH2O in bar
+
+    *Raise:*
+        ValueError -- when temperature exceed maximum value for calculation
+                      (>=374 °C)
     """
-    mm_hg_to_bar = 1 / 750.0615
+    mm_hg_to_bar = 1.0 / 750.0615
 
     if temperature < 1:
         temperature = 1
@@ -194,36 +207,90 @@ def calculate_pp_h2o_surf(temperature=20):
 
 
 def convert_bar_to_psi(value):
-    """SI - imperial conversion function
+    """SI --> imperial pressure conversion function
+
+    *Keyword Arguments:*
+        :value: (float) -- pressure in bar
+
+    *Returns:*
+        float -- pressure in psi
+
+    *Raise:*
+        <nothing>
     """
     return float(value) * 14.5037744
 
 
 def convert_psi_to_bar(value):
-    """SI - imperial conversion function
+    """imperial --> SI pressure conversion function
+
+    *Keyword Arguments:*
+        :value: (float) -- pressure in psi
+
+    *Returns:*
+        float -- pressure in bar
+
+    *Raise:*
+        <nothing>
     """
     return float(value) / 14.5037744
 
 
 def convert_liter_to_cubicfeet(value):
-    """SI - imperial conversion function
+    """SI -->  imperial volume conversion function
+
+    *Keyword Arguments:*
+        :value: (float) -- volume in liter
+
+    *Returns:*
+        float -- volume in cubicfeet
+
+    *Raise:*
+        <nothing>
     """
     return float(value) / (math.pow(0.3048, 3) * 1000)
 
 
 def convert_cubicfeet_to_liter(value):
-    """SI - imperial conversion function
+    """imperial --> SI volume conversion function
+
+    *Keyword Arguments:*
+        :value: (float) -- volume in cubicfeet
+
+    *Returns:*
+        float -- volume in liter
+
+    *Raise:*
+        <nothing>
     """
     return float(value) * (math.pow(0.3048, 3) * 1000)
 
 
 def convert_meter_to_feet(value):
-    """SI - imperial conversion function
+    """SI --> imperial distance conversion function
+
+    *Keyword Arguments:*
+        :value: (float) -- volume in cubicfeet
+
+    *Returns:*
+        float -- volume in liter
+
+    *Raise:*
+        <nothing>
     """
     return float(value) / 0.3048
 
 
 def convert_feet_to_meter(value):
-    """SI - imperial conversion function
+    """imperial --> SI distance conversion function
+
+    *Keyword Arguments:*
+        :value: (float) -- volume in cubicfeet
+
+    *Returns:*
+        float -- volume in liter
+
+    *Raise:*
+        <nothing>
     """
     return float(value) * 0.3048

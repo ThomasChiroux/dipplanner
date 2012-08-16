@@ -34,23 +34,25 @@ class OxTox(object):
     """Defines a Oxygen Toxicity model
 
     *Attributes:*
+        * cns (float) -- central nervous system toxicity
 
-    :cns: (float) -- central nervous system toxicity
-        (see http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms)
-    :otu: (float- -- Oxygen toxicity Units
-    :max_ox: (float) -- maximum ppo2
+          (see http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms)
+        * otu (float- -- Oxygen toxicity Units
+        * max_ox (float) -- maximum ppo2
 
     """
 
     def __init__(self):
         """Constructor for OxTox class
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
+        *Raise:*
+            <nothing>
         """
         #initiate class logger
         self.logger = logging.getLogger(
@@ -62,7 +64,19 @@ class OxTox(object):
         self.max_ox = 0.0
 
     def __deepcopy__(self, memo):
-        """deepcopy method will be called by copy.deepcopy"""
+        """deepcopy method will be called by copy.deepcopy
+
+        Used for "cloning" the object into another new object.
+
+        *Keyword Arguments:*
+            :memo: -- not used here
+
+        *Returns:*
+            Gradient -- Gradient object copy of itself
+
+        *Raise:*
+            <nothing>
+        """
         newobj = OxTox()
         newobj.cns = self.cns
         newobj.otu = self.otu
@@ -71,18 +85,22 @@ class OxTox(object):
 
     def add_o2(self, time, pp_o2):
         """Adds oxygen load into model.
+
         Uses NOAA lookup table to add percentage based on time and ppO2.
         Calculate OTU using formula OTU= T * (0.5/(pO2-0.5))^-(5/6)
+
         this OTU formula need T (time) in minutes, so we need to convert the
         time in second to minutes while using this formula
 
-        Keyword arguments:
-        pp_o2 -- partial pressure of oxygen
-        time -- time of segment (in seconds)
+        *Keyword arguments:*
+            :pp_o2: (float) -- partial pressure of oxygen
+            :time: (float) -- time of segment (in seconds)
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
+        *Raise:*
+            <nothing>
         """
         if pp_o2 > 0.5:
             # only accumulate OTU for ppO2 > 0.5 atm
@@ -131,15 +149,18 @@ class OxTox(object):
     def remove_o2(self, time):
         """Removes oxygen load from model during surface intervals
 
-        Keyword arguments:
-        time -- time of segment (in seconds)
+        *Keyword arguments:*
+            :time: (float) -- time of segment (in seconds)
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
+        *Raise:*
+            <nothing>
         """
+        # very simple OTU recovery model: one day of no diving reset OTU
         if time >= 86400:
             self.otu = 0.0
-        #old_cns = self.cns
+
         # decay cns with haltime of 90mins
         self.cns = self.cns * math.exp(-(float(time) / 60) * 0.693147 / 90.0)

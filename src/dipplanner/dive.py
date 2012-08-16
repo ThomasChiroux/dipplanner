@@ -53,9 +53,21 @@ from dipplanner.tools import altitude_or_depth_to_absolute_pressure
 
 
 class NothingToProcess(DipplannerException):
-    """raised when the is no input segments to process"""
+    """raised when the is no input segments to process
+    """
+
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.dipp_exception.NothingToProcess")
@@ -67,8 +79,19 @@ class InstanciationError(DipplannerException):
     """raised when the Dive constructor encounters a problem.
        In this case, it can not continue
     """
+
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.dipp_exception.InstanciationError")
@@ -77,9 +100,21 @@ class InstanciationError(DipplannerException):
 
 
 class ProcessingError(DipplannerException):
-    """raised when the is no input segments to process"""
+    """raised when the is no input segments to process
+    """
+
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.dipp_exception.ProcessingError")
@@ -88,9 +123,21 @@ class ProcessingError(DipplannerException):
 
 
 class InfiniteDeco(DipplannerException):
-    """raised when the deco time becomes enourmous (like infinite)"""
+    """raised when the deco time becomes enourmous (like infinite)
+    """
+
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.dipp_exception.InfiniteDeco")

@@ -18,7 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
 """Defines a Buhlmann compartment
 """
 
@@ -34,7 +33,21 @@ from dipplanner.model.buhlmann.model_exceptions import ModelStateException
 
 
 class Compartment(object):
-    """Buhlmann compartment class"""
+    """Buhlmann compartment class
+
+    *Attributes:*
+        * h_he: helium halftime
+        * h_n2: nitrogen halftime
+        * a_he: helium : a coefficient
+        * a_n2: nitrogen : a coefficient
+        * b_he: helium : b coefficient
+        * b_n2: nitrogen : b coefficient
+        * k_he: helium : k coefficient (calculated)
+        * k_n2: nitrogen : k coefficient (calculated)
+        * pp_he: partial pressure of helium
+        * pp_n2: partial pressure of nitrogen
+
+    """
 
     def __init__(self, h_he=None, h_n2=None,
                  a_he=None, b_he=None,
@@ -44,10 +57,19 @@ class Compartment(object):
         can be called with time params and coef and in this case initate the
         compartment time constants
 
-        Keyword arguments:
-        Returns:
-        Raise:
-        see set_compartment_time_constants method
+        *Keyword arguments:*
+            :h_he: (float) -- helium halftime
+            :h_n2: (float) -- nitrogen halftime
+            :a_he: (float) -- helium: a coefficient
+            :b_he: (float) -- helium: b coefficient
+            :a_n2: (float) -- nitrogen: a coefficient
+            :b_n2: (float) -- nitrogen: b coefficient
+
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            see set_compartment_time_constants method
         """
         #initiate class logger
         self.logger = logging.getLogger(
@@ -82,7 +104,19 @@ class Compartment(object):
                                                 a_n2, b_n2)
 
     def __deepcopy__(self, memo):
-        """deepcopy method will be called by copy.deepcopy"""
+        """deepcopy method will be called by copy.deepcopy
+
+        Used for "cloning" the object into another new object.
+
+        *Keyword Arguments:*
+            :memo: -- not used here
+
+        *Returns:*
+            Compartment -- Compartment object copy of itself
+
+        *Raise:*
+            <nothing>
+        """
         newobj = Compartment(self.h_he, self.h_n2,
                              self.a_he, self.b_he,
                              self.a_n2, self.b_n2)
@@ -105,7 +139,19 @@ class Compartment(object):
         return newobj
 
     def __repr__(self):
-        """Returns a string representing the comp"""
+        """Returns a string representing the comp
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            str -- string representation of the compartment
+                   ex:
+                   "He:0.0 N2:19.9991340314 gf:0.3 mv_at:2.98611129437 max_amb:15.8731803417 MV:6.6973840088"
+
+        *Raise:*
+            <nothing>
+        """
         return "He:%s N2:%s mv_at:%s MV:%s" % (
             self.pp_he,
             self.pp_n2,
@@ -113,11 +159,35 @@ class Compartment(object):
             self.get_mv(settings.AMBIANT_PRESSURE_SURFACE))
 
     def __str__(self):
-        """Return a human readable name of the segment"""
+        """Return a human readable name of the segment
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            str -- string representation of the compartment
+                   ex:
+                   "He:0.0 N2:19.9991340314 gf:0.3 mv_at:2.98611129437 max_amb:15.8731803417 MV:6.6973840088"
+
+        *Raise:*
+            <nothing>
+        """
         return self.__repr__()
 
     def __unicode__(self):
-        """Return a human readable name of the segment in unicode"""
+        """Return a human readable name of the segment in unicode
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            ustr -- unicode string representation of the compartment
+                   ex:
+                   u"He:0.0 N2:19.9991340314 gf:0.3 mv_at:2.98611129437 max_amb:15.8731803417 MV:6.6973840088"
+
+        *Raise:*
+            <nothing>
+        """
         return u"%s" % self.__repr__()
 
     def set_compartment_time_constants(self, h_he, h_n2,
@@ -125,16 +195,19 @@ class Compartment(object):
                                        a_n2, b_n2):
         """Sets the compartment's time constants
 
-        Keyword arguments:
-        h_he -- Helium Halftime
-        h_n2 -- Nitrogen Halftime
-        a_he -- Helium : a coefficient
-        b_he -- Helium : b coefficient
-        a_n2 -- Nitrogen : a coefficient
-        b_n2 -- Nitrogen : b coefficient
+        *Keyword arguments:*
+            :h_he: (float) -- Helium Halftime
+            :h_n2: (float) -- Nitrogen Halftime
+            :a_he: (float) -- Helium : a coefficient
+            :b_he: (float) -- Helium : b coefficient
+            :a_n2: (float) -- Nitrogen : a coefficient
+            :b_n2: (float) -- Nitrogen : b coefficient
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
         """
         self.h_he = h_he
         self.h_n2 = h_n2
@@ -148,15 +221,15 @@ class Compartment(object):
     def set_pp(self, pp_he, pp_n2):
         """Sets partial pressures of He and N2
 
-        Keyword arguments:
-        pp_he -- partial pressure of Helium
-        pp_n2 -- partial pressure of Nitrogen
+        *Keyword arguments:*
+            :pp_he: (float) -- partial pressure of Helium
+            :pp_n2: (float) -- partial pressure of Nitrogen
 
-        Return:
-        <nothing>
+        *Return:*
+            <nothing>
 
-        Raise:
-        ModelStateException -- if pp < 0
+        *Raise:*
+            <nothing>
 
         """
         #if pp_he < 0.0 or pp_n2 < 0.0:
@@ -180,16 +253,16 @@ class Compartment(object):
         Uses instananeous equation: P = Po + (Pi - Po)(1-e^-kt)
         store the new values in self.pp_he and self.pp_n2
 
-        Keyword arguments:
-        pp_he_inspired -- partial pressure of inspired helium
-        pp_n2_inspired -- partial pressure of inspired nitrogen
-        seg_time -- segment time in seconds
+        *Keyword arguments:*
+            :pp_he_inspired: (float) -- partial pressure of inspired helium
+            :pp_n2_inspired: (float) -- partial pressure of inspired nitrogen
+            :seg_time: (float) -- segment time in seconds
 
-        Return:
-        <nothing>
+        *Return:*
+            <nothing>
 
-        Raise:
-        ModelStateException -- if pp or time < 0
+        *Raise:*
+            ModelStateException -- if pp or time < 0
         """
         # below is an optimisation to reduce the
         # (1 - math.exp(-self.k_he*float(seg_time)))
@@ -237,18 +310,18 @@ class Compartment(object):
         Uses equation : P=Pio+R(t -1/k)-[Pio-Po-(R/k)]e^-kt
         store the new values in self.pp_he and self.pp_n2
 
-        Keyword arguments:
-        pp_he_inspired -- partial pressure of inspired helium
-        pp_n2_inspired -- partial pressure of inspired nitrogen
-        rate_he -- rate of change of pp_he
-        rate_n2 -- rate of change of pp_n2
-        seg_time -- segment time in seconds
+        *Keyword arguments:*
+            :pp_he_inspired: (float) -- partial pressure of inspired helium
+            :pp_n2_inspired: (float) -- partial pressure of inspired nitrogen
+            :rate_he: (float) -- rate of change of pp_he
+            :rate_n2: (float) -- rate of change of pp_n2
+            :seg_time: (float) -- segment time in seconds
 
-        Return:
-        <nothing>
+        *Return:*
+            <nothing>
 
-        Raise:
-        ModelStateException -- if pp or time < 0
+        *Raise:*
+            ModelStateException -- if pp or time < 0
         """
         if pp_he_inspired < 0 or pp_n2_inspired < 0 or seg_time < 0:
             raise ModelStateException(
@@ -277,22 +350,6 @@ class Compartment(object):
             self.b_he_n2 = ((self.b_he * new_pp_he) +
                             (self.b_n2 * new_pp_n2)) / (new_pp_he + new_pp_n2)
 
-#def _calculate_p_a_b_inert(self):
-#    """Calculate and returns p_he_n2, a_he_n2 and b_he_n2
-#    based on current pp_he and pp_n2 of this compartment
-#
-#    Keyword arguments:
-#    <none>
-#
-#    Returns:
-#    3 float values : p_he_n2, a_he_n2 and b_he_n2
-#    """
-#    p_he_n2 = self.pp_he + self.pp_n2
-#    # calculate adjusted a, b coefficients based on those of He and N2
-#    a_he_n2 = ((self.a_he * self.pp_he) + (self.a_n2 * self.pp_n2)) / p_he_n2
-#    b_he_n2 = ((self.b_he * self.pp_he) + (self.b_n2 * self.pp_n2)) / p_he_n2
-#    return p_he_n2, a_he_n2, b_he_n2
-
     def get_m_value_at(self, pressure):
         """Gets M-Value for given ambient pressure using the Buhlmann equation
         Pm = Pa/b +a
@@ -302,15 +359,22 @@ class Compartment(object):
             * Pa = ambiant pressure
             * a,b co-efficients
 
-        Not used for decompression but for display of M-value limit line
-        Note that this does not factor gradient factors.
+        .. note::
 
-        Keyword arguments:
-        pressure -- ambient pressure (in bar)
+            Not used for decompression but for display of M-value limit line
 
-        Return:
-        float, M_value : maximum tolerated pressure in bar
+        .. note::
 
+            this method does not use gradient factors.
+
+        *Keyword arguments:*
+            :pressure: (float) -- ambient pressure (in bar)
+
+        *Return:*
+            float -- M_value: maximum tolerated pressure in bar
+
+        *Raise:*
+            <nothing>
         """
         return float(pressure) / self.b_he_n2 + self.a_he_n2
 
@@ -318,12 +382,14 @@ class Compartment(object):
         """Gets Tolerated Absolute Pressure for the compartment
         for current pp of He and N2
 
-        Keyword arguments:
-        gf -- gradient factor : 0.1 to 1.0, typical 0.2 - 0.95
+        *Keyword arguments:*
+            :gf: (float) -- gradient factor : 0.1 to 1.0, typical 0.2 - 0.95
 
-        Return:
-        float, maximum tolerated pressure (absolute) in bar
+        *Return:*
+            float -- maximum tolerated pressure (absolute) in bar
 
+        *Raise:*
+            <nothing>
         """
         return ((self.pp_he + self.pp_n2) - self.a_he_n2 * gf) / \
             (gf / self.b_he_n2 - gf + 1.0)
@@ -331,12 +397,14 @@ class Compartment(object):
     def get_mv(self, p_amb):
         """Gets M-Value for a compartment, given an ambient pressure
 
-        Keyword arguments:
-        p_amb -- ambiant pressure
+        *Keyword arguments:*
+            :p_amb: (float) -- ambiant pressure
 
-        Return:
-        float, M-value
+        *Return:*
+            float -- M-value
 
+        *Raise:*
+            <nothing>
         """
         #self.logger.debug("comp m-value for %s : %s" % (p_amb, mv))
         return (self.pp_he + self.pp_n2) / (float(p_amb) /

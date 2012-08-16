@@ -69,11 +69,11 @@
 <span class="c"># If not, see &lt;http://www.gnu.org/licenses/gpl.html&gt;</span>
 <span class="c">#</span>
 <span class="c"># This module is part of dipplanner, a Dive planning Tool written in python</span>
-<span class="c"># Strongly inspired by Guy Wittig&#39;s MVPlan</span>
 <span class="sd">&quot;&quot;&quot;dive class module</span>
 
-<span class="sd">Contains:</span>
-<span class="sd">Dive -- class</span>
+<span class="sd">Each Dive represent one dive (and only one)</span>
+<span class="sd">For successive dives, it is possible to provide the parameters of the</span>
+<span class="sd">previous dive in order to calculate the next one.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">__authors__</span> <span class="o">=</span> <span class="p">[</span>
@@ -104,9 +104,21 @@
 
 
 <div class="viewcode-block" id="NothingToProcess"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.NothingToProcess">[docs]</a><span class="k">class</span> <span class="nc">NothingToProcess</span><span class="p">(</span><span class="n">DipplannerException</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;raised when the is no input segments to process&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;raised when the is no input segments to process</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="NothingToProcess.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.NothingToProcess.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :description: (str) -- text describing the error</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">DipplannerException</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="s">&quot;dipplanner.dipp_exception.NothingToProcess&quot;</span><span class="p">)</span>
@@ -118,8 +130,19 @@
     <span class="sd">&quot;&quot;&quot;raised when the Dive constructor encounters a problem.</span>
 <span class="sd">       In this case, it can not continue</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="InstanciationError.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.InstanciationError.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :description: (str) -- text describing the error</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">DipplannerException</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="s">&quot;dipplanner.dipp_exception.InstanciationError&quot;</span><span class="p">)</span>
@@ -128,9 +151,21 @@
 
 </div></div>
 <div class="viewcode-block" id="ProcessingError"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.ProcessingError">[docs]</a><span class="k">class</span> <span class="nc">ProcessingError</span><span class="p">(</span><span class="n">DipplannerException</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;raised when the is no input segments to process&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;raised when the is no input segments to process</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="ProcessingError.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.ProcessingError.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :description: (str) -- text describing the error</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">DipplannerException</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="s">&quot;dipplanner.dipp_exception.ProcessingError&quot;</span><span class="p">)</span>
@@ -139,9 +174,21 @@
 
 </div></div>
 <div class="viewcode-block" id="InfiniteDeco"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.InfiniteDeco">[docs]</a><span class="k">class</span> <span class="nc">InfiniteDeco</span><span class="p">(</span><span class="n">DipplannerException</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;raised when the deco time becomes enourmous (like infinite)&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;raised when the deco time becomes enourmous (like infinite)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="InfiniteDeco.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.InfiniteDeco.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;constructor : call the upper constructor and set the logger</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :description: (str) -- text describing the error</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">DipplannerException</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="s">&quot;dipplanner.dipp_exception.InfiniteDeco&quot;</span><span class="p">)</span>
@@ -155,8 +202,8 @@
 <span class="sd">    dive segments are processed then calls ascend(0.0) to</span>
 <span class="sd">    return to the surface.</span>
 
-<span class="sd">    The Model can be either null in which case a new model is created,</span>
-<span class="sd">    or can be an existing model with tissue loadings.</span>
+<span class="sd">    The previous_profile (Model) can be either null in which case a</span>
+<span class="sd">    new model is created, or can be an existing model with tissue loadings.</span>
 
 <span class="sd">    Gas switching is done on the final ascent if OC deco or</span>
 <span class="sd">    bailout is specified.</span>
@@ -164,24 +211,25 @@
 <span class="sd">    Outputs profile to a List of dive segments</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">    input_segments -- (list) Stores enabled input dive segment objects</span>
-<span class="sd">    output_segments -- (list) Stores output segments produced by this class</span>
-<span class="sd">    tanks -- (list) Stores enabled dive tank objects</span>
-<span class="sd">    current_tank -- current tank object</span>
-<span class="sd">    current_depth -- current dive depth</span>
-<span class="sd">    ambiant_pressure -- (current) ambiant pressure</span>
-<span class="sd">    current_f_he -- current gas fraction of He</span>
-<span class="sd">    current_f_n2 -- current gas fraction of N2</span>
-<span class="sd">    current_f_o2 -- current gas fraction of O2</span>
-<span class="sd">    model -- model used for this dive</span>
-<span class="sd">    run_time -- runTime</span>
-<span class="sd">    pp_o2 -- CCR ppO2, if OC : 0.0</span>
-<span class="sd">    is_closed_circuit -- Flag to store CC or OC</span>
-<span class="sd">    in_final_ascent -- flag for final ascent</span>
-<span class="sd">    is_repetative_dive -- Flag for repetative dives</span>
-<span class="sd">    surface_interval -- for surf. int. in seconds</span>
-<span class="sd">    no_flight_time_value -- calculated no flight time</span>
-<span class="sd">    metadata -- description for the dive</span>
+
+<span class="sd">    * input_segments -- (list) Stores enabled input dive segment objects</span>
+<span class="sd">    * output_segments -- (list) Stores output segments produced by this class</span>
+<span class="sd">    * tanks -- (list) Stores enabled dive tank objects</span>
+<span class="sd">    * current_tank -- current tank object</span>
+<span class="sd">    * current_depth -- current dive depth</span>
+<span class="sd">    * ambiant_pressure -- (current) ambiant pressure</span>
+<span class="sd">    * current_f_he -- current gas fraction of He</span>
+<span class="sd">    * current_f_n2 -- current gas fraction of N2</span>
+<span class="sd">    * current_f_o2 -- current gas fraction of O2</span>
+<span class="sd">    * model -- model used for this dive</span>
+<span class="sd">    * run_time -- runTime</span>
+<span class="sd">    * pp_o2 -- CCR ppO2, if OC : 0.0</span>
+<span class="sd">    * is_closed_circuit -- Flag to store CC or OC</span>
+<span class="sd">    * in_final_ascent -- flag for final ascent</span>
+<span class="sd">    * is_repetative_dive -- Flag for repetative dives</span>
+<span class="sd">    * surface_interval -- for surf. int. in seconds</span>
+<span class="sd">    * no_flight_time_value -- calculated no flight time</span>
+<span class="sd">    * metadata -- description for the dive</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Dive.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">known_segments</span><span class="p">,</span> <span class="n">known_tanks</span><span class="p">,</span> <span class="n">previous_profile</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -191,16 +239,16 @@
 <span class="sd">        (profile will create one for you)</span>
 <span class="sd">        For repetative dives, instanciate profile class with the previous model</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        known_segments -- list of input segments</span>
-<span class="sd">        known_tanks -- list of tanks for this dive</span>
-<span class="sd">        model -- model object</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :known_segments: -- list of input segments</span>
+<span class="sd">            :known_tanks: -- list of tanks for this dive</span>
+<span class="sd">            :previous_profile: (Model) -- model object of the precedent dive</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
 <span class="sd">        .. note:: the constructor should not fail. If something if wrong, it</span>
-<span class="sd">                  MUST still instanciate itself, with errors in his own object</span>
+<span class="sd">                  MUST still instantiate itself, with errors in his own object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c">#initiate class logger</span>
@@ -263,35 +311,77 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_time</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c"># in second</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
 </div>
-<div class="viewcode-block" id="Dive.__repr__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a string representing the result of the dive using default</span>
 <span class="sd">           template</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            str -- a string with the result of the calculation of the dives</span>
+<span class="sd">                   using the default template</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s">&quot;default.tpl&quot;</span><span class="p">)</span>
-</div>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
 
+<div class="viewcode-block" id="Dive.__str__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.__str__">[docs]</a>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            str -- a string with the result of the calculation of the dives</span>
+<span class="sd">                   using the default template</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
+</div>
 <div class="viewcode-block" id="Dive.__unicode__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.__unicode__">[docs]</a>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment in unicode&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a human readable name of the segment in unicode</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            ustr -- an unicode string with the result of the calculation of</span>
+<span class="sd">                    the dives using the default template</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s">u&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="Dive.__cmp__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.__cmp__">[docs]</a>    <span class="k">def</span> <span class="nf">__cmp__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">otherdive</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compare a dive to another dive, based on run_time</span>
 
-<span class="sd">        Keyword arguments:</span>
-<span class="sd">        otherdive -- another dive object</span>
+<span class="sd">        *Keyword arguments:*</span>
+<span class="sd">            otherdive (Dive) -- another dive object</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        Integer -- result of cmp()</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            Integer -- result of cmp()</span>
 
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">cmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_time</span><span class="p">,</span> <span class="n">otherdive</span><span class="o">.</span><span class="n">run_time</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Dive.output"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the dive profile calculated, using the template given</span>
-<span class="sd">        in settings or command lines</span>
+<span class="sd">        in settings or command lines.</span>
+<span class="sd">        (and not only the default template)</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            str -- a string with the result of the calculation of the dives</span>
+<span class="sd">                   using the choosen template</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">PackageLoader</span><span class="p">(</span><span class="s">&#39;dipplanner&#39;</span><span class="p">,</span> <span class="s">&#39;templates&#39;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -306,14 +396,14 @@
         <span class="sd">&quot;&quot;&quot;Conducts a surface interval</span>
 <span class="sd">        by performing a constant depth calculation on air at zero meters</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        time -- duration of the interval, in seconds</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :time: (int) -- duration of the interval, in seconds</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;Exceptions from model&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;Exceptions from model&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -329,17 +419,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">refill_tanks</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="Dive.get_surface_interval"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.get_surface_interval">[docs]</a>    <span class="k">def</span> <span class="nf">get_surface_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns surface interval in</span>
-<span class="sd">        mm:ss format</span>
+        <span class="sd">&quot;&quot;&quot;Returns surface interval in mm:ss format</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        str -- surface interval time in mmm:ss format</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            str -- surface interval time in mmm:ss format</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">seconds_to_mmss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface_interval</span><span class="p">)</span>
 </div>
@@ -347,16 +436,15 @@
         <span class="sd">&quot;&quot;&quot;refile all tanks defined in this dive</span>
 <span class="sd">        it is used for repetitive dives</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c">#TODO: options in arg and config: &#39;automatic tank refill between dives&#39;</span>
         <span class="k">for</span> <span class="n">tank</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tanks</span><span class="p">:</span>
             <span class="n">tank</span><span class="o">.</span><span class="n">refill</span><span class="p">()</span>
 </div>
@@ -364,13 +452,15 @@
         <span class="sd">&quot;&quot;&quot;Returns true if there are loaded dive segments</span>
 <span class="sd">        else false means there is nothing to process</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        True -- if there is at least one input dive segment to process</span>
-<span class="sd">        False -- if there is no dive segment to process</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            True (bool) -- if there is at least one input dive segment to process</span>
+<span class="sd">            False (bool) -- if there is no dive segment to process</span>
 
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_segments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">True</span>
@@ -381,6 +471,15 @@
         <span class="sd">&quot;&quot;&quot;Call do_dive, and handle exceptions internally : do not raise any</span>
 <span class="sd">        &quot;dive related&quot; exception : add the exception inside</span>
 <span class="sd">        self.dive_exceptions instead.</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">do_dive</span><span class="p">()</span>
@@ -415,16 +514,16 @@
 <div class="viewcode-block" id="Dive.do_dive"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.do_dive">[docs]</a>    <span class="k">def</span> <span class="nf">do_dive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Process the dive</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        NothingToProcess -- if there is no input segment to process</span>
-<span class="sd">        +</span>
-<span class="sd">        &lt;Exceptions from model&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            NothingToProcess -- if there is no input segment to process</span>
+<span class="sd">            or</span>
+<span class="sd">            &lt;Exceptions from model&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_dive_segments</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
@@ -635,26 +734,49 @@
         <span class="sd">&quot;&quot;&quot;Returns no flight time (if calculated) in hhmmss format</span>
 <span class="sd">        instead of an int in seconds</span>
 
-<span class="sd">        This method does not calculated no_flight_time</span>
+<span class="sd">        .. note::</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">           This method does not calculate no_flight_time</span>
+<span class="sd">           you need to call no_flight_time() or</span>
+<span class="sd">           no_flight_time_without_exception() before.</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">        str -- &quot;hh:mm:ss&quot; no flight time</span>
+<span class="sd">            str -- &quot;hh:mm:ss&quot; no flight time</span>
+<span class="sd">            str -- &quot;&quot; if no flight time is not calculated</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_flight_time_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">seconds_to_hhmmss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">no_flight_time_value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s">&quot;&quot;</span>
 </div>
-<div class="viewcode-block" id="Dive.no_flight_time_without_exception"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.no_flight_time_without_exception">[docs]</a>    <span class="k">def</span> <span class="nf">no_flight_time_without_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Dive.no_flight_time_without_exception"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dive.Dive.no_flight_time_without_exception">[docs]</a>    <span class="k">def</span> <span class="nf">no_flight_time_without_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                         <span class="n">altitude</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">FLIGHT_ALTITUDE</span><span class="p">,</span>
+                                         <span class="n">tank</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call no_flight_time, and handle exceptions internally:</span>
 <span class="sd">        do not raise any &quot;dive related&quot; exception: add the</span>
 <span class="sd">        exception inside self.dive_exceptions instead.</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :altitude: (int) -- in meter : altitude used for the calculation</span>
+<span class="sd">            :flight_ascent_rate: (float) -- in m/s</span>
+<span class="sd">            :tank: (Tank) -- optionnal:</span>
+<span class="sd">                    it is possible to provide a tank while calling</span>
+<span class="sd">                    no_flight_time to force &quot;no flight deco&quot; with</span>
+<span class="sd">                    another mix than air.</span>
+<span class="sd">                    In this case, we will &#39;consume&#39; the tank</span>
+<span class="sd">                    When the tank is empty, it automatically switch to air</span>
+
+<span class="sd">        *Returns:*</span>
+<span class="sd">            int -- no fight time in seconds</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">no_flight_time</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">no_flight_time</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="n">tank</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ModelStateException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dive_exceptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ModelException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
@@ -689,22 +811,22 @@
 <span class="sd">        current depth (which is 0m). The stop time represents the no flight</span>
 <span class="sd">        time</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        altitude - int - in meter : altitude used for the calculation</span>
-<span class="sd">        flight_ascent_rate - float - in m/s</span>
-<span class="sd">        tank - Tank - optional :</span>
-<span class="sd">            posibily to provide a tank while calling</span>
-<span class="sd">            no_flight_time to force &quot;no flight deco&quot; with</span>
-<span class="sd">            another mix than air.</span>
-<span class="sd">            In this case, we will &#39;consume&#39; the tank</span>
-<span class="sd">            When the tank is empty, it automaticaly switch to air</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :altitude: (int) -- in meter : altitude used for the calculation</span>
+<span class="sd">            :flight_ascent_rate: (float) -- in m/s</span>
+<span class="sd">            :tank: (Tank) -- optionnal:</span>
+<span class="sd">                    it is possible to provide a tank while calling</span>
+<span class="sd">                    no_flight_time to force &quot;no flight deco&quot; with</span>
+<span class="sd">                    another mix than air.</span>
+<span class="sd">                    In this case, we will &#39;consume&#39; the tank</span>
+<span class="sd">                    When the tank is empty, it automatically switch to air</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        int - no fight time in seconds</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            int -- no fight time in seconds</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        InfiniteDeco - if the no flight time can not achieve enough</span>
-<span class="sd">                       decompression to be able to go to give altitude</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            InfiniteDeco - if the no flight time can not achieve enough</span>
+<span class="sd">                           decompression to be able to go to give altitude</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">no_flight_time</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">deco_uses_tank</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># set to true when deco is using a tank</span>
@@ -762,8 +884,10 @@
 <span class="sd">        If inFinalAscent then gradient factors start changing,</span>
 <span class="sd">        and automatic gas selection is made.</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        target_depth -- in meter, target depth for the ascend</span>
+<span class="sd">        This method is called by do_dive()</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :target_depth: (float) -- in meter, target depth for the ascend</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">        &lt;nothing&gt;</span>
@@ -990,14 +1114,14 @@
         <span class="sd">&quot;&quot;&quot;Estimate gas consumption for all output segments</span>
 <span class="sd">        and set this into the respective gas objects</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        &lt;none&gt;</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;Exceptions from tank&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;Exceptions from tank&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_segments</span><span class="p">:</span>
@@ -1007,14 +1131,15 @@
         <span class="sd">&quot;&quot;&quot;Select appropriate deco gas for the depth specified</span>
 <span class="sd">        Returns true if a gas switch occured</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">        depth -- target depth to make the choice</span>
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :depth: (float) -- target depth to make the choice</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        True -- if gas swich occured, False if not</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">            True -- if gas swich occured</span>
+<span class="sd">            False -- if no gas switch occured</span>
 
-<span class="sd">        Raise:</span>
-<span class="sd">        &lt;Exceptions from tank&gt;</span>
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;Exceptions from tank&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">gas_switch</span> <span class="o">=</span> <span class="bp">False</span>

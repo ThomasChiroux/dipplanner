@@ -43,6 +43,7 @@ class Model(object):
     """Represents a Buhlmann model.
     Composed of a tissue array of Compartment[]
     Has an OxTox and Gradient object
+
     Can throw a ModelStateException propagated from a Compartment if pressures
     or time is out of bounds.
 
@@ -55,14 +56,14 @@ class Model(object):
     constDepth() method of Compartment.
 
     Attributes:
-    tissues -- a list of Compartments
-    gradient -- gradient factor object
-    ox_tox -- OxTox object
-    metadata -- Stores information about where the model was created
-    units -- only 'metric' allowed
-    COMPS -- static info : number of compartments
-    MODEL_VALIDATION_SUCCESS -- static const for success of validation
-    MODEL_VALIDATION_FAILURE -- sattic const for failure of validation
+        * tissues (list)-- a list of Compartments
+        * gradient (Gradient) -- gradient factor object
+        * ox_tox (OxTox) -- OxTox object
+        * metadata (str) -- Stores infos about where the model was created
+        * units (str) -- only 'metric' allowed
+        * COMPS (int) -- static info : number of compartments
+        * MODEL_VALIDATION_SUCCESS (int) -- static const for validation success
+        * MODEL_VALIDATION_FAILURE (int) -- static const for validation failure
     """
     COMPS = 16
 
@@ -73,12 +74,14 @@ class Model(object):
     def __init__(self):
         """Constructor for model class
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
+        *Raise:*
+            <nothing>
         """
         #initiate class logger
         self.logger = logging.getLogger(
@@ -105,7 +108,19 @@ class Model(object):
         self.metadata = "(none)"
 
     def __deepcopy__(self, memo):
-        """deepcopy method will be called by copy.deepcopy"""
+        """deepcopy method will be called by copy.deepcopy
+
+        Used for "cloning" the object into another new object.
+
+        *Keyword Arguments:*
+            :memo: -- not used here
+
+        *Returns:*
+            Model -- Model object copy of itself
+
+        *Raise:*
+            <nothing>
+        """
         newobj = Model()
         newobj.units = self.units
         newobj.ox_tox = copy.deepcopy(self.ox_tox)
@@ -116,7 +131,17 @@ class Model(object):
         return newobj
 
     def __repr__(self):
-        """Returns a string representing the model"""
+        """Returns a string representing the model
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            str -- string representation of the model
+
+        *Raise:*
+            <nothing>
+        """
         model_string = ""  # "Compartment pressures:\n"
         for comp_number in range(0, self.COMPS):
             model_string += "C:%s He:%s N2:%s gf:%s \
@@ -137,40 +162,65 @@ mv_at:%s max_amb:%s MV:%s\n" % \
         return model_string
 
     def __str__(self):
-        """Return a human readable name of the segment"""
+        """Return a human readable name of the segment
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            str -- string representation of the model
+
+        *Raise:*
+            <nothing>
+        """
         return self.__repr__()
 
     def __unicode__(self):
-        """Return a human readable name of the segment in unicode"""
+        """Return a human readable name of the segment in unicode
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            ustr -- unicode string representation of the model
+
+        *Raise:*
+            <nothing>
+        """
         return u"%s" % self.__repr__()
 
     def init_gradient(self):
         """Initialise the gradient attribute
         uses the default settings parameters for gf_low and high
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
 
+        *Raise:*
+            <nothing>
         """
         self.gradient = Gradient(settings.GF_LOW, settings.GF_HIGH)
 
-    def set_time_constants(self):
-        """Initialize time constants in buhmann tissue list
+    def set_time_constants(self, deco_model=settings.DECO_MODEL):
+        """Initialize time constants in buhlmann tissue list
         Only for metric values
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            :deco_model: (str) -- "ZHL16b" or "ZHL16c"
 
-        Returns:
-        <nothing>
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
         """
         # note: comparing with buhlmann original (1990) ZH-L16 a coeficient,
         # there is here a x10 factor for a coeficient
         #h_he, h_n2, a_he, b_he, a_n2, b_n2
-        if settings.DECO_MODEL == "ZHL16c":
+        if deco_model == "ZHL16c":
             self.logger.info("model used: Buhlmann ZHL16c")
             self.tissues[0].set_compartment_time_constants(
                 1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
@@ -204,7 +254,7 @@ mv_at:%s max_amb:%s MV:%s\n" % \
                 188.24, 498.0,  5.172,  0.9217, 2.523,  0.9602)
             self.tissues[15].set_compartment_time_constants(
                 240.03, 635.0,  5.119,  0.9267, 2.327,  0.9653)
-        elif settings.DECO_MODEL == "ZHL16b":
+        elif deco_model == "ZHL16b":
             self.logger.info("model used: Buhlmann ZHL16b")
             self.tissues[0].set_compartment_time_constants(
                 1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
@@ -241,16 +291,19 @@ mv_at:%s max_amb:%s MV:%s\n" % \
 
     def validate_model(self):
         """Validate model - checks over the model and looks for corruption
-        This is needed to chack a model that has been loaded from XML
+
+        This is needed to check a model that has been loaded from XML
         Resets time constants
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        self.MODEL_VALIDATION_SUCCESS -- if OK
-        self.MODEL_VALIDATION_FAILURE -- if not OK
+        *Returns:*
+            self.MODEL_VALIDATION_SUCCESS -- if OK
+            self.MODEL_VALIDATION_FAILURE -- if not OK
 
+        *Raise:*
+            <nothing>
         """
         time_constant_zero = False  # need for resetting time constants
 
@@ -277,9 +330,11 @@ mv_at:%s max_amb:%s MV:%s\n" % \
             <none>
 
         *Returns:*
-            integer : reference number of the controlling
+            integer -- reference number of the controlling
                       compartment (between 1 to 16)
 
+        *Raise:*
+            <nothing>
         """
         control_compartment_number = 0
         max_pressure = 0.0
@@ -296,12 +351,14 @@ mv_at:%s max_amb:%s MV:%s\n" % \
     def ceiling(self):
         """Determine the current ceiling depth
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        Float, ceiling depth in meter
+        *Returns:*
+            float -- ceiling depth in meter
 
+        *Raise:*
+            <nothing>
         """
         pressure = 0.0
         for comp in self.tissues:
@@ -316,12 +373,14 @@ mv_at:%s max_amb:%s MV:%s\n" % \
     def ceiling_in_pabs(self):
         """Determine the current ceiling
 
-        Keyword arguments:
-        <none>
+        *Keyword arguments:*
+            <none>
 
-        Returns:
-        Float, ceiling in bar (absolute pressure)
+        *Returns:*
+            float -- ceiling in bar (absolute pressure)
 
+        *Raise:*
+            <nothing>
         """
         pressure = 0.0
         for comp in self.tissues:
@@ -335,12 +394,14 @@ mv_at:%s max_amb:%s MV:%s\n" % \
     def m_value(self, pressure):
         """Determine the maximum M-Value for a given depth (pressure)
 
-        Keyword arguments:
-        pressure -- in bar
+        *Keyword arguments:*
+            :pressure: (float) -- in bar
 
-        Returns
-        float, max M-Value
+        *Returns*
+            float -- max M-Value
 
+        *Raise:*
+            <nothing>
         """
         p_absolute = pressure + settings.AMBIANT_PRESSURE_SURFACE
         compartment_mv = 0.0
@@ -359,12 +420,13 @@ mv_at:%s max_amb:%s MV:%s\n" % \
 
         *Keyword arguments:*
 
-            :pressure: -- pressure of this depth of segment in bar
-            :seg_time: -- Time of segment in seconds
-            :f_he: -- Fraction of inert gas Helium in inspired gas mix
-            :f_n2: -- Fraction of inert gas Nitrogen in inspired gas mix
-            :pp_o2: -- For CCR mode, partial pressure of oxygen in bar.
-                       If == 0.0, then open circuit
+            :pressure: (float)-- pressure of this depth of segment in bar
+            :seg_time: (float) -- Time of segment in seconds
+            :f_he: (float) -- fraction of inert gas Helium in inspired gas mix
+            :f_n2: (float) -- fraction of inert gas Nitrogen in
+                              inspired gas mix
+            :pp_o2: (float) -- For CCR mode, partial pressure of oxygen in bar.
+                               If == 0.0, then open circuit
 
         *Returns:*
             <nothing>
@@ -433,20 +495,21 @@ mv_at:%s max_amb:%s MV:%s\n" % \
 
         *Keyword arguments:*
 
-        :start: -- start pressure of this segment in bar (WARNING: not meter !)
-        :finish: -- finish pressure of this segment in bar (WARNING: not meter !)
-        :rate: -- rate of ascent or descent in m/s
-        :f_he: -- Fraction of inert gas Helium in inspired gas mix
-        :f_n2: -- Fraction of inert gas Nitrogen in inspired gas mix
-        :pp_o2: -- For CCR mode, partial pressure of oxygen in bar.
-            If == 0.0, then open circuit
+            :start: (float) -- start pressure of this segment in bar
+                               (WARNING: not meter ! it's a pressure)
+            :finish: (float) -- finish pressure of this segment in bar
+                                (WARNING: not meter ! it's a pressure)
+            :rate: (float) -- rate of ascent or descent in m/s
+            :f_he: (float) -- Fraction of inert gas Helium in inspired gas mix
+            :f_n2: (float) -- Fraction of inert gas Nitrogen in inspired gas mix
+            :pp_o2: (float) -- For CCR mode, partial pressure of oxygen in bar.
+                               If == 0.0, then open circuit
 
         *Returns:*
             <nothing>
 
         *Raise:*
             ModelStateException
-
         """
         # rem: here we do not bother of PP_H2O like in constant_depth : WHY ?
         start_ambiant_pressure = start + settings.AMBIANT_PRESSURE_SURFACE

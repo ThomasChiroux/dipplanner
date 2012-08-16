@@ -71,9 +71,7 @@
 <span class="c"># This module is part of dipplanner, a Dive planning Tool written in python</span>
 <span class="sd">&quot;&quot;&quot;tools modules</span>
 
-<span class="sd">Contains:</span>
-<span class="sd">seconds_to_mmss -- function</span>
-<span class="sd">altitude_to_pressure -- function</span>
+<span class="sd">This modules contains some utility functions like unit conversions, etc...</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">__authors__</span> <span class="o">=</span> <span class="p">[</span>
@@ -91,15 +89,18 @@
 <span class="sd">    (like 2:06)</span>
 <span class="sd">    It does returns only minutes and seconds, not hours, minutes and seconds</span>
 
-<span class="sd">    Keyword Arguments:</span>
-<span class="sd">    duration - the duration in seconds</span>
+<span class="sd">    &quot;Keyword Arguments:&quot;</span>
+<span class="sd">        :seconds: (float) -- the duration in seconds</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    &lt;string&gt; : the time in minutes and seconds</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">        str -- the time in minutes and seconds</span>
+<span class="sd">               ex:</span>
+<span class="sd">               &quot;23:45&quot;</span>
+<span class="sd">               &quot;112:33&quot;</span>
+<span class="sd">               ...</span>
 
-<span class="sd">    Raise:</span>
-<span class="sd">    ValueError: when bad time values</span>
-
+<span class="sd">    *Raise:*</span>
+<span class="sd">        ValueError: when bad time values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">seconds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;time can not be negative&quot;</span><span class="p">)</span>
@@ -113,14 +114,17 @@
 <span class="sd">    in hour:minutes and seconds</span>
 <span class="sd">    like 22:34:44</span>
 
-<span class="sd">    Keyword Arguments:</span>
-<span class="sd">    seconds - the duration in seconds</span>
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :seconds: (float) -- the duration in seconds</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    &lt;string&gt; : the time in hour - minutes and seconds</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">        str -- the time in hour - minutes and seconds</span>
+<span class="sd">               ex:</span>
+<span class="sd">               &quot;00:23:45&quot;</span>
+<span class="sd">               &quot;01:52:33&quot;</span>
 
-<span class="sd">    Raise:</span>
-<span class="sd">    ValueError: when bad time values is given</span>
+<span class="sd">    *Raise:*</span>
+<span class="sd">        ValueError: when bad time values is given</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">seconds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;time can not be negative&quot;</span><span class="p">)</span>
@@ -133,18 +137,19 @@
 
 </div>
 <div class="viewcode-block" id="altitude_or_depth_to_absolute_pressure"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.altitude_or_depth_to_absolute_pressure">[docs]</a><span class="k">def</span> <span class="nf">altitude_or_depth_to_absolute_pressure</span><span class="p">(</span><span class="n">altitude_or_depth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;output aboslute pressure for give &quot;depth&quot; in meter.</span>
-<span class="sd">    If depth is positive it&#39;s considered altitude depth</span>
-<span class="sd">    If depth is negative it&#39;s considered depth in water</span>
+    <span class="sd">&quot;&quot;&quot;output absolute pressure for give &quot;depth&quot; in meter.</span>
 
-<span class="sd">    Keyword Arguments:</span>
-<span class="sd">    altitude_or_depth - int (signed) : in meter</span>
+<span class="sd">    * If depth is positive it&#39;s considered altitude depth</span>
+<span class="sd">    * If depth is negative it&#39;s considered depth in water</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    float - resulting absolute pressure in bar</span>
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :altitude_or_depth: (float (signed)) -- in meter</span>
 
-<span class="sd">    Raise:</span>
-<span class="sd">    ValueError if altitude &gt; 10000m</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- resulting absolute pressure in bar</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        ValueError if altitude &gt; 10000m</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">altitude_or_depth</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">depth_to_pressure</span><span class="p">(</span><span class="o">-</span><span class="n">altitude_or_depth</span><span class="p">)</span> <span class="o">+</span> \
@@ -158,14 +163,14 @@
 <span class="sd">    uses the formula:</span>
 <span class="sd">    p = 101325.(1-2.25577.10^-5.h)^5.25588</span>
 
-<span class="sd">    Keyword Arguments:</span>
-<span class="sd">    altitude - current altitude in meter</span>
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :altitude: (float) -- current altitude in meter</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    float - resulting pressure in bar</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- resulting pressure in bar</span>
 
-<span class="sd">    Raise:</span>
-<span class="sd">    ValueError: when bad altitude is given (bad or &lt;0 or &gt; 10000 m)</span>
+<span class="sd">    *Raise:*</span>
+<span class="sd">        ValueError: when bad altitude is given (bad or &lt;0 or &gt; 10000 m)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">altitude</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -177,36 +182,40 @@
         <span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SEA_LEVEL</span>
 
 </div>
-<div class="viewcode-block" id="depth_to_pressure"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.depth_to_pressure">[docs]</a><span class="k">def</span> <span class="nf">depth_to_pressure</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+<div class="viewcode-block" id="depth_to_pressure"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.depth_to_pressure">[docs]</a><span class="k">def</span> <span class="nf">depth_to_pressure</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">METHOD_FOR_DEPTH_CALCULATION</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates depth pressure based on depth using a more complex</span>
 <span class="sd">    method than only /10</span>
 
-<span class="sd">    Keyword Arguments:</span>
-<span class="sd">    depth - in meter</span>
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :depth: (float) -- in meter</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    float - depth pressure in bar</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- depth pressure in bar</span>
 
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">METHOD_FOR_DEPTH_CALCULATION</span> <span class="o">==</span> <span class="s">&#39;complex&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;complex&#39;</span><span class="p">:</span>
         <span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>
         <span class="k">return</span> <span class="n">settings</span><span class="o">.</span><span class="n">WATER_DENSITY</span> <span class="o">*</span> <span class="mf">1E3</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1E-5</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
 
 </div>
-<div class="viewcode-block" id="pressure_to_depth"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.pressure_to_depth">[docs]</a><span class="k">def</span> <span class="nf">pressure_to_depth</span><span class="p">(</span><span class="n">pressure</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculates depth based on give pressure using a more complex</span>
+<div class="viewcode-block" id="pressure_to_depth"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.pressure_to_depth">[docs]</a><span class="k">def</span> <span class="nf">pressure_to_depth</span><span class="p">(</span><span class="n">pressure</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">METHOD_FOR_DEPTH_CALCULATION</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;calculates depth based on give pressure using a more complex</span>
 <span class="sd">    method than only *10</span>
 
-<span class="sd">    Keyword Arguments:</span>
-<span class="sd">    pressure - float in bar</span>
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :pressure: (float) -- pressure in bar</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    int - depth in meter</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- depth in meter</span>
 
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">METHOD_FOR_DEPTH_CALCULATION</span> <span class="o">==</span> <span class="s">&#39;complex&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;complex&#39;</span><span class="p">:</span>
         <span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">pressure</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">WATER_DENSITY</span> <span class="o">*</span> <span class="mf">1E3</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="mf">1E-5</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -218,13 +227,17 @@
 <span class="sd">    using Antoine equation</span>
 <span class="sd">    (http://en.wikipedia.org/wiki/Vapour_pressure_of_water)</span>
 
-<span class="sd">    Keyword Arguments:</span>
-<span class="sd">      temperature - float in ° Celcius</span>
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :temperature: (float) [OPTIONNAL] --  in ° Celcius</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">      float - ppH2O in bar</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- ppH2O in bar</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        ValueError -- when temperature exceed maximum value for calculation</span>
+<span class="sd">                      (&gt;=374 °C)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mm_hg_to_bar</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">750.0615</span>
+    <span class="n">mm_hg_to_bar</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">750.0615</span>
 
     <span class="k">if</span> <span class="n">temperature</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">temperature</span> <span class="o">=</span> <span class="mi">1</span>
@@ -245,37 +258,91 @@
 
 </div>
 <div class="viewcode-block" id="convert_bar_to_psi"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.convert_bar_to_psi">[docs]</a><span class="k">def</span> <span class="nf">convert_bar_to_psi</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SI - imperial conversion function</span>
+    <span class="sd">&quot;&quot;&quot;SI --&gt; imperial pressure conversion function</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :value: (float) -- pressure in bar</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- pressure in psi</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="mf">14.5037744</span>
 
 </div>
 <div class="viewcode-block" id="convert_psi_to_bar"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.convert_psi_to_bar">[docs]</a><span class="k">def</span> <span class="nf">convert_psi_to_bar</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SI - imperial conversion function</span>
+    <span class="sd">&quot;&quot;&quot;imperial --&gt; SI pressure conversion function</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :value: (float) -- pressure in psi</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- pressure in bar</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="mf">14.5037744</span>
 
 </div>
 <div class="viewcode-block" id="convert_liter_to_cubicfeet"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.convert_liter_to_cubicfeet">[docs]</a><span class="k">def</span> <span class="nf">convert_liter_to_cubicfeet</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SI - imperial conversion function</span>
+    <span class="sd">&quot;&quot;&quot;SI --&gt;  imperial volume conversion function</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :value: (float) -- volume in liter</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- volume in cubicfeet</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">0.3048</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="convert_cubicfeet_to_liter"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.convert_cubicfeet_to_liter">[docs]</a><span class="k">def</span> <span class="nf">convert_cubicfeet_to_liter</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SI - imperial conversion function</span>
+    <span class="sd">&quot;&quot;&quot;imperial --&gt; SI volume conversion function</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :value: (float) -- volume in cubicfeet</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- volume in liter</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">0.3048</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="convert_meter_to_feet"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.convert_meter_to_feet">[docs]</a><span class="k">def</span> <span class="nf">convert_meter_to_feet</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SI - imperial conversion function</span>
+    <span class="sd">&quot;&quot;&quot;SI --&gt; imperial distance conversion function</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :value: (float) -- volume in cubicfeet</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- volume in liter</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.3048</span>
 
 </div>
 <div class="viewcode-block" id="convert_feet_to_meter"><a class="viewcode-back" href="../../autodoc.html#dipplanner.tools.convert_feet_to_meter">[docs]</a><span class="k">def</span> <span class="nf">convert_feet_to_meter</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SI - imperial conversion function</span>
+    <span class="sd">&quot;&quot;&quot;imperial --&gt; SI distance conversion function</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :value: (float) -- volume in cubicfeet</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        float -- volume in liter</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.3048</span></div>
 </pre></div>

@@ -41,10 +41,19 @@ from dipplanner.tools import pressure_to_depth, depth_to_pressure
 class InvalidGas(DipplannerException):
     """Exception raised when the gas informations provided for the Tank
     are invalid
-
     """
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.DipplannerException.InvalidGas")
@@ -54,10 +63,19 @@ class InvalidGas(DipplannerException):
 
 class InvalidTank(DipplannerException):
     """Exception raised when the tank infos provided are invalid
-
     """
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.DipplannerException.InvalidTank")
@@ -68,10 +86,19 @@ class InvalidTank(DipplannerException):
 class InvalidMod(DipplannerException):
     """Exception raised when the given MOD is incompatible with the gas
     provided for the tank
-
     """
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.DipplannerException.InvalidMod")
@@ -82,10 +109,19 @@ class InvalidMod(DipplannerException):
 class EmptyTank(DipplannerException):
     """Exception raised when trying to consume more gas in tank than the
     remaining gas
-
     """
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger"""
+        """constructor : call the upper constructor and set the logger
+
+        *Keyword Arguments:*
+            :description: (str) -- text describing the error
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
         DipplannerException.__init__(self, description)
         self.logger = logging.getLogger(
             "dipplanner.DipplannerException.EmptyTank")
@@ -99,6 +135,22 @@ class Tank(object):
     We provide proportion of N2, O2, He, calculates MOD and volumes during the
     dives
     We can also (optionally) provide the type of tanks : volume and pressure
+
+    *Attributes:*
+
+        * f_o2 (float) -- fraction of oxygen in the gas in % (>= 0.0 & <= 1.0)
+        * f_he (float) -- fraction of helium in the gas in % (>= 0.0 & <= 1.0)
+        * f_n2 (float) -- fraction of nitrogen in the gas in %
+                          (>= 0.0 & <= 1.0)
+        * max_ppo2 (float) -- maximum tolerated ppo2 for this tank
+        * tank_vol (float) -- volume of tank in liter
+        * tank_pressure (float) -- pressure of tank in bar
+        * mod (float) -- maximum operating depth of the tank
+        * in_use (boolean) -- is the tank used for the dive of not
+        * total_gas (float) -- total gas volume of the tank in liter
+        * used_gas (float) -- used gas in liter
+        * remaining_gas (float) -- remaining gas in liter
+        * min_gas (float) -- minimum remaining gas in liter
 
     """
 
@@ -311,26 +363,65 @@ class Tank(object):
         return total_gas_volume
 
     def __repr__(self):
-        """Returns a string representing the actual tank"""
+        """Returns a string representing the actual tank
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- representation of the tank in the form:
+                   "Air - 12.0l-100.0% (2423.10/2423.10l)"
+
+        *Raise:*
+            <nothing>
+        """
         return "%s - %s" % (self.name(), self.get_tank_info())
 
     def __str__(self):
-        """Return a human readable name of the tank"""
+        """Return a human readable name of the tank
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- name of the tank in the form:
+                   "Air"
+                   "Nitrox 80"
+                   ...
+
+        *Raise:*
+            <nothing>
+        """
         return "%s" % self.name()
 
     def __unicode__(self):
-        """Return a human readable name of the tank in unicode"""
+        """Return a human readable name of the tank in unicode
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- name of the tank in the form:
+                   "Air"
+                   "Nitrox 80"
+                   ...
+
+        *Raise:*
+            <nothing>
+        """
         return u"%s" % self.name()
 
     def __cmp__(self, othertank):
         """Compare a tank to another tank, based on MOD
 
-        Keyword arguments:
-        othertank -- another tank object
+        *Keyword arguments:*
+            othertank (Tank) -- another tank object
 
-        Returns:
-        Integer -- result of cmp()
+        *Returns:*
+            integer -- result of cmp()
 
+        *Raise:*
+            <nothing>
         """
         return cmp(self.mod, othertank.mod)
 
@@ -345,6 +436,8 @@ class Tank(object):
         *Returns:*
             integer -- Maximum Operating Depth in meter
 
+        *Raise:*
+            <nothing>
         """
         return max(int(10 * (float(max_ppo2) / self.f_o2) - 10), 0)
 
@@ -391,6 +484,18 @@ class Tank(object):
         """returns a Human readable name for the gaz and tanks
         Differnt possibilities:
         Air, Nitrox, Oxygen, Trimix, Heliox
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- name of the tank in the form:
+                   "Air"
+                   "Nitrox"
+                   ...
+
+        *Raise:*
+            <nothing>
         """
         name = 'Air'
         composition = ''
@@ -415,6 +520,17 @@ class Tank(object):
         """returns tank infos : size, remaining vol
         example of tank info:
         15l-90% (2800/3000l)
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            str -- infos of the tank in the form:
+                   "12.0l-100.0% (2423.10/2423.10l)"
+                   ...
+
+        *Raise:*
+            <nothing>
         """
         if self.total_gas > 0:
             return "%sl-%s%% (%02.02f/%02.02fl)" % (
@@ -426,10 +542,19 @@ class Tank(object):
             return "(no tank info, used:%sl)" % self.used_gas
 
     def get_mod(self, max_ppo2=None):
-        """return mod in meter
+        """return mod (maximum operating depth) in meter
         if no argument provided, return the mod based on the current tank (and
         configured max_ppo2)
-        if max_ppo2 is provied, returns the (new) mod based on the given ppo2
+        if max_ppo2 is provided, returns the (new) mod based on the given ppo2
+
+        *Keyword arguments:*
+            :max_ppo2: (float) -- ppo2 for mod calculation
+
+        *Returns:*
+            float -- mod in meter
+
+        *Raise:*
+            <nothing>
         """
         if not max_ppo2:
             return self.mod
@@ -439,20 +564,38 @@ class Tank(object):
     def get_min_od(self, min_ppo2=settings.ABSOLUTE_MIN_PPO2):
         """return in meter the minimum operating depth for the gas in the tank
         return 0 if diving from/to surface is ok with this gaz
+
+        *Keyword arguments:*
+            :min_ppo2: (float) -- minimum tolerated ppo2
+
+        *Returns:*
+            float -- minimum operating depthin meter
+
+        *Raise:*
+            <nothing>
         """
         return self._calculate_mod(min_ppo2)
 
     def get_mod_for_given_end(self, end):
         """calculate a mod based on given end and based on gaz inside the tank
 
-        Keyword arguments:
-        end -- int -- equivalent narcotic depth in meter
+        .. note::
+            end calculation is based on narcotic index for all gases.
 
-        Returns:
-        mod -- int -- depth in meter based on given end
+            By default, dipplanner considers that oxygen is narcotic
+            (same narcotic index than nitrogen)
 
-        Raise:
-        <nothing>
+            All narcotic indexes can by changed in the config file,
+            in the [advanced] section
+
+        *Keyword arguments:*
+            :end: (int) -- equivalent narcotic depth in meter
+
+        *Returns:*
+            int -- mod: depth in meter based on given end
+
+        *Raise:*
+            <nothing>
         """
         # calculate the reference narcotic effect of air
         # Air consists of: Nitrogen N2: 78.08%,
@@ -474,17 +617,26 @@ class Tank(object):
         return mod
 
     def get_end_for_given_depth(self, depth):
-        """calculate a end based on given depth and based
-        on gaz inside the tank
+        """calculate end (equivalent narcotic depth)
+        based on given depth and based on gaz inside the tank
 
-        Keyword arguments:
-        depth -- int -- in meter
+        .. note::
+            end calculation is based on narcotic index for all gases.
 
-        Returns:
-        end -- int -- equivalent narcotic depth in meter
+            By default, dipplanner considers that oxygen is narcotic
+            (same narcotic index than nitrogen)
 
-        Raise:
-        <nothing>
+            All narcotic indexes can by changed in the config file,
+            in the [advanced] section
+
+        *Keyword arguments:*
+            depth -- int -- in meter
+
+        *Returns:*
+            end -- int -- equivalent narcotic depth in meter
+
+        *Raise:*
+            <nothing>
         """
         p_absolute = depth_to_pressure(depth) + \
             settings.AMBIANT_PRESSURE_SURFACE
@@ -509,10 +661,15 @@ class Tank(object):
 
     def consume_gas(self, gas_consumed):
         """Consume gas inside this tank
-        take one argument : gas_consumed, in liter
-        return remaining gaz in tank (in liter)
-        result may be negative : in this case (result < of choosen tank rules)
-        it will display a special warning
+
+        *Keyword arguments:*
+            :gas_consumed: (float) -- gas consumed in liter
+
+        *Returns:*
+            float -- remaining gas in liter
+
+        *Raise:*
+            <nothing>
         """
         #if self.remaining_gas - gas_consumed < 0:
             #raise EmptyTank("There is not enought gas in this tank")
@@ -523,7 +680,15 @@ class Tank(object):
 
     def refill(self):
         """Refill the tank
-        return remaining gaz in tank (in liter)
+
+         *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            float -- remaining gas in liter
+
+        *Raise:*
+            <nothing>
         """
         self.used_gas = 0
         self.remaining_gas = self.total_gas
@@ -531,8 +696,16 @@ class Tank(object):
 
     def check_rule(self):
         """Checks the rule agains the remaining gas in the tank
-        returns : True if rule OK
-                  False if rule NOK
+
+        *Keyword arguments:*
+            :gas_consumed: (float) -- gas consumed in liter
+
+        *Returns:*
+            bool -- True is rule OK
+                    False if rule Not OK
+
+        *Raise:*
+            <nothing>
         """
         if self.remaining_gas < self.min_gas:
             return False

@@ -69,7 +69,6 @@
 <span class="c"># If not, see &lt;http://www.gnu.org/licenses/gpl.html&gt;</span>
 <span class="c">#</span>
 <span class="c"># This module is part of dipplanner, a Dive planning Tool written in python</span>
-<span class="c"># Strongly inspired by Guy Wittig&#39;s MVPlan</span>
 <span class="sd">&quot;&quot;&quot;Base Class for exceptions for dipplanner module</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -84,12 +83,48 @@
     <span class="sd">&quot;&quot;&quot;Base exception class for dipplanner</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="DipplannerException.__init__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dipp_exception.DipplannerException.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;DipplannerException constructor</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            :description: (str) -- text describing the error</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;dipplanner.DipplannerException&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
 </div>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DipplannerException.__str__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dipp_exception.DipplannerException.__str__">[docs]</a>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;String representing the object</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            str -- a string describing the Exception</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="DipplannerException.__unicode__"><a class="viewcode-back" href="../../autodoc.html#dipplanner.dipp_exception.DipplannerException.__unicode__">[docs]</a>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;unicode string representing the object</span>
+
+<span class="sd">        *Keyword Arguments:*</span>
+<span class="sd">            &lt;none&gt;</span>
+
+<span class="sd">        *Return:*</span>
+<span class="sd">            ustr -- a unicode string describing the Exception</span>
+
+<span class="sd">        *Raise:*</span>
+<span class="sd">            &lt;nothing&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">u&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

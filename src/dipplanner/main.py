@@ -35,7 +35,6 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 import sys
-import os
 import logging
 from collections import OrderedDict
 
@@ -310,8 +309,8 @@ def parse_config_file(filenames):
                         dives[section]['tanks'][tankname],
                         float(setpoint))
                 except KeyError:
-                    print "Error : tank name (%s) in not found in tank list "
-                    "!" % tankname
+                    print("Error : tank name (%s) in not found in tank list "
+                    "!" % tankname)
                     sys.exit(0)
                 except:
                     raise

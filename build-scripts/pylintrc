@@ -198,20 +198,20 @@ int-import-graph=
 [DESIGN]
 
 # Maximum number of arguments for function / method
-max-args=5
+max-args=10
 
 # Argument names that match this expression will be ignored. Default to name
 # with leading underscore
 ignored-argument-names=_.*
 
 # Maximum number of locals for function / method body
-max-locals=15
+max-locals=25
 
 # Maximum number of return / yield for function / method body
 max-returns=6
 
 # Maximum number of branch for function / method body
-max-branchs=12
+max-branchs=15
 
 # Maximum number of statements in function / method body
 max-statements=50
@@ -220,13 +220,13 @@ max-statements=50
 max-parents=7
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+max-attributes=25
 
 # Minimum number of public methods for a class (see R0903).
 min-public-methods=2
 
 # Maximum number of public methods for a class (see R0904).
-max-public-methods=20
+max-public-methods=25
 
 
 [CLASSES]

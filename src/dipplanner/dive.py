@@ -29,7 +29,6 @@ __authors__ = [
     # alphabetical order by last name
     'Thomas Chiroux', ]
 
-import os
 import logging
 import copy
 # dependencies imports

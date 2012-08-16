@@ -27,7 +27,6 @@ bin/dipplanner (which is an empty shell)
 runs in command line and output resulting dive profile
 also initiate log files
 """
-#TODO: ResTifying docstrings
 
 __version__ = "0.3nightly"
 

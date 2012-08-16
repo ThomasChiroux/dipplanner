@@ -57,7 +57,6 @@ AMBIANT_PRESSURE_SEA_LEVEL = 1.01325  # surface pressure (in bar)
 METHOD_FOR_DEPTH_CALCULATION = 'complex'  # either simple (/10) or complex
 TRAVEL_SWITCH = 'late'  # "late" or "early"
 
-# #TODO: put this also in config.cfg
 FLIGHT_ALTITUDE = 2450  # in meter practicly, this value can not be bigger than
                         # about 2850m because breathing air at 0m will only
                         # 'prepare the body' to a decompression until this

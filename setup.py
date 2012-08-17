@@ -39,19 +39,13 @@ install_requires = [
     # List your project dependencies here.
     # For more details, see:
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
-    'readline',
     'jinja2',
     # below are dependencies for develop phaes only
-    # TODO: find a way not to install this dev in setup.py install
+    # TODO: find a way to install only this tools with setup.py develop
     "ipython",
     "pylint",
     "pep8",
     "sphinx", ]
-
-# readline is always here on linux
-if sys.platform.startswith('linux'):
-    install_requires.remove('readline')
-
 
 setup(name='dipplanner',
       version=version,
@@ -61,11 +55,14 @@ setup(name='dipplanner',
           # Get strings from
           # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       ],
-      keywords='',
+      keywords='diving plannification',
       author='Thomas Chiroux',
       author_email='',
       url='http://dipplanner.org',
       license='GPLv3',
+      entry_points = {
+        'console_scripts': [ 'dipplanner = dipplanner.main:main' ],
+      },
       packages=find_packages('src'),
       package_dir={'': 'src'}, include_package_data=True,
       zip_safe=False,

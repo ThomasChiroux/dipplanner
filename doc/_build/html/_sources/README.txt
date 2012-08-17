@@ -104,23 +104,10 @@ please use git to clone the repository :
 
     git clone git://github.com/ThomasChiroux/dipplanner.git
 
-Installing
-----------
-
-There is no full installation yet
-
-Using
------
-
-This version if currently only usable in command line
-
-Run the program
-^^^^^^^^^^^^^^^
-
 Preparation: virtualvenv
 """"""""""""""""""""""""
 
-It is recommended to setup a virtualvenv before running or installing.
+It is recommended (but optional) to setup a virtualvenv before running or installing.
 In this way, you will not break or change your real environment.
 So after getting the source, go in the dipplanner directory:
 
@@ -131,27 +118,31 @@ So after getting the source, go in the dipplanner directory:
    virtualenv venv
    source venv/bin/activate
 
-Installation
-""""""""""""
-for linux or macos (or  windows with python installed) :
+Installing
+----------
+
+Inside the dipplanner source directory, run
 
 ::
 
-    python setup.py develop
+    python setup.py install
 
-setup.py develop will install all needed dependencies and add dipplanner
-in your python path
+Using
+-----
+
+This version if currently only usable in command line
+
+Run the program
+^^^^^^^^^^^^^^^
 
 Running the program
 """""""""""""""""""
-
-an executable wrapper is in bin/ directory, run the program:
 
 ex:
 
 ::
 
-    bin/dipplanner --help
+    dipplanner --help
 
 
 Planning one dive
@@ -162,7 +153,7 @@ Here is below a sample for a 12l tank with 200b of air and a dive of 25min at 30
 
 ::
 
-    bin/dipplanner -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"
+    dipplanner -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"
 
 You can provide more than one tank and of course multiple segments (they will be processed in the order you provided it)
 Deco tanks will be automaticaly choosen if appropriate.
@@ -170,12 +161,18 @@ Here is below a sample for a trimix dive : bi 12l-cylinder of Tx21/30 and Deco N
 
 ::
 
-    bin/dipplanner -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"
+    dipplanner -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"
 
 Change some parameters of the dive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-See --help output to see all available parameters
+See ::
+
+    dipplanner --help
+
+output to see all available parameters
+
+You can also read :ref:`dipplanner_cmdline`
 
 Config files
 ^^^^^^^^^^^^
@@ -189,6 +186,8 @@ parameter are changed using this order:
 1) default parameter
 2) parameter set in config files
 3) parameter set in command line
+
+You can also read :ref:`dipplanner_configfile`
 
 Units : SI or Imperial
 ----------------------

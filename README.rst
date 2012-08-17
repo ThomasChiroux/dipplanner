@@ -121,7 +121,7 @@ So after getting the source, go in the dipplanner directory:
 Installing
 ----------
 
-Inside the dipplanner source directory, run
+Inside the dipplanner source directory, run:
 
 ::
 

@@ -26,7 +26,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="dipplanner 0.3nightly documentation" href="index.html" />
-    <link rel="prev" title="dipplanner Quick Start" href="README.html" /> 
+    <link rel="next" title="Release Notes" href="NEWS.html" />
+    <link rel="prev" title="Templates" href="template.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,7 +40,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="README.html" title="dipplanner Quick Start"
+          <a href="NEWS.html" title="Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="template.html" title="Templates"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">dipplanner 0.3nightly documentation</a> &raquo;</li> 
       </ul>
@@ -51,9 +55,9 @@
           <div class="body">
             
   <div class="section" id="source-code-documentation">
-<h1>Source code documentation<a class="headerlink" href="#source-code-documentation" title="Permalink to this headline">¶</a></h1>
+<span id="dipplanner-autodoc"></span><h1>Source code documentation<a class="headerlink" href="#source-code-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-dipplanner.dive">
-<span id="dive"></span><h2>dive<a class="headerlink" href="#module-dipplanner.dive" title="Permalink to this headline">¶</a></h2>
+<span id="dive"></span><span id="dipplanner-autodoc-dive"></span><h2>dive<a class="headerlink" href="#module-dipplanner.dive" title="Permalink to this headline">¶</a></h2>
 <p>dive class module</p>
 <p>Each Dive represent one dive (and only one)
 For successive dives, it is possible to provide the parameters of the
@@ -680,7 +684,7 @@ False &#8211; if no gas switch occured</dd>
 
 </div>
 <div class="section" id="module-dipplanner.segment">
-<span id="segment"></span><h2>segment<a class="headerlink" href="#module-dipplanner.segment" title="Permalink to this headline">¶</a></h2>
+<span id="segment"></span><span id="dipplanner-autodoc-segment"></span><h2>segment<a class="headerlink" href="#module-dipplanner.segment" title="Permalink to this headline">¶</a></h2>
 <p>Segment classes
 A segment is a portion of a dive in the same depth (depth + duration)</p>
 <dl class="exception">
@@ -1567,12 +1571,8 @@ Complex method : use real density of water, T°, etc...</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-dipplanner.settings">
-<span id="settings"></span><h2>settings<a class="headerlink" href="#module-dipplanner.settings" title="Permalink to this headline">¶</a></h2>
-<p>Global settings for dipplanner</p>
-</div>
 <div class="section" id="module-dipplanner.tank">
-<span id="tank"></span><h2>tank<a class="headerlink" href="#module-dipplanner.tank" title="Permalink to this headline">¶</a></h2>
+<span id="tank"></span><span id="dipplanner-autodoc-tank"></span><h2>tank<a class="headerlink" href="#module-dipplanner.tank" title="Permalink to this headline">¶</a></h2>
 <p>Contains a Tank Class</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -2302,9 +2302,9 @@ in the [advanced] section</p>
 
 </div>
 <div class="section" id="model-buhlmann">
-<h2>model: buhlmann<a class="headerlink" href="#model-buhlmann" title="Permalink to this headline">¶</a></h2>
+<span id="dipplanner-autodoc-model-buhlmann"></span><h2>model: buhlmann<a class="headerlink" href="#model-buhlmann" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="module-dipplanner.model.buhlmann.model_exceptions">
-<span id="exceptions"></span><h3>Exceptions<a class="headerlink" href="#module-dipplanner.model.buhlmann.model_exceptions" title="Permalink to this headline">¶</a></h3>
+<span id="exceptions"></span><span id="dipplanner-autodoc-model-buhlmann-exceptions"></span><h3>Exceptions<a class="headerlink" href="#module-dipplanner.model.buhlmann.model_exceptions" title="Permalink to this headline">¶</a></h3>
 <p>Defines Exceptions for buhlmann model</p>
 <dl class="exception">
 <dt id="dipplanner.model.buhlmann.model_exceptions.ModelException">
@@ -2420,7 +2420,7 @@ in the [advanced] section</p>
 
 </div>
 <div class="section" id="module-dipplanner.model.buhlmann.compartment">
-<span id="compartment"></span><h3>compartment<a class="headerlink" href="#module-dipplanner.model.buhlmann.compartment" title="Permalink to this headline">¶</a></h3>
+<span id="compartment"></span><span id="dipplanner-autodoc-model-buhlmann-compartment"></span><h3>compartment<a class="headerlink" href="#module-dipplanner.model.buhlmann.compartment" title="Permalink to this headline">¶</a></h3>
 <p>Defines a Buhlmann compartment</p>
 <dl class="class">
 <dt id="dipplanner.model.buhlmann.compartment.Compartment">
@@ -2742,7 +2742,7 @@ for current pp of He and N2</p>
 
 </div>
 <div class="section" id="module-dipplanner.model.buhlmann.gradient">
-<span id="gradient"></span><h3>gradient<a class="headerlink" href="#module-dipplanner.model.buhlmann.gradient" title="Permalink to this headline">¶</a></h3>
+<span id="gradient"></span><span id="dipplanner-autodoc-model-buhlmann-gradient"></span><h3>gradient<a class="headerlink" href="#module-dipplanner.model.buhlmann.gradient" title="Permalink to this headline">¶</a></h3>
 <p>gradient module</p>
 <dl class="class">
 <dt id="dipplanner.model.buhlmann.gradient.Gradient">
@@ -2914,17 +2914,11 @@ Typically called once to initialise the GF slope.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.gradient.Gradient.__str__">
-<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.gradient.Gradient.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__str__() &lt;==&gt; str(x)</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
 <div class="section" id="module-dipplanner.model.buhlmann.oxygen_toxicity">
-<span id="oxygen-toxicity"></span><h3>oxygen toxicity<a class="headerlink" href="#module-dipplanner.model.buhlmann.oxygen_toxicity" title="Permalink to this headline">¶</a></h3>
+<span id="oxygen-toxicity"></span><span id="dipplanner-autodoc-model-buhlmann-oxtox"></span><h3>oxygen toxicity<a class="headerlink" href="#module-dipplanner.model.buhlmann.oxygen_toxicity" title="Permalink to this headline">¶</a></h3>
 <p>Oxygen Toxicity model</p>
 <dl class="class">
 <dt id="dipplanner.model.buhlmann.oxygen_toxicity.OxTox">
@@ -3030,17 +3024,11 @@ time in second to minutes while using this formula</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__str__">
-<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__str__() &lt;==&gt; str(x)</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
 <div class="section" id="module-dipplanner.model.buhlmann.model">
-<span id="model"></span><h3>model<a class="headerlink" href="#module-dipplanner.model.buhlmann.model" title="Permalink to this headline">¶</a></h3>
+<span id="model"></span><span id="dipplanner-autodoc-model-buhlmann-model"></span><h3>model<a class="headerlink" href="#module-dipplanner.model.buhlmann.model" title="Permalink to this headline">¶</a></h3>
 <p>Buhlmann model module</p>
 <p>Contains:
 Model &#8211; class</p>
@@ -3335,8 +3323,8 @@ If == 0.0, then open circuit</td>
 
 </div>
 </div>
-<div class="section" id="id1">
-<h2>Exceptions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dipplanner-autodoc-exceptions">
+<span id="id1"></span><h2>Exceptions<a class="headerlink" href="#dipplanner-autodoc-exceptions" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-dipplanner.dipp_exception"></span><p>Base Class for exceptions for dipplanner module</p>
 <dl class="exception">
 <dt id="dipplanner.dipp_exception.DipplannerException">
@@ -3396,7 +3384,7 @@ If == 0.0, then open circuit</td>
 
 </div>
 <div class="section" id="module-dipplanner.tools">
-<span id="tools"></span><h2>tools<a class="headerlink" href="#module-dipplanner.tools" title="Permalink to this headline">¶</a></h2>
+<span id="tools"></span><span id="dipplanner-autodoc-model-tools"></span><h2>tools<a class="headerlink" href="#module-dipplanner.tools" title="Permalink to this headline">¶</a></h2>
 <p>tools modules</p>
 <p>This modules contains some utility functions like unit conversions, etc...</p>
 <dl class="function">
@@ -3407,7 +3395,7 @@ minutes and seconds
 (like 2:06)
 It does returns only minutes and seconds, not hours, minutes and seconds</p>
 <dl class="docutils">
-<dt>&#8220;Keyword Arguments:&#8221;</dt>
+<dt><em>Keyword Arguments:</em></dt>
 <dd><table class="first last docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -3720,7 +3708,7 @@ using Antoine equation
 
 </div>
 <div class="section" id="module-dipplanner.main">
-<span id="main"></span><h2>main<a class="headerlink" href="#module-dipplanner.main" title="Permalink to this headline">¶</a></h2>
+<span id="main"></span><span id="dipplanner-autodoc-main"></span><h2>main<a class="headerlink" href="#module-dipplanner.main" title="Permalink to this headline">¶</a></h2>
 <p>main dipplanner module for command line usage.</p>
 <p>This module is used by the only &#8220;executable&#8221; of the project:
 bin/dipplanner (which is an empty shell)</p>
@@ -3835,6 +3823,237 @@ and/or command line, calculates the dives and return the output in stdout.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-dipplanner.settings">
+<span id="settings"></span><span id="dipplanner-autodoc-settings"></span><h2>settings<a class="headerlink" href="#module-dipplanner.settings" title="Permalink to this headline">¶</a></h2>
+<p>Global settings for dipplannerand their default values</p>
+<p>All the settings can be changed by <a class="reference internal" href="command_line.html#dipplanner-cmdline"><em>dipplanner command-line documentation</em></a>
+and/or <a class="reference internal" href="config_file.html#dipplanner-configfile"><em>dipplanner config file documentation</em></a></p>
+<dl class="data">
+<dt id="dipplanner.settings.FRESH_WATER_DENSITY">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">FRESH_WATER_DENSITY</tt><em class="property"> = 1.0</em><a class="headerlink" href="#dipplanner.settings.FRESH_WATER_DENSITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>water density kg/l</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.SEA_WATER_DENSITY">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">SEA_WATER_DENSITY</tt><em class="property"> = 1.03</em><a class="headerlink" href="#dipplanner.settings.SEA_WATER_DENSITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>water density kg/l</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.ABSOLUTE_MAX_PPO2">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">ABSOLUTE_MAX_PPO2</tt><em class="property"> = 2.0</em><a class="headerlink" href="#dipplanner.settings.ABSOLUTE_MAX_PPO2" title="Permalink to this definition">¶</a></dt>
+<dd><p>in bar</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.ABSOLUTE_MIN_PPO2">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">ABSOLUTE_MIN_PPO2</tt><em class="property"> = 0.16</em><a class="headerlink" href="#dipplanner.settings.ABSOLUTE_MIN_PPO2" title="Permalink to this definition">¶</a></dt>
+<dd><p>in bar</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.ABSOLUTE_MAX_TANK_PRESSURE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">ABSOLUTE_MAX_TANK_PRESSURE</tt><em class="property"> = 300</em><a class="headerlink" href="#dipplanner.settings.ABSOLUTE_MAX_TANK_PRESSURE" title="Permalink to this definition">¶</a></dt>
+<dd><p>in bar</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.ABSOLUTE_MAX_TANK_SIZE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">ABSOLUTE_MAX_TANK_SIZE</tt><em class="property"> = 40</em><a class="headerlink" href="#dipplanner.settings.ABSOLUTE_MAX_TANK_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>in liter</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.SURFACE_TEMP">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">SURFACE_TEMP</tt><em class="property"> = 20</em><a class="headerlink" href="#dipplanner.settings.SURFACE_TEMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temperature at surface.
+Used to calculate PP_H2O_SURFACE</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.HE_NARCOTIC_VALUE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">HE_NARCOTIC_VALUE</tt><em class="property"> = 0.23</em><a class="headerlink" href="#dipplanner.settings.HE_NARCOTIC_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>helium narcotic value</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.N2_NARCOTIC_VALUE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">N2_NARCOTIC_VALUE</tt><em class="property"> = 1.0</em><a class="headerlink" href="#dipplanner.settings.N2_NARCOTIC_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>nitrogen narcotic value</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.O2_NARCOTIC_VALUE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">O2_NARCOTIC_VALUE</tt><em class="property"> = 1.0</em><a class="headerlink" href="#dipplanner.settings.O2_NARCOTIC_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>oxygen narcotic value</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.AR_NARCOTIC_VALUE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">AR_NARCOTIC_VALUE</tt><em class="property"> = 2.33</em><a class="headerlink" href="#dipplanner.settings.AR_NARCOTIC_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>argon narcotic value</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.STOP_DEPTH_INCREMENT">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">STOP_DEPTH_INCREMENT</tt><em class="property"> = 3</em><a class="headerlink" href="#dipplanner.settings.STOP_DEPTH_INCREMENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>in meter</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.LAST_STOP_DEPTH">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">LAST_STOP_DEPTH</tt><em class="property"> = 3</em><a class="headerlink" href="#dipplanner.settings.LAST_STOP_DEPTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>in meter : last stop before surfacing</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.STOP_TIME_INCREMENT">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">STOP_TIME_INCREMENT</tt><em class="property"> = 1</em><a class="headerlink" href="#dipplanner.settings.STOP_TIME_INCREMENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>in second</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.FORCE_ALL_STOPS">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">FORCE_ALL_STOPS</tt><em class="property"> = True</em><a class="headerlink" href="#dipplanner.settings.FORCE_ALL_STOPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>once deco stop begun, force to stop to each deco
+depth stop</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.AMBIANT_PRESSURE_SEA_LEVEL">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">AMBIANT_PRESSURE_SEA_LEVEL</tt><em class="property"> = 1.01325</em><a class="headerlink" href="#dipplanner.settings.AMBIANT_PRESSURE_SEA_LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>surface pressure (in bar)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.METHOD_FOR_DEPTH_CALCULATION">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">METHOD_FOR_DEPTH_CALCULATION</tt><em class="property"> = 'complex'</em><a class="headerlink" href="#dipplanner.settings.METHOD_FOR_DEPTH_CALCULATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>either simple (/10) or complex</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.TRAVEL_SWITCH">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">TRAVEL_SWITCH</tt><em class="property"> = 'late'</em><a class="headerlink" href="#dipplanner.settings.TRAVEL_SWITCH" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#8220;late&#8221; or &#8220;early&#8221;</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.FLIGHT_ALTITUDE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">FLIGHT_ALTITUDE</tt><em class="property"> = 2450</em><a class="headerlink" href="#dipplanner.settings.FLIGHT_ALTITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>in meter practicly, this value can not be bigger than
+about 2850m because breathing air at 0m will only
+&#8216;prepare the body&#8217; to a decompression until this
+value. To go higher, another &#8216;stop&#8217; is needed
+between.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.TEMPLATE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">TEMPLATE</tt><em class="property"> = 'default-color.tpl'</em><a class="headerlink" href="#dipplanner.settings.TEMPLATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>template should be in templates/ directory</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.DECO_MODEL">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">DECO_MODEL</tt><em class="property"> = 'ZHL16c'</em><a class="headerlink" href="#dipplanner.settings.DECO_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>ZHL16c or ZHL16b</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.WATER_DENSITY">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">WATER_DENSITY</tt><em class="property"> = 1.03</em><a class="headerlink" href="#dipplanner.settings.WATER_DENSITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>water density kg/l</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.AMBIANT_PRESSURE_SURFACE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">AMBIANT_PRESSURE_SURFACE</tt><em class="property"> = 1.01325</em><a class="headerlink" href="#dipplanner.settings.AMBIANT_PRESSURE_SURFACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>surface pressure (in bar)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.DEFAULT_MAX_PPO2">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">DEFAULT_MAX_PPO2</tt><em class="property"> = 1.6</em><a class="headerlink" href="#dipplanner.settings.DEFAULT_MAX_PPO2" title="Permalink to this definition">¶</a></dt>
+<dd><p>in bar</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.DEFAULT_MIN_PPO2">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">DEFAULT_MIN_PPO2</tt><em class="property"> = 0.21</em><a class="headerlink" href="#dipplanner.settings.DEFAULT_MIN_PPO2" title="Permalink to this definition">¶</a></dt>
+<dd><p>in bar</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.DEFAULT_MAX_END">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">DEFAULT_MAX_END</tt><em class="property"> = 30</em><a class="headerlink" href="#dipplanner.settings.DEFAULT_MAX_END" title="Permalink to this definition">¶</a></dt>
+<dd><p>in meter</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.DIVE_CONSUMPTION_RATE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">DIVE_CONSUMPTION_RATE</tt><em class="property"> = 0.2833333333333333</em><a class="headerlink" href="#dipplanner.settings.DIVE_CONSUMPTION_RATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>liter/s</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.DECO_CONSUMPTION_RATE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">DECO_CONSUMPTION_RATE</tt><em class="property"> = 0.2</em><a class="headerlink" href="#dipplanner.settings.DECO_CONSUMPTION_RATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>liter/s</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.DESCENT_RATE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">DESCENT_RATE</tt><em class="property"> = 0.3333333333333333</em><a class="headerlink" href="#dipplanner.settings.DESCENT_RATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>m/s</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.ASCENT_RATE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">ASCENT_RATE</tt><em class="property"> = 0.16666666666666666</em><a class="headerlink" href="#dipplanner.settings.ASCENT_RATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>m/s</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.RUN_TIME">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">RUN_TIME</tt><em class="property"> = True</em><a class="headerlink" href="#dipplanner.settings.RUN_TIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Warning : if RUN-TIME is True, the segment duration must include descent time
+if the duration is too small dipplanner will raise an error
+if True: segments represents runtime,
+if false, segments represents segtime</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.USE_OC_DECO">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">USE_OC_DECO</tt><em class="property"> = True</em><a class="headerlink" href="#dipplanner.settings.USE_OC_DECO" title="Permalink to this definition">¶</a></dt>
+<dd><p>if True, use enabled gases of decomp in oc or bailout</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.GF_LOW">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">GF_LOW</tt><em class="property"> = 0.3</em><a class="headerlink" href="#dipplanner.settings.GF_LOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>% between 0.0 and 1.0</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.GF_HIGH">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">GF_HIGH</tt><em class="property"> = 0.8</em><a class="headerlink" href="#dipplanner.settings.GF_HIGH" title="Permalink to this definition">¶</a></dt>
+<dd><p>% between 0.0 and 1.0</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.MULTILEVEL_MODE">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">MULTILEVEL_MODE</tt><em class="property"> = False</em><a class="headerlink" href="#dipplanner.settings.MULTILEVEL_MODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>TO CHECK</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dipplanner.settings.AUTOMATIC_TANK_REFILL">
+<tt class="descclassname">dipplanner.settings.</tt><tt class="descname">AUTOMATIC_TANK_REFILL</tt><em class="property"> = True</em><a class="headerlink" href="#dipplanner.settings.AUTOMATIC_TANK_REFILL" title="Permalink to this definition">¶</a></dt>
+<dd><p>automatic refill of tanks between dives</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -3848,7 +4067,6 @@ and/or command line, calculates the dives and return the output in stdout.</p>
 <li><a class="reference internal" href="#">Source code documentation</a><ul>
 <li><a class="reference internal" href="#module-dipplanner.dive">dive</a></li>
 <li><a class="reference internal" href="#module-dipplanner.segment">segment</a></li>
-<li><a class="reference internal" href="#module-dipplanner.settings">settings</a></li>
 <li><a class="reference internal" href="#module-dipplanner.tank">tank</a></li>
 <li><a class="reference internal" href="#model-buhlmann">model: buhlmann</a><ul>
 <li><a class="reference internal" href="#module-dipplanner.model.buhlmann.model_exceptions">Exceptions</a></li>
@@ -3858,16 +4076,20 @@ and/or command line, calculates the dives and return the output in stdout.</p>
 <li><a class="reference internal" href="#module-dipplanner.model.buhlmann.model">model</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id1">Exceptions</a></li>
+<li><a class="reference internal" href="#dipplanner-autodoc-exceptions">Exceptions</a></li>
 <li><a class="reference internal" href="#module-dipplanner.tools">tools</a></li>
 <li><a class="reference internal" href="#module-dipplanner.main">main</a></li>
+<li><a class="reference internal" href="#module-dipplanner.settings">settings</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="README.html"
-                        title="previous chapter">dipplanner Quick Start</a></p>
+  <p class="topless"><a href="template.html"
+                        title="previous chapter">Templates</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="NEWS.html"
+                        title="next chapter">Release Notes</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/autodoc.txt"
@@ -3900,7 +4122,10 @@ and/or command line, calculates the dives and return the output in stdout.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="README.html" title="dipplanner Quick Start"
+          <a href="NEWS.html" title="Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="template.html" title="Templates"
              >previous</a> |</li>
         <li><a href="index.html">dipplanner 0.3nightly documentation</a> &raquo;</li> 
       </ul>

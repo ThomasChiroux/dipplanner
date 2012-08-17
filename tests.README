@@ -8,9 +8,13 @@ see README for more infos.
 Run all tests:
 ==============
 
-python test/run_all_tests.py
+python test/run_unittest.py
 
-or
+or (with nose)
+
+python test/run_nose.py
+
+or 
 
 python setup.py test
 

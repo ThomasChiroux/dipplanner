@@ -38,7 +38,7 @@ def seconds_to_mmss(seconds):
     (like 2:06)
     It does returns only minutes and seconds, not hours, minutes and seconds
 
-    "Keyword Arguments:"
+    *Keyword Arguments:*
         :seconds: (float) -- the duration in seconds
 
     *Returns:*

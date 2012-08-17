@@ -654,6 +654,9 @@ def main():
     *Raise:*
         <nothing>
     """
+    if sys.version_info < (2, 7):
+        raise SystemExit("ERROR: This programm needs python 2.7 or greater")
+
     activate_debug()
 
     settings.__VERSION__ = __version__

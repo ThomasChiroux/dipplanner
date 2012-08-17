@@ -23,8 +23,11 @@ Welcome to dipplanner's documentation!
    :maxdepth: 4
 
    README
-
+   command_line
+   config_file
+   template
    autodoc
+   NEWS
 
 TODOs
 =====

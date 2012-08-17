@@ -18,7 +18,10 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""Global settings for dipplanner
+"""Global settings for dipplannerand their default values
+
+All the settings can be changed by :ref:`dipplanner_cmdline`
+and/or :ref:`dipplanner_configfile`
 """
 
 __authors__ = [
@@ -29,68 +32,75 @@ __authors__ = [
 # software version, populated automatically
 __VERSION__ = None
 
-# unless knowing what you're doing, this prefs should not be changed
-# by the user
-# water density kg/l
-FRESH_WATER_DENSITY = 1.0
-SEA_WATER_DENSITY = 1.03
-ABSOLUTE_MAX_PPO2 = 2.0
-ABSOLUTE_MIN_PPO2 = 0.16
-ABSOLUTE_MAX_TANK_PRESSURE = 300  # in bar
-ABSOLUTE_MAX_TANK_SIZE = 2 * 20  # in liter
+#: unless knowing what you're doing, this prefs should not be changed
+#: by the user
 
-# Temperature at surface.
-# Used to calculate PP_H2O_SURFACE
+FRESH_WATER_DENSITY = 1.0  #: water density kg/l
+SEA_WATER_DENSITY = 1.03  #: water density kg/l
+ABSOLUTE_MAX_PPO2 = 2.0  #: in bar
+ABSOLUTE_MIN_PPO2 = 0.16  #: in bar
+ABSOLUTE_MAX_TANK_PRESSURE = 300  #: in bar
+ABSOLUTE_MAX_TANK_SIZE = 2 * 20  #: in liter
+
+#: Temperature at surface.
+#: Used to calculate PP_H2O_SURFACE
 SURFACE_TEMP = 20
 
-HE_NARCOTIC_VALUE = 0.23
-N2_NARCOTIC_VALUE = 1.0
-O2_NARCOTIC_VALUE = 1.0
-AR_NARCOTIC_VALUE = 2.33
+HE_NARCOTIC_VALUE = 0.23  #: helium narcotic value
+N2_NARCOTIC_VALUE = 1.0  #: nitrogen narcotic value
+O2_NARCOTIC_VALUE = 1.0  #: oxygen narcotic value
+AR_NARCOTIC_VALUE = 2.33  #: argon narcotic value
 
-STOP_DEPTH_INCREMENT = 3  # in meter
-LAST_STOP_DEPTH = 3  # in meter : last stop before surfacing
-STOP_TIME_INCREMENT = 1  # in second
-FORCE_ALL_STOPS = True  # one deco stop begun, force to stop to each deco
-                        # depth stop
-AMBIANT_PRESSURE_SEA_LEVEL = 1.01325  # surface pressure (in bar)
-METHOD_FOR_DEPTH_CALCULATION = 'complex'  # either simple (/10) or complex
-TRAVEL_SWITCH = 'late'  # "late" or "early"
+STOP_DEPTH_INCREMENT = 3  #: in meter
+LAST_STOP_DEPTH = 3  #: in meter : last stop before surfacing
+STOP_TIME_INCREMENT = 1  #: in second
 
-FLIGHT_ALTITUDE = 2450  # in meter practicly, this value can not be bigger than
-                        # about 2850m because breathing air at 0m will only
-                        # 'prepare the body' to a decompression until this
-                        # value. To go higher, another 'stop' is needed
-                        # between.
+#: once deco stop begun, force to stop to each deco
+#: depth stop
+FORCE_ALL_STOPS = True
+
+AMBIANT_PRESSURE_SEA_LEVEL = 1.01325  #: surface pressure (in bar)
+METHOD_FOR_DEPTH_CALCULATION = 'complex'  #: either simple (/10) or complex
+
+TRAVEL_SWITCH = 'late'  #: "late" or "early"
+
+#: in meter practicly, this value can not be bigger than
+#: about 2850m because breathing air at 0m will only
+#: 'prepare the body' to a decompression until this
+#: value. To go higher, another 'stop' is needed
+#: between.
+FLIGHT_ALTITUDE = 2450
 
 # ========= User settings ========
-TEMPLATE = "default-color.tpl"
+TEMPLATE = "default-color.tpl"  #: template should be in templates/ directory
 
-DECO_MODEL = "ZHL16c"
-WATER_DENSITY = SEA_WATER_DENSITY
-AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL
+DECO_MODEL = "ZHL16c"  #: ZHL16c or ZHL16b
 
-DEFAULT_MAX_PPO2 = 1.6
-DEFAULT_MIN_PPO2 = 0.21
-DEFAULT_MAX_END = 30  # in meter
+WATER_DENSITY = SEA_WATER_DENSITY  #: water density kg/l
+AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL  #: surface pressure (in bar)
 
-DIVE_CONSUMPTION_RATE = 17.0 / 60  # liter/s
-DECO_CONSUMPTION_RATE = 12.0 / 60  # liter/s
+DEFAULT_MAX_PPO2 = 1.6  #: in bar
+DEFAULT_MIN_PPO2 = 0.21  #: in bar
+DEFAULT_MAX_END = 30  #: in meter
 
-DESCENT_RATE = float(20) / 60  # m/s
-ASCENT_RATE = float(10) / 60  # m/s
+DIVE_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
+DECO_CONSUMPTION_RATE = 12.0 / 60  #: liter/s
 
-# Warning : if RUN-TIME is True, the segment duration must include descent time
-# if the duration is too small dipplanner will raise an error
-RUN_TIME = True  # if True: segments represents runtime,
-                 # if false, segments represents segtime
+DESCENT_RATE = float(20) / 60  #: m/s
+ASCENT_RATE = float(10) / 60  #: m/s
 
-USE_OC_DECO = True  # if True, use enabled gases of decomp in oc or bailout
+#: Warning : if RUN-TIME is True, the segment duration must include descent time
+#: if the duration is too small dipplanner will raise an error
+#: if True: segments represents runtime,
+#: if false, segments represents segtime
+RUN_TIME = True
 
-GF_LOW = 0.30
-GF_HIGH = 0.80
+USE_OC_DECO = True  #: if True, use enabled gases of decomp in oc or bailout
+
+GF_LOW = 0.30  #: % between 0.0 and 1.0
+GF_HIGH = 0.80  #: % between 0.0 and 1.0
 
 # TODO: check the usage of the MULTILEVEL_MODE setting
-MULTILEVEL_MODE = False
+MULTILEVEL_MODE = False  #: TO CHECK
 
-AUTOMATIC_TANK_REFILL = True
+AUTOMATIC_TANK_REFILL = True  #: automatic refill of tanks between dives

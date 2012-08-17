@@ -65,8 +65,11 @@ class Gradient(object):
             "dipplanner.model.buhlmann.gradient.Gradient")
         self.logger.debug("creating an instance of Gradient")
 
+        self.gf_low = None
+        self.gf_high = None
         self.set_gf_low(gf_low)
         self.set_gf_high(gf_high)
+
         self.gf_slope = 1.0
         self.gf = gf_low
         self.gf_set = False
@@ -142,11 +145,11 @@ class Gradient(object):
             self.gf_slope = (self.gf_high - self.gf_low) / (0.0 - depth)
             self.gf_set = True
 
-    def set_gf_low(self, gf_low):
+    def set_gf_low(self, value):
         """Sets gf low setting
 
         *Keyword arguments:*
-            :gf_low: (float) -- low Gf, between 0.0 and 1.0
+            :value: (float) -- low Gf, between 0.0 and 1.0
 
         *Returns:*
             <nothing>
@@ -155,16 +158,16 @@ class Gradient(object):
             ValueError -- if either gf_low of gf_high has wrong value
 
         """
-        if gf_low < 0.0 or gf_low > 1.0:
+        if value < 0.0 or value > 1.0:
             raise ValueError("gf_low should be between 0.0 and 1.0")
         else:
-            self.gf_low = float(gf_low)
+            self.gf_low = float(value)
 
-    def set_gf_high(self, gf_high):
+    def set_gf_high(self, value):
         """Sets gf high setting
 
         *Keyword arguments:*
-            :gf_high: (float) -- high Gf, between 0.0 and 1.0
+            :value: (float) -- high Gf, between 0.0 and 1.0
 
         *Returns:*
             <nothing>
@@ -173,7 +176,7 @@ class Gradient(object):
             ValueError -- if gf_high has wrong value
 
         """
-        if gf_high < 0.0 or gf_high > 1.0:
+        if value < 0.0 or value > 1.0:
             raise ValueError("gf_high should be between 0.0 and 1.0")
         else:
-            self.gf_high = float(gf_high)
+            self.gf_high = float(value)

@@ -292,9 +292,9 @@ class Tank(object):
         b_n2 = 0.0387
         a_he = 0.0346
         b_he = 0.0238
-        vm_o2 = 31.9988
-        vm_n2 = 28.01348
-        vm_he = 4.0020602
+        #vm_o2 = 31.9988  # not used
+        #vm_n2 = 28.01348  # not used
+        #vm_he = 4.0020602  # not used
         R = 0.0831451
         T = 273.15 + temp  # default temp at 15°C
 

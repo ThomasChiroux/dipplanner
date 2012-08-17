@@ -77,7 +77,9 @@ TEMPLATE = "default-color.tpl"  #: template should be in templates/ directory
 DECO_MODEL = "ZHL16c"  #: ZHL16c or ZHL16b
 
 WATER_DENSITY = SEA_WATER_DENSITY  #: water density kg/l
-AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL  #: surface pressure (in bar)
+
+#: surface pressure (in bar)
+AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL
 
 DEFAULT_MAX_PPO2 = 1.6  #: in bar
 DEFAULT_MIN_PPO2 = 0.21  #: in bar

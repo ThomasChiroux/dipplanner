@@ -686,7 +686,7 @@ class Dive(object):
 
            This method does not calculate no_flight_time
            you need to call no_flight_time() or
-           no_flight_time_without_exception() before.
+           no_flight_time_wo_exception() before.
 
         *Keyword Arguments:*
             <none>
@@ -700,7 +700,7 @@ class Dive(object):
         else:
             return ""
 
-    def no_flight_time_without_exception(self,
+    def no_flight_time_wo_exception(self,
                                          altitude=settings.FLIGHT_ALTITUDE,
                                          tank=None):
         """Call no_flight_time, and handle exceptions internally:

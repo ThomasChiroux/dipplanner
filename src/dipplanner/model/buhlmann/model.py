@@ -94,7 +94,7 @@ class Model(object):
         self.gradient = None
         self.init_gradient()
 
-        for comp_number in range(0, self.COMPS):
+        for _ in range(0, self.COMPS):
             self.tissues.append(Compartment())
 
         self.set_time_constants()

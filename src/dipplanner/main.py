@@ -686,7 +686,7 @@ def main():
 
     # now calculate no flight time based on the last dive
     try:
-        current_dive.no_flight_time_without_exception()
+        current_dive.no_flight_time_wo_exception()
     except Exception, unhandled_exc:
         LOGGER.error("Exception while calculating no flight time: %s" %
                      unhandled_exc)

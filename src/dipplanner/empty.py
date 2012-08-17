@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""
+"""Empty module
 """
 
 __authors__ = [

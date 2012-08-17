@@ -63,8 +63,13 @@ class TestTankisAir(TestTank):
     def test_end_at_depth(self):
         self.assertAlmostEqual(self.mytank.get_end_for_given_depth(40),
                                38.7573409377, 5, 'wrong end at depth:%s'
-
                                % self.mytank.get_end_for_given_depth(40))
+
+    def test_tank_info(self):
+        self.assertEqual(self.mytank.get_tank_info(),
+                         '12.0l-100.0% (2423.10/2423.10l)',
+                         "Wrong Tank infos: %s"
+                         % self.mytank.get_tank_info())
 
 
 class TestTankNitrox32(TestTank):
@@ -413,6 +418,35 @@ class TestTankInvalidTank2(TestTank):
         else:
             self.fail('should raise Invalid Tank')
 
+class TestTankInvalidTank3(TestTank):
+
+    def runTest(self):
+        try:
+            mytank = Tank(f_o2=-0.3)
+        except InvalidGas:
+            pass
+        else:
+            self.fail('should raise Invalid Gas')
+
+class TestTankInvalidTank4(TestTank):
+
+    def runTest(self):
+        try:
+            mytank = Tank(tank_vol=-150)
+        except InvalidTank:
+            pass
+        else:
+            self.fail('should raise Invalid Tank')
+
+class TestTankInvalidTank5(TestTank):
+
+    def runTest(self):
+        try:
+            mytank = Tank(f_o2=0.3, tank_pressure=-100)
+        except InvalidTank:
+            pass
+        else:
+            self.fail('should raise Invalid Tank')
 
 class TestTankInvalidMod1(TestTank):
 
@@ -436,6 +470,38 @@ class TestTankInvalidMod2(TestTank):
             self.fail('should raise Invalid Mod')
 
 
+class TestTankInvalidMod3(TestTank):
+
+    def runTest(self):
+        try:
+            mytank = Tank(f_o2=1, mod=-7)
+        except InvalidMod:
+            pass
+        else:
+            self.fail('should raise Invalid Mod')
+
+class TestTankRules(TestTank):
+
+    def setUp(self):
+        TestTank.setUp(self)
+
+    def test_rule_bar_1(self):
+        mytank = Tank(tank_vol=15, tank_pressure=200, tank_rule="50b")
+        self.assertAlmostEqual(mytank.min_gas, 767.5548, 4,
+                               "bad Tank rule calculation: %s"
+                               % mytank.min_gas)
+
+    def test_rule_bar_2(self):
+        mytank = Tank(tank_vol=15, tank_pressure=200, tank_rule="1/3")
+        self.assertAlmostEqual(mytank.min_gas, 1009.62376, 4,
+                               "bad Tank rule calculation: %s"
+                               % mytank.min_gas)
+
+    def test_rule_bar_3(self):
+        mytank = Tank(tank_vol=15, tank_pressure=200, tank_rule="1/6")
+        self.assertAlmostEqual(mytank.min_gas, 2019.24752, 4,
+                               "bad Tank rule calculation: %s"
+                               % mytank.min_gas)
 def main():
     import sys
     import argparse

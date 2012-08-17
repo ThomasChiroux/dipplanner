@@ -31,6 +31,8 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner.main import activate_debug_for_tests
 
+from dipplanner.tools import seconds_to_mmss
+from dipplanner.tools import seconds_to_hhmmss
 from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import depth_to_pressure
 from dipplanner.tools import altitude_or_depth_to_absolute_pressure
@@ -52,6 +54,66 @@ class TestTools(unittest.TestCase):
 
         activate_debug_for_tests()
 
+class TimeTools(TestTools):
+
+    def setUp(self):
+        TestTools.setUp(self)
+
+    def test_seconds_to_mmss_1(self):
+        self.assertEqual(seconds_to_mmss(10), "  0:10",
+                         "Wrong output for seconds to mmss: %s"
+                         % seconds_to_mmss(10))
+
+    def test_seconds_to_mmss_2(self):
+        self.assertEqual(seconds_to_mmss(100), "  1:40",
+            "Wrong output for seconds to mmss: %s"
+            % seconds_to_mmss(100))
+
+    def test_seconds_to_mmss_3(self):
+        self.assertEqual(seconds_to_mmss(875), " 14:35",
+            "Wrong output for seconds to mmss: %s"
+            % seconds_to_mmss(875))
+
+    def test_seconds_to_mmss_4(self):
+        self.assertEqual(seconds_to_mmss(447851), "7464:11",
+            "Wrong output for seconds to mmss: %s"
+            % seconds_to_mmss(447851))
+
+    def test_seconds_to_mmss_5(self):
+        try:
+            result = seconds_to_mmss(-10)
+        except ValueError:
+            pass
+        else:
+            self.fail('should raise ValueError')
+
+    def test_seconds_to_hhmmss_1(self):
+        self.assertEqual(seconds_to_hhmmss(10), "00:00:10",
+            "Wrong output for seconds to hhmmss: %s"
+            % seconds_to_hhmmss(10))
+
+    def test_seconds_to_hhmmss_2(self):
+        self.assertEqual(seconds_to_hhmmss(100), "00:01:40",
+            "Wrong output for seconds to hhmmss: %s"
+            % seconds_to_hhmmss(100))
+
+    def test_seconds_to_hhmmss_3(self):
+        self.assertEqual(seconds_to_hhmmss(875), "00:14:35",
+            "Wrong output for seconds to hhmmss: %s"
+            % seconds_to_hhmmss(875))
+
+    def test_seconds_to_hhmmss_4(self):
+        self.assertEqual(seconds_to_hhmmss(447851), "124:24:11",
+            "Wrong output for seconds to hhmmss: %s"
+            % seconds_to_hhmmss(447851))
+
+    def test_seconds_to_hhmmss_5(self):
+        try:
+            result = seconds_to_hhmmss(-10)
+        except ValueError:
+            pass
+        else:
+            self.fail('should raise ValueError')
 
 class TestAltOrDepthToAbsPressure0m(TestTools):
 

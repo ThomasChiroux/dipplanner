@@ -44,7 +44,7 @@ def seconds_to_mmss(seconds):
     *Returns:*
         str -- the time in minutes and seconds
                ex:
-               "23:45"
+               " 23:45"
                "112:33"
                ...
 

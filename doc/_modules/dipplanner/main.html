@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>dipplanner.main &mdash; dipplanner 0.3nightly documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3nightly',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="dipplanner 0.3nightly documentation" href="../../index.html" />
+    <link rel="up" title="dipplanner" href="../dipplanner.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">dipplanner 0.3nightly documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../dipplanner.html" accesskey="U">dipplanner</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for dipplanner.main</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c">#</span>
+<span class="c"># Copyright 2011-2012 Thomas Chiroux</span>
+<span class="c">#</span>
+<span class="c"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c"># it under the terms of the GNU General Public License as</span>
+<span class="c"># published by the Free Software Foundation, either version 3 of the</span>
+<span class="c"># License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c"># This program is distributed in the hope that it will be useful,</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c"># GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c"># You should have received a copy of the GNU General Public License</span>
+<span class="c"># along with this program.</span>
+<span class="c"># If not, see &lt;http://www.gnu.org/licenses/gpl.html&gt;</span>
+<span class="c">#</span>
+<span class="c"># This module is part of dipplanner, a Dive planning Tool written in python</span>
+
+<span class="sd">&quot;&quot;&quot;main dipplanner module for command line usage.</span>
+
+<span class="sd">This module is used by the only &quot;executable&quot; of the project:</span>
+<span class="sd">bin/dipplanner (which is an empty shell)</span>
+
+<span class="sd">runs in command line and output resulting dive profile</span>
+<span class="sd">also initiate log files</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c">#TODO: ResTifying docstrings</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;0.3nightly&quot;</span>
+
+<span class="n">__authors__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c"># alphabetical order by last name</span>
+    <span class="s">&#39;Thomas Chiroux&#39;</span><span class="p">,</span> <span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="c"># dependencies imports</span>
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">PackageLoader</span>
+
+<span class="c"># local imports</span>
+<span class="kn">from</span> <span class="nn">dipplanner</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">dipplanner.dive</span> <span class="kn">import</span> <span class="n">Dive</span>
+<span class="kn">from</span> <span class="nn">dipplanner.tank</span> <span class="kn">import</span> <span class="n">Tank</span>
+<span class="kn">from</span> <span class="nn">dipplanner.segment</span> <span class="kn">import</span> <span class="n">SegmentDive</span>
+<span class="kn">from</span> <span class="nn">dipplanner.tools</span> <span class="kn">import</span> <span class="n">altitude_to_pressure</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;dipplanner&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="activate_debug"><a class="viewcode-back" href="../../autodoc.html#dipplanner.main.activate_debug">[docs]</a><span class="k">def</span> <span class="nf">activate_debug</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;setup the default debug parameters</span>
+
+<span class="sd">    it&#39;s mainly used for test cases who needs also logging to be set</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        &lt;none&gt;</span>
+
+<span class="sd">    *Return:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="c"># create file handler which logs even debug messages</span>
+    <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s">&quot;dipplanner.log&quot;</span><span class="p">)</span>
+    <span class="n">file_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="c"># create console handler with a higher log level</span>
+    <span class="n">stream_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">stream_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+    <span class="c"># create formatter and add it to the handlers</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+        <span class="s">&quot;</span><span class="si">%(asctime)s</span><span class="s"> - </span><span class="si">%(levelname)s</span><span class="s"> - </span><span class="si">%(name)s</span><span class="s"> - </span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">stream_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="c"># add the handlers to the logger</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">stream_handler</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="activate_debug_for_tests"><a class="viewcode-back" href="../../autodoc.html#dipplanner.main.activate_debug_for_tests">[docs]</a><span class="k">def</span> <span class="nf">activate_debug_for_tests</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;setup the default debug parameters</span>
+
+<span class="sd">    it&#39;s mainly used for test cases who needs also logging to be set</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        &lt;none&gt;</span>
+
+<span class="sd">    *Return:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+    <span class="n">stream_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">stream_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+        <span class="s">&quot;</span><span class="si">%(asctime)s</span><span class="s"> - </span><span class="si">%(levelname)s</span><span class="s"> - </span><span class="si">%(name)s</span><span class="s"> - </span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="n">stream_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">stream_handler</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="parse_config_file"><a class="viewcode-back" href="../../autodoc.html#dipplanner.main.parse_config_file">[docs]</a><span class="k">def</span> <span class="nf">parse_config_file</span><span class="p">(</span><span class="n">filenames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;parse a config file and change default settings values</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        :filename: (str) -- name (and path) of the config file to be parsed</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        Nothing, but can exit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ConfigParser</span> <span class="kn">import</span> <span class="n">SafeConfigParser</span>
+
+    <span class="k">if</span> <span class="n">filenames</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">SafeConfigParser</span><span class="p">()</span>
+        <span class="n">filesread</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;No config file found: skip config from files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="n">missing</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">filesread</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filesread</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;No config file found: skip config from files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s">&quot;Config file : </span><span class="si">%s</span><span class="s"> not found, skip it&quot;</span> <span class="o">%</span> <span class="nb">list</span><span class="p">(</span><span class="n">missing</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Config files : </span><span class="si">%s</span><span class="s"> not found, skip them&quot;</span> <span class="o">%</span>
+                           <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">missing</span><span class="p">)))</span>
+
+    <span class="c"># now try to find each parameter and set the new setting</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="s">&#39;advanced&#39;</span><span class="p">):</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="s">&#39;advanced&#39;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;fresh_water_density&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">FRESH_WATER_DENSITY</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;fresh_water_density&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;sea_water_density&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">SEA_WATER_DENSITY</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;sea_water_density&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_max_ppo2&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ABSOLUTE_MAX_PPO2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_max_ppo2&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_min_ppo2&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ABSOLUTE_MIN_PPO2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_min_ppo2&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_max_tank_pressure&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ABSOLUTE_MAX_TANK_PRESSURE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_max_tank_pressure&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_max_tank_size&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ABSOLUTE_MAX_TANK_SIZE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;absolute_max_tank_size&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;surface_temp&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">SURFACE_TEMP</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;surface_temp&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;he_narcotic_value&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">HE_NARCOTIC_VALUE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;he_narcotic_value&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;n2_narcotic_value&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">N2_NARCOTIC_VALUE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;n2_narcotic_value&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;o2_narcotic_value&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">O2_NARCOTIC_VALUE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;o2_narcotic_value&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;ar_narcotic_value&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">AR_NARCOTIC_VALUE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;ar_narcotic_value&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;stop_depth_increment&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">STOP_DEPTH_INCREMENT</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;stop_depth_increment&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;last_stop_depth&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">LAST_STOP_DEPTH</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;last_stop_depth&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;stop_time_increment&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">STOP_TIME_INCREMENT</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;stop_time_increment&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;force_all_stops&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">FORCE_ALL_STOPS</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+                <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;force_all_stops&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;ambiant_pressure_sea_level&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SEA_LEVEL</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;ambiant_pressure_sea_level&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;method_for_depth_calculation&#39;</span><span class="p">):</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;method_for_depth_calculation&#39;</span><span class="p">)</span>
+            <span class="k">if</span>  <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;simple&#39;</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;complex&#39;</span><span class="p">:</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">METHOD_FOR_DEPTH_CALCULATION</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;travel_switch&#39;</span><span class="p">):</span>
+            <span class="n">travel</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;travel_switch&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">travel</span> <span class="o">==</span> <span class="s">&#39;late&#39;</span> <span class="ow">or</span> <span class="n">travel</span> <span class="o">==</span> <span class="s">&#39;early&#39;</span><span class="p">:</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">TRAVEL_SWITCH</span> <span class="o">=</span> <span class="n">travel</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;flight_altitude&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">FLIGHT_ALTITUDE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;flight_altitude&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="s">&#39;output&#39;</span><span class="p">):</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="s">&#39;output&#39;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;template&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;template&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="s">&#39;general&#39;</span><span class="p">):</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="s">&#39;general&#39;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;deco_model&#39;</span><span class="p">):</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;deco_model&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s">&quot;ZHL16b&quot;</span> <span class="ow">or</span> <span class="n">model</span> <span class="o">==</span> <span class="s">&quot;ZHL16c&quot;</span><span class="p">:</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">DECO_MODEL</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;max_ppo2&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MAX_PPO2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;max_ppo2&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;min_ppo2&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MIN_PPO2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;min_ppo2&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;max_end&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MAX_END</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;max_end&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;descent_rate&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DESCENT_RATE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;descent_rate&#39;</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;ascent_rate&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ASCENT_RATE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;ascent_rate&#39;</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;dive_consumption_rate&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DIVE_CONSUMPTION_RATE</span> <span class="o">=</span> \
+                <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;dive_consumption_rate&#39;</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;deco_consumption_rate&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DIVE_CONSUMPTION_RATE</span> <span class="o">=</span> \
+                <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;deco_consumption_rate&#39;</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;gf_low&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">GF_LOW</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="nb">eval</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;gf_low&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;%&#39;</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;gf_high&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">GF_HIGH</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="nb">eval</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;gf_high&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;%&#39;</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">100</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;water&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;water&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;sea&#39;</span><span class="p">:</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">WATER_DENSITY</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">SEA_WATER_DENSITY</span>
+            <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;water&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;fresh&#39;</span><span class="p">:</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">WATER_DENSITY</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">FRESH_WATER_DENSITY</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;altitude&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SURFACE</span> <span class="o">=</span> \
+                <span class="n">altitude_to_pressure</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;altitude&#39;</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;run_time&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">RUN_TIME</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+                <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;run_time&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;use_oc_deco&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">USE_OC_DECO</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+                <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;use_oc_deco&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;multilevel_mode&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">MULTILEVEL_MODE</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+                <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;multilevel_mode&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;automatic_tank_refill&#39;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">AUTOMATIC_TANK_REFILL</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+                <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s">&#39;automatic_tank_refill&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+
+    <span class="c">#dives = { &#39;dive1&#39;: { &#39;tanks&#39;: {}, &#39;segments&#39;: {}, &#39;surface_interval&#39;:0} }</span>
+    <span class="n">dives</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">dive_number</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c"># initialization</span>
+    <span class="k">while</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="s">&#39;dive</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">dive_number</span><span class="p">):</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="s">&#39;dive</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">dive_number</span>
+        <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;tanks&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s">&#39;segments&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">parameter_name</span><span class="p">,</span> <span class="n">parameter_value</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">parameter_name</span> <span class="o">==</span> <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span>
+                <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;surface_interval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">parameter_value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">parameter_name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;tank&#39;</span><span class="p">:</span>
+                <span class="c">#number = parameter_name[4:]</span>
+                <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">f_o2</span><span class="p">,</span> <span class="n">f_he</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span> <span class="o">=</span>\
+                    <span class="n">parameter_value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;tanks&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tank</span><span class="p">(</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">f_o2</span><span class="p">),</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">f_he</span><span class="p">),</span>
+                    <span class="n">max_ppo2</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MAX_PPO2</span><span class="p">,</span>
+                    <span class="n">tank_vol</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">volume</span><span class="p">)),</span>
+                    <span class="n">tank_pressure</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">pressure</span><span class="p">)),</span>
+                    <span class="n">tank_rule</span><span class="o">=</span><span class="n">rule</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;tanks&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">{}:</span>
+            <span class="c"># no tank provided, try to get the previous tanks</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;tanks&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">dives</span><span class="p">[</span><span class="s">&#39;dive</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dive_number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)][</span><span class="s">&#39;tanks&#39;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;Error : no tank provided for this dive !&quot;</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">parameter_name</span><span class="p">,</span> <span class="n">parameter_value</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">parameter_name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;segment&#39;</span><span class="p">:</span>
+                <span class="c">#number = parameter_name[4:]</span>
+                <span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">tankname</span><span class="p">,</span> <span class="n">setpoint</span><span class="p">)</span> <span class="o">=</span> <span class="n">parameter_value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;segments&#39;</span><span class="p">][</span><span class="n">parameter_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">SegmentDive</span><span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">depth</span><span class="p">)),</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">time</span><span class="p">)),</span>
+                        <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;tanks&#39;</span><span class="p">][</span><span class="n">tankname</span><span class="p">],</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="n">setpoint</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="s">&quot;Error : tank name (</span><span class="si">%s</span><span class="s">) in not found in tank list &quot;</span>
+                    <span class="s">&quot;!&quot;</span> <span class="o">%</span> <span class="n">tankname</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">raise</span>
+
+        <span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;segments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="n">dives</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s">&#39;segments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">dive_number</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dives</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+</div>
+<div class="viewcode-block" id="parse_arguments"><a class="viewcode-back" href="../../autodoc.html#dipplanner.main.parse_arguments">[docs]</a><span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;parse all command lines options</span>
+
+<span class="sd">    could also exit from program because of wrong arguments</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        &lt;none&gt;</span>
+
+<span class="sd">    *Returns:*</span>
+<span class="sd">        a tuple of two dicts:</span>
+<span class="sd">            :args:</span>
+<span class="sd">            :dives:</span>
+
+<span class="sd">            * args is the result of argpaser</span>
+
+<span class="sd">            * dives dict is in the following form:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                dives = { &#39;dive1&#39;: { &#39;tanks&#39;: {},</span>
+<span class="sd">                                     &#39;segments&#39;: {},</span>
+<span class="sd">                                     &#39;surface_interval&#39;:0 },</span>
+<span class="sd">                          &#39;dive2&#39;: { &#39;tanks&#39;: {},</span>
+<span class="sd">                                     &#39;segments&#39;: {},</span>
+<span class="sd">                                     &#39;surface_interval&#39;:60 }}</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        Nothing, but can exit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">argparse</span>
+
+    <span class="n">usage</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span><span class="si">%(prog)s</span><span class="s"> [options]&quot;&quot;&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span><span class="si">%(prog)s</span><span class="s"> calculates and output dive profile</span>
+<span class="s">  Thomas Chiroux, 2011-2012 - see http://dipplanner.org</span>
+<span class="s">  &quot;&quot;&quot;</span>
+
+    <span class="n">epilog</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+        <span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span>
+        <span class="n">epilog</span><span class="o">=</span><span class="n">epilog</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
+
+    <span class="n">group1</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span>
+        <span class="s">&quot;Mandatory Options&quot;</span><span class="p">,</span>
+        <span class="sd">&quot;&quot;&quot;Either presence of tank and segment inside a config file or</span>
+<span class="sd">  this mandatory options (at leat one of each) are needed for this program to</span>
+<span class="sd">   run&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group1</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;-c&quot;</span><span class="p">,</span> <span class="s">&quot;--config&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;config_files&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s">&quot;append&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;STRING&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;path for config file.</span>
+<span class="s">  Default : ./config.cfg</span>
+<span class="s">  see manual for more infos on config file&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group1</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;-t&quot;</span><span class="p">,</span> <span class="s">&quot;--tank&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;tanks&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s">&quot;append&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;STRING&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Tank used for the dive</span>
+<span class="s">  Format:  &quot;tank_name;f_o2;f_he;Volume(l);Pressure(bar);Minimum gas rule&quot;</span>
+<span class="s">  Example: &quot;airtank;0.21;0.0;12;200,50b&quot;</span>
+
+<span class="s">  Minimum gas rule in format : xxxb of 1/x</span>
+<span class="s">  &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group1</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;-s&quot;</span><span class="p">,</span> <span class="s">&quot;--segment&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;segments&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s">&quot;append&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;STRING&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Input segments used for the dive</span>
+
+<span class="s">  Format:  &quot;depth;duration;tank;setpoint&quot;</span>
+<span class="s">  Example: &quot;30;20*60;airtank;0.0&quot;</span>
+<span class="s">  * depth: in meter</span>
+<span class="s">  * duration : in seconds (operations are allowed like: &#39;30*60&#39;)</span>
+<span class="s">  * tank : name of the tank (same name as tank options)</span>
+<span class="s">  * setpoint : 0 if OC, setpoint if CCR</span>
+
+<span class="s">  You can specify multiple args like:</span>
+<span class="s">  </span><span class="si">%(prog)s</span><span class="s"> [other_options] -s &quot;30;1000;airtank;0.0&quot; -s &quot;20;800;airtank;0.0&quot;</span>
+<span class="s">  &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group1</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--surfaceinterval&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;surfaceinterval&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;SECONDS&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Optional Surface Interval in seconds&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group2</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s">&quot;Dive Parameters&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--model&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s">&quot;ZHL16c&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;ZHL16b&#39;</span><span class="p">,</span> <span class="s">&#39;ZHL16c&#39;</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Decompression model: either ZHL16b or ZHL16c &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--gflow&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;GF low, in &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--gfhigh&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;GF high, in &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--water&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;type of water : sea or fresh&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--altitude&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;altitude of the dive in meter.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--diveconsrate&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;gas consumption rate during dive (in l/minute).&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--decoconsrate&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;gas consumption rate during deco (in l/minute).&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--descentrate&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;descent rate (in m/minute).&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--ascentrate&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;ascent rate (in m/minute).&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--maxppo2&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;max allowed ppo2 for this dive.&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--minppo2&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;minimum allowed ppo2 for this dive.&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--maxend&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;max END allowed for this dive.&quot;</span><span class="p">)</span>
+
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--samegasfordeco&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;if set, do not use deco tanks (or bailout) for decompressions&quot;</span><span class="p">)</span>
+    <span class="n">group2</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--forcesegmenttime&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;if set, each input segment will be dove</span>
+<span class="s">  at the full time of the segment.</span>
+<span class="s">  By default the segment time is shortened by descent or ascent time</span>
+<span class="s">  &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group3</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s">&quot;Advanced Parameters&quot;</span><span class="p">)</span>
+    <span class="n">group3</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--depthcalcmethod&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;simple|complex&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;method used for pressure from depth calculation.</span>
+<span class="s">            Simple method uses only +10m = +1bar</span>
+<span class="s">            Complex methods uses real water density&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group3</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--travelswitch&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;late|early&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Travel switch method (late or early).</span>
+<span class="s">              if late, it will keep the travel as long as possible</span>
+<span class="s">              if early, it will switch to bottom tank as soon as is it</span>
+<span class="s">              breathable&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">group3</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--surfacetemp&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Temperature at surface in celcius&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group3</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--ambiantpressureatsea&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;VAL&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Change ambiant pressure at sea level (in bar)&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">group4</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s">&quot;Output Parameters&quot;</span><span class="p">)</span>
+    <span class="n">group4</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">&quot;--template&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;TEMPLATE&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Name of the template to be used</span>
+<span class="s">  The template file should be present in ./templates&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="c"># parse the options</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">dives</span> <span class="o">=</span> <span class="n">parse_config_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config_files</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dives</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">dives</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">gflow</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">GF_LOW</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gflow</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;%&#39;</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Error while parsing option gflow : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">gflow</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">gfhigh</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">GF_HIGH</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gfhigh</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;%&#39;</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Error while parsing option gfhigh: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">gfhigh</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">water</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">water</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;sea&quot;</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">WATER_DENSITY</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">SEA_WATER_DENSITY</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">water</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;fresh&quot;</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">WATER_DENSITY</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">FRESH_WATER_DENSITY</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">altitude</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SURFACE</span> <span class="o">=</span> <span class="n">altitude_to_pressure</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">altitude</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">diveconsrate</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DIVE_CONSUMPTION_RATE</span> <span class="o">=</span> \
+                <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">diveconsrate</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Error while parsing option diveconsrate : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                         <span class="n">args</span><span class="o">.</span><span class="n">diveconsrate</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">decoconsrate</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DECO_CONSUMPTION_RATE</span> <span class="o">=</span> \
+                <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">decoconsrate</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Error while parsing option decoconsrate : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                         <span class="n">args</span><span class="o">.</span><span class="n">decoconsrate</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">descentrate</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">DESCENT_RATE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">descentrate</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Error while parsing option descentrate : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                         <span class="n">args</span><span class="o">.</span><span class="n">descentrate</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ascentrate</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ASCENT_RATE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ascentrate</span><span class="p">))</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Error while parsing option ascentrate : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                         <span class="n">args</span><span class="o">.</span><span class="n">ascentrate</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">model</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">DECO_MODEL</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">model</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">maxppo2</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MAX_PPO2</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">maxppo2</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">minppo2</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MIN_PPO2</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">minppo2</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">maxend</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MAX_END</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">maxend</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">samegasfordeco</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">USE_OC_DECO</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">forcesegmenttime</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">RUN_TIME</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">depthcalcmethod</span> <span class="o">==</span> <span class="s">&#39;simple&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">depthcalcmethod</span> <span class="o">==</span> <span class="s">&#39;complex&#39;</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">METHOD_FOR_DEPTH_CALCULATION</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">depthcalcmethod</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">travelswitch</span> <span class="o">==</span> <span class="s">&#39;late&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">travelswitch</span> <span class="o">==</span> <span class="s">&#39;early&#39;</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">TRAVEL_SWITCH</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">travelswitch</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">surfacetemp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">SURFACE_TEMP</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">surfacetemp</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ambiantpressureatsea</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;---------------- </span><span class="si">%s</span><span class="s"> ---------------------&quot;</span> <span class="o">%</span> \
+              <span class="n">args</span><span class="o">.</span><span class="n">ambiantpressureatsea</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">AMBIANT_PRESSURE_SEA_LEVEL</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ambiantpressureatsea</span>
+
+    <span class="c"># try to find tank(s) and segment(s).</span>
+    <span class="c"># if found, add this dive to the (eventually) other dives defined in config</span>
+    <span class="c"># files.</span>
+    <span class="c"># this will be the last dive</span>
+    <span class="n">tanks</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">tanks</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">tank</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">tanks</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">f_o2</span><span class="p">,</span> <span class="n">f_he</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span> <span class="o">=</span> <span class="n">tank</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span>
+
+            <span class="n">tanks</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tank</span><span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="n">f_o2</span><span class="p">),</span>
+                <span class="nb">float</span><span class="p">(</span><span class="n">f_he</span><span class="p">),</span>
+                <span class="n">max_ppo2</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_MAX_PPO2</span><span class="p">,</span>
+                <span class="n">tank_vol</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">volume</span><span class="p">)),</span>
+                <span class="n">tank_pressure</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">pressure</span><span class="p">)),</span>
+                <span class="n">tank_rule</span><span class="o">=</span><span class="n">rule</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">tanks</span> <span class="o">==</span> <span class="p">{}:</span>
+        <span class="c"># no tank provided, try to get the previous tanks</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tanks</span> <span class="o">=</span> <span class="n">dives</span><span class="p">[</span><span class="n">dives</span><span class="o">.</span><span class="n">items</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]][</span><span class="s">&#39;tanks&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="k">print</span> <span class="s">&quot;Error : no tank provided for this dive !&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">segments</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+        <span class="n">num_seg</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">tankname</span><span class="p">,</span> <span class="n">setpoint</span><span class="p">)</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span>
+            <span class="c"># looks for tank in tanks</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c">#seg_name = &#39;segment%s&#39; % num_seg</span>
+                <span class="c">#print seg_name</span>
+                <span class="n">segments</span><span class="p">[</span><span class="s">&#39;segment</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">num_seg</span><span class="p">]</span> <span class="o">=</span> <span class="n">SegmentDive</span><span class="p">(</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">depth</span><span class="p">)),</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">time</span><span class="p">)),</span>
+                    <span class="n">tanks</span><span class="p">[</span><span class="n">tankname</span><span class="p">],</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">setpoint</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;Error : tank name (</span><span class="si">%s</span><span class="s">) in not found in tank list !&quot;</span> <span class="o">%</span>
+                    <span class="n">tankname</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">num_seg</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">segments</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">surfaceinterval</span><span class="p">:</span>
+            <span class="n">dives</span><span class="p">[</span><span class="s">&#39;diveCLI&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;tanks&#39;</span><span class="p">:</span> <span class="n">tanks</span><span class="p">,</span> <span class="s">&#39;segments&#39;</span><span class="p">:</span> <span class="n">segments</span><span class="p">,</span>
+                                <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">surfaceinterval</span><span class="p">)}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dives</span><span class="p">[</span><span class="s">&#39;diveCLI&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;tanks&#39;</span><span class="p">:</span> <span class="n">tanks</span><span class="p">,</span> <span class="s">&#39;segments&#39;</span><span class="p">:</span> <span class="n">segments</span><span class="p">,</span>
+                                <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">template</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">template</span>
+        <span class="c"># returns</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">dives</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../autodoc.html#dipplanner.main.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;main</span>
+
+<span class="sd">    main uses the parameters, tanks and dives given in config file(s)</span>
+<span class="sd">    and/or command line, calculates the dives and return the output in stdout.</span>
+
+<span class="sd">    *Keyword Arguments:*</span>
+<span class="sd">        &lt;none&gt;</span>
+
+<span class="sd">    *Return:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
+
+<span class="sd">    *Raise:*</span>
+<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">activate_debug</span><span class="p">()</span>
+
+    <span class="n">settings</span><span class="o">.</span><span class="n">__VERSION__</span> <span class="o">=</span> <span class="n">__version__</span>
+    <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">dives</span><span class="p">)</span> <span class="o">=</span> <span class="n">parse_arguments</span><span class="p">()</span>
+    <span class="n">profiles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">previous_dive</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">dive</span> <span class="ow">in</span> <span class="n">dives</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">previous_dive</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">current_dive</span> <span class="o">=</span> <span class="n">Dive</span><span class="p">(</span>
+                <span class="n">dives</span><span class="p">[</span><span class="n">dive</span><span class="p">][</span><span class="s">&#39;segments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                <span class="n">dives</span><span class="p">[</span><span class="n">dive</span><span class="p">][</span><span class="s">&#39;tanks&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_dive</span> <span class="o">=</span> <span class="n">Dive</span><span class="p">(</span>
+                <span class="n">dives</span><span class="p">[</span><span class="n">dive</span><span class="p">][</span><span class="s">&#39;segments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                <span class="n">dives</span><span class="p">[</span><span class="n">dive</span><span class="p">][</span><span class="s">&#39;tanks&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+                <span class="n">previous_dive</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dives</span><span class="p">[</span><span class="n">dive</span><span class="p">][</span><span class="s">&#39;surface_interval&#39;</span><span class="p">]:</span>
+            <span class="n">current_dive</span><span class="o">.</span><span class="n">do_surface_interval</span><span class="p">(</span><span class="n">dives</span><span class="p">[</span><span class="n">dive</span><span class="p">][</span><span class="s">&#39;surface_interval&#39;</span><span class="p">])</span>
+
+        <span class="n">current_dive</span><span class="o">.</span><span class="n">do_dive_without_exceptions</span><span class="p">()</span>
+        <span class="n">profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_dive</span><span class="p">)</span>
+        <span class="n">previous_dive</span> <span class="o">=</span> <span class="n">current_dive</span>
+        <span class="c"># now, dive exceptins do not stop the program anymore, but can be</span>
+        <span class="c"># displayed in the output template instead. The used MUST take care of</span>
+        <span class="c"># the result.</span>
+
+    <span class="c"># now calculate no flight time based on the last dive</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">current_dive</span><span class="o">.</span><span class="n">no_flight_time_without_exception</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">unhandled_exc</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Exception while calculating no flight time: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                     <span class="n">unhandled_exc</span><span class="p">)</span>
+
+    <span class="c"># now Prepare the output</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">PackageLoader</span><span class="p">(</span><span class="s">&#39;dipplanner&#39;</span><span class="p">,</span> <span class="s">&#39;templates&#39;</span><span class="p">))</span>
+    <span class="n">tpl</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">TEMPLATE</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">tpl</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">dives</span><span class="o">=</span><span class="n">profiles</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">text</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">dipplanner 0.3nightly documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../dipplanner.html" >dipplanner</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2012, Thomas Chiroux.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

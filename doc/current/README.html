@@ -153,19 +153,7 @@ without warning)</p>
 <p>please use git to clone the repository :</p>
 <div class="highlight-python"><pre>git clone git://github.com/ThomasChiroux/dipplanner.git</pre>
 </div>
-</div>
-<div class="section" id="installing">
-<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
-<p>There is no full installation yet</p>
-</div>
-<div class="section" id="using">
-<h2>Using<a class="headerlink" href="#using" title="Permalink to this headline">¶</a></h2>
-<p>This version if currently only usable in command line</p>
-<div class="section" id="run-the-program">
-<h3>Run the program<a class="headerlink" href="#run-the-program" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="preparation-virtualvenv">
-<h4>Preparation: virtualvenv<a class="headerlink" href="#preparation-virtualvenv" title="Permalink to this headline">¶</a></h4>
-<p>It is recommended to setup a virtualvenv before running or installing.
+<p>It is recommended (but optional) to setup a virtualvenv before running or installing.
 In this way, you will not break or change your real environment.
 So after getting the source, go in the dipplanner directory:</p>
 <div class="highlight-python"><pre>cd dipplanner
@@ -174,19 +162,21 @@ virtualenv venv
 source venv/bin/activate</pre>
 </div>
 </div>
-<div class="section" id="installation">
-<h4>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h4>
-<p>for linux or macos (or  windows with python installed) :</p>
-<div class="highlight-python"><pre>python setup.py develop</pre>
+<div class="section" id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+<p>Inside the dipplanner source directory, run</p>
+<div class="highlight-python"><pre>python setup.py install</pre>
 </div>
-<p>setup.py develop will install all needed dependencies and add dipplanner
-in your python path</p>
 </div>
+<div class="section" id="using">
+<h2>Using<a class="headerlink" href="#using" title="Permalink to this headline">¶</a></h2>
+<p>This version if currently only usable in command line</p>
+<div class="section" id="run-the-program">
+<h3>Run the program<a class="headerlink" href="#run-the-program" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="running-the-program">
 <h4>Running the program<a class="headerlink" href="#running-the-program" title="Permalink to this headline">¶</a></h4>
-<p>an executable wrapper is in bin/ directory, run the program:</p>
 <p>ex:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nb">bin</span><span class="o">/</span><span class="n">dipplanner</span> <span class="o">--</span><span class="n">help</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dipplanner</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 </div>
@@ -195,17 +185,22 @@ in your python path</p>
 <h3>Planning one dive<a class="headerlink" href="#planning-one-dive" title="Permalink to this headline">¶</a></h3>
 <p>To plan a dive, you should at least provide one tank and one dive segment.
 Here is below a sample for a 12l tank with 200b of air and a dive of 25min at 30m</p>
-<div class="highlight-python"><pre>bin/dipplanner -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"</pre>
+<div class="highlight-python"><pre>dipplanner -t "airtank;0.21;0.0;12;200;50b" -s "30;25*60;airtank;0.0"</pre>
 </div>
 <p>You can provide more than one tank and of course multiple segments (they will be processed in the order you provided it)
 Deco tanks will be automaticaly choosen if appropriate.
 Here is below a sample for a trimix dive : bi 12l-cylinder of Tx21/30 and Deco Nx80 (S80), 50m - 20mins:</p>
-<div class="highlight-python"><pre>bin/dipplanner -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"</pre>
+<div class="highlight-python"><pre>dipplanner -t "tx;0.21;0.30;24;200;50b" -t "deco;0.8;0.0;12;200;50b" -s "50;20*60;tx;0.0"</pre>
 </div>
 </div>
 <div class="section" id="change-some-parameters-of-the-dive">
 <h3>Change some parameters of the dive<a class="headerlink" href="#change-some-parameters-of-the-dive" title="Permalink to this headline">¶</a></h3>
-<p>See &#8211;help output to see all available parameters</p>
+<p>See</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dipplanner</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>output to see all available parameters</p>
+<p>You can also read <a class="reference internal" href="command_line.html#dipplanner-cmdline"><em>dipplanner command-line documentation</em></a></p>
 </div>
 <div class="section" id="config-files">
 <h3>Config files<a class="headerlink" href="#config-files" title="Permalink to this headline">¶</a></h3>
@@ -218,6 +213,7 @@ see config/default_config.cfg for all the details</p>
 <li>parameter set in config files</li>
 <li>parameter set in command line</li>
 </ol>
+<p>You can also read <a class="reference internal" href="config_file.html#dipplanner-configfile"><em>dipplanner config file documentation</em></a></p>
 </div>
 </div>
 <div class="section" id="units-si-or-imperial">
@@ -279,8 +275,6 @@ If not, see <a class="reference external" href="http://www.gnu.org/licenses/gpl.
 <li><a class="reference internal" href="#installing">Installing</a></li>
 <li><a class="reference internal" href="#using">Using</a><ul>
 <li><a class="reference internal" href="#run-the-program">Run the program</a><ul>
-<li><a class="reference internal" href="#preparation-virtualvenv">Preparation: virtualvenv</a></li>
-<li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#running-the-program">Running the program</a></li>
 </ul>
 </li>

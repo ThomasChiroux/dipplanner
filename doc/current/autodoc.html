@@ -532,7 +532,7 @@ instead of an int in seconds</p>
 <p class="first admonition-title">Note</p>
 <p class="last">This method does not calculate no_flight_time
 you need to call no_flight_time() or
-no_flight_time_without_exception() before.</p>
+no_flight_time_wo_exception() before.</p>
 </div>
 <dl class="docutils">
 <dt><em>Keyword Arguments:</em></dt>
@@ -544,8 +544,8 @@ str &#8211; &#8220;&#8221; if no flight time is not calculated</dd>
 </dd></dl>
 
 <dl class="method">
-<dt id="dipplanner.dive.Dive.no_flight_time_without_exception">
-<tt class="descname">no_flight_time_without_exception</tt><big>(</big><em>altitude=2450</em>, <em>tank=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.no_flight_time_without_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.no_flight_time_without_exception" title="Permalink to this definition">¶</a></dt>
+<dt id="dipplanner.dive.Dive.no_flight_time_wo_exception">
+<tt class="descname">no_flight_time_wo_exception</tt><big>(</big><em>altitude=2450</em>, <em>tank=None</em><big>)</big><a class="headerlink" href="#dipplanner.dive.Dive.no_flight_time_wo_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call no_flight_time, and handle exceptions internally:
 do not raise any &#8220;dive related&#8221; exception: add the
 exception inside self.dive_exceptions instead.</p>
@@ -2872,7 +2872,7 @@ Typically called once to initialise the GF slope.</p>
 
 <dl class="method">
 <dt id="dipplanner.model.buhlmann.gradient.Gradient.set_gf_low">
-<tt class="descname">set_gf_low</tt><big>(</big><em>gf_low</em><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/gradient.html#Gradient.set_gf_low"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.gradient.Gradient.set_gf_low" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_gf_low</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/gradient.html#Gradient.set_gf_low"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.gradient.Gradient.set_gf_low" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets gf low setting</p>
 <dl class="docutils">
 <dt><em>Keyword arguments:</em></dt>
@@ -2880,7 +2880,7 @@ Typically called once to initialise the GF slope.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">gf_low:</th><td class="field-body">(float) &#8211; low Gf, between 0.0 and 1.0</td>
+<tr class="field-odd field"><th class="field-name">value:</th><td class="field-body">(float) &#8211; low Gf, between 0.0 and 1.0</td>
 </tr>
 </tbody>
 </table>
@@ -2894,7 +2894,7 @@ Typically called once to initialise the GF slope.</p>
 
 <dl class="method">
 <dt id="dipplanner.model.buhlmann.gradient.Gradient.set_gf_high">
-<tt class="descname">set_gf_high</tt><big>(</big><em>gf_high</em><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/gradient.html#Gradient.set_gf_high"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.gradient.Gradient.set_gf_high" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_gf_high</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/dipplanner/model/buhlmann/gradient.html#Gradient.set_gf_high"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.model.buhlmann.gradient.Gradient.set_gf_high" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets gf high setting</p>
 <dl class="docutils">
 <dt><em>Keyword arguments:</em></dt>
@@ -2902,7 +2902,7 @@ Typically called once to initialise the GF slope.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">gf_high:</th><td class="field-body">(float) &#8211; high Gf, between 0.0 and 1.0</td>
+<tr class="field-odd field"><th class="field-name">value:</th><td class="field-body">(float) &#8211; high Gf, between 0.0 and 1.0</td>
 </tr>
 </tbody>
 </table>
@@ -3409,7 +3409,7 @@ It does returns only minutes and seconds, not hours, minutes and seconds</p>
 <dd><dl class="first last docutils">
 <dt>str &#8211; the time in minutes and seconds</dt>
 <dd>ex:
-&#8220;23:45&#8221;
+&#8221; 23:45&#8221;
 &#8220;112:33&#8221;
 ...</dd>
 </dl>

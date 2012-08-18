@@ -8,6 +8,7 @@ when invoking dipplanner, you may specify any of these options:
 .. code-block:: bash
 
     dipplanner [-h] [--help]
+               [--version]
                [-c] [--config]
                [--surfaceinterval]
                [--model]
@@ -40,7 +41,14 @@ help
 
 .. cmdoption:: -h, --help
 
-    show this help message and exit
+    show help message and exit
+
+version
+*******
+
+.. cmdoption:: --version
+
+    show version number and exit
 
 config files
 ************

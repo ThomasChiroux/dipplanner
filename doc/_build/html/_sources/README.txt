@@ -105,7 +105,7 @@ please use git to clone the repository :
     git clone git://github.com/ThomasChiroux/dipplanner.git
 
 Preparation: virtualvenv
-""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is recommended (but optional) to setup a virtualvenv before running or installing.
 In this way, you will not break or change your real environment.
@@ -121,7 +121,7 @@ So after getting the source, go in the dipplanner directory:
 Installing
 ----------
 
-Inside the dipplanner source directory, run
+Inside the dipplanner source directory, run:
 
 ::
 
@@ -134,9 +134,6 @@ This version if currently only usable in command line
 
 Run the program
 ^^^^^^^^^^^^^^^
-
-Running the program
-"""""""""""""""""""
 
 ex:
 

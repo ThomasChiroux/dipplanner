@@ -200,7 +200,8 @@ class Tank(object):
         *Raise:*
 
             * InvalidGas -- see validate()
-            * InvalidMod -- if mod > max mod based on max_ppo2 and see validate()
+            * InvalidMod -- if mod > max mod based on
+                            max_ppo2 and see validate()
             * InvalidTank -- see validate()
 
         """
@@ -454,11 +455,13 @@ class Tank(object):
         *Raise:*
             * InvalidGas -- When proportions of gas exceed
                       100% for example (or negatives values)
-            * InvalidMod -- if mod > max mod based on max_ppo2 or ABSOLUTE_MAX_MOD
-                      ABSOLUTE_MAX_MOD is a global settings which can not be
-                      exceeded.
-            * InvalidTank -- when pressure or tank size exceed maximum values or are
-                       incorrect (like negatives) values
+            * InvalidMod -- if mod > max mod based on max_ppo2
+                            or ABSOLUTE_MAX_MOD.
+
+                            ABSOLUTE_MAX_MOD is a global settings which
+                            can not be exceeded.
+            * InvalidTank -- when pressure or tank size exceed maximum
+                      values or are incorrect (like negatives) values
         """
         if self.f_o2 + self.f_he > 1:
             raise InvalidGas("Proportion of O2+He is more than 100%")

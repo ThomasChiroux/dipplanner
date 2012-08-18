@@ -91,7 +91,8 @@ DECO_CONSUMPTION_RATE = 12.0 / 60  #: liter/s
 DESCENT_RATE = float(20) / 60  #: m/s
 ASCENT_RATE = float(10) / 60  #: m/s
 
-#: Warning : if RUN-TIME is True, the segment duration must include descent time
+#: Warning : if RUN-TIME is True, the segment duration must
+#:           include descent time
 #: if the duration is too small dipplanner will raise an error
 #: if True: segments represents runtime,
 #: if false, segments represents segtime

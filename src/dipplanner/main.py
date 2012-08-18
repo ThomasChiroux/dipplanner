@@ -308,7 +308,7 @@ def parse_config_file(filenames):
                         float(setpoint))
                 except KeyError:
                     print("Error : tank name (%s) in not found in tank list "
-                    "!" % tankname)
+                          "!" % tankname)
                     sys.exit(0)
                 except:
                     raise
@@ -663,14 +663,14 @@ def main():
 
     # get the version
     try:
-        f = open("RELEASE-VERSION", "r")
+        version_file = open("RELEASE-VERSION", "r")
 
         try:
-            version = f.readlines()[0]
+            version = version_file.readlines()[0]
             settings.__VERSION__ = version.strip()
 
         finally:
-            f.close()
+            version_file.close()
     except:
         settings.__VERSION__ = "unknown"
 

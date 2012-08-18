@@ -404,7 +404,8 @@ class Dive(object):
             <none>
 
         *Returns:*
-            True (bool) -- if there is at least one input dive segment to process
+            True (bool) -- if there is at least one input
+                           dive segment to process
             False (bool) -- if there is no dive segment to process
 
         *Raise:*
@@ -701,8 +702,8 @@ class Dive(object):
             return ""
 
     def no_flight_time_wo_exception(self,
-                                         altitude=settings.FLIGHT_ALTITUDE,
-                                         tank=None):
+                                    altitude=settings.FLIGHT_ALTITUDE,
+                                    tank=None):
         """Call no_flight_time, and handle exceptions internally:
         do not raise any "dive related" exception: add the
         exception inside self.dive_exceptions instead.

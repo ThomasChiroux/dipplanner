@@ -153,6 +153,8 @@ without warning)</p>
 <p>please use git to clone the repository :</p>
 <div class="highlight-python"><pre>git clone git://github.com/ThomasChiroux/dipplanner.git</pre>
 </div>
+<div class="section" id="preparation-virtualvenv">
+<h3>Preparation: virtualvenv<a class="headerlink" href="#preparation-virtualvenv" title="Permalink to this headline">¶</a></h3>
 <p>It is recommended (but optional) to setup a virtualvenv before running or installing.
 In this way, you will not break or change your real environment.
 So after getting the source, go in the dipplanner directory:</p>
@@ -162,9 +164,10 @@ virtualenv venv
 source venv/bin/activate</pre>
 </div>
 </div>
+</div>
 <div class="section" id="installing">
 <h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
-<p>Inside the dipplanner source directory, run</p>
+<p>Inside the dipplanner source directory, run:</p>
 <div class="highlight-python"><pre>python setup.py install</pre>
 </div>
 </div>
@@ -173,12 +176,9 @@ source venv/bin/activate</pre>
 <p>This version if currently only usable in command line</p>
 <div class="section" id="run-the-program">
 <h3>Run the program<a class="headerlink" href="#run-the-program" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="running-the-program">
-<h4>Running the program<a class="headerlink" href="#running-the-program" title="Permalink to this headline">¶</a></h4>
 <p>ex:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">dipplanner</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
-</div>
 </div>
 </div>
 <div class="section" id="planning-one-dive">
@@ -271,13 +271,13 @@ If not, see <a class="reference external" href="http://www.gnu.org/licenses/gpl.
 <li><a class="reference internal" href="#calculations">Calculations</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#get-the-sources">Get the sources</a></li>
-<li><a class="reference internal" href="#installing">Installing</a></li>
-<li><a class="reference internal" href="#using">Using</a><ul>
-<li><a class="reference internal" href="#run-the-program">Run the program</a><ul>
-<li><a class="reference internal" href="#running-the-program">Running the program</a></li>
+<li><a class="reference internal" href="#get-the-sources">Get the sources</a><ul>
+<li><a class="reference internal" href="#preparation-virtualvenv">Preparation: virtualvenv</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#installing">Installing</a></li>
+<li><a class="reference internal" href="#using">Using</a><ul>
+<li><a class="reference internal" href="#run-the-program">Run the program</a></li>
 <li><a class="reference internal" href="#planning-one-dive">Planning one dive</a></li>
 <li><a class="reference internal" href="#change-some-parameters-of-the-dive">Change some parameters of the dive</a></li>
 <li><a class="reference internal" href="#config-files">Config files</a></li>

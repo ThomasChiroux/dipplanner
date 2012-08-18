@@ -501,7 +501,8 @@ mv_at:%s max_amb:%s MV:%s\n" % \
                                 (WARNING: not meter ! it's a pressure)
             :rate: (float) -- rate of ascent or descent in m/s
             :f_he: (float) -- Fraction of inert gas Helium in inspired gas mix
-            :f_n2: (float) -- Fraction of inert gas Nitrogen in inspired gas mix
+            :f_n2: (float) -- Fraction of inert gas Nitrogen
+                              in inspired gas mix
             :pp_o2: (float) -- For CCR mode, partial pressure of oxygen in bar.
                                If == 0.0, then open circuit
 

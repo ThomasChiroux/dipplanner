@@ -26,14 +26,36 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 from setuptools import setup, find_packages
+from setuptools.command.build_py import build_py
 import os
 import sys
+
+# local imports
+from build_scripts.version import get_git_version
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 NEWS = open(os.path.join(here, 'NEWS.rst')).read()
 
-version = '0.3nightly'
+VERSION = get_git_version()
+
+class my_build_py(build_py):
+    def run(self):
+        # honor the --dry-run flag
+        if not self.dry_run:
+            target_dir = os.path.join(self.build_lib, 'dipplanner')
+
+            # mkpath is a distutils helper to create directories
+            self.mkpath(target_dir)
+
+            try:
+                fobj=open(os.path.join(target_dir, 'RELEASE-VERSION'), 'w')
+                fobj.write(VERSION)
+            except:
+                pass
+
+        # distutils uses old-style classes, so no super()
+        build_py.run(self)
 
 install_requires = [
     # List your project dependencies here.
@@ -42,9 +64,10 @@ install_requires = [
     'jinja2', ]
 
 setup(name='dipplanner',
-      version=version,
+      version=VERSION,
       description="Dive planner and decompression calculation program",
       long_description=README + '\n\n' + NEWS,
+      cmdclass={ 'build_py': my_build_py },
       classifiers=[
           # Get strings from
           # http://pypi.python.org/pypi?%3Aaction=list_classifiers

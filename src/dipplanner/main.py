@@ -28,8 +28,6 @@ runs in command line and output resulting dive profile
 also initiate log files
 """
 
-__version__ = "0.3nightly"
-
 __authors__ = [
     # alphabetical order by last name
     'Thomas Chiroux', ]
@@ -365,6 +363,10 @@ def parse_arguments():
         epilog=epilog,
         formatter_class=argparse.RawTextHelpFormatter)
 
+    parser.add_argument('--version',
+                        action='version',
+                        version=settings.__VERSION__)
+
     group1 = parser.add_argument_group(
         "Mandatory Options",
         """Either presence of tank and segment inside a config file or
@@ -659,8 +661,21 @@ def main():
 
     activate_debug()
 
-    settings.__VERSION__ = __version__
+    # get the version
+    try:
+        f = open("RELEASE-VERSION", "r")
+
+        try:
+            version = f.readlines()[0]
+            settings.__VERSION__ = version.strip()
+
+        finally:
+            f.close()
+    except:
+        settings.__VERSION__ = "unknown"
+
     (args, dives) = parse_arguments()
+
     profiles = []
     previous_dive = None
     for dive in dives:

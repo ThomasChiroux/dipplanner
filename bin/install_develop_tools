@@ -1,0 +1,2 @@
+#!/bin/bash
+pip install ipython pylint pep8 sphinx

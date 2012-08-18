@@ -39,13 +39,7 @@ install_requires = [
     # List your project dependencies here.
     # For more details, see:
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
-    'jinja2',
-    # below are dependencies for develop phaes only
-    # TODO: find a way to install only this tools with setup.py develop
-    "ipython",
-    "pylint",
-    "pep8",
-    "sphinx", ]
+    'jinja2', ]
 
 setup(name='dipplanner',
       version=version,

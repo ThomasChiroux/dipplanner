@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Source code documentation &mdash; dipplanner 0.3nightly documentation</title>
+    <title>Source code documentation &mdash; dipplanner 0.3a-3-g9986 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.3nightly',
+        VERSION:     '0.3a-3-g9986',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="dipplanner 0.3nightly documentation" href="index.html" />
+    <link rel="top" title="dipplanner 0.3a-3-g9986 documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="NEWS.html" />
     <link rel="prev" title="Templates" href="template.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="template.html" title="Templates"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3nightly documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-3-g9986 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -484,8 +484,12 @@ else false means there is nothing to process</p>
 <dt><em>Keyword Arguments:</em></dt>
 <dd>&lt;none&gt;</dd>
 <dt><em>Returns:</em></dt>
-<dd>True (bool) &#8211; if there is at least one input dive segment to process
-False (bool) &#8211; if there is no dive segment to process</dd>
+<dd><dl class="first docutils">
+<dt>True (bool) &#8211; if there is at least one input</dt>
+<dd>dive segment to process</dd>
+</dl>
+<p class="last">False (bool) &#8211; if there is no dive segment to process</p>
+</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
 </dl>
@@ -1932,10 +1936,17 @@ must be either :</p>
 </dl>
 <p><em>Raise:</em></p>
 <blockquote>
-<div><ul class="simple">
-<li>InvalidGas &#8211; see validate()</li>
-<li>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2 and see validate()</li>
-<li>InvalidTank &#8211; see validate()</li>
+<div><ul>
+<li><p class="first">InvalidGas &#8211; see validate()</p>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidMod &#8211; if mod &gt; max mod based on</dt>
+<dd><p class="first last">max_ppo2 and see validate()</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">InvalidTank &#8211; see validate()</p>
+</li>
 </ul>
 </div></blockquote>
 </dd></dl>
@@ -2071,15 +2082,16 @@ if validity check fails raise an Exception &#8216;InvalidTank&#8217;</p>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2 or ABSOLUTE_MAX_MOD</dt>
-<dd><p class="first last">ABSOLUTE_MAX_MOD is a global settings which can not be
-exceeded.</p>
+<dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2</dt>
+<dd><p class="first">or ABSOLUTE_MAX_MOD.</p>
+<p class="last">ABSOLUTE_MAX_MOD is a global settings which
+can not be exceeded.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>InvalidTank &#8211; when pressure or tank size exceed maximum values or are</dt>
-<dd><p class="first last">incorrect (like negatives) values</p>
+<dt>InvalidTank &#8211; when pressure or tank size exceed maximum</dt>
+<dd><p class="first last">values or are incorrect (like negatives) values</p>
 </dd>
 </dl>
 </li>
@@ -2914,12 +2926,6 @@ Typically called once to initialise the GF slope.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.gradient.Gradient.__str__">
-<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.gradient.Gradient.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__str__() &lt;==&gt; str(x)</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -3028,12 +3034,6 @@ time in second to minutes while using this formula</p>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
 </dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__str__">
-<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__str__() &lt;==&gt; str(x)</p>
 </dd></dl>
 
 </dd></dl>
@@ -3315,7 +3315,8 @@ Calls Compartment.asc_desc to update compartments</p>
 </tr>
 <tr class="field-even field"><th class="field-name">f_he:</th><td class="field-body">(float) &#8211; Fraction of inert gas Helium in inspired gas mix</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">f_n2:</th><td class="field-body">(float) &#8211; Fraction of inert gas Nitrogen in inspired gas mix</td>
+<tr class="field-odd field"><th class="field-name">f_n2:</th><td class="field-body">(float) &#8211; Fraction of inert gas Nitrogen
+in inspired gas mix</td>
 </tr>
 <tr class="field-even field"><th class="field-name">pp_o2:</th><td class="field-body">(float) &#8211; For CCR mode, partial pressure of oxygen in bar.
 If == 0.0, then open circuit</td>
@@ -4029,8 +4030,11 @@ between.</p>
 <dl class="data">
 <dt id="dipplanner.settings.RUN_TIME">
 <tt class="descclassname">dipplanner.settings.</tt><tt class="descname">RUN_TIME</tt><em class="property"> = True</em><a class="headerlink" href="#dipplanner.settings.RUN_TIME" title="Permalink to this definition">¶</a></dt>
-<dd><p>Warning : if RUN-TIME is True, the segment duration must include descent time
-if the duration is too small dipplanner will raise an error
+<dd><dl class="docutils">
+<dt>Warning <span class="classifier-delimiter">:</span> <span class="classifier">if RUN-TIME is True, the segment duration must</span></dt>
+<dd>include descent time</dd>
+</dl>
+<p>if the duration is too small dipplanner will raise an error
 if True: segments represents runtime,
 if false, segments represents segtime</p>
 </dd></dl>
@@ -4139,7 +4143,7 @@ if false, segments represents segtime</p>
         <li class="right" >
           <a href="template.html" title="Templates"
              >previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3nightly documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-3-g9986 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

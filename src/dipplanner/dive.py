@@ -406,6 +406,7 @@ class Dive(object):
         *Returns:*
             True (bool) -- if there is at least one input
                            dive segment to process
+
             False (bool) -- if there is no dive segment to process
 
         *Raise:*

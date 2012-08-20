@@ -28,9 +28,34 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 import math
+import re
 
+# local imports
 from dipplanner import settings
 
+def safe_eval_calculator(text_to_eval):
+    """Small an safe eval function usable only for simple calculation
+    (only the basic operators)
+
+    *Keyword Arguments:*
+        :text_to_eval: (float) -- the text (formula) that should be evaluated
+
+    *Returns:*
+        float -- the result of the calculation.
+
+    *Raise:*
+        ValueError: when given expression is not constitued of only
+                    numbers and operators
+        SyntaxError: when the given expression is incorrect
+
+    """
+    expr = "^([0-9]|\+|\*|\/|\-|\.|\ )+$"
+    re_result = re.match(expr, text_to_eval)
+    if re_result is None:
+        raise ValueError("Only numbers and simple operators (*+-/) "
+                         "are allowed")
+    else:
+        return eval(re_result.group(0), {'__builtins__':None}, {})
 
 def seconds_to_mmss(seconds):
     """Convert a value in seconds into a string representing the time in

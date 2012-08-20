@@ -35,6 +35,7 @@ __authors__ = [
 import sys
 import logging
 from collections import OrderedDict
+from ConfigParser import SafeConfigParser
 
 # dependencies imports
 from jinja2 import Environment, PackageLoader
@@ -45,6 +46,7 @@ from dipplanner.dive import Dive
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
 from dipplanner.tools import altitude_to_pressure
+from dipplanner.tools import safe_eval_calculator
 
 LOGGER = logging.getLogger("dipplanner")
 
@@ -116,8 +118,6 @@ def parse_config_file(filenames):
     *Raise:*
         Nothing, but can exit
     """
-    from ConfigParser import SafeConfigParser
-
     if filenames is not None:
         config = SafeConfigParser()
         filesread = config.read(filenames)
@@ -185,8 +185,8 @@ def parse_config_file(filenames):
             settings.STOP_TIME_INCREMENT = float(
                 config.get(section, 'stop_time_increment'))
         if config.has_option(section, 'force_all_stops'):
-            settings.FORCE_ALL_STOPS = eval(
-                ''.join(config.get(section, 'force_all_stops')).title())
+            settings.FORCE_ALL_STOPS = config.getboolean(section,
+                                                         'force_all_stops')
         if config.has_option(section, 'ambiant_pressure_sea_level'):
             settings.AMBIANT_PRESSURE_SEA_LEVEL = float(
                 config.get(section, 'ambiant_pressure_sea_level'))
@@ -235,10 +235,12 @@ def parse_config_file(filenames):
 
         if config.has_option(section, 'gf_low'):
             settings.GF_LOW = float(
-                eval(''.join(config.get(section, 'gf_low')).strip('%'))) / 100
+                safe_eval_calculator(''.join(config.get(section, 'gf_low'))
+                                       .strip('%'))) / 100
         if config.has_option(section, 'gf_high'):
             settings.GF_HIGH = float(
-                eval(''.join(config.get(section, 'gf_high')).strip('%'))) / 100
+                safe_eval_calculator(''.join(config.get(section, 'gf_high'))
+                                       .strip('%'))) / 100
 
         if config.has_option(section, 'water'):
             if config.get(section, 'water') == 'sea':
@@ -251,20 +253,19 @@ def parse_config_file(filenames):
                 altitude_to_pressure(float(config.get(section, 'altitude')))
 
         if config.has_option(section, 'run_time'):
-            settings.RUN_TIME = eval(
-                ''.join(config.get(section, 'run_time')).title())
+            settings.RUN_TIME = config.getboolean(section, 'run_time')
 
         if config.has_option(section, 'use_oc_deco'):
-            settings.USE_OC_DECO = eval(
-                ''.join(config.get(section, 'use_oc_deco')).title())
+            settings.USE_OC_DECO = config.getboolean(section, 'use_oc_deco')
 
         if config.has_option(section, 'multilevel_mode'):
-            settings.MULTILEVEL_MODE = eval(
-                ''.join(config.get(section, 'multilevel_mode')).title())
+            settings.MULTILEVEL_MODE = config.getboolean(section,
+                                                         'multilevel_mode')
 
         if config.has_option(section, 'automatic_tank_refill'):
-            settings.AUTOMATIC_TANK_REFILL = eval(
-                ''.join(config.get(section, 'automatic_tank_refill')).title())
+            settings.AUTOMATIC_TANK_REFILL = \
+                config.getboolean(section,
+                                  'automatic_tank_refill')
 
     #dives = { 'dive1': { 'tanks': {}, 'segments': {}, 'surface_interval':0} }
     dives = {}
@@ -274,7 +275,8 @@ def parse_config_file(filenames):
         dives[section] = {'tanks': {}, 'segments': {}, 'surface_interval': 0}
         for parameter_name, parameter_value in config.items(section):
             if parameter_name == 'surface_interval':
-                dives[section]['surface_interval'] = eval(parameter_value)
+                dives[section]['surface_interval'] = \
+                    safe_eval_calculator(parameter_value)
             elif parameter_name[0:4] == 'tank':
                 #number = parameter_name[4:]
                 (name, f_o2, f_he, volume, pressure, rule) =\
@@ -283,8 +285,8 @@ def parse_config_file(filenames):
                     float(f_o2),
                     float(f_he),
                     max_ppo2=settings.DEFAULT_MAX_PPO2,
-                    tank_vol=float(eval(volume)),
-                    tank_pressure=float(eval(pressure)),
+                    tank_vol=float(safe_eval_calculator(volume)),
+                    tank_pressure=float(safe_eval_calculator(pressure)),
                     tank_rule=rule)
 
         if dives[section]['tanks'] == {}:
@@ -302,8 +304,8 @@ def parse_config_file(filenames):
                 (depth, time, tankname, setpoint) = parameter_value.split(";")
                 try:
                     dives[section]['segments'][parameter_name] = SegmentDive(
-                        float(eval(depth)),
-                        float(eval(time)),
+                        float(safe_eval_calculator(depth)),
+                        float(safe_eval_calculator(time)),
                         dives[section]['tanks'][tankname],
                         float(setpoint))
                 except KeyError:
@@ -500,13 +502,15 @@ def parse_arguments():
 
     if args.gflow:
         try:
-            settings.GF_LOW = float(eval(args.gflow.strip('%'))) / 100
+            settings.GF_LOW = \
+                float(safe_eval_calculator(args.gflow.strip('%'))) / 100
         except ValueError:
             parser.error("Error while parsing option gflow : %s" % args.gflow)
 
     if args.gfhigh:
         try:
-            settings.GF_HIGH = float(eval(args.gfhigh.strip('%'))) / 100
+            settings.GF_HIGH = \
+                float(safe_eval_calculator(args.gfhigh.strip('%'))) / 100
         except ValueError:
             parser.error("Error while parsing option gfhigh: %s" % args.gfhigh)
 
@@ -522,7 +526,7 @@ def parse_arguments():
     if args.diveconsrate:
         try:
             settings.DIVE_CONSUMPTION_RATE = \
-                float(eval(args.diveconsrate)) / 60
+                float(safe_eval_calculator(args.diveconsrate)) / 60
         except ValueError:
             parser.error("Error while parsing option diveconsrate : %s" %
                          args.diveconsrate)
@@ -530,21 +534,23 @@ def parse_arguments():
     if args.decoconsrate:
         try:
             settings.DECO_CONSUMPTION_RATE = \
-                float(eval(args.decoconsrate)) / 60
+                float(safe_eval_calculator(args.decoconsrate)) / 60
         except ValueError:
             parser.error("Error while parsing option decoconsrate : %s" %
                          args.decoconsrate)
 
     if args.descentrate:
         try:
-            settings.DESCENT_RATE = float(eval(args.descentrate)) / 60
+            settings.DESCENT_RATE = \
+                float(safe_eval_calculator(args.descentrate)) / 60
         except ValueError:
             parser.error("Error while parsing option descentrate : %s" %
                          args.descentrate)
 
     if args.ascentrate:
         try:
-            settings.ASCENT_RATE = float(eval(args.ascentrate)) / 60
+            settings.ASCENT_RATE = \
+                float(safe_eval_calculator(args.ascentrate)) / 60
         except ValueError:
             parser.error("Error while parsing option ascentrate : %s" %
                          args.ascentrate)
@@ -594,8 +600,8 @@ def parse_arguments():
                 float(f_o2),
                 float(f_he),
                 max_ppo2=settings.DEFAULT_MAX_PPO2,
-                tank_vol=float(eval(volume)),
-                tank_pressure=float(eval(pressure)),
+                tank_vol=float(safe_eval_calculator(volume)),
+                tank_pressure=float(safe_eval_calculator(pressure)),
                 tank_rule=rule)
 
     if tanks == {}:
@@ -616,8 +622,8 @@ def parse_arguments():
                 #seg_name = 'segment%s' % num_seg
                 #print seg_name
                 segments['segment%s' % num_seg] = SegmentDive(
-                    float(eval(depth)),
-                    float(eval(time)),
+                    float(safe_eval_calculator(depth)),
+                    float(safe_eval_calculator(time)),
                     tanks[tankname],
                     float(setpoint))
             except KeyError:
@@ -629,10 +635,13 @@ def parse_arguments():
             num_seg += 1
         segments = OrderedDict(sorted(segments.items(), key=lambda t: t[0]))
         if args.surfaceinterval:
-            dives['diveCLI'] = {'tanks': tanks, 'segments': segments,
-                                'surface_interval': eval(args.surfaceinterval)}
+            dives['diveCLI'] = {'tanks': tanks,
+                                'segments': segments,
+                                'surface_interval':
+                                safe_eval_calculator(args.surfaceinterval)}
         else:
-            dives['diveCLI'] = {'tanks': tanks, 'segments': segments,
+            dives['diveCLI'] = {'tanks': tanks,
+                                'segments': segments,
                                 'surface_interval': 0}
 
     if args.template:

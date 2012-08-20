@@ -44,7 +44,7 @@ from dipplanner.tools import convert_feet_to_meter
 from dipplanner.tools import convert_liter_to_cubicfeet
 from dipplanner.tools import convert_meter_to_feet
 from dipplanner.tools import convert_psi_to_bar
-
+from dipplanner.tools import safe_eval_calculator
 
 class TestTools(unittest.TestCase):
 
@@ -53,6 +53,69 @@ class TestTools(unittest.TestCase):
         # temporary hack (tests):
 
         activate_debug_for_tests()
+
+class SafeEvalTools(TestTools):
+
+    def setUp(self):
+        TestTools.setUp(self)
+
+    def test_eval_good_1(self):
+        self.assertEqual(safe_eval_calculator("2*10"),
+                         20,
+                         "Wrong safe eval result: %s"
+                         % safe_eval_calculator("2*10"))
+
+    def test_eval_good_2(self):
+        self.assertEqual(safe_eval_calculator("2 * 10"),
+            20,
+            "Wrong safe eval result: %s"
+            % safe_eval_calculator("2*10"))
+
+    def test_eval_good_3(self):
+        self.assertEqual(safe_eval_calculator("5+6 * 4 / 3"),
+            13,
+            "Wrong safe eval result: %s"
+            % safe_eval_calculator("5+6 * 4 / 3"))
+
+    def test_eval_bad_1(self):
+        try:
+            result = safe_eval_calculator("(5+6) * 4 / 3")
+        except ValueError:
+            pass
+        else:
+            self.fail('should raise ValueError')
+
+    def test_eval_bad_2(self):
+        try:
+            result = safe_eval_calculator("a5+6 * 4 / 3")
+        except ValueError:
+            pass
+        else:
+            self.fail('should raise ValueError')
+
+    def test_eval_bad_3(self):
+        try:
+            result = safe_eval_calculator("(5+6) d* 4 / 3")
+        except ValueError:
+            pass
+        else:
+            self.fail('should raise ValueError')
+
+    def test_eval_bad_4(self):
+        try:
+            result = safe_eval_calculator("_2+2")
+        except ValueError:
+            pass
+        else:
+            self.fail('should raise ValueError')
+
+    def test_eval_bad_5(self):
+        try:
+            result = safe_eval_calculator("5***4")
+        except SyntaxError:
+            pass
+        else:
+            self.fail('should raise SyntaxError')
 
 class TimeTools(TestTools):
 

@@ -122,6 +122,17 @@ class TestRepetitiveDive1(TestDive):
         self.assertEqual(no_flight_time, 5460, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_no_flight_wo_exc(self):
+        no_flight_time = self.profile1.no_flight_time_wo_exception()
+        self.assertEqual(no_flight_time, 5460, 'Bad no flight time: %s'
+                         % no_flight_time)
+
+    def test_surfaceint(self):
+        self.assertEqual(self.profile1.get_surface_interval(),
+                         ' 20:00',
+                         'wrong surface interval:%s'
+                         % self.profile1.get_surface_interval())
+
 
 class TestRepetitiveDive2(TestDive):
 
@@ -176,6 +187,16 @@ class TestRepetitiveDive2(TestDive):
         self.assertEqual(no_flight_time, 18360, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_no_flight_wo_exc(self):
+        no_flight_time = self.profile2.no_flight_time_wo_exception()
+        self.assertEqual(no_flight_time, 18360, 'Bad no flight time: %s'
+                         % no_flight_time)
+
+    def test_surfaceint(self):
+        self.assertEqual(self.profile2.get_surface_interval(),
+                         ' 60:00',
+                         'wrong surface interval:%s'
+                         % self.profile2.get_surface_interval())
 
 class TestRepetitiveDive3(TestDive):
 
@@ -238,6 +259,16 @@ class TestRepetitiveDive3(TestDive):
         self.assertEqual(no_flight_time, 1620, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_no_flight_wo_exc(self):
+        no_flight_time = self.profile3.no_flight_time_wo_exception()
+        self.assertEqual(no_flight_time, 1620, 'Bad no flight time: %s'
+        % no_flight_time)
+
+    def test_surfaceint(self):
+        self.assertEqual(self.profile3.get_surface_interval(),
+                         '720:00',
+                         'wrong surface interval:%s'
+                         % self.profile3.get_surface_interval())
 
 # ========================== M A I N ==========================================
 # =============================================================================

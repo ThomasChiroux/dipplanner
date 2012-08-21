@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Source code documentation &mdash; dipplanner 0.3a-3-g9986 documentation</title>
+    <title>Source code documentation &mdash; dipplanner 0.3a-7-g44d8 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.3a-3-g9986',
+        VERSION:     '0.3a-7-g44d8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="dipplanner 0.3a-3-g9986 documentation" href="index.html" />
+    <link rel="top" title="dipplanner 0.3a-7-g44d8 documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="NEWS.html" />
     <link rel="prev" title="Templates" href="template.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="template.html" title="Templates"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-3-g9986 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-7-g44d8 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -2926,6 +2926,12 @@ Typically called once to initialise the GF slope.</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="dipplanner.model.buhlmann.gradient.Gradient.__str__">
+<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.gradient.Gradient.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__str__() &lt;==&gt; str(x)</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -3034,6 +3040,12 @@ time in second to minutes while using this formula</p>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__str__">
+<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.model.buhlmann.oxygen_toxicity.OxTox.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__str__() &lt;==&gt; str(x)</p>
 </dd></dl>
 
 </dd></dl>
@@ -3400,6 +3412,34 @@ If == 0.0, then open circuit</td>
 <span id="tools"></span><span id="dipplanner-autodoc-model-tools"></span><h2>tools<a class="headerlink" href="#module-dipplanner.tools" title="Permalink to this headline">¶</a></h2>
 <p>tools modules</p>
 <p>This modules contains some utility functions like unit conversions, etc...</p>
+<dl class="function">
+<dt id="dipplanner.tools.safe_eval_calculator">
+<tt class="descclassname">dipplanner.tools.</tt><tt class="descname">safe_eval_calculator</tt><big>(</big><em>text_to_eval</em><big>)</big><a class="headerlink" href="#dipplanner.tools.safe_eval_calculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Small an safe eval function usable only for simple calculation
+(only the basic operators)</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">text_to_eval:</th><td class="field-body">(float) &#8211; the text (formula) that should be evaluated</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; the result of the calculation.</dd>
+<dt><em>Raise:</em></dt>
+<dd><dl class="first docutils">
+<dt>ValueError: when given expression is not constitued of only</dt>
+<dd>numbers and operators</dd>
+</dl>
+<p class="last">SyntaxError: when the given expression is incorrect</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="function">
 <dt id="dipplanner.tools.seconds_to_mmss">
 <tt class="descclassname">dipplanner.tools.</tt><tt class="descname">seconds_to_mmss</tt><big>(</big><em>seconds</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tools.html#seconds_to_mmss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tools.seconds_to_mmss" title="Permalink to this definition">¶</a></dt>
@@ -3781,12 +3821,12 @@ also initiate log files</p>
 
 <dl class="function">
 <dt id="dipplanner.main.parse_arguments">
-<tt class="descclassname">dipplanner.main.</tt><tt class="descname">parse_arguments</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#parse_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.parse_arguments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">parse_arguments</tt><big>(</big><em>cli_arguments</em><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#parse_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.parse_arguments" title="Permalink to this definition">¶</a></dt>
 <dd><p>parse all command lines options</p>
 <p>could also exit from program because of wrong arguments</p>
 <dl class="docutils">
 <dt><em>Keyword Arguments:</em></dt>
-<dd>&lt;none&gt;</dd>
+<dd>arguments (list of string) &#8211; list of arguments, like sys.argv</dd>
 <dt><em>Returns:</em></dt>
 <dd><dl class="first last docutils">
 <dt>a tuple of two dicts:</dt>
@@ -3822,12 +3862,12 @@ also initiate log files</p>
 
 <dl class="function">
 <dt id="dipplanner.main.main">
-<tt class="descclassname">dipplanner.main.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.main" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">main</tt><big>(</big><em>cli_arguments=['/home/tchiroux/devel/perso/dipplanner/venv/dev/bin/sphinx-build', '-b', 'html', '-d', '_build/doctrees', '.', '_build/html']</em><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>main uses the parameters, tanks and dives given in config file(s)
 and/or command line, calculates the dives and return the output in stdout.</p>
 <dl class="docutils">
 <dt><em>Keyword Arguments:</em></dt>
-<dd>&lt;none&gt;</dd>
+<dd>arguments (list of string) &#8211; list of arguments, like sys.argv</dd>
 <dt><em>Return:</em></dt>
 <dd>&lt;nothing&gt;</dd>
 <dt><em>Raise:</em></dt>
@@ -4143,7 +4183,7 @@ if false, segments represents segtime</p>
         <li class="right" >
           <a href="template.html" title="Templates"
              >previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-3-g9986 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-7-g44d8 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

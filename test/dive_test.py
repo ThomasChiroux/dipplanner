@@ -76,7 +76,6 @@ class TestDiveNotEnoughGas1(TestDive):
                          'gas rule test (result:%s)'
                          % self.profile1.tanks[0].check_rule())
 
-
 class TestDiveAirDiveOutput1(TestDive):
 
     def setUp(self):
@@ -84,6 +83,70 @@ class TestDiveAirDiveOutput1(TestDive):
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
         self.profile1 = Dive([diveseg1], [self.airtank])
         self.profile1.do_dive()
+
+    def test_segment1(self):
+        self.assertEqual(str(self.profile1.output_segments[0]),
+            ' DESCENT: at  30m for   1:30 [RT:  1:30], '
+            'on Air,  SP:0.0, END:29m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[0])
+
+    def test_segment2(self):
+        self.assertEqual(str(self.profile1.output_segments[1]),
+            '   CONST: at  30m for  28:30 [RT: 30:00], '
+            'on Air,  SP:0.0, END:29m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[1])
+
+    def test_segment3(self):
+        self.assertEqual(str(self.profile1.output_segments[2]),
+            '  ASCENT: at  15m for   1:30 [RT: 31:30], '
+            'on Air,  SP:0.0, END:14m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[2])
+
+    def test_segment4(self):
+        self.assertEqual(str(self.profile1.output_segments[3]),
+            '    DECO: at  15m for   0:01 [RT: 31:31], '
+            'on Air,  SP:0.0, END:14m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[3])
+
+    def test_segment5(self):
+        self.assertEqual(str(self.profile1.output_segments[4]),
+            '    DECO: at  12m for   0:25 [RT: 31:56], '
+            'on Air,  SP:0.0, END:11m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[4])
+
+    def test_segment6(self):
+        self.assertEqual(str(self.profile1.output_segments[5]),
+            '    DECO: at   9m for   2:42 [RT: 34:38], '
+            'on Air,  SP:0.0, END:8m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[5])
+
+    def test_segment7(self):
+        self.assertEqual(str(self.profile1.output_segments[6]),
+            '    DECO: at   6m for   5:02 [RT: 39:40], '
+            'on Air,  SP:0.0, END:5m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[6])
+
+    def test_segment8(self):
+        self.assertEqual(str(self.profile1.output_segments[7]),
+            '    DECO: at   3m for   8:44 [RT: 48:24], '
+            'on Air,  SP:0.0, END:2m',
+            'bad segment (%s)'
+            % self.profile1.output_segments[7])
+
+class TestDiveAirDiveOutput_woExc(TestDive):
+
+    def setUp(self):
+        TestDive.setUp(self)
+        diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
+        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1.do_dive_without_exceptions()
 
     def test_segment1(self):
         self.assertEqual(str(self.profile1.output_segments[0]),

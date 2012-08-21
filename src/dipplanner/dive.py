@@ -726,7 +726,7 @@ class Dive(object):
             <nothing>
         """
         try:
-            self.no_flight_time(altitude, tank)
+            result = self.no_flight_time(altitude, tank)
         except ModelStateException as exc:
             self.dive_exceptions.append(exc)
         except ModelException as exc:
@@ -754,6 +754,8 @@ class Dive(object):
                 DipplannerException("Unknown exception occured: %s (%s)" %
                                     (exc.__repr__(),
                                      exc.message)))
+        else:
+            return result
 
     def no_flight_time(self, altitude=settings.FLIGHT_ALTITUDE, tank=None):
         """Evaluate the no flight time by 'ascending' to the choosen

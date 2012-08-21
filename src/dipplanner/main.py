@@ -36,6 +36,7 @@ import sys
 import logging
 from collections import OrderedDict
 from ConfigParser import SafeConfigParser
+import argparse
 
 # dependencies imports
 from jinja2 import Environment, PackageLoader
@@ -210,7 +211,7 @@ def parse_config_file(filenames):
     if config.has_section('general'):
         section = 'general'
         if config.has_option(section, 'deco_model'):
-            model = config.get(section, 'deco_model')
+            model = (config.get(section, 'deco_model')).strip()
             if model == "ZHL16b" or model == "ZHL16c":
                 settings.DECO_MODEL = model
         if config.has_option(section, 'max_ppo2'):
@@ -230,7 +231,7 @@ def parse_config_file(filenames):
             settings.DIVE_CONSUMPTION_RATE = \
                 float(config.get(section, 'dive_consumption_rate')) / 60
         if config.has_option(section, 'deco_consumption_rate'):
-            settings.DIVE_CONSUMPTION_RATE = \
+            settings.DECO_CONSUMPTION_RATE = \
                 float(config.get(section, 'deco_consumption_rate')) / 60
 
         if config.has_option(section, 'gf_low'):
@@ -321,13 +322,13 @@ def parse_config_file(filenames):
     return OrderedDict(sorted(dives.items(), key=lambda t: t[0]))
 
 
-def parse_arguments():
+def parse_arguments(cli_arguments):
     """parse all command lines options
 
     could also exit from program because of wrong arguments
 
     *Keyword Arguments:*
-        <none>
+        arguments (list of string) -- list of arguments, like sys.argv
 
     *Returns:*
         a tuple of two dicts:
@@ -350,9 +351,7 @@ def parse_arguments():
     *Raise:*
         Nothing, but can exit
     """
-    import argparse
-
-    usage = """%(prog)s [options]"""
+    #usage = """%(prog)s [options]"""
     description = """%(prog)s calculates and output dive profile
   Thomas Chiroux, 2011-2012 - see http://dipplanner.org
   """
@@ -361,7 +360,7 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(
         description=description,
-        usage=usage,
+        #usage=usage,
         epilog=epilog,
         formatter_class=argparse.RawTextHelpFormatter)
 
@@ -413,7 +412,7 @@ def parse_arguments():
     group2 = parser.add_argument_group("Dive Parameters")
     group2.add_argument(
         "--model", metavar="VAL", type=str,
-        default="ZHL16c", choices=['ZHL16b', 'ZHL16c'],
+        choices=['ZHL16b', 'ZHL16c'],
         help="""Decompression model: either ZHL16b or ZHL16c """)
 
     group2.add_argument(
@@ -494,7 +493,7 @@ def parse_arguments():
   The template file should be present in ./templates""")
 
     # parse the options
-    args = parser.parse_args()
+    args = parser.parse_args(cli_arguments[1:])
 
     dives = parse_config_file(args.config_files)
     if dives is None:
@@ -583,8 +582,6 @@ def parse_arguments():
         settings.SURFACE_TEMP = args.surfacetemp
 
     if args.ambiantpressureatsea:
-        print "---------------- %s ---------------------" % \
-              args.ambiantpressureatsea
         settings.AMBIANT_PRESSURE_SEA_LEVEL = args.ambiantpressureatsea
 
     # try to find tank(s) and segment(s).
@@ -592,6 +589,7 @@ def parse_arguments():
     # files.
     # this will be the last dive
     tanks = {}
+
     if args.tanks:
         for tank in args.tanks:
             (name, f_o2, f_he, volume, pressure, rule) = tank.split(";")
@@ -609,8 +607,7 @@ def parse_arguments():
         try:
             tanks = dives[dives.items()[-1][0]]['tanks']
         except (KeyError, IndexError):
-            print "Error : no tank provided for this dive !"
-            sys.exit(0)
+            parser.error("Error : no tank provided for this dive !")
 
     segments = {}
     if args.segments:
@@ -650,14 +647,14 @@ def parse_arguments():
     return (args, dives)
 
 
-def main():
+def main(cli_arguments=sys.argv):
     """main
 
     main uses the parameters, tanks and dives given in config file(s)
     and/or command line, calculates the dives and return the output in stdout.
 
     *Keyword Arguments:*
-        <none>
+        arguments (list of string) -- list of arguments, like sys.argv
 
     *Return:*
         <nothing>
@@ -683,9 +680,10 @@ def main():
     except:
         settings.__VERSION__ = "unknown"
 
-    (args, dives) = parse_arguments()
+    (args, dives) = parse_arguments(cli_arguments)
 
     profiles = []
+    current_dive = None
     previous_dive = None
     for dive in dives:
         if previous_dive is None:

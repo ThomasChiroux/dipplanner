@@ -30,7 +30,7 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner import settings
 from dipplanner.main import activate_debug_for_tests
-from dipplanner.main import parse_arguments
+from dipplanner.parse_cli_args import DipplannerCliArguments
 from dipplanner.tools import altitude_to_pressure
 
 class TestCliArguments(unittest.TestCase):
@@ -50,14 +50,16 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "-c", "test/configs/restore_default_config.cfg", ]
-        parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
 
     def test_surfaceinterval(self):
         cli_args = ["dipplanner",
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--surfaceinterval=200", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
+        dives = dipplanner_arguments.dives
+        args = dipplanner_arguments.args
         self.assertEqual(dives['diveCLI']['surface_interval'], 200,
                          "Wrong surface interval: %s"
                          % args.surfaceinterval)
@@ -67,7 +69,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--model=ZHL16b", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DECO_MODEL, 'ZHL16b',
                          "Wrong model: %s"
                          % settings.DECO_MODEL)
@@ -77,7 +79,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--gflow=22%", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.GF_LOW, 0.22,
                          "Wrong gllow: %s"
                          % settings.GF_LOW)
@@ -87,7 +89,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--gfhigh=95", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.GF_HIGH, 0.95,
             "Wrong gfhigh: %s"
             % settings.GF_HIGH)
@@ -97,7 +99,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--water=fresh", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.WATER_DENSITY,
                          settings.FRESH_WATER_DENSITY,
                          "Wrong water type: %s"
@@ -108,7 +110,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--altitude=2456", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.AMBIANT_PRESSURE_SURFACE,
                          altitude_to_pressure(2456),
                          "Wrong altitude pressure: %s"
@@ -119,7 +121,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--diveconsrate=23", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DIVE_CONSUMPTION_RATE,
                          23.0/60,
                          "Wrong diveconsrate: %s"
@@ -130,7 +132,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--decoconsrate=21", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DECO_CONSUMPTION_RATE,
             21.0/60,
             "Wrong decoconsrate: %s"
@@ -141,7 +143,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--descentrate=42", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DESCENT_RATE,
                          42.0/60,
                          "Wrong descentrate: %s"
@@ -152,7 +154,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--ascentrate=9", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.ASCENT_RATE,
             9.0/60,
             "Wrong ascentrate: %s"
@@ -163,7 +165,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--maxppo2=1.5", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DEFAULT_MAX_PPO2,
             1.5,
             "Wrong mawppo2: %s"
@@ -174,7 +176,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--minppo2=0.17", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DEFAULT_MIN_PPO2,
                          0.17,
                          "Wrong minppo2: %s"
@@ -185,7 +187,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--maxend=33", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DEFAULT_MAX_END,
             33,
             "Wrong maxend: %s"
@@ -196,7 +198,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--samegasfordeco", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.USE_OC_DECO,
             False,
             "Wrong samegasfordeco: %s"
@@ -207,7 +209,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--forcesegmenttime", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.RUN_TIME,
             False,
             "Wrong forcesegmenttime: %s"
@@ -218,7 +220,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--depthcalcmethod=simple", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.METHOD_FOR_DEPTH_CALCULATION,
             'simple',
             "Wrong depthcalcmethod: %s"
@@ -229,7 +231,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--travelswitch=early", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.TRAVEL_SWITCH,
             'early',
             "Wrong travelswitch: %s"
@@ -240,7 +242,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--surfacetemp=24.5", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.SURFACE_TEMP,
             24.5,
             "Wrong surfacetemp: %s"
@@ -251,7 +253,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--surfacetemp=29", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.SURFACE_TEMP,
             29,
             "Wrong surfacetemp: %s"
@@ -262,7 +264,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--ambiantpressureatsea=1.01", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.AMBIANT_PRESSURE_SEA_LEVEL,
             1.01,
             "Wrong ambiantpressureatsea: %s"
@@ -273,7 +275,7 @@ class TestAllCli(TestCliArguments):
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
                     "--template=default.html", ]
-        (args, dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.TEMPLATE,
             'default.html',
             "Wrong template: %s"
@@ -290,7 +292,9 @@ class TestAllConfig(TestCliArguments):
                     "-c", "test/configs/test_config.cfg",
                     "-c", "configs/test_config.cfg", ]
 
-        (self.args, self.dives) = parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
+        self.dives = dipplanner_arguments.dives
+        self.args = dipplanner_arguments.args
 
     @classmethod
     def tearDownClass(cls):
@@ -300,7 +304,7 @@ class TestAllConfig(TestCliArguments):
                     "-c", "test/configs/restore_default_config.cfg",
                     "-c", "configs/restore_default_config.cfg", ]
 
-        parse_arguments(cli_args)
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
 
     def test_surfaceinterval(self):
         self.assertEqual(self.dives['dive2']['surface_interval'], 98 * 60,

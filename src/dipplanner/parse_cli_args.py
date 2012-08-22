@@ -30,7 +30,7 @@ import argparse
 from collections import OrderedDict
 
 # local imports
-from dipplanner.parse_config_files import parse_config_file
+from dipplanner.parse_config_files import DipplannerConfigFiles
 from dipplanner import settings
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
@@ -283,8 +283,8 @@ class DipplannerCliArguments(object):
         *Raise:*
             Nothing, but can exit
         """
-
-        dives = parse_config_file(args.config_files)
+        parsed_config_files = DipplannerConfigFiles(args.config_files)
+        dives = parsed_config_files.dives
 
         if dives is None:
             dives = {}

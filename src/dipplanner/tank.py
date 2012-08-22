@@ -604,6 +604,7 @@ class Tank(object):
         # Air consists of: Nitrogen N2: 78.08%,
         #                  Oxygen O2: 20.95%,
         #                  Argon Ar: 0.934%
+        #OC
         reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * \
             (settings.N2_NARCOTIC_VALUE * 0.7808 +
              settings.O2_NARCOTIC_VALUE * 0.2095 +

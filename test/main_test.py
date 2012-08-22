@@ -33,6 +33,7 @@ from dipplanner.main import activate_debug_for_tests
 from dipplanner.parse_cli_args import DipplannerCliArguments
 from dipplanner.tools import altitude_to_pressure
 
+
 class TestCliArguments(unittest.TestCase):
     def setUp(self):
         # temporary hack (tests):
@@ -49,7 +50,8 @@ class TestAllCli(TestCliArguments):
         cli_args = ["dipplanner",
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
-                    "-c", "test/configs/restore_default_config.cfg", ]
+                    "-c", "test/configs/restore_default_config.cfg",
+                    "-c", "configs/restore_default_config.cfg", ]
         dipplanner_arguments = DipplannerCliArguments(cli_args)
 
     def test_surfaceinterval(self):
@@ -304,7 +306,7 @@ class TestAllConfig(TestCliArguments):
                     "-c", "test/configs/restore_default_config.cfg",
                     "-c", "configs/restore_default_config.cfg", ]
 
-        dipplanner_arguments = DipplannerCliArguments(cli_args)
+        DipplannerCliArguments(cli_args)
 
     def test_surfaceinterval(self):
         self.assertEqual(self.dives['dive2']['surface_interval'], 98 * 60,
@@ -533,3 +535,4 @@ if __name__ == "__main__":
     else:
         suite = unittest.findTestCases(sys.modules[__name__])
     unittest.TextTestRunner(verbosity=2).run(suite)
+

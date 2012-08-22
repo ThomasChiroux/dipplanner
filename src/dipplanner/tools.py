@@ -33,6 +33,7 @@ import re
 # local imports
 from dipplanner import settings
 
+
 def safe_eval_calculator(text_to_eval):
     """Small an safe eval function usable only for simple calculation
     (only the basic operators)
@@ -55,7 +56,8 @@ def safe_eval_calculator(text_to_eval):
         raise ValueError("Only numbers and simple operators (*+-/) "
                          "are allowed")
     else:
-        return eval(re_result.group(0), {'__builtins__':None}, {})
+        return eval(re_result.group(0), {'__builtins__': None}, {})
+
 
 def seconds_to_mmss(seconds):
     """Convert a value in seconds into a string representing the time in

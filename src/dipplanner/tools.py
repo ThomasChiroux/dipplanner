@@ -47,6 +47,7 @@ def safe_eval_calculator(text_to_eval):
     *Raise:*
         ValueError: when given expression is not constitued of only
                     numbers and operators
+
         SyntaxError: when the given expression is incorrect
 
     """
@@ -179,7 +180,7 @@ def depth_to_pressure(depth, method=settings.METHOD_FOR_DEPTH_CALCULATION):
 
 
 def pressure_to_depth(pressure, method=settings.METHOD_FOR_DEPTH_CALCULATION):
-    """calculates depth based on give pressure using a more complex
+    """Calculates depth based on give pressure using a more complex
     method than only *10
 
     *Keyword Arguments:*

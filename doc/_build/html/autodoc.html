@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Source code documentation &mdash; dipplanner 0.3a-7-g44d8 documentation</title>
+    <title>Source code documentation &mdash; dipplanner 0.3a-10-g2967 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.3a-7-g44d8',
+        VERSION:     '0.3a-10-g2967',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="dipplanner 0.3a-7-g44d8 documentation" href="index.html" />
+    <link rel="top" title="dipplanner 0.3a-10-g2967 documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="NEWS.html" />
     <link rel="prev" title="Templates" href="template.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="template.html" title="Templates"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-7-g44d8 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-10-g2967 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -1952,6 +1952,29 @@ must be either :</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="dipplanner.tank.Tank.__deepcopy__">
+<tt class="descname">__deepcopy__</tt><big>(</big><em>memo</em><big>)</big><a class="headerlink" href="#dipplanner.tank.Tank.__deepcopy__" title="Permalink to this definition">¶</a></dt>
+<dd><p>deepcopy method will be called by copy.deepcopy</p>
+<p>Used for &#8220;cloning&#8221; the object into another new object.</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">memo:</th><td class="field-body">&#8211; not used here</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>Tank &#8211; Tank object copy of itself</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="dipplanner.tank.Tank.calculate_real_volume">
 <tt class="descname">calculate_real_volume</tt><big>(</big><em>tank_vol=None</em>, <em>tank_pressure=None</em>, <em>f_o2=None</em>, <em>f_he=None</em>, <em>temp=15</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank.calculate_real_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank.calculate_real_volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the real gas volume of the tank (in liter) based
@@ -3579,7 +3602,7 @@ method than only /10</p>
 <dl class="function">
 <dt id="dipplanner.tools.pressure_to_depth">
 <tt class="descclassname">dipplanner.tools.</tt><tt class="descname">pressure_to_depth</tt><big>(</big><em>pressure</em>, <em>method='complex'</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tools.html#pressure_to_depth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tools.pressure_to_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>calculates depth based on give pressure using a more complex
+<dd><p>Calculates depth based on give pressure using a more complex
 method than only <a href="#id2"><span class="problematic" id="id3">*</span></a>10</p>
 <dl class="docutils">
 <dt><em>Keyword Arguments:</em></dt>
@@ -3794,69 +3817,6 @@ also initiate log files</p>
 <dd>&lt;nothing&gt;</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dipplanner.main.parse_config_file">
-<tt class="descclassname">dipplanner.main.</tt><tt class="descname">parse_config_file</tt><big>(</big><em>filenames</em><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#parse_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.parse_config_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>parse a config file and change default settings values</p>
-<dl class="docutils">
-<dt><em>Keyword Arguments:</em></dt>
-<dd><table class="first last docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">filename:</th><td class="field-body">(str) &#8211; name (and path) of the config file to be parsed</td>
-</tr>
-</tbody>
-</table>
-</dd>
-<dt><em>Returns:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-<dt><em>Raise:</em></dt>
-<dd>Nothing, but can exit</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dipplanner.main.parse_arguments">
-<tt class="descclassname">dipplanner.main.</tt><tt class="descname">parse_arguments</tt><big>(</big><em>cli_arguments</em><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#parse_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.parse_arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>parse all command lines options</p>
-<p>could also exit from program because of wrong arguments</p>
-<dl class="docutils">
-<dt><em>Keyword Arguments:</em></dt>
-<dd>arguments (list of string) &#8211; list of arguments, like sys.argv</dd>
-<dt><em>Returns:</em></dt>
-<dd><dl class="first last docutils">
-<dt>a tuple of two dicts:</dt>
-<dd><table class="first docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">args:</th><td class="field-body"></td>
-</tr>
-<tr class="field-even field"><th class="field-name">dives:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<ul class="simple">
-<li>args is the result of argpaser</li>
-<li>dives dict is in the following form:</li>
-</ul>
-<div class="last highlight-python"><div class="highlight"><pre><span class="n">dives</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;dive1&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;tanks&#39;</span><span class="p">:</span> <span class="p">{},</span>
-                     <span class="s">&#39;segments&#39;</span><span class="p">:</span> <span class="p">{},</span>
-                     <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span><span class="mi">0</span> <span class="p">},</span>
-          <span class="s">&#39;dive2&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;tanks&#39;</span><span class="p">:</span> <span class="p">{},</span>
-                     <span class="s">&#39;segments&#39;</span><span class="p">:</span> <span class="p">{},</span>
-                     <span class="s">&#39;surface_interval&#39;</span><span class="p">:</span><span class="mi">60</span> <span class="p">}}</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</dd>
-<dt><em>Raise:</em></dt>
-<dd>Nothing, but can exit</dd>
 </dl>
 </dd></dl>
 
@@ -4183,7 +4143,7 @@ if false, segments represents segtime</p>
         <li class="right" >
           <a href="template.html" title="Templates"
              >previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-7-g44d8 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-10-g2967 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -251,6 +251,35 @@ class Tank(object):
                 self.min_gas = 0
         self.logger.debug("minimum gas authorised: %s" % self.min_gas)
 
+    def __deepcopy__(self, memo):
+        """deepcopy method will be called by copy.deepcopy
+
+        Used for "cloning" the object into another new object.
+
+        *Keyword Arguments:*
+            :memo: -- not used here
+
+        *Returns:*
+            Tank -- Tank object copy of itself
+
+        *Raise:*
+            <nothing>
+        """
+        newobj = Tank()
+        newobj.f_o2 = self.f_o2
+        newobj.f_he = self.f_he
+        newobj.f_n2 = self.f_n2
+        newobj.max_ppo2 = self.max_ppo2
+        newobj.tank_vol = self.tank_vol
+        newobj.tank_pressure = self.tank_pressure
+        newobj.mod = self.mod
+        newobj.in_use = self.in_use
+        newobj.used_gas = self.used_gas
+        newobj.total_gas = self.total_gas
+        newobj.remaining_gas = self.remaining_gas
+        newobj.min_gas = self.min_gas
+        return newobj
+
     def calculate_real_volume(self, tank_vol=None, tank_pressure=None,
                               f_o2=None, f_he=None, temp=15):
         """

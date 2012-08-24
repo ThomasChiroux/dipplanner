@@ -679,6 +679,13 @@ class Dive(object):
         self.model.metadata = self.metadata
         # recalculate the gas consumptions
         self.do_gas_calcs()
+        # save the tanks parameters : next dives may use the same tanks,
+        # but we need here to duplicate tank object within this dive in
+        # order to save the tank parameters for this dive only
+        saved_tanks = []
+        for tank in self.tanks:
+            saved_tanks.append(copy.deepcopy(tank))
+        self.tanks = saved_tanks
 
     def get_no_flight_hhmmss(self):
         """Returns no flight time (if calculated) in hhmmss format

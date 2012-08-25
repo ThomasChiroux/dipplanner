@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>dipplanner command-line documentation &mdash; dipplanner 0.3a-10-g2967 documentation</title>
+    <title>dipplanner command-line documentation &mdash; dipplanner 0.3a-11-gcf71 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.3a-10-g2967',
+        VERSION:     '0.3a-11-gcf71',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="dipplanner 0.3a-10-g2967 documentation" href="index.html" />
+    <link rel="top" title="dipplanner 0.3a-11-gcf71 documentation" href="index.html" />
     <link rel="next" title="dipplanner config file documentation" href="config_file.html" />
     <link rel="prev" title="dipplanner Quick Start" href="README.html" /> 
   </head>
@@ -37,12 +37,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="config_file.html" title="dipplanner config file documentation"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="README.html" title="dipplanner Quick Start"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-10-g2967 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-11-gcf71 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -71,6 +74,8 @@
            <span class="o">[</span>--minppo2<span class="o">]</span>
            <span class="o">[</span>--maxend<span class="o">]</span>
            <span class="o">[</span>--samegasfordeco<span class="o">]</span>
+           <span class="o">[</span>--multilevel<span class="o">]</span>
+           <span class="o">[</span>--automatictankrefill<span class="o">]</span> <span class="o">[</span>--notankrefill<span class="o">]</span>
            <span class="o">[</span>--forcesegmenttime<span class="o">]</span>
            <span class="o">[</span>--depthcalcmethod<span class="o">]</span>
            <span class="o">[</span>--travelswitch<span class="o">]</span>
@@ -416,6 +421,18 @@ in the [advanced] section</p>
 </dd></dl>
 
 <dl class="cmdoption">
+<dt id="cmdoption--forcesegmenttime">
+<tt class="descname">--forcesegmenttime</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--forcesegmenttime" title="Permalink to this definition">¶</a></dt>
+<dd><p>if set, each input segment will be dove
+at the full time of the segment.</p>
+<p>By default the segment time is shortened by descent or ascent time</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dipplanner</span> <span class="o">--</span><span class="n">forcesegmenttime</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cmdoption">
 <dt id="cmdoption--samegasfordeco">
 <tt class="descname">--samegasfordeco</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--samegasfordeco" title="Permalink to this definition">¶</a></dt>
 <dd><p>if set, do not use deco tanks (or bailout) for decompressions</p>
@@ -432,13 +449,31 @@ or will still use CCR setpoint of last segment for deco</p>
 </dd></dl>
 
 <dl class="cmdoption">
-<dt id="cmdoption--forcesegmenttime">
-<tt class="descname">--forcesegmenttime</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--forcesegmenttime" title="Permalink to this definition">¶</a></dt>
-<dd><p>if set, each input segment will be dove
-at the full time of the segment.</p>
-<p>By default the segment time is shortened by descent or ascent time</p>
+<dt id="cmdoption--multilevel">
+<tt class="descname">--multilevel</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--multilevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>if set, switch dipplanner in multilevel mode.</p>
+<p>TODO: complete this</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption--automatictankrefill">
+<tt class="descname">--automatictankrefill</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--automatictankrefill" title="Permalink to this definition">¶</a></dt>
+<dd><p>is set, the tanks will be automatically refilled between repetitive dives.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">dipplanner</span> <span class="o">--</span><span class="n">forcesegmenttime</span>
+<p>automatic tank refill between repetitive dives</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dipplanner</span> <span class="o">--</span><span class="n">automatictankrefill</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption--notankrefill">
+<tt class="descname">--notankrefill</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--notankrefill" title="Permalink to this definition">¶</a></dt>
+<dd><p>is set, the tanks will NOT be automatically refilled between
+repetitive dives.</p>
+<p>Example:</p>
+<p>no tank refill between repetitive dives</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dipplanner</span> <span class="o">--</span><span class="n">notankrefill</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -577,12 +612,15 @@ The template file should be present in templates directory</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="config_file.html" title="dipplanner config file documentation"
              >next</a> |</li>
         <li class="right" >
           <a href="README.html" title="dipplanner Quick Start"
              >previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-10-g2967 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-11-gcf71 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

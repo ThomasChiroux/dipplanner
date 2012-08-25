@@ -115,6 +115,46 @@ class DipplannerConfigFiles(object):
                 model = ''.join(config.get(section, 'deco_model')).strip()
                 if model == "ZHL16b" or model == "ZHL16c":
                     settings.DECO_MODEL = model
+
+            if config.has_option(section, 'gf_low'):
+                settings.GF_LOW = float(
+                    safe_eval_calculator(''.join(config.get(section,
+                        'gf_low'))
+                    .strip('%'))) / 100
+
+            if config.has_option(section, 'gf_high'):
+                settings.GF_HIGH = float(
+                    safe_eval_calculator(''.join(config.get(section,
+                        'gf_high'))
+                    .strip('%'))) / 100
+
+            if config.has_option(section, 'water'):
+                if config.get(section, 'water') == 'sea':
+                    settings.WATER_DENSITY = settings.SEA_WATER_DENSITY
+                elif config.get(section, 'water') == 'fresh':
+                    settings.WATER_DENSITY = settings.FRESH_WATER_DENSITY
+
+            if config.has_option(section, 'altitude'):
+                settings.AMBIANT_PRESSURE_SURFACE =\
+                altitude_to_pressure(float(config.get(section,
+                    'altitude')))
+
+            if config.has_option(section, 'dive_consumption_rate'):
+                settings.DIVE_CONSUMPTION_RATE =\
+                float(config.get(section, 'dive_consumption_rate')) / 60
+
+            if config.has_option(section, 'deco_consumption_rate'):
+                settings.DECO_CONSUMPTION_RATE =\
+                float(config.get(section, 'deco_consumption_rate')) / 60
+
+            if config.has_option(section, 'descent_rate'):
+                settings.DESCENT_RATE = float(
+                    config.get(section, 'descent_rate')) / 60
+
+            if config.has_option(section, 'ascent_rate'):
+                settings.ASCENT_RATE = float(
+                    config.get(section, 'ascent_rate')) / 60
+
             if config.has_option(section, 'max_ppo2'):
                 settings.DEFAULT_MAX_PPO2 = float(config.get(section,
                                                              'max_ppo2'))
@@ -124,41 +164,6 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'max_end'):
                 settings.DEFAULT_MAX_END = float(config.get(section,
                                                             'max_end'))
-            if config.has_option(section, 'descent_rate'):
-                settings.DESCENT_RATE = float(
-                    config.get(section, 'descent_rate')) / 60
-            if config.has_option(section, 'ascent_rate'):
-                settings.ASCENT_RATE = float(
-                    config.get(section, 'ascent_rate')) / 60
-
-            if config.has_option(section, 'dive_consumption_rate'):
-                settings.DIVE_CONSUMPTION_RATE = \
-                    float(config.get(section, 'dive_consumption_rate')) / 60
-            if config.has_option(section, 'deco_consumption_rate'):
-                settings.DECO_CONSUMPTION_RATE = \
-                    float(config.get(section, 'deco_consumption_rate')) / 60
-
-            if config.has_option(section, 'gf_low'):
-                settings.GF_LOW = float(
-                    safe_eval_calculator(''.join(config.get(section,
-                                                            'gf_low'))
-                                         .strip('%'))) / 100
-            if config.has_option(section, 'gf_high'):
-                settings.GF_HIGH = float(
-                    safe_eval_calculator(''.join(config.get(section,
-                                                            'gf_high'))
-                                         .strip('%'))) / 100
-
-            if config.has_option(section, 'water'):
-                if config.get(section, 'water') == 'sea':
-                    settings.WATER_DENSITY = settings.SEA_WATER_DENSITY
-                elif config.get(section, 'water') == 'fresh':
-                    settings.WATER_DENSITY = settings.FRESH_WATER_DENSITY
-
-            if config.has_option(section, 'altitude'):
-                settings.AMBIANT_PRESSURE_SURFACE = \
-                    altitude_to_pressure(float(config.get(section,
-                                                          'altitude')))
 
             if config.has_option(section, 'run_time'):
                 settings.RUN_TIME = config.getboolean(section, 'run_time')

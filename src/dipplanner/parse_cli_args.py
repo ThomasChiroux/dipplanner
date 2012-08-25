@@ -172,6 +172,7 @@ class DipplannerCliArguments(object):
         group2.add_argument(
             "--gfhigh", metavar="VAL", type=str,
             help="""GF high, in """)
+
         group2.add_argument(
             "--water", metavar="VAL", type=str,
             help="""type of water : sea or fresh""")
@@ -203,15 +204,28 @@ class DipplannerCliArguments(object):
             help="max END allowed for this dive.")
 
         group2.add_argument(
-            "--samegasfordeco", action="store_true",
-            help="if set, do not use deco tanks (or bailout) "
-                 "for decompressions")
-        group2.add_argument(
             "--forcesegmenttime", action="store_true",
             help="""if set, each input segment will be dove
       at the full time of the segment.
       By default the segment time is shortened by descent or ascent time
       """)
+
+        group2.add_argument(
+            "--samegasfordeco", action="store_true",
+            help="if set, do not use deco tanks (or bailout) "
+                 "for decompressions")
+
+        group2.add_argument("--multilevel", action="store_true",
+                            help="Multilevel mode")
+
+        group2.add_argument("--automatictankrefill",
+                            action="store_true",
+                            help="Automatic tank refill between dives")
+
+        group2.add_argument("--notankrefill",
+                            action="store_true",
+                            help="Do not refill tanks between dives")
+
 
     def adv_params_arguments(self):
         """Advanced parameters
@@ -382,7 +396,18 @@ class DipplannerCliArguments(object):
         if args.ambiantpressureatsea:
             settings.AMBIANT_PRESSURE_SEA_LEVEL = args.ambiantpressureatsea
 
-        # try to find tank(s) and segment(s).
+        if args.multilevel:
+            settings.MULTILEVEL_MODE = True
+
+        if args.automatictankrefill:
+            print "Automatic tank refill ====> %s" % args.automatictankrefill
+            settings.AUTOMATIC_TANK_REFILL = True
+
+        if args.notankrefill:
+            print "no tank refill ====> %s" % args.notankrefill
+            settings.AUTOMATIC_TANK_REFILL = False
+
+    # try to find tank(s) and segment(s).
         # if found, add this dive to the (eventually) other dives defined
         # in config files.
         # this will be the last dive

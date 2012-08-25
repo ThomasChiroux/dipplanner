@@ -7,7 +7,7 @@ v0.3 (ongoing)
 .. note::
     v0.3 is not released yet.
 
-    Below are the feature already developped for the 0.3 target release.
+    Below are the feature already developed for the 0.3 target release.
 
     See GitHub Issues for more infos.
 
@@ -20,6 +20,8 @@ New features
 Bug corrections
 ***************
 
+* tank infos on repetitive dives was wrong (only last tank status was
+  diven, even for the firs(s) dive(s).
 
 v0.2
 ----

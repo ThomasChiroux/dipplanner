@@ -24,6 +24,8 @@ when invoking dipplanner, you may specify any of these options:
                [--minppo2]
                [--maxend]
                [--samegasfordeco]
+               [--multilevel]
+               [--automatictankrefill] [--notankrefill]
                [--forcesegmenttime]
                [--depthcalcmethod]
                [--travelswitch]
@@ -408,6 +410,20 @@ dive parameters
         All narcotic indexes can by changed in the config file,
         in the [advanced] section
 
+.. cmdoption:: --forcesegmenttime
+
+    if set, each input segment will be dove
+    at the full time of the segment.
+
+    By default the segment time is shortened by descent or ascent time
+
+
+    Example:
+
+    ::
+
+        dipplanner --forcesegmenttime
+
 .. cmdoption:: --samegasfordeco
 
     if set, do not use deco tanks (or bailout) for decompressions
@@ -428,20 +444,36 @@ dive parameters
 
         dipplanner --samegasfordeco
 
+.. cmdoption:: --multilevel
 
-.. cmdoption:: --forcesegmenttime
+    if set, switch dipplanner in multilevel mode.
 
-    if set, each input segment will be dove
-    at the full time of the segment.
+    TODO: complete this
 
-    By default the segment time is shortened by descent or ascent time
+.. cmdoption:: --automatictankrefill
 
+    is set, the tanks will be automatically refilled between repetitive dives.
 
     Example:
 
+    automatic tank refill between repetitive dives
+
     ::
 
-        dipplanner --forcesegmenttime
+        dipplanner --automatictankrefill
+
+.. cmdoption:: --notankrefill
+
+    is set, the tanks will NOT be automatically refilled between
+    repetitive dives.
+
+    Example:
+
+    no tank refill between repetitive dives
+
+    ::
+
+        dipplanner --notankrefill
 
 
 Advanced Parameters

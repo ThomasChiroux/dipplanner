@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Source code documentation &mdash; dipplanner 0.3a-10-g2967 documentation</title>
+    <title>Source code documentation &mdash; dipplanner 0.3a-11-gcf71 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.3a-10-g2967',
+        VERSION:     '0.3a-11-gcf71',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="dipplanner 0.3a-10-g2967 documentation" href="index.html" />
+    <link rel="top" title="dipplanner 0.3a-11-gcf71 documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="NEWS.html" />
     <link rel="prev" title="Templates" href="template.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="template.html" title="Templates"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-10-g2967 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-11-gcf71 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -772,7 +772,7 @@ depth(s) of the segment</p>
 </li>
 <li><p class="first">time (float) &#8211; duration of this segment, in seconds</p>
 </li>
-<li><p class="first">run_time (float) &#8211; runtime in profile</p>
+<li><p class="first">run_time (float) &#8211; runtime (displayed in profile informations)</p>
 </li>
 <li><p class="first">setpoint (float) &#8211; setpoint for CCR</p>
 </li>
@@ -1816,7 +1816,24 @@ remaining gas</p>
 contains breathing Gas
 We provide proportion of N2, O2, He, calculates MOD and volumes during the
 dives
-We can also (optionally) provide the type of tanks : volume and pressure</p>
+We can also (optionally) provide the type of tanks :</p>
+<ul class="simple">
+<li>volume</li>
+<li>pressure</li>
+<li>remaining gas warning rule</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>About imperial unit conversion</p>
+<p>In &#8216;imperial&#8217; countries (North America), it&#8217;s common to describe
+a tank with the volume of air stored in the cylinder at its working
+pressure (if you where to release it at the surface),
+instead of (internal volume * pressure).</p>
+<p>This make difficult if not impossible to switch between the two units
+without any approximation or implementation choices.</p>
+<p>eg: 80-cubic-foot aluminium cylinder (AL80)</p>
+<p class="last">TODO: continuer le texte explicatif</p>
+</div>
 <p><em>Attributes:</em></p>
 <blockquote>
 <div><ul>
@@ -4143,7 +4160,7 @@ if false, segments represents segtime</p>
         <li class="right" >
           <a href="template.html" title="Templates"
              >previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-10-g2967 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-11-gcf71 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

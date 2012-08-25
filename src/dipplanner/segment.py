@@ -76,7 +76,7 @@ class Segment(object):
         * in_use (boolean) -- True if segment is used
         * depth (float) -- depth of this segment, in meter
         * time (float) -- duration of this segment, in seconds
-        * run_time (float) -- runtime in profile
+        * run_time (float) -- runtime (displayed in profile informations)
         * setpoint (float) -- setpoint for CCR
         * tank (Tank) -- refer to tank object used in this segment
 
@@ -103,7 +103,7 @@ class Segment(object):
         self.in_use = True  # is this segment in use : default: yes
         self.depth = 0.0  # depth of this segment, in meter
         self.time = 0.0  # time of this segment, in second
-        self.run_time = 0.0  # runtime in profile (TODO: a priori inutile)
+        self.run_time = 0.0  # runtime in profile
         self.setpoint = 0.0  # for CCR
         self.tank = None  # tank used for this segment
 

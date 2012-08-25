@@ -134,7 +134,25 @@ class Tank(object):
     contains breathing Gas
     We provide proportion of N2, O2, He, calculates MOD and volumes during the
     dives
-    We can also (optionally) provide the type of tanks : volume and pressure
+    We can also (optionally) provide the type of tanks :
+
+    - volume
+    - pressure
+    - remaining gas warning rule
+
+    .. note:: About imperial unit conversion
+
+        In 'imperial' countries (North America), it's common to describe
+        a tank with the volume of air stored in the cylinder at its working
+        pressure (if you where to release it at the surface),
+        instead of (internal volume * pressure).
+
+        This make difficult if not impossible to switch between the two units
+        without any approximation or implementation choices.
+
+        eg: 80-cubic-foot aluminium cylinder (AL80)
+
+        TODO: continuer le texte explicatif
 
     *Attributes:*
 

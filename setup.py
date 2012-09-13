@@ -61,7 +61,7 @@ install_requires = [
     # List your project dependencies here.
     # For more details, see:
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
-    'flask', ]
+    'flask', 'lxml']
 
 setup(name='dipplanner',
       version=VERSION,

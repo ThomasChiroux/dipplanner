@@ -19,6 +19,9 @@
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
 """module generating the GUI
+
+It uses flask micro-framework to publish a full REST/json API over the
+dipplanner objects and methods
 """
 
 __authors__ = [
@@ -32,9 +35,11 @@ from flask import Flask
 from flask import request
 from flask.views import MethodView
 from flask import make_response
+from flask import Blueprint
 
 # local imports
 from dipplanner.tank import Tank
+from dipplanner.mission import Mission
 
 WEBAPP = Flask(__name__)
 
@@ -42,6 +47,57 @@ WEBAPP = Flask(__name__)
 class TankApi(MethodView):
     """RestFull API for Tank Class
     """
+    def __init__(self, name, mission):
+        """Constructor for TankApi object
+
+        *Keyword Arguments:*
+            :name: (str) -- api name
+            :mission: (Mission) -- mission object
+
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
+        self.name = name
+        self.mission = mission
+        bp = Blueprint(name, __name__)
+        bp_endpoint = '{0}_api'.format(name)
+        bp_url = '/{0}/'.format(name)
+        bp_pk = '{0}_name'.format(name)
+        self.register_api(bp, bp_endpoint, bp_url, bp_pk)
+        self._blueprint = bp
+
+    def register_api(self, blueprint, endpoint, url, p_key, pk_type=None):
+        """register a REST Api for a dipplanner object
+
+        *Keyword Arguments:*
+            :app: (Flask) -- Flask application object
+            :view: (MethodView) -- MethodView herited object
+            :endpoint: (str) -- name for the view
+            :url: (str) -- base url for the api
+            :p_key: (str) -- primary key name
+            :pk_type: (str) -- type of primary key
+
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
+        view_func = self.as_view(endpoint, self.name, self.mission)
+        blueprint.add_url_rule(url, defaults={p_key: None},
+                               view_func=view_func, methods=['GET', ])
+        blueprint.add_url_rule(url, view_func=view_func, methods=['POST', ])
+        if pk_type is None:
+            blueprint.add_url_rule('%s<%s>' % (url, p_key),
+                                   view_func=view_func,
+                                   methods=['GET', 'PUT', 'PATCH', 'DELETE'])
+        else:
+            blueprint.add_url_rule('%s<%s:%s>' % (url, pk_type, p_key),
+                                   view_func=view_func,
+                                   methods=['GET', 'PUT', 'PATCH', 'DELETE'])
 
     def json_resp(self, message, code):
         """Return a pure json Flask response with
@@ -80,9 +136,10 @@ class TankApi(MethodView):
         *Raise:*
             <nothing>
         """
-        temp_tank = Tank()
-        print 'get tank: %s' % tank_name
-        return self.json_resp(temp_tank.dumps_json(), 200)
+        if tank_name is None:
+            return self.json_resp('', 200)
+        else:
+            return self.json_resp(self.mission[0].tanks[0].dumps_json(), 200)
 
     def post(self):
         """POST method for the Tank object Api
@@ -158,37 +215,16 @@ class TankApi(MethodView):
         return self.json_resp('', 204)
 
 
-def register_api(app, view, endpoint, url, p_key, pk_type=None):
-    """register a REST Api for a dipplanner object
-
-    *Keyword Arguments:*
-        :app: (Flask) -- Flask application object
-        :view: (MethodView) -- MethodView herited object
-        :endpoint: (str) -- name for the view
-        :url: (str) -- base url for the api
-        :p_key: (str) -- primary key name
-        :pk_type: (str) -- type of primary key
-
-    *Returns:*
-        <nothing>
-
-    *Raise:*
-        <nothing>
+def start_gui(mission=None):
+    """Starts the html GUI server
     """
-    view_func = view.as_view(endpoint)
-    app.add_url_rule(url, defaults={p_key: None},
-                     view_func=view_func, methods=['GET', ])
-    app.add_url_rule(url, view_func=view_func, methods=['POST', ])
-    if pk_type is None:
-        app.add_url_rule('%s<%s>' % (url, p_key), view_func=view_func,
-                         methods=['GET', 'PUT', 'PATCH', 'DELETE'])
+    if mission is None:
+        tank_api = TankApi('tank', Mission())
     else:
-        app.add_url_rule('%s<%s:%s>' % (url, pk_type, p_key),
-                         view_func=view_func,
-                         methods=['GET', 'PUT', 'PATCH', 'DELETE'])
+        tank_api = TankApi('tank', mission)
+    WEBAPP.register_blueprint(tank_api._blueprint)
+    WEBAPP.run(debug=True)  # TODO: remove debug infos before release
 
 if __name__ == "__main__":
-    register_api(WEBAPP, TankApi,
-                 'tank_api', '/tank/',
-                 'tank_name', pk_type=None)
-    WEBAPP.run(debug=True)
+    # for debug purposes
+    start_gui()

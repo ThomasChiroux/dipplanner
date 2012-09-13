@@ -87,6 +87,7 @@ class DipplannerCliArguments(object):
         self.dive_params_arguments()
         self.adv_params_arguments()
         self.output_params_arguments()
+        self.gui_params_arguments()
 
         self.args = None
         self.dives = None
@@ -283,6 +284,23 @@ class DipplannerCliArguments(object):
             type=str,
             help="""Name of the template to be used
       The template file should be present in ./templates""")
+
+    def gui_params_arguments(self):
+        """Gui parameters
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
+        group5 = self.parser.add_argument_group("Gui Parameters")
+        group5.add_argument("--gui",
+                            action="store_true",
+                            help="Start web gui instead of CLI output")
 
     def check_arguments(self, args):
         """parse all command lines options

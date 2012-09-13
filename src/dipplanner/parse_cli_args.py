@@ -34,6 +34,8 @@ from dipplanner.parse_config_files import DipplannerConfigFiles
 from dipplanner import settings
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
+from dipplanner.dive import Dive
+from dipplanner.mission import Mission
 from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import safe_eval_calculator
 
@@ -470,3 +472,34 @@ class DipplannerCliArguments(object):
 
         self.args = args
         self.dives = dives
+        self.create_mission()
+
+    def create_mission(self):
+        """Create a mission object based of listed dives in self.dives
+
+        *Keyword Arguments:*
+        <none>
+
+        *Returns:*
+        <nothing>
+
+        *Raise:*
+        <nothing>
+        """
+        self.mission = Mission()
+        previous_dive = None
+
+        for dive in self.dives:
+            if previous_dive is None:
+                current_dive = Dive(dives[dive]['segments'].values(),
+                                    dives[dive]['tanks'].values())
+                self.mission.add_dive(current_dive)
+            else:
+                current_dive = Dive(dives[dive]['segments'].values(),
+                                    dives[dive]['tanks'].values(),
+                                    previous_dive)
+                if dives[dive]['surface_interval']:
+                    current_dive=dives[dive]['surface_interval']
+                self.mission.add_dive(current_dive)
+            previous_dive = current_dive
+

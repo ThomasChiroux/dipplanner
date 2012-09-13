@@ -340,13 +340,14 @@ class Dive(object):
                           dives=[self, ])
         return text
 
-    def do_surface_interval(self, time):
+    def do_surface_interval(self, time=None):
         """Conducts a surface interval
         by performing a constant depth calculation on air at zero meters
 
         *Keyword Arguments:*
             :time: (int) -- duration of the interval, in seconds
-
+                            if not provided, uses the surface_interval
+                            defined in this dive
         *Returns:*
             <nothing>
 
@@ -354,6 +355,9 @@ class Dive(object):
             <Exceptions from model>
 
         """
+        if time is None:
+            time = self.surface_interval
+
         try:
             self.model.const_depth(pressure=0.0, seg_time=time,
                                    f_he=0.0, f_n2=0.79, pp_o2=0.0)

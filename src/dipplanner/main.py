@@ -133,37 +133,21 @@ def main(cli_arguments=sys.argv):
         settings.__VERSION__ = "unknown"
 
     dipplanner_arguments = DipplannerCliArguments(cli_arguments)
-    dives = dipplanner_arguments.dives
+    mission = dipplanner_arguments.mission
 
-    profiles = []
-    current_dive = None
-    previous_dive = None
-    for dive in dives:
-        if previous_dive is None:
-            current_dive = Dive(
-                dives[dive]['segments'].values(),
-                dives[dive]['tanks'].values())
-        else:
-            current_dive = Dive(
-                dives[dive]['segments'].values(),
-                dives[dive]['tanks'].values(),
-                previous_dive
-            )
-        if dives[dive]['surface_interval']:
-            current_dive.do_surface_interval(dives[dive]['surface_interval'])
-
-        current_dive.do_dive_without_exceptions()
-        profiles.append(current_dive)
-        previous_dive = current_dive
+    for dive in mission:
+        dive.do_dive_without_exceptions()
+        #profiles.append(current_dive)
+        #previous_dive = current_dive
         # now, dive exceptins do not stop the program anymore, but can be
         # displayed in the output template instead. The used MUST take care of
         # the result.
 
     # now calculate no flight time based on the last dive
-    current_dive.no_flight_time_wo_exception()
+    mission[-1].no_flight_time_wo_exception()
 
     # now Prepare the output
     env = Environment(loader=PackageLoader('dipplanner', 'templates'))
     tpl = env.get_template(settings.TEMPLATE)
-    text = tpl.render(settings=settings, dives=profiles)
+    text = tpl.render(settings=settings, dives=mission)
     print text

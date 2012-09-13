@@ -31,6 +31,7 @@ __authors__ = [
 import logging
 import math
 import re
+import json
 
 # local imports
 from dipplanner import settings
@@ -163,19 +164,22 @@ class Tank(object):
         * max_ppo2 (float) -- maximum tolerated ppo2 for this tank
         * tank_vol (float) -- volume of tank in liter
         * tank_pressure (float) -- pressure of tank in bar
+        * tank_rule (str) -- tank rule for minimum gas calculation
         * mod (float) -- maximum operating depth of the tank
         * in_use (boolean) -- is the tank used for the dive of not
         * total_gas (float) -- total gas volume of the tank in liter
         * used_gas (float) -- used gas in liter
         * remaining_gas (float) -- remaining gas in liter
         * min_gas (float) -- minimum remaining gas in liter
-
+        * given_name (str) -- name of the Tank if not provided,
+                              try to set it automatically
     """
 
     def __init__(self,  f_o2=0.21, f_he=0.0,
                  max_ppo2=settings.DEFAULT_MAX_PPO2,
                  mod=None, tank_vol=12.0, tank_pressure=200,
-                 tank_rule="30b"):
+                 tank_rule="30b",
+                 given_name = None):
         """Constructor for Tank class
 
         If nothing is provided, create a default 'Air' with 12l/200b tank
@@ -211,7 +215,9 @@ class Tank(object):
                             * 1/6 way IN,
                             * 1/6 wau OUT,
                             * 2/3 remains
-
+            :given_name: (str) -- set a specific name for the Tank.
+                    if not given, it will be generated automatically based
+                    on the gas.
         *Returns:*
             <nothing>
 
@@ -237,6 +243,7 @@ class Tank(object):
         self.max_ppo2 = float(max_ppo2)
         self.tank_vol = float(tank_vol)
         self.tank_pressure = float(tank_pressure)
+        self.tank_rule = tank_rule
         if mod is not None:
             if mod > self._calculate_mod(self.max_ppo2):
                 raise InvalidMod(
@@ -246,6 +253,10 @@ class Tank(object):
             self.mod = self._calculate_mod(self.max_ppo2)
 
         self.in_use = True
+        if given_name is not None:
+            self.given_name = given_name
+        else:
+            self.given_name = self.name()
 
         self._validate()
 
@@ -255,13 +266,27 @@ class Tank(object):
         else:
             self.total_gas = 0.0
         self.remaining_gas = self.total_gas
-        # calculate minimum remaining gas
-        min_re = re.search("([0-9]+)b", tank_rule)
+        self._set_min_gas()
+
+    def _set_min_gas(self):
+        """sets the minimum gas volume for this tank based
+        on the min_gas rule provided
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            float -- minimum gas volume in liter
+
+        *Raise:*
+            <nothing>
+        """
+        min_re = re.search("([0-9]+)b", self.tank_rule)
         if min_re is not None:
             self.min_gas = self.calculate_real_volume(self.tank_vol,
                                                       int(min_re.group(1)))
         else:
-            min_re = re.search("1/([0-9])", tank_rule)
+            min_re = re.search("1/([0-9])", self.tank_rule)
             if min_re is not None:
                 self.min_gas = self.total_gas * \
                     (float(1) - 2 * (1 / float(min_re.group(1))))
@@ -473,6 +498,110 @@ class Tank(object):
         """
         return cmp(self.mod, othertank.mod)
 
+    def dumps_json(self):
+        """dumps the Tank object in json format
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            string -- json dumps of Tank object
+
+        *Raise:*
+            TypeError : if Tank is not serialisable
+        """
+        tank_dict = { 'given_name': self.given_name,
+                      'name': self.name(),
+                      'f_o2': self.f_o2,
+                      'f_he': self.f_he,
+                      'f_n2': self.f_n2,
+                      'max_ppo2': self.max_ppo2,
+                      'tank_vol': self.tank_vol,
+                      'tank_pressure': self.tank_pressure,
+                      'mod': self.mod,
+                      'in_use': self.in_use,
+                      'total_gas': self.total_gas,
+                      'used_gas': self.used_gas,
+                      'remaining_gas': self.remaining_gas,
+                      'min_gas': self.min_gas,
+                      'tank_rule': self.tank_rule }
+
+        return json.dumps(tank_dict)
+
+    def loads_json(self, input_json):
+        """loads a json structure and update the tank object with the new
+        values.
+
+        This method can be used in http PUT method to update object
+        value
+
+        *Keyword arguments:*
+            :input_json: (string) -- the json structure to be loaded
+
+        *Returns:*
+            <none>
+
+        *Raise:*
+            * ValueError : if json is not loadable
+            * InvalidGas -- When proportions of gas exceed
+                      100% for example (or negatives values)
+            * InvalidMod -- if mod > max mod based on max_ppo2
+                            or ABSOLUTE_MAX_MOD.
+
+                            ABSOLUTE_MAX_MOD is a global settings which
+                            can not be exceeded.
+            * InvalidTank -- when pressure or tank size exceed maximum
+                      values or are incorrect (like negatives) values
+        """
+        if type(input_json) == str:
+            tank_dict = json.loads(input_json)
+        elif type(input_json) == dict:
+            tank_dict = input_json
+        else:
+            raise TypeError("json must be either str or dict (%s given"
+                            % type(input_json))
+
+        if tank_dict.has_key('given_name'):
+            self.given_name = tank_dict['given_name']
+        if tank_dict.has_key('f_o2'):
+            self.f_o2 = tank_dict['f_o2']
+        if tank_dict.has_key('f_he'):
+            self.f_he = tank_dict['f_he']
+        if tank_dict.has_key('f_n2'):
+            self.f_n2 = tank_dict['f_n2']
+        if tank_dict.has_key('max_ppo2'):
+            self.max_ppo2 = tank_dict['max_ppo2']
+        if tank_dict.has_key('tank_rule'):
+            self.tank_rule = tank_dict['tank_rule']
+        if tank_dict.has_key('total_gas'):
+            self.total_gas = tank_dict['total_gas']
+        if tank_dict.has_key('used_gas'):
+            self.used_gas = tank_dict['used_gas']
+        if tank_dict.has_key('remaining_gas'):
+            self.remaining_gas = tank_dict['remaining_gas']
+        if tank_dict.has_key('min_gas'):
+            self.min_gas = tank_dict['min_gas']
+        if tank_dict.has_key('mod'):
+            self.mod = tank_dict['mod']
+        if tank_dict.has_key('in_use'):
+            self.in_use = tank_dict['in_use']
+
+        if tank_dict.has_key('tank_vol'):
+            self.tank_vol = tank_dict['tank_vol']
+            # tank_vol has changed, need to recalculate total_gas etc..
+            self.total_gas = self.calculate_real_volume()
+            self.remaining_gas = self.total_gas - self.used_gas
+            self._set_min_gas()
+
+        if tank_dict.has_key('tank_pressure'):
+            self.tank_pressure = tank_dict['tank_pressure']
+            # tank_pressure has changed: need to recalculate total_gas, etc..
+            self.total_gas = self.calculate_real_volume()
+            self.remaining_gas = self.total_gas - self.used_gas
+            self._set_min_gas()
+
+        self._validate()
+
     def _calculate_mod(self, max_ppo2):
         """calculate and returns mod for a given ppo2 based on this tank info
         result in meter
@@ -512,6 +641,8 @@ class Tank(object):
         """
         if self.f_o2 + self.f_he > 1:
             raise InvalidGas("Proportion of O2+He is more than 100%")
+        if self.f_o2 + self.f_he + self.f_n2 != 1:
+            raise InvalidGas("Proportion of O2+He+N2 is not 100%")
         if self.f_o2 < 0 or self.f_he < 0 or self.f_n2 < 0:
             raise InvalidGas("Proportion of gas should not be < 0")
         if self.mod <= 0:

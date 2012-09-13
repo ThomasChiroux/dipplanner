@@ -307,7 +307,7 @@ class Dive(object):
         """Compare a dive to another dive, based on run_time
 
         *Keyword arguments:*
-            otherdive (Dive) -- another dive object
+            :otherdive: (Dive) -- another dive object
 
         *Returns:*
             Integer -- result of cmp()

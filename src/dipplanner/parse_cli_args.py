@@ -421,7 +421,8 @@ class DipplannerCliArguments(object):
                     max_ppo2=settings.DEFAULT_MAX_PPO2,
                     tank_vol=float(safe_eval_calculator(volume)),
                     tank_pressure=float(safe_eval_calculator(pressure)),
-                    tank_rule=rule)
+                    tank_rule=rule,
+                    given_name=name)
 
         if tanks == {}:
             # no tank provided, try to get the previous tanks

@@ -64,7 +64,7 @@ def activate_debug():
     LOGGER.setLevel(logging.DEBUG)
     # create file handler which logs even debug messages
     file_handler = logging.FileHandler("dipplanner.log")
-    file_handler.setLevel(logging.INFO)
+    file_handler.setLevel(logging.DEBUG)
     # create console handler with a higher log level
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.WARNING)
@@ -135,11 +135,7 @@ def main(cli_arguments=sys.argv):
     dipplanner_arguments = DipplannerCliArguments(cli_arguments)
     mission = dipplanner_arguments.mission
 
-    for dive in mission:
-        dive.do_dive_without_exceptions()
-
-    # now calculate no flight time based on the last dive
-    mission[-1].no_flight_time_wo_exception()
+    mission.calculate()
 
     # now Prepare the output
     env = Environment(loader=PackageLoader('dipplanner', 'templates'))

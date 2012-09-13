@@ -487,19 +487,26 @@ class DipplannerCliArguments(object):
         <nothing>
         """
         self.mission = Mission()
-        previous_dive = None
+        #previous_dive = None
+        for dive in self.dives:  # TODO: change 'dive' name here because it's actually not an instance of Dive object
+            current_dive = Dive(self.dives[dive]['segments'].values(),
+                                self.dives[dive]['tanks'].values())
+            if self.dives[dive]['surface_interval']:
+                current_dive.surface_interval = \
+                    self.dives[dive]['surface_interval']
+            self.mission.add_dive(current_dive)
 
-        for dive in self.dives:
-            if previous_dive is None:
-                current_dive = Dive(self.dives[dive]['segments'].values(),
-                                    self.dives[dive]['tanks'].values())
-                self.mission.add_dive(current_dive)
-            else:
-                current_dive = Dive(self.dives[dive]['segments'].values(),
-                                    self.dives[dive]['tanks'].values(),
-                                    previous_dive)
-                if self.dives[dive]['surface_interval']:
-                    current_dive=self.dives[dive]['surface_interval']
-                self.mission.add_dive(current_dive)
-            previous_dive = current_dive
 
+#            if previous_dive is None:
+#                current_dive = Dive(self.dives[dive]['segments'].values(),
+#                                    self.dives[dive]['tanks'].values())
+#                self.mission.add_dive(current_dive)
+#            else:
+#                current_dive = Dive(self.dives[dive]['segments'].values(),
+#                                    self.dives[dive]['tanks'].values(),
+#                                    previous_dive)
+#                if self.dives[dive]['surface_interval']:
+#                    current_dive.surface_interval = \
+#                        self.dives[dive]['surface_interval']
+#                self.mission.add_dive(current_dive)
+#            previous_dive = current_dive

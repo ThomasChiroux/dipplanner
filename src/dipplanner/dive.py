@@ -174,7 +174,7 @@ class Dive(object):
     * pp_o2 -- CCR ppO2, if OC : 0.0
     * is_closed_circuit -- Flag to store CC or OC
     * in_final_ascent -- flag for final ascent
-    * is_repetative_dive -- Flag for repetative dives
+    * is_repetative_dive -- Flag for repetitive dives
     * surface_interval -- for surf. int. in seconds
     * no_flight_time_value -- calculated no flight time
     * metadata -- description for the dive
@@ -216,14 +216,7 @@ class Dive(object):
                     InstanciationError("Unable to instanciate model"))
             self.metadata = ""
         else:
-            # repetative dive
-            self.is_repetitive_dive = True
-            self.model = previous_profile.model
-            try:
-                self.model.init_gradient()
-            except Exception:
-                self.dive_exceptions.append(
-                    InstanciationError("Unable to reset model gradients"))
+            self.set_repetitive(previous_profile)
 
         # filter input segment for only enabled segments
         self.input_segments = []
@@ -317,6 +310,27 @@ class Dive(object):
         """
         return cmp(self.run_time, otherdive.run_time)
 
+    def set_repetitive(self, previous_dive):
+        """Make this dive a repetitive dive by cloning the previous
+        model history into the current dive
+
+        *Keyword Arguments:*
+            :previous_dive: (Dive) -- previous dive profile
+
+        *Return:*
+            <nothing>
+
+        *Raise:*
+            <nothing>
+        """
+        self.model = copy.deepcopy(previous_dive.model)
+        self.is_repetitive_dive = True
+        try:
+            self.model.init_gradient()
+        except Exception:
+            self.dive_exceptions.append(
+                InstanciationError("Unable to reset model gradients"))
+
     def output(self, template=None):
         """Returns the dive profile calculated, using the template given
         in settings or command lines.
@@ -364,6 +378,8 @@ class Dive(object):
         except Exception:
             self.dive_exceptions.append(
                 ModelException("Unable to do surface interval"))
+        else:
+            self.logger.debug("Calculating surface interval of %s s" % time)
 
         self.surface_interval = time
 
@@ -791,6 +807,7 @@ class Dive(object):
             InfiniteDeco - if the no flight time can not achieve enough
                            decompression to be able to go to give altitude
         """
+        self.logger.debug("Calculating No flight time")
         no_flight_time = 0
         deco_uses_tank = False  # set to true when deco is using a tank
         # need to change gaz to air:

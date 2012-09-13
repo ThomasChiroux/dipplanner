@@ -168,3 +168,22 @@ class Mission(object):
                     raise TypeError("Bad Dive Type: %s " % type(dive))
         else:
             raise TypeError("Bad Dive Type: %s " % type(dive_or_divelist))
+
+    def calculate(self):
+        """Calculate all the decompression planning for all dives in this
+        mission
+
+        """
+        previous_dive = None
+        for dive in self.dives:
+            if previous_dive is not None:
+                # make a copy of the model, to keep the previous_dive
+                # model inchanged by further calculations
+                dive.set_repetitive(previous_dive)
+                dive.do_surface_interval()
+            dive.do_dive_without_exceptions()
+            previous_dive = dive
+
+        # now calculate no flight time based on the last dive
+        self.dives[-1].no_flight_time_wo_exception()
+

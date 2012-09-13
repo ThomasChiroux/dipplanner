@@ -27,6 +27,7 @@ __authors__ = [
 
 import math
 import logging
+
 # local imports
 from dipplanner import settings
 from dipplanner.model.buhlmann.model_exceptions import ModelStateException

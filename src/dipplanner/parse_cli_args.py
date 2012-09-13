@@ -400,14 +400,12 @@ class DipplannerCliArguments(object):
             settings.MULTILEVEL_MODE = True
 
         if args.automatictankrefill:
-            print "Automatic tank refill ====> %s" % args.automatictankrefill
             settings.AUTOMATIC_TANK_REFILL = True
 
         if args.notankrefill:
-            print "no tank refill ====> %s" % args.notankrefill
             settings.AUTOMATIC_TANK_REFILL = False
 
-    # try to find tank(s) and segment(s).
+        # try to find tank(s) and segment(s).
         # if found, add this dive to the (eventually) other dives defined
         # in config files.
         # this will be the last dive

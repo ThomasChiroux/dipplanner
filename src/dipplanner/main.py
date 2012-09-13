@@ -137,11 +137,6 @@ def main(cli_arguments=sys.argv):
 
     for dive in mission:
         dive.do_dive_without_exceptions()
-        #profiles.append(current_dive)
-        #previous_dive = current_dive
-        # now, dive exceptins do not stop the program anymore, but can be
-        # displayed in the output template instead. The used MUST take care of
-        # the result.
 
     # now calculate no flight time based on the last dive
     mission[-1].no_flight_time_wo_exception()

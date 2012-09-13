@@ -75,7 +75,73 @@ class Mission(object):
         """
         self.dives = []
         self.description = description
-        self.add_dive(dive_or_divelist)
+        if dive_or_divelist is not None:
+            self.add_dive(dive_or_divelist)
+
+    def __iter__(self):
+        """iterable
+
+        see :py:meth:`dipplanner.mission.Mission._forward` )
+        """
+        return self._forward()
+
+    def _forward(self):
+        """forward generator, used for iteration
+        """
+        current_item = 0
+        total_len = len(self.dives)
+        while current_item < total_len:
+            dive = self.dives[current_item]
+            current_item += 1
+            yield dive
+
+    def __len__(self):
+        """calculate and return len of Session object
+
+        usage example:
+
+          .. code-block:: python
+
+            print len(my_mission)
+
+        *Args:*
+          <none>
+
+        *Returns:*
+         :int: number of Dives in this mission
+        """
+        return len(self.dives)
+
+    def __getitem__(self, _slice):
+        """slice operator
+
+        usage examples:
+
+          .. code-block:: python
+
+              dive = my_mission[5]
+
+          .. code-block:: python
+
+              sublist = my_mission[2:8]
+
+          .. code-block:: python
+
+              sublist = my_mission[:5]
+
+          .. code-block:: python
+
+              sublist my_mission[-5:]
+
+        *returns:*
+          :Dive: Dive object
+
+        or
+
+          :list: a list of Dive objects if returns more than one value
+
+        """
+        return self.dives[_slice]
 
     def add_dive(self, dive_or_divelist):
         """add a Dive or a list of dive to the Mission
@@ -101,4 +167,4 @@ class Mission(object):
                 else:
                     raise TypeError("Bad Dive Type: %s " % type(dive))
         else:
-            raise TypeError("Bad Dive Type: %s " % type(dive))
+            raise TypeError("Bad Dive Type: %s " % type(dive_or_divelist))

@@ -491,15 +491,15 @@ class DipplannerCliArguments(object):
 
         for dive in self.dives:
             if previous_dive is None:
-                current_dive = Dive(dives[dive]['segments'].values(),
-                                    dives[dive]['tanks'].values())
+                current_dive = Dive(self.dives[dive]['segments'].values(),
+                                    self.dives[dive]['tanks'].values())
                 self.mission.add_dive(current_dive)
             else:
-                current_dive = Dive(dives[dive]['segments'].values(),
-                                    dives[dive]['tanks'].values(),
+                current_dive = Dive(self.dives[dive]['segments'].values(),
+                                    self.dives[dive]['tanks'].values(),
                                     previous_dive)
-                if dives[dive]['surface_interval']:
-                    current_dive=dives[dive]['surface_interval']
+                if self.dives[dive]['surface_interval']:
+                    current_dive=self.dives[dive]['surface_interval']
                 self.mission.add_dive(current_dive)
             previous_dive = current_dive
 

@@ -1,0 +1,208 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        ...
+    </generator>
+    <mediadata>
+        <video id="video_red-sea-2003">
+            <title>Red Sea 2003</title>
+            <objectname>rs2003.avi</objectname>
+        </video>
+        <video id="video_dive-and-sail-2004">
+            <title>Dive &amp; Sail 2004</title>
+            <objectname>dive-and-sail-2004.avi</objectname>
+        </video>
+    </mediadata>
+    <divesite>
+        <!-- FIRST, descriptions of all dive bases -->
+        <divebase id="db_deep-down">
+            <name>Deep Down</name>
+            <contact>
+                <email>info@deep-down-diving.com</email>
+                <homepage>http://www.deep-down-diving.com</homepage>
+            </contact>
+            <priceperdive currency="USD">40.00</priceperdive>
+            <pricedivepackage currency="USD" noofdives="10">350.00</pricedivepackage>
+            <guide>
+                <!-- dive guide already registered as <buddy>, therefore only cross-referencing here -->
+                <link ref="buddy_Georg"/>
+            </guide>
+            <guide>
+                <!-- 2. dive guide already described as <buddy> ... -->
+                <link ref="buddy_Hansi_the_airsucker"/>
+            </guide>
+            <rating>
+                <ratingvalue>7</ratingvalue>
+            </rating>
+        </divebase>
+        <!-- FOLLOWING, descriptions of all dive spots -->
+        <site id="site_Scapa_Brummer">
+            <!-- description of the first registered dive spot -->
+            <name>Brummer</name>
+            <geography>
+                <location>Scapa Flow</location>
+                <address>
+                    <province>Orkney Islands</province>
+                    <country>UK</country>
+                </address>
+                <!-- degree of latitude: North > 0 / South < 0 -->
+                <latitude>58.897222</latitude>
+                <!-- degree of longitude: East > 0 / West < 0 -->
+                <longitude>-3.1519444</longitude>
+                <altitude>0.0</altitude>
+            </geography>
+            <sitedata>
+                <maximumdepth>37.0</maximumdepth>
+                <density>1030.0</density>   <!-- salt water -->
+                <bottom>sandy ground</bottom>
+                <wreck id="wreck_Brummer">
+                    <name>SMS Brummer</name>
+                    <shiptype>light cruiser</shiptype>
+                    <nationality>German</nationality>
+                    <built>
+                        <shipyard>Vulcan, Stettin</shipyard>
+                        <launchingdate>
+                            <datetime>1916</datetime>
+                        </launchingdate>
+                    </built>
+                    <shipdimension>
+                        <length>140.0</length>
+                        <beam>13.0</beam>
+                        <draught>6.0</draught>
+                        <displacement>4.385E6</displacement>
+                    </shipdimension>
+                    <sunk>
+                        <datetime>1919-06-21T13:05</datetime>
+                    </sunk>
+                    <notes>
+                        <para>German high sea fleet</para>
+                    </notes>
+                </wreck>
+            </sitedata>
+            <notes>
+                <para>Really nice wreck dive!</para>
+            </notes>
+        </site>
+        <!-- more dive spots -->
+    </divesite>
+    <divetrip>
+        <!-- all documented dive trips are following -->
+        <trip id="trip_holiday2003">
+            <trippart type="hoteltrip, organizedtrip">
+                <name>Dive club travel to Red Sea 2003</name>
+                <dateoftrip startdate="2003-04-12" enddate="2003-04-19"/>
+                <geography>
+                    <location>Red Sea</location>
+                    <address>
+                        <city>Hurghada</city>
+                        <country>Egypt</country>
+                    </address>
+                </geography>
+                <accommodation>
+                    <name>Hotel 1000 and 1 Night</name>
+                    <category>hotel</category>
+                    <contact>
+                        <email>info@hotel-1000-and-1-night.com</email>
+                        <homepage>http://www.hotel-1000-and-1-night.com</homepage>
+                    </contact>
+                    <rating>
+                        <ratingvalue>6</ratingvalue>
+                    </rating>
+                </accommodation>
+                <link ref="db_deep-down"/>   <!-- dive base for all dives of this trip -->
+                <notes>
+                    <para>Nice dive holiday - if there only were less other divers...</para>
+                    <link ref="video_red-sea-2003"/>
+                </notes>
+            </trippart>
+        </trip>
+        <trip id="trip_holiday2004">
+            <trippart type="boattrip, individualtrip">
+                <name>Dive &amp; Sail 2004</name>
+                <dateoftrip startdate="2004-09-24" enddate="2004-10-03"/>
+                <geography>
+                    <province>Cote d'Azur</province>
+                    <country>France</country>
+                </geography>
+                <vessel>
+                    <name>Dorade</name>
+                    <shiptype>sailing ship</shiptype>
+                    <marina>Bormes les Mimosas</marina>
+                    <shipdimension>
+                        <!-- only these two data are known in this case -->
+                        <length>14.6</length>
+                        <beam>3.5</beam>
+                    </shipdimension>
+                </vessel>
+                <relateddives>
+                    <link ref="tg_530"/><link ref="tg_531"/><link ref="tg_532"/><link ref="tg_533"/>
+                    <link ref="tg_534"/><link ref="tg_535"/><link ref="tg_536"/><link ref="tg_537"/>
+                    <link ref="tg_538"/><link ref="tg_539"/><link ref="tg_540"/><link ref="tg_541"/>
+                </relateddives>
+                <notes>
+                    <para>Our motto: We dive, what others are dreaming of!!! :-)</para>
+                    <link ref="video_dive-and-sail-2004"/>
+                </notes>
+            </trippart>
+        </trip>
+        <trip id="trip_holiday2005">
+            <name>Dive club trip to Corse 2005</name>
+            <trippart type="boattrip, organizedtrip">
+                <name>Dive club trip to Corse 2005 - 1 week Galiote</name>
+                <dateoftrip startdate="2005-05-21" enddate="2005-05-28"/>
+                <geography>
+                    <location>Mediterranean Sea</location>
+                    <address>
+                        <country>Corse</country>
+                    </address>
+                </geography>
+                <vessel>
+                    <name>Galiote</name>
+                    <shiptype>motoryacht</shiptype>
+                    <!-- no other data available -->
+                </vessel>
+                <relateddives>
+                    <link ref="dive_580"/><link ref="dive_581"/><link ref="dive_582"/><link ref="dive_583"/>
+                    <link ref="dive_584"/><link ref="dive_585"/><link ref="dive_586"/><link ref="dive_587"/>
+                    <link ref="dive_588"/><link ref="dive_589"/><link ref="dive_590"/><link ref="dive_591"/>
+                </relateddives>
+                <notes>
+                    <para>Nice diving holiday with Günter and his crew!</para>
+                    <link ref="video_galiote2005"/>
+                </notes>
+            </trippart>
+            <trippart type="individualtrip">
+                <name>Dive club trip to Corse 2005 - 1 week campingground and dive club Nemo</name>
+                <dateoftrip startdate="2005-05-28" enddate="2005-06-05"/>
+                <geography>
+                    <address>
+                        <country>Corse</country>
+                    </address>
+                </geography>
+                <accommodation>
+                    <name>Camping Corse</name>
+                    <category>Camping</category>
+                    <contact>
+                        <email>info@camping-corse.com</email>
+                        <homepage>http://www.camping-corse.com</homepage>
+                    </contact>
+                    <rating>
+                        <ratingvalue>6</ratingvalue>
+                    </rating>
+                </accommodation>
+                <relateddives>
+                    <link ref="dive_592"/><link ref="dive_593"/><link ref="dive_594"/><link ref="dive_595"/>
+                    <link ref="dive_596"/><link ref="dive_597"/><link ref="dive_598"/><link ref="dive_599"/>
+                    <link ref="dive_600"/><link ref="dive_601"/><link ref="dive_602"/><link ref="dive_603"/>
+                </relateddives>
+                <notes>
+                    <para>Nice second week of the diving holiday!</para>
+                    <link ref="video_corse2005"/>
+                </notes>
+            </trippart>
+        </trip>
+    </divetrip>
+    <!-- here other sections, dive profiles, or data concerning  -->
+    <!-- generation of dive tables e.g., can be given            -->
+</uddf>

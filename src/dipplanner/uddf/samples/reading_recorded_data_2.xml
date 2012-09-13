@@ -1,0 +1,26 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>Dive Computer Configuration</name>
+        <manufacturer>
+            <name>Dive Heroes Company</name>
+            <address>
+                <!-- address data of manufacturer -->
+            </address>
+            <contact>
+                <!-- contact data of manufacturer -->
+            </contact>
+        </manufacturer>
+        <version>2.71828</version>
+        <datetime>2006-05-14</datetime>
+    </generator>
+    <!-- other sections are meaningless in this context and will be ignored by dive computers -->
+    <divecomputercontrol>
+        <getdcdata>
+            <!-- download only breathing gas definitions, and profile data -->
+            <getdcgasdefinitionsdata/>
+            <getdcprofiledata/>
+        </getdcdata>
+    </divecomputercontrol>
+</uddf>

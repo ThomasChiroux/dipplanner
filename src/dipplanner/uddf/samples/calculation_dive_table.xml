@@ -1,0 +1,255 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>DSTG - Diver's Super Table Generator</name>
+        <manufacturer>Dive Heroes Company</manufacturer>
+        <manufacturer>
+            <name>Dive Heroes Company</name>
+            <address>
+                <!-- address data of manufacturer -->
+            </address>
+            <contact>
+                <!-- contact data of manufacturer -->
+            </contact>
+        </manufacturer>
+        <version>2.23607</version>
+        <datetime>2007-09-20</datetime>
+    </generator>
+    <gasdefinitions>
+        <mix id="air">
+            <name>air</name>
+            <o2>0.210</o2>
+            <n2>0.790</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <mix id="noaa1">
+            <name>NOAA1</name>  <!-- 32 % O2, 68 % N2 -->
+            <o2>0.320</o2>
+            <n2>0.680</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <!-- <tankdata> is omitted, because a breathing gas consumption -->
+        <!-- calculation is not performed when generating a table -->
+    </gasdefinitions>
+    <profiledata>
+        <repetitiongroup id="rg1">
+            <dive id="dive1">
+                <!-- here all dive profile data -->
+            </dive>
+            <!-- here can be stored more dive profiles -->
+        </repetitiongroup>
+        <!-- here all other recorded dive profiles -->
+    </profiledata>
+    <tablegeneration>
+        <!-- in this case dive tables shall be generated -->
+        <calculatetable>
+            <!-- the first table shall be calculated for air as breathing gas, -->
+            <!-- tissues are saturated concerning ambient pressure (here: sea level) -->
+            <table id="table_air_no-prev-saturation_0m">
+                <link ref="air"/>
+                <surfaceintervalbeforedive>
+                    <infinity/>
+                </surfaceintervalbeforedive>
+                <density>1030.0</density>
+                <!-- statements for the output to be generated -->
+                <output>
+                    <!-- language: English -->
+                    <lingo>en</lingo>
+                    <!-- a HTML file shall be generated -->
+                    <fileformat>html</fileformat>
+                    <!-- the name of the output file (the extension ".html" MUST NOT be given) -->
+                    <filename>table_air_no-prev-saturation_0m</filename>
+                    <!-- a headline for the table -->
+                    <headline>Table for air, no previous saturation, sea level</headline>
+                    <!-- additional remarks, to be inserted as text into the output file -->
+                    <remark>Calculated on basis of the ZH-L16c deco model</remark>
+                </output>
+                <applicationdata>
+                    <!-- here additional parameters for the executing software -->
+                </applicationdata>
+                <decomodel>ZH-L16c</decomodel>
+                <!-- maximum ascent velocity 10 m/min ^= 0.1666... m/s -->
+                <maximumascendingrate>0.16666666667</maximumascendingrate>
+                <!-- the following parameters all MUST BE GIVEN -->
+                <tablescope>
+                    <!-- sea level -->
+                    <altitude>0.0</altitude>
+                    <!-- shallowest depth 9 m to begin with table output -->
+                    <divedepthbegin>9.0</divedepthbegin>
+                    <!-- deepest depth 65 m to end with table output -->
+                    <divedepthend>65.0</divedepthend>
+                    <!-- increment 3 m for table output -->
+                    <divedepthstep>3.0</divedepthstep>
+                    <!-- maximum bottom time to be considered for table output 30 minutes -->
+                    <bottomtimemaximum>1800.0</bottomtimemaximum>
+                    <!-- minimal bottom time to be considered for table output 5 minutes -->
+                    <bottomtimeminimum>300.0</bottomtimeminimum>
+                    <!-- at beginning (at shallowest depth) increment 25 minutes -->
+                    <bottomtimestepbegin>1500.0</bottomtimestepbegin>
+                    <!-- increment 1 minute at deepest depth -->
+                    <bottomtimestepend>60.0</bottomtimestepend>
+                </tablescope>
+            </table>
+            <!-- the second table shall be calculated for nitrox (NOAA1) as breathing gas, -->
+            <!-- tissues are saturated concerning ambient pressure (here: sea level) -->
+            <table id="table_noaa1_no-prev-saturation_0m">
+                <link ref="noaa1"/>
+                <surfaceintervalbeforedive>
+                    <infinity/>
+                </surfaceintervalbeforedive>
+                <density>1030.0</density>
+                <!-- statements for the output to be generated -->
+                <output>
+                    <!-- language: English -->
+                    <lingo>en</lingo>
+                    <!-- a HTML file shall be generated -->
+                    <fileformat>html</fileformat>
+                    <!-- the name of the output file (the extension ".html" MUST NOT be given) -->
+                    <filename>table_noaa1_no-prev-saturation_0m</filename>
+                    <!-- a headline for the table -->
+                    <headline>Table for nitrox NOAA1, no previous saturation, sea level</headline>
+                    <!-- additional remarks, to be inserted as text into the output file -->
+                    <remark>Calculated on basis of the ZH-L16c deco model</remark>
+                </output>
+                <applicationdata>
+                    <!-- here additional parameters for the executing software -->
+                </applicationdata>
+                <decomodel>ZH-L16c</decomodel>
+                <!-- maximum ascent velocity 10 m/min ^= 0.1666... m/s -->
+                <maximumascendingrate>0.16666666667</maximumascendingrate>
+                <!-- the following parameters all MUST BE GIVEN -->
+                <tablescope>
+                    <!-- sea level -->
+                    <altitude>0.0</altitude>
+                    <!-- shallowest depth 9 m to begin with table output -->
+                    <divedepthbegin>9.0</divedepthbegin>
+                    <!-- deepest depth 65 m to end with table output -->
+                    <divedepthend>65.0</divedepthend>
+                    <!-- increment 3 m for table output -->
+                    <divedepthstep>3.0</divedepthstep>
+                    <!-- maximum bottom time to be considered for table output 30 minutes -->
+                    <bottomtimemaximum>1800.0</bottomtimemaximum>
+                    <!-- minimal bottom time to be considered for table output 5 minutes -->
+                    <bottomtimeminimum>300.0</bottomtimeminimum>
+                    <!-- at beginning (at shallowest depth) increment 25 minutes -->
+                    <bottomtimestepbegin>1500.0</bottomtimestepbegin>
+                    <!-- increment 1 minute at deepest depth -->
+                    <bottomtimestepend>60.0</bottomtimestepend>
+                </tablescope>
+            </table>
+            <!-- the third table again shall be calculated for air as breathing gas, but now -->
+            <!-- tissues are saturated on basis of a previously made dive -->
+            <table id="table_air_with-prev-saturation_0m">
+                <link ref="air"/>
+                <link ref="dive1"/>
+                <!-- a surface interval of two hours shall be taken into account between -->
+                <!-- the previous dive (cross-referenced above) and the next one for -->
+                <!-- which the table is to be calculated -->
+                <surfaceintervalbeforedive>
+                    <passedtime>7200.0</passedtime>
+                </surfaceintervalbeforedive>
+                <density>1030.0</density>
+                <!-- statements for the output to be generated -->
+                <output>
+                    <!-- language: English -->
+                    <lingo>en</lingo>
+                    <!-- a HTML file shall be generated -->
+                    <fileformat>html</fileformat>
+                    <!-- the name of the output file (the extension ".html" MUST NOT be given) -->
+                    <filename>table_air_with-prev-saturation_0m</filename>
+                    <!-- a headline for the table -->
+                    <headline>Table for air, with previous saturation, sea level</headline>
+                    <!-- additional remarks, to be inserted as text into the output file -->
+                    <remark>
+                        Calculated on basis of the ZH-L16c deco model; for comparison purposes with
+                        a dive ended two hours before
+                    </remark>
+                </output>
+                <applicationdata>
+                    <!-- here additional parameters for the executing software -->
+                </applicationdata>
+                <decomodel>ZH-L16c</decomodel>
+                <!-- maximum ascent velocity 10 m/min ^= 0.1666... m/s -->
+                <maximumascendingrate>0.16666666667</maximumascendingrate>
+                <!-- the following parameters all MUST BE GIVEN -->
+                <tablescope>
+                    <!-- sea level -->
+                    <altitude>0.0</altitude>
+                    <!-- shallowest depth 9 m to begin with table output -->
+                    <divedepthbegin>9.0</divedepthbegin>
+                    <!-- deepest depth 65 m to end with table output -->
+                    <divedepthend>65.0</divedepthend>
+                    <!-- increment 3 m for table output -->
+                    <divedepthstep>3.0</divedepthstep>
+                    <!-- maximum bottom time to be considered for table output 30 minutes -->
+                    <bottomtimemaximum>1800.0</bottomtimemaximum>
+                    <!-- minimal bottom time to be considered for table output 5 minutes -->
+                    <bottomtimeminimum>300.0</bottomtimeminimum>
+                    <!-- at beginning (at shallowest depth) increment 25 minutes -->
+                    <bottomtimestepbegin>1500.0</bottomtimestepbegin>
+                    <!-- increment 1 minute at deepest depth -->
+                    <bottomtimestepend>60.0</bottomtimestepend>
+                </tablescope>
+            </table>
+            <!-- the fourth table shall be calculated for nitrox (NOAA1) as breathing gas, and -->
+            <!-- tissues are saturated on basis of a previously made dive -->
+            <table id="table_noaa1_with-prev-saturation_0m">
+                <link ref="noaa1"/>
+                <link ref="dive1"/>
+                <!-- a surface interval of two hours shall be taken into account between -->
+                <!-- the previous dive (cross-referenced above) and the next one for -->
+                <!-- which the table is to be calculated -->
+                <surfaceintervalbeforedive>
+                    <passedtime>7200.0</passedtime>
+                </surfaceintervalbeforedive>
+                <density>1030.0</density>
+                <!-- statements for the output to be generated -->
+                <output>
+                    <!-- language: English -->
+                    <lingo>en</lingo>
+                    <!-- a HTML file shall be generated -->
+                    <fileformat>html</fileformat>
+                    <!-- the name of the output file (the extension ".html" MUST NOT be given) -->
+                    <filename>table_noaa1_with-prev-saturation_0m</filename>
+                    <!-- a headline for the table -->
+                    <headline>Table for nitrox NOAA1, with previous saturation, sea level</headline>
+                    <!-- additional remarks, to be inserted as text into the output file -->
+                    <remark>
+                        Calculated on basis of the ZH-L16c deco model; for comparison purposes with
+                        a dive ended two hours before
+                    </remark>
+                </output>
+                <applicationdata>
+                    <!-- here additional parameters for the executing software -->
+                </applicationdata>
+                <decomodel>ZH-L16c</decomodel>
+                <!-- maximum ascent velocity 10 m/min ^= 0.1666... m/s -->
+                <maximumascendingrate>0.16666666667</maximumascendingrate>
+                <!-- the following parameters all MUST BE GIVEN -->
+                <tablescope>
+                    <!-- sea level -->
+                    <altitude>0.0</altitude>
+                    <!-- shallowest depth 9 m to begin with table output -->
+                    <divedepthbegin>9.0</divedepthbegin>
+                    <!-- deepest depth 65 m to end with table output -->
+                    <divedepthend>65.0</divedepthend>
+                    <!-- increment 3 m for table output -->
+                    <divedepthstep>3.0</divedepthstep>
+                    <!-- maximum bottom time to be considered for table output 30 minutes -->
+                    <bottomtimemaximum>1800.0</bottomtimemaximum>
+                    <!-- minimal bottom time to be considered for table output 5 minutes -->
+                    <bottomtimeminimum>300.0</bottomtimeminimum>
+                    <!-- at beginning (at shallowest depth) increment 25 minutes -->
+                    <bottomtimestepbegin>1500.0</bottomtimestepbegin>
+                    <!-- increment 1 minute at deepest depth -->
+                    <bottomtimestepend>60.0</bottomtimestepend>
+                </tablescope>
+            </table>
+        </calculatetable>
+    </tablegeneration>
+</uddf>

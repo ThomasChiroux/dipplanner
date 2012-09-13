@@ -1,0 +1,94 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>MGT</name>
+        <manufacturer>
+            <name>Kai Schröder</name>
+        </manufacturer>
+        <version>0.6</version>
+        <datetime>2004-09-30</datetime>
+    </generator>
+    <gasdefinitions>
+        <!-- only air is to be used for this calculation -->
+        <mix id="Air">
+            <name>air</name>
+            <o2>0.210</o2>
+            <n2>0.790</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+    </gasdefinitions>
+    <profiledata>
+        <!-- all recorded dive profiles - here none is necessary -->
+    </profiledata>
+    <tablegeneration>
+        <calculatebottomtimetable>
+            <bottomtimetable id="DECO2000">
+                <link ref="deco2000"/>
+                <output>
+                    <!-- output language is set to "German" -->
+                    <lingo>de</lingo>
+                    <!-- format of output, in this case ASCII -->
+                    <fileformat>ascii</fileformat>
+                    <!-- name of output file -->
+                    <filename>mgt_deco2000</filename>
+                    <!-- headline for table to be calculated -->
+                    <headline>Tabelle fuer   0 m bis  700 muedM (DECO 2000)</headline>
+                    <!-- remarks added to the table output -->
+                    <remark>
+                        Maximale Grundzeit in Minuten bei verschiedenen Flaschenvolumina,
+                        Tauchtiefen und Atemminutenvolumen (AMV)
+                        unter Beruecksichtigung von notwendigen Dekompressionsstopps
+
+                        Wird die Nullzeit bei einem Tauchgang ueberschritten, so wird der
+                        max. Grundzeit ein "d" (fuer Deko-Tauchgang) vorangestellt.
+
+                        Ist die maximale Grundzeit laenger als die Nullzeit, aber dafuer
+                        in der Tabelle kein Dekostopp angegeben, so wird die Nullzeit als
+                        maximale Grundzeit angegeben und dieser ein "s" (fuer "Sicher-
+                        heitsstopp") vorangestellt. In diesem Fall obliegt es dem Taucher,
+                        einen Sicherheitsstopp von z.B. 3 min auf 5 m (oder laenger) zu machen.
+
+                        Muss die maximale Grundzeit auf die laengste in der Tabelle enthaltene
+                        Grundzeit gesetzt werden (weil fuer laengere Grundzeiten keine
+                        Dekostopps mehr berechnet wurden), wird dem Wert ein "t"
+                        vorangestellt. In diesem Fall ist die theoretisch moegliche maximale
+                        Grundzeit laenger als die angegebene, aber dafuer existieren keine
+                        Dekostopp-Angaben mehr.
+
+                        Grundzeiten berechnet mit Hilfe der Austauchtabelle DECO 2000
+                        (0 -- 700 muedM) von Max Hahn; Aufstiegsgeschwindigkeit 10 m/min
+                    </remark>
+                </output>
+                <bottomtimetablescope>
+                    <!-- shallowest depth: 5 m -->
+                    <divedepthbegin>5.0</divedepthbegin>
+                    <!-- deepest depth: 60 m -->
+                    <divedepthend>60.0</divedepthend>
+                    <!-- increment for depth: 5 m -->
+                    <divedepthstep>5.0</divedepthstep>
+                    <!-- table is to be calculated for different breathing gas consumption values, ... -->
+                    <!-- beginning with a BCV of 10 l/min -->
+                    <breathingconsumptionvolumebegin>0.00016666667</breathingconsumptionvolumebegin>
+                    <!-- end at 30 l/min -->
+                    <breathingconsumptionvolumeend>0.0005</breathingconsumptionvolumeend>
+                    <!-- increment 5 l/min -->
+                    <breathingconsumptionvolumestep>8.3333333e-5</breathingconsumptionvolumestep>
+                    <!-- ... and also for different tank volumes... -->
+                    <!-- beginning with a tank volume of 10 litres ^= 0.01 m^3 -->
+                    <tankvolumebegin>0.01</tankvolumebegin>
+                    <!-- end at 20 litres -->
+                    <tankvolumeend>0.02</tankvolumeend>
+                    <!-- increment 5 litres -->
+                    <tankvolumestep>0.005</tankvolumestep>
+                    <!-- fill pressure at beginning of each dive 200 bar -->
+                    <tankpressurebegin>20000000.0</tankpressurebegin>
+                    <!-- reserve pressure at end to be considered (40 bar) - not to be used -->
+                    <tankpressurereserve>40000.0</tankpressurereserve>
+                </bottomtimetablescope>
+            </bottomtimetable>
+        </calculatebottomtimetable>
+    </tablegeneration>
+</uddf>

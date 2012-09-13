@@ -1,0 +1,202 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>DSL - Diver's Super Logbook</name>
+        <type>logbook</type>
+        <manufacturer>
+            <name>Dive Heroes Company</name>
+            <address>
+                <!-- address data of manufacturer -->
+            </address>
+            <contact>
+                <!-- contact data of manufacturer -->
+            </contact>
+        </manufacturer>
+        <version>3.14159</version>
+        <datetime>2004-09-30</datetime>
+    </generator>
+    <mediadata>
+        <image id="img_flatfeet">
+            <title>Arno's flatfeet...</title>
+            <objectname>flatfeet.jpg</objectname>
+        </image>
+    </mediadata>
+    <diver>
+        <!-- first all own data are given (which are wished) ... -->
+        <owner id="owner_arno">
+            <!-- description of the owner of the UDDF file -->
+            <!-- (so the own data are to be given here)    -->
+            <personal>
+                <firstname>Arno</firstname>
+                <middlename>Albert</middlename>
+                <lastname>Alzheimer</lastname>
+                <honorific>Dr.</honorific>
+                <sex>male</sex>
+                <birthdate>
+                    <datetime>1919-02-30</datetime>
+                </birthdate>
+                <passport>987654321</passport>
+                <height>1.8</height>
+                <weight>86.0</weight>
+                <smoking>0</smoking>
+                <bloodgroup>A</bloodgroup>
+                <numberofdives timeinterval="P13Y/2006-02-16" dives="1234"/>
+                <membership organisation="VDST/CMAS" memberid="123456"/>
+            </personal>
+            <address>
+                <street>Auf der Heide 12</street>
+                <city>Aheim</city>
+                <postcode>12345</postcode>
+                <country>Deutschland</country>
+                <!-- province is omitted -->
+            </address>
+            <contact>
+                <language>deutsch</language>
+                <phone>01234/567890</phone>
+                <email>arno@arno-alzheimer.org</email>
+                <homepage>http://www.tieftauchen.info/arno</homepage>
+            </contact>
+            <medical>
+                <examination>
+                    <datetime>2003-04-12</datetime>
+                    <doctor id="doctorDusel">
+                        <personal>
+                            <firstname>Dirk</firstname>
+                            <lastname>Dusel</lastname>
+                            <honorific>Dr.</honorific>
+                            <sex>male</sex>
+                            <birthdate>
+                                <!-- if date of birthdate is known, it can be given here... -->
+                            </birthdate>
+                        </personal>
+                        <address>
+                            <street>Duddelstr. 34</street>
+                            <city>Dortmund</city>
+                            <postcode>54321</postcode>
+                            <country>Deutschland</country>
+                            <province>Nordrhein-Westfalen</province>
+                        </address>
+                        <contact>
+                            <language>deutsch</language>
+                            <phone>01234/987654</phone>
+                            <!-- neither email address nor homepage is known (no entries here) -->
+                        </contact>
+                    </doctor>
+                    <examinationresult>passed</examinationresult>
+                    <notes>
+                        <para>
+                            Flatfeet don't seem to affect dive fitness :-)
+                        </para>
+                        <link ref="img_flatfeet"/>
+                    </notes>
+                </examination>
+                <examination>
+                    <datetime>2004-04-20</datetime>
+                    <!-- following a reference to the practising doctor, -->
+                    <!-- the data are already given above                -->
+                    <link ref="doctorDusel"/>
+                    <examinationresult>passed</examinationresult>
+                </examination>
+            </medical>
+            <education>
+                <!-- all levels of the owner's dive education -> several -->
+                <!-- <certification> elements one after the other     -->
+                <certification>
+                    <level>Bronze</level>
+                    <organisation>VDST/CMAS</organisation>
+                    <!-- because data of the then dive instructor were not -->
+                    <!-- registered in an UDDF file, no reference via      -->
+                    <!-- <link ref="..."/> can be made here             -->
+                    <issuedate>
+                        <datetime>1994-03-15</datetime>
+                    </issuedate>
+                </certification>
+                <certification>
+                    <specialty>Orientation</specialty>
+                    <organisation>VDST/CMAS</organisation>
+                    <!-- because data of the then dive instructor were not -->
+                    <!-- registered in an UDDF file, no reference via      -->
+                    <!-- <link ref="..."/> can be made here             -->
+                    <issuedate>
+                        <datetime>1994-03-15</datetime>
+                    </issuedate>
+                </certification>
+                <certification>
+                    <level>Silver</level>
+                    <organisation>VDST/CMAS</organisation>
+                    <!-- because data of the then dive instructor were not -->
+                    <!-- registered in an UDDF file, no reference via      -->
+                    <!-- <link ref="..."/> can be made here             -->
+                    <issuedate>
+                        <datetime>1997-11-26</datetime>
+                    </issuedate>
+                </certification>
+                <certification>
+                    <level>Gold</level>
+                    <organisation>VDST/CMAS</organisation>
+                    <!-- because data of the then dive instructor were not -->
+                    <!-- registered in an UDDF file, no reference via      -->
+                    <!-- <link ref="..."/> can be made here             -->
+                    <issuedate>
+                        <datetime>2000-05-10</datetime>
+                    </issuedate>
+                </certification>
+            </education>
+            <divepermissions>
+                <!-- here any number of dive permissions can be listed -->
+                <permit>
+                    <name>DiveCard</name>
+                    <region>Austria</region>
+                    <issuedate>
+                        <datetime>2004-08-24</datetime>
+                    </issuedate>
+                    <validdate>
+                        <datetime>2005-08-23</datetime>
+                    </validdate>
+                </permit>
+                <permit>
+                    <name>Zeeland</name>
+                    <region>Zeeland (The Netherlands)</region>
+                    <issuedate>
+                        <datetime>1996-09-03</datetime>
+                    </issuedate>
+                    <validdate>
+                        <datetime>2001-08-31</datetime>
+                    </validdate>
+                </permit>
+                <!-- here more dive permissions if necessary -->
+            </divepermissions>
+            <!-- because no additional dive insurances have been signed -->
+            <!-- <diveinsurances>...</diveinsurances> is neglected here -->
+        </owner>
+        <!-- ... and now follow the data of all dive buddies -->
+        <buddy id="buddy_bertie_the_airsucker">
+            <!-- data of the first dive buddy -->
+            <personal>
+                <firstname>Bertie</firstname>
+                <lastname>Bammel</lastname>
+            </personal>
+            <!-- no address data given - <address>...</address> is dropped -->
+            <contact>
+                <email>airsucker@deepdiving.info</email>
+                <homepage>http://www.deepdiving.info/bertie</homepage>
+            </contact>
+        </buddy>
+        <buddy id="buddyCarl">
+            <!-- description of another dive buddy -->
+            <personal>
+                <firstname>Carl</firstname>
+                <lastname>Cabuff</lastname>
+            </personal>
+            <!-- address data not known - <address>...</address> is dropped -->
+            <contact>
+                <email>lurchi@abcde.com</email>
+                <homepage>http://www.deepdiving.info/carl</homepage>
+            </contact>
+        </buddy>
+        <!-- here more descriptions of other dive buddies can be inserted -->
+    </diver>
+    <!-- here other sections, dive profiles, or data concerning  -->
+    <!-- generation of dive tables e.g., can be given            -->
+</uddf>

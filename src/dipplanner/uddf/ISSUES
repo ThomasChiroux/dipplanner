@@ -1,0 +1,27 @@
+sample fixes:
+
+sur http://www.streit.cc/extern/uddf_v310/en/examples_dive-profiles.html
+balises ip non fermées dans balise tausim
+
+http://www.streit.cc/extern/uddf_v310/en/examples.html#s2_taucherdaten
+balise birthdate pas fermée (2 occurrences)
+                <membership organisation=="VDST/CMAS" memberid="123456"/>
+=> 		
+                <membership organisation="VDST/CMAS" memberid="123456"/>
+
+
+http://www.streit.cc/extern/uddf_v310/en/examples.html#s2_tauchplatzbeschreibungen
+</trip"> (2 occcurences) => </trip>
+balise title fermée par <title> au lieu de </title>
+
+
+& => &amp;
+
+
+on xsd:
+minoccur everywhere, what about maxoccurs ? (for instance on gasdefinitions)
+
+
+tankdata: if volume is empty and no tank defined => allowed by the XSD
+
+example breathing: tankbeginpressure trop haute pour nitrox

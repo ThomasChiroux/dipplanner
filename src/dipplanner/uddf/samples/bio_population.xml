@@ -1,0 +1,159 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+    </generator>
+    <mediadata>
+        <image id="img_red_gorgonia">
+            <objectname>red_gorgonia.jpg</objectname>
+            <!-- Additionally, information about specific image data can be given -->
+            <!-- here inside <imagedata> (for example aperture, shutter speed, exposure -->
+            <!-- compensation, focal length of lens, date and time). -->
+            <!-- (of course, this is possible for all below listed images) -->
+        </image>
+        <image id="img_spiny-starfish"><objectname>spiny-starfish.jpg</objectname></image>
+        <image id="img_5_groupers"><objectname>5_groupers.jpg</objectname></image>
+        <image id="img_sea-lettuce_rainbow-wrasse"><objectname>sea-lettuce_rainbow-wrasse.jpg</objectname></image>
+        <image id="img_heinz_close_to_3_groupers"><objectname>heinz_close_to_3_groupers.jpg</objectname></image>
+        <image id="img_portrait_red-scorpionfish"><objectname>portrait_red-scorpionfish.jpg</objectname></image>
+        <video id="video_shallow_040928"><objectname>shallow_040928.avi</objectname></video>
+    </mediadata>
+    <divesite>
+        <!-- description of all dive spots -->
+        <site id="site_Shallow_south_of_Gabiniere">
+            <name>Shallow to the south of Ilot de la Gabiniere</name>
+            <geography>
+                <location>Ilot de la Gabiniere</location>
+                <address>
+                    <province>Cote d'Azur</province>
+                    <country>France</country>
+                </address>
+                <!-- degree of latitude, and longitude, unknown -->
+                <altitude>0.0</altitude>
+            </geography>
+            <ecology>
+                <!-- listing of typically seen plants, and animals respectively -->
+                <fauna>
+                    <invertebrata>            <!-- invertebrates -->
+                        <porifera>                <!-- sponges -->
+                            <species>
+                                <trivialname>Kidney sponge</trivialname>
+                                <scientificname>Chondrosia reniformis</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Orange-red encrusting sponge</trivialname>
+                                <scientificname>Crambe crambe</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Bluish encrusting sponge</trivialname>
+                                <scientificname>Anchinoe</scientificname>
+                            </species>
+                        </porifera>
+                        <cnidaria>                <!-- cnidarians -->
+                            <species>
+                                <trivialname>Purple gorgonian</trivialname>
+                                <scientificname>Paramuricea clavata (chamaeleon)</scientificname>
+                            </species>
+                        </cnidaria>
+                        <ascidiacea>              <!-- seasquirts -->
+                            <species>
+                                <trivialname>Red seasquirt</trivialname>
+                                <scientificname>Halocynthia papillosa</scientificname>
+                            </species>
+                        </ascidiacea>
+                        <echinodermata>           <!-- echinoderms -->
+                            <species>
+                                <trivialname>Purple Starfish</trivialname>
+                                <scientificname>Echinaster sepositus</scientificname>
+                            </species>
+                        </echinodermata>
+                    </invertebrata>
+                    <vertebrata>              <!-- vertebrates -->
+                        <osteichthyes>        <!-- bony fishes -->
+                            <species>
+                                <trivialname>Moray-eel</trivialname>
+                                <scientificname>Muraena helena</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Grouper</trivialname>
+                                <scientificname>Epinephelus guaza</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Striped grouper</trivialname>
+                                <scientificname>Epinephelus alexandrinus</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Red damselfish</trivialname>
+                                <scientificname>Anthias anthias</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Damselfish</trivialname>
+                                <scientificname>Chromis chromis</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Rainbow wrasse</trivialname>
+                                <scientificname>Coris julis</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Two-banded bream</trivialname>
+                                <scientificname>Diplodus vulgaris</scientificname>
+                            </species>
+                            <species>
+                                <trivialname>Toothed sparus</trivialname>
+                                <scientificname>Oblada melanura</scientificname>
+                            </species>
+                             <species>
+                                <trivialname>Peacock wrasse</trivialname>
+                                <scientificname>Symphodus tinca</scientificname>
+                            </species>
+                        </osteichthyes>
+                    </vertebrata>
+                </fauna>
+                <flora>
+                    <rhodophyceae>      <!-- red algae -->
+                        <species>
+                            <trivialname>Peyssonnelia</trivialname>
+                            <scientificname>Peyssonnelia squamaria</scientificname>
+                        </species>
+                    </rhodophyceae>
+                    <chlorophyceae>     <!-- green algae -->
+                        <species>
+                            <trivialname>Sea lettuce</trivialname>
+                            <scientificname>Ulva rigida</scientificname>
+                        </species>
+                        <species>
+                            <trivialname>Ball alga</trivialname>
+                            <scientificname>Codium bursa</scientificname>
+                        </species>
+                    </chlorophyceae>
+                </flora>
+            </ecology>
+            <sitedata>
+                <minimumdepth>18.0</minimumdepth>
+                <maximumdepth>32.0</maximumdepth>
+                <arealength>20.0</arealength>         <!-- length of examined rock -->
+                <areawidth>8.0</areawidth>            <!-- width of rock -->
+                <!-- (from the above given four values a volume can be calculated, if necessary) -->
+                <density>1030.0</density>             <!-- salt water -->
+                <bottom>rocks</bottom>
+             </sitedata>
+            <notes>
+                <para>
+                    First class dive spot! Due to currents often difficult to dive. Access either via
+                    blue water descent from boat, or - with excellent knowledge of the topography! -
+                    diving from the southern tip of Ilot de la Gabiniere in southwest direction.
+                    Narrow, long ridge, both sides like steep walls. Dense growing of algae, sponges,
+                    and gorgonians. Many fishes, first of all many groupers.
+                </para>
+                <link ref="img_red_gorgonia"/>
+                <link ref="img_spiny-starfish"/>
+                <link ref="img_5_groupers"/>
+                <link ref="img_sea-lettuce_rainbow-wrasse"/>
+                <link ref="img_heinz_close_to_3_groupers"/>
+                <link ref="img_portrait_red-scorpionfish"/>
+                <link ref="video_shallow_040928"/>
+            </notes>
+        </site>
+    </divesite>
+    <!-- more dive spots -->
+</uddf>

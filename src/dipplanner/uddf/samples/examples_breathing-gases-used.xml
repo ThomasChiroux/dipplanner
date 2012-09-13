@@ -1,0 +1,159 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>DSL - Diver's Super Logbook</name>
+        <manufacturer>
+            <name>Dive Heroes Company</name>
+            <address>
+                <!-- address data of manufacturer -->
+            </address>
+            <contact>
+                <!-- contact data of manufacturer -->
+            </contact>
+        </manufacturer>
+        <version>3.14159</version>
+        <datetime>2004-09-30</datetime>
+    </generator>
+    <mediadata>
+        <image id="img_steeltank_new">
+            <title>my new steel tank</title>
+            <objectname>steeltank_new.jpg</objectname>
+            <imagedata>
+                <!-- date when photo was taken -->
+                <datetime>2001-05-02</datetime>
+            </imagedata>
+        </image>
+        <image id="img_steeltank_2_years_later">
+            <title>my 2 years old steel tank</title>
+            <objectname>steeltank_2_years_later.jpg</objectname>
+            <imagedata>
+                <!-- date when photo was taken -->
+                <datetime>2003-07-06</datetime>
+            </imagedata>
+        </image>
+    </mediadata>
+    <diver>
+        <owner>
+            <!-- description of the owner of the UDDF file -->
+            <personal>
+                <!-- personal data (name etc.) -->
+            </personal>
+            <address>
+                <!-- address data ... -->
+            </address>
+            <!-- here more data of the owner -->
+            <equipment>
+                <!-- listing of the owner's equipment -->
+                ...
+                <tank id="tank_1">
+                    <name>favourite tank</name>
+                    <manufacturer>
+                        <name>Super tank manufacturer</name>
+                        <address>
+                            <!-- address data of manufacturer -->
+                        </address>
+                        <contact>
+                            <!-- contact data of manufacturer -->
+                        </contact>
+                    </manufacturer>
+                    <model>As hard as steel</model>
+                    <serialnumber>12345</serialnumber>
+                    <purchase>
+                        <datetime>
+                            <!-- date of purchase of tank -->
+                        </datetime>
+                        <price currency="DM">250.00</price>
+                        <shop>
+                            <!-- information concerning the shop, where the tank was bought -->
+                        </shop>
+                    </purchase>
+                    <nextservicedate>
+                        <!-- date of next proof by safety standards authority -->
+                    </nextservicedate>
+                    <tankmaterial>steel</tankmaterial>    <!-- steel tank -->
+                    <tankvolume>0.015</tankvolume>        <!-- 15 litres -->
+                    <notes>
+                        <link ref="img_steeltank_new"/>
+                        <link ref="img_steeltank_2_years_later"/>
+                    </notes>
+                </tank>
+                <!-- here more tank descriptions can be inserted -->
+            </equipment>
+        </owner>
+    </diver>
+    <gasdefinitions>
+        <!-- all breathing gases used -->
+        <mix id="oxygen_pure">
+            <name>pure oxygen</name>
+            <o2>1.000</o2>
+            <n2>0.000</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <mix id="air">
+            <name>air</name>
+            <o2>0.210</o2>
+            <n2>0.790</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <mix id="nitrox6040">
+            <name>Nitrox60/40</name>  <!-- Nitrox 60 % N2, 40 % O2 -->
+            <o2>0.400</o2>
+            <n2>0.600</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <mix id="trimix">
+            <name>Trimix</name>  <!-- Trimix 15 % O2, 40 % N2, 45 % He -->
+            <o2>0.150</o2>
+            <n2>0.400</n2>
+            <he>0.450</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <!-- here more <mix> elements can be given -->
+    </gasdefinitions>
+    <profiledata>
+        <repetitiongroup id="rg_2010-05">
+            <dive id="dive654">
+                <tankdata id="air_1">
+                    <!-- air filled 15 litre tank, fill pressure at beginning 200 bar, breathing consumption volume 12 litres/min -->
+                    <link ref="air"/>
+                    <link ref="tank_1"/>
+                    <!-- for the tank volume is given in the declaration above, -->
+                    <!-- there is no need to set it again here -->
+                    <tankpressurebegin>20000000.0</tankpressurebegin>
+                    <breathingconsumptionvolume>0.0002</breathingconsumptionvolume>
+                </tankdata>
+                <tankdata id="air_2">
+                    <!-- another tank filled with air... -->
+                    <link ref="air"/>
+                    <!-- no cross-referencing to a given tank -> for a breathing gas -->
+                    <!-- consumption calculation the tank volume must be set here -->
+                    <tankvolume>0.01</tankvolume>
+                    <tankpressurebegin>20000000.0</tankpressurebegin>
+                    <breathingconsumptionvolume>0.0003333333333</breathingconsumptionvolume>          <!-- [m^3/s] ^= 20 litres/min -->
+                </tankdata>
+                <tankdata id="nitrox_tank">
+                    <link ref="nitrox6040"/>
+                    <tankvolume>0.01</tankvolume>
+                    <tankpressurebegin>20000000.0</tankpressurebegin>
+                    <breathingconsumptionvolume>0.00025</breathingconsumptionvolume>                  <!-- [m^3/s] ^= 15 litres/min -->
+                </tankdata>
+                <tankdata id="o2_tank">
+                    <link ref="oxygen_pure"/>
+                    <tankvolume>0.008</tankvolume>
+                    <tankpressurebegin>20000000.0</tankpressurebegin>
+                    <breathingconsumptionvolume>0.0002</breathingconsumptionvolume>                   <!-- [m^3/s] ^= 12 litres/min -->
+                </tankdata>
+                <!-- here more <tankdata> elements can be inserted -->
+                <!-- here follow the other elements for describing this dive -->
+            </dive>
+        </repetitiongroup>
+    </profiledata>
+</uddf>

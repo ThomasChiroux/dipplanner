@@ -1,0 +1,145 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>DP Planner</name>
+        <manufacturer>
+            <name>Grouper Inc.</name>
+            <address>
+                <!-- address data of manufacturer -->
+            </address>
+            <contact>
+                <!-- contact data of manufacturer -->
+            </contact>
+        </manufacturer>
+        <version>1.41421</version>
+        <datetime>2006-06-20</datetime>
+    </generator>
+    <gasdefinitions>
+        <mix id="oxygen">
+            <name>pure oxygen</name>
+            <o2>1.000</o2>
+            <n2>0.000</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <mix id="noaa1">
+            <name>NOAA1</name>  <!-- 32 % O2, 68 % N2 -->
+            <o2>0.320</o2>
+            <n2>0.680</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <mix id="trimix">
+            <name>Trimix</name>  <!-- Trimix 16 % O2, 40 % N2, 44 % He -->
+            <o2>0.160</o2>
+            <n2>0.400</n2>
+            <he>0.440</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+        <mix id="heliox">
+            <name>Heliox</name>  <!-- 12 % O2, 88 % He -->
+            <o2>0.120</o2>
+            <n2>0.000</n2>
+            <he>0.880</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+    </gasdefinitions>
+    <tablegeneration>
+        <!-- here follow parameters for the generation of ascent tables -->
+        <calculateprofile>
+            <profile>
+                <!-- a cross-referentiation via <link ref="..."/> on a dive or a repetitiongroup -->
+                <!-- is dropped because tissues are saturated corresponding to ambient pressure -->
+                <!-- <link ref="..."/> as cross-referentiation on <tankdata> is dropped -->
+                <!-- because no breathing gas consumption calculation is to be performed -->
+                <link ref="oxygen"/>
+                <link ref="noaa1"/>
+                <link ref="trimix"/>
+                <link ref="heliox"/>
+                <surfaceintervalbeforedive>
+                    <!-- tissues saturated corresponding to ambient pressure, no -->
+                    <!-- remaining saturation from a prior dive to be considered -->
+                    <infinity/>
+                </surfaceintervalbeforedive>
+                <density>1030.0</density>   <!-- salt water -->
+                <output>
+                    <lingo>en</lingo>
+                    <fileformat>pdf</fileformat>
+                    <filename>example_profile_1</filename>
+                    <headline>Example Dive 100 m</headline>
+                    <remark>
+                        This is an examplary calculation for a dive to 100 m salt water.
+                    </remark>
+                </output>
+                <!-- program specific parameters which an UDDF parser will not necessarily read -->
+                <applicationdata>...</applicationdata>
+                <!-- setting of the decompression model to be used -->
+                <!-- If the executing software does not support this deco model, the program's -->
+                <!-- standard model has to be used - what should be noticed to the user, of course! :-) -->
+                <decomodel>ZH-L16</decomodel>
+                <!-- "Deep Stops" shall be used; length 1 minute -->
+                <deepstoptime>60.0</deepstoptime>
+                <!-- maximum ascent velocity in meters per seconds -->
+                <!-- here: 10 m/min ^= 0.1666... m/s -->
+                <maximumascendingrate>0.16666666667</maximumascendingrate>
+                <!-- settings on which depths the breathing gases shall be changed -->
+                <mixchange>
+                    <!-- change of breathing gases during ascent -->
+                    <ascent>
+                        <waypoint>
+                            <depth>85.0</depth>
+                            <switchmix ref="trimix"/>
+                        </waypoint>
+                        <waypoint>
+                            <depth>40.0</depth>
+                            <switchmix ref="noaa1"/>
+                        </waypoint>
+                        <waypoint>
+                            <depth> 5.0</depth>
+                            <switchmix ref="oxygen"/>
+                        </waypoint>
+                    </ascent>
+                </mixchange>
+                <!-- definition of a descent profile as a basis to calculate the ascent profile -->
+                <inputprofile>
+                    <waypoint>
+                        <!-- Every dive begins at 0 min at the surface! :-) -->
+                        <!-- beginning the dive with Nitrox NOAA I (32 % O2, 68 % N2) -->
+                        <divetime>0.0</divetime>
+                        <depth>0.0</depth>
+                        <switchmix ref="noaa1"/>
+                    </waypoint>
+                    <!-- simple profile: -->
+                    <!-- descent within 10 min to 100 m -->
+                    <waypoint>
+                        <!-- at a depth of 35 m change to Trimix mix -->
+                        <divetime>210.0</divetime>
+                        <depth>35.0</depth>
+                        <switchmix ref="trimix"/>
+                    </waypoint>
+                    <waypoint>
+                        <!-- at a depth of 80 m change to Heliox -->
+                        <divetime>480.0</divetime>
+                        <depth>80.0</depth>
+                        <switchmix ref="heliox"/>
+                    </waypoint>
+                    <waypoint>
+                        <divetime>600.0</divetime>
+                        <depth>100.0</depth>
+                    </waypoint>
+                    <waypoint>
+                        <!-- remaining time on depth 10 min -->
+                        <divetime>900.0</divetime>
+                        <depth>100.0</depth>
+                    </waypoint>
+                    <!-- now the ascent begins - it's the program's task to calculate it -->
+                </inputprofile>
+            </profile>
+        </calculateprofile>
+    </tablegeneration>
+</uddf>

@@ -1,0 +1,68 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>Dive Computer Configuration</name>
+        <manufacturer>
+            <name>Dive Heroes Company</name>
+            <address>
+                <!-- address data of manufacturer -->
+            </address>
+            <contact>
+                <!-- contact data of manufacturer -->
+            </contact>
+        </manufacturer>
+        <version>2.71828</version>
+        <datetime>2006-05-14</datetime>
+    </generator>
+    <divecomputercontrol>
+        <setdcdata>
+            <!-- set date and time -->
+            <setdcdatetime>
+                <datetime>2006-05-18T14:21:00</datetime>
+            </setdcdatetime>
+            <!-- settings for an alarm, to be given by the dive computer at 16.30 h -->
+            <setdcalarmtime>
+                <time>
+                    <hour>16</hour>
+                    <minute>30</minute>
+                </time>
+                <dcalarm>
+                    <!-- that type of alarm shall be given which is defined as ,,1`` inside the dive computer -->
+                    <alarmtype>1</alarmtype>
+                    <!-- alarm is to be acknowledged -->
+                    <acknowledge/>
+                </dcalarm>
+            </setdcalarmtime>
+            <setdcdivedepthalarm>
+                <!-- first depth alarm at 35 m -->
+                <dcalarmdepth>35.0</dcalarmdepth>
+                <dcalarm>
+                    <!-- that type of alarm shall be given which is defined as ,,2`` inside the dive computer -->
+                    <alarmtype>2</alarmtype>
+                    <!-- alarm is to be given for 5 seconds -->
+                    <period>5.0</period>
+                </dcalarm>
+            </setdcdivedepthalarm>
+            <setdcdivedepthalarm>
+                <!-- second depth alarm at 40 m -->
+                <dcalarmdepth>40.0</dcalarmdepth>
+                <dcalarm>
+                    <!-- that type of alarm shall be given which is defined as ,,3`` inside the dive computer -->
+                    <alarmtype>3</alarmtype>
+                    <!-- this alarm, again, is to be acknowledged :-) -->
+                    <acknowledge/>
+                </dcalarm>
+            </setdcdivedepthalarm>
+            <!-- when no-decompression time is over, play an acoustic hint -->
+            <setdcendndtalarm>
+                <dcalarm>
+                    <!-- that type of alarm shall be given which is defined as ,,4`` inside the dive computer -->
+                    <alarmtype>4</alarmtype>
+                    <!-- alarm is to be given for 5 seconds -->
+                    <period>5.0</period>
+                </dcalarm>
+            </setdcendndtalarm>
+        </setdcdata>
+    </divecomputercontrol>
+</uddf>

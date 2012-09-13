@@ -1,0 +1,157 @@
+<uddf version="3.1.0">
+    <!-- the <generator> section has to appear in every UDDF file -->
+    <generator>
+        <!-- description of the program generating the UDDF file -->
+        <name>Tausim v1.0</name>
+        <manufacturer>
+            <name>Kai Schröder</name>
+        </manufacturer>
+        <version>1.0</version>
+        <datetime>2006-04-28</datetime>
+    </generator>
+    <divesite>
+        <site id="site_tausim_0.0_1030.0">
+            <geography>
+                <altitude>0.0</altitude>   <!-- sea level -->
+            </geography>
+            <sitedata>
+                <density>1030.0</density>  <!-- salt water -->
+            </sitedata>
+        </site>
+    </divesite>
+    <gasdefinitions>
+        <!-- all breathing gases used -->
+        <mix id="air">
+            <name>air</name>
+            <o2>0.210</o2>
+            <n2>0.790</n2>
+            <he>0.000</he>
+            <ar>0.000</ar>
+            <h2>0.000</h2>
+        </mix>
+    </gasdefinitions>
+    <profiledata>
+        <!-- in the following one recorded dive profile is shown examplary -->
+        <repetitiongroup id="rg_tausim_060428_001">
+            <dive id="dive_tausim_060428_1549">
+                <datetime>2006-04-28T15:49</datetime>
+                <surfaceintervalbeforedive>
+                    <infinity/>
+                </surfaceintervalbeforedive>
+                <tankdata>
+                    <link ref="air"/>
+                    <tankvolume>0.015</tankvolume>
+                    <tankpressurebegin>20000000.0</tankpressurebegin>
+                    <breathingconsumptionvolume>0.0002</breathingconsumptionvolume>       <!-- [m^3/s] ^= 12 litres/min -->
+                </tankdata>
+                <!-- temperature is of no importance in "Tausim", but the greatest depth -->
+                <!-- reached during a (simulated) dive is written into the UDDF output   -->
+                <greatestdepth>53.0</greatestdepth>
+                <applicationdata>
+                    <!-- Within this section data relevant only to the program generating -->
+                    <!-- the profile - in this case "Tausim" - are given. These data can  -->
+                    <!-- be ignored by other programs.                                    -->
+                    <tausim>
+                        <pres>4000000.0</pres>
+                        <timeinc>10</timeinc>
+                        <depthinc>10</depthinc>
+                        <durdep>9</durdep>
+                        <nstatic>18</nstatic>
+                        <rls>50</rls>
+                        <decomodel>ZH-L16</decomodel>
+                        <buehl>5</buehl>
+                        <tissues>16</tissues>
+                        <ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70</ip>
+                        <ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70</ip>
+                        <ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70</ip>
+                        <ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70000</ip><ip>75073.70</ip>
+                    </tausim>
+                </applicationdata>
+                <samples>
+                    <waypoint>
+                        <depth>0.0</depth>
+                        <divetime>0.0</divetime>
+                        <switchmix ref="air"/>
+                    </waypoint>
+                    <waypoint>
+                        <depth>50.0</depth>
+                        <divetime>300.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>50.0</depth>
+                        <divetime>420.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>46.0</depth>
+                        <divetime>480.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>46.0</depth>
+                        <divetime>600.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>53.0</depth>
+                        <divetime>660.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>48.0</depth>
+                        <divetime>720.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>48.0</depth>
+                        <divetime>900.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>38.0</depth>
+                        <divetime>960.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>38.0</depth>
+                        <divetime>1260.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>25.0</depth>
+                        <divetime>1380.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>21.0</depth>
+                        <divetime>1560.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>11.0</depth>
+                        <divetime>1860.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>11.0</depth>
+                        <divetime>2220.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>5.0</depth>
+                        <divetime>2340.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>5.0</depth>
+                        <divetime>2580.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>3.0</depth>
+                        <divetime>2640.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>3.0</depth>
+                        <divetime>4140.0</divetime>
+                    </waypoint>
+                    <waypoint>
+                        <depth>0.0</depth>
+                        <divetime>4500.0</divetime>
+                    </waypoint>
+                </samples>
+            </dive> <!-- end dive_tausim_060428_1549 -->
+            <!-- here more <dive> sections can be inserted -->
+        </repetitiongroup>
+        <!-- here more <repetitiongroup> sections can be inserted -->
+    </profiledata>
+    <tablegeneration>
+        <!-- here follow instructions for the generation of dive tables -->
+    </tablegeneration>
+</uddf>

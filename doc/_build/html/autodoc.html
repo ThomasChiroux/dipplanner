@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Source code documentation &mdash; dipplanner 0.3a-11-gcf71 documentation</title>
+    <title>Source code documentation &mdash; dipplanner 0.3a-19-ga892 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.3a-11-gcf71',
+        VERSION:     '0.3a-19-ga892',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="dipplanner 0.3a-11-gcf71 documentation" href="index.html" />
+    <link rel="top" title="dipplanner 0.3a-19-ga892 documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="NEWS.html" />
     <link rel="prev" title="Templates" href="template.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="template.html" title="Templates"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-11-gcf71 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-19-ga892 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -56,6 +56,149 @@
             
   <div class="section" id="source-code-documentation">
 <span id="dipplanner-autodoc"></span><h1>Source code documentation<a class="headerlink" href="#source-code-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-dipplanner.mission">
+<span id="mission"></span><span id="dipplanner-autodoc-mission"></span><h2>mission<a class="headerlink" href="#module-dipplanner.mission" title="Permalink to this headline">¶</a></h2>
+<p>Mission class module</p>
+<p>A Mission a basically a list of repetitive dives.
+It could also be called a &#8216;DiveTrip&#8217; for example</p>
+<dl class="class">
+<dt id="dipplanner.mission.Mission">
+<em class="property">class </em><tt class="descclassname">dipplanner.mission.</tt><tt class="descname">Mission</tt><big>(</big><em>dive_or_divelist=None</em>, <em>description=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/mission.html#Mission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.mission.Mission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mission Class</p>
+<p>a Mission represent all repetitive dives for a given set of time.
+the Mission will keep consistency between repetitive dives</p>
+<p>An isolated dive is a Mission with only one dive inside</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>dives (list) &#8211; list of Dive object of the same mission
+description (str) &#8211; description of the mission (OPTIONAL)</dd>
+</dl>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Insert dive(s) in a certain position</p>
+</div>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">change dive order, permutations, etc...</p>
+</div>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">decide if we define a common list of tanks for a given mission
+in this case, each dive will be able to pickup some tank</p>
+</div>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">Todo</p>
+<p class="last">decide if settings is included in Mission object or remains
+global</p>
+</div>
+<dl class="method">
+<dt id="dipplanner.mission.Mission.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>dive_or_divelist=None</em>, <em>description=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/mission.html#Mission.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.mission.Mission.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mission constructor</p>
+<p>Initialize the Mission object
+if no parameter is given, instantiate an &#8216;empty&#8217; Mission</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">dive_or_divelist:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">&#8211; either on Dive object
+or a list of Dive object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">description:</th><td class="field-body">(str)&#8211; description of the Mission</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>Return:</dt>
+<dd>&lt;nothing&gt;</dd>
+<dt>Raise:</dt>
+<dd>TypeError: if dive_or_divelist contains another type than Dive</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.__iter__">
+<tt class="descname">__iter__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/mission.html#Mission.__iter__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.mission.Mission.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>iterable</p>
+<p>see <a class="reference internal" href="#dipplanner.mission.Mission._forward" title="dipplanner.mission.Mission._forward"><tt class="xref py py-meth docutils literal"><span class="pre">dipplanner.mission.Mission._forward()</span></tt></a> )</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission._forward">
+<tt class="descname">_forward</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/mission.html#Mission._forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.mission.Mission._forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>forward generator, used for iteration</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.__len__">
+<tt class="descname">__len__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/mission.html#Mission.__len__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.mission.Mission.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate and return len of Session object</p>
+<p>usage example:</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">my_mission</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="docutils">
+<dt><em>Args:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">int:</th><td class="field-body">number of Dives in this mission</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.add_dive">
+<tt class="descname">add_dive</tt><big>(</big><em>dive_or_divelist</em><big>)</big><a class="reference internal" href="_modules/dipplanner/mission.html#Mission.add_dive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.mission.Mission.add_dive" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a Dive or a list of dive to the Mission</p>
+<p>they will be added at the end of the list</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">dive_or_divelist:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">&#8211; either on Dive object
+or a list of Dive object</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>Return:</dt>
+<dd>&lt;nothing&gt;</dd>
+<dt>Raise:</dt>
+<dd>TypeError: if dive_or_divelist contains another type than Dive</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.calculate">
+<tt class="descname">calculate</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/mission.html#Mission.calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.mission.Mission.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate all the decompression planning for all dives in this
+mission</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dipplanner.mission.Mission.__str__">
+<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.mission.Mission.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__str__() &lt;==&gt; str(x)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-dipplanner.dive">
 <span id="dive"></span><span id="dipplanner-autodoc-dive"></span><h2>dive<a class="headerlink" href="#module-dipplanner.dive" title="Permalink to this headline">¶</a></h2>
 <p>dive class module</p>
@@ -315,7 +458,7 @@ bailout is specified.</p>
 <li>pp_o2 &#8211; CCR ppO2, if OC : 0.0</li>
 <li>is_closed_circuit &#8211; Flag to store CC or OC</li>
 <li>in_final_ascent &#8211; flag for final ascent</li>
-<li>is_repetative_dive &#8211; Flag for repetative dives</li>
+<li>is_repetative_dive &#8211; Flag for repetitive dives</li>
 <li>surface_interval &#8211; for surf. int. in seconds</li>
 <li>no_flight_time_value &#8211; calculated no flight time</li>
 <li>metadata &#8211; description for the dive</li>
@@ -395,9 +538,40 @@ MUST still instantiate itself, with errors in his own object</p>
 <dd><p>Compare a dive to another dive, based on run_time</p>
 <dl class="docutils">
 <dt><em>Keyword arguments:</em></dt>
-<dd>otherdive (Dive) &#8211; another dive object</dd>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">otherdive:</th><td class="field-body">(Dive) &#8211; another dive object</td>
+</tr>
+</tbody>
+</table>
+</dd>
 <dt><em>Returns:</em></dt>
 <dd>Integer &#8211; result of cmp()</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.dive.Dive.set_repetitive">
+<tt class="descname">set_repetitive</tt><big>(</big><em>previous_dive</em><big>)</big><a class="headerlink" href="#dipplanner.dive.Dive.set_repetitive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make this dive a repetitive dive by cloning the previous
+model history into the current dive</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">previous_dive:</th><td class="field-body">(Dive) &#8211; previous dive profile</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Return:</em></dt>
+<dd>&lt;nothing&gt;</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
 </dl>
@@ -425,7 +599,7 @@ in settings or command lines.
 
 <dl class="method">
 <dt id="dipplanner.dive.Dive.do_surface_interval">
-<tt class="descname">do_surface_interval</tt><big>(</big><em>time</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.do_surface_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.do_surface_interval" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">do_surface_interval</tt><big>(</big><em>time=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.do_surface_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.do_surface_interval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Conducts a surface interval
 by performing a constant depth calculation on air at zero meters</p>
 <dl class="docutils">
@@ -434,7 +608,9 @@ by performing a constant depth calculation on air at zero meters</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">time:</th><td class="field-body">(int) &#8211; duration of the interval, in seconds</td>
+<tr class="field-odd field"><th class="field-name">time:</th><td class="field-body">(int) &#8211; duration of the interval, in seconds
+if not provided, uses the surface_interval
+defined in this dive</td>
 </tr>
 </tbody>
 </table>
@@ -1811,7 +1987,7 @@ remaining gas</p>
 
 <dl class="class">
 <dt id="dipplanner.tank.Tank">
-<em class="property">class </em><tt class="descclassname">dipplanner.tank.</tt><tt class="descname">Tank</tt><big>(</big><em>f_o2=0.21</em>, <em>f_he=0.0</em>, <em>max_ppo2=1.6</em>, <em>mod=None</em>, <em>tank_vol=12.0</em>, <em>tank_pressure=200</em>, <em>tank_rule='30b'</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">dipplanner.tank.</tt><tt class="descname">Tank</tt><big>(</big><em>f_o2=0.21</em>, <em>f_he=0.0</em>, <em>max_ppo2=1.6</em>, <em>mod=None</em>, <em>tank_vol=12.0</em>, <em>tank_pressure=200</em>, <em>tank_rule='30b'</em>, <em>given_name=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class implements a representation of dive tanks wich
 contains breathing Gas
 We provide proportion of N2, O2, He, calculates MOD and volumes during the
@@ -1853,6 +2029,8 @@ without any approximation or implementation choices.</p>
 </li>
 <li><p class="first">tank_pressure (float) &#8211; pressure of tank in bar</p>
 </li>
+<li><p class="first">tank_rule (str) &#8211; tank rule for minimum gas calculation</p>
+</li>
 <li><p class="first">mod (float) &#8211; maximum operating depth of the tank</p>
 </li>
 <li><p class="first">in_use (boolean) &#8211; is the tank used for the dive of not</p>
@@ -1865,11 +2043,17 @@ without any approximation or implementation choices.</p>
 </li>
 <li><p class="first">min_gas (float) &#8211; minimum remaining gas in liter</p>
 </li>
+<li><dl class="first docutils">
+<dt>given_name (str) &#8211; name of the Tank if not provided,</dt>
+<dd><p class="first last">try to set it automatically</p>
+</dd>
+</dl>
+</li>
 </ul>
 </div></blockquote>
 <dl class="method">
 <dt id="dipplanner.tank.Tank.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>f_o2=0.21</em>, <em>f_he=0.0</em>, <em>max_ppo2=1.6</em>, <em>mod=None</em>, <em>tank_vol=12.0</em>, <em>tank_pressure=200</em>, <em>tank_rule='30b'</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>f_o2=0.21</em>, <em>f_he=0.0</em>, <em>max_ppo2=1.6</em>, <em>mod=None</em>, <em>tank_vol=12.0</em>, <em>tank_pressure=200</em>, <em>tank_rule='30b'</em>, <em>given_name=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/tank.html#Tank.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.tank.Tank.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor for Tank class</p>
 <p>If nothing is provided, create a default &#8216;Air&#8217; with 12l/200b tank
 and max_ppo2 to 1.6 (used to calculate mod)
@@ -1908,7 +2092,7 @@ with max_ppo2: raise InvalidMod</li>
 </tr>
 <tr class="field-odd field"><th class="field-name">tank_rule:</th><td class="field-body"><p class="first">(float) &#8211; rule for warning in the tank consumption
 must be either :</p>
-<ul class="last">
+<ul>
 <li><dl class="first docutils">
 <dt>xxxb (ex: 50b means 50 bar minimum at</dt>
 <dd><p class="first last">the end of the dive)</p>
@@ -1945,6 +2129,11 @@ must be either :</p>
 </ul>
 </td>
 </tr>
+<tr class="field-even field"><th class="field-name">given_name:</th><td class="field-body"><p class="first last">(str) &#8211; set a specific name for the Tank.
+if not given, it will be generated automatically based
+on the gas.</p>
+</td>
+</tr>
 </tbody>
 </table>
 </dd>
@@ -1966,6 +2155,21 @@ must be either :</p>
 </li>
 </ul>
 </div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.tank.Tank._set_min_gas">
+<tt class="descname">_set_min_gas</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.Tank._set_min_gas" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the minimum gas volume for this tank based
+on the min_gas rule provided</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>float &#8211; minimum gas volume in liter</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -2076,6 +2280,69 @@ optional : if not provided, use self.f_he</td>
 <dd>integer &#8211; result of cmp()</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.tank.Tank.dumps_json">
+<tt class="descname">dumps_json</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.Tank.dumps_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>dumps the Tank object in json format</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; json dumps of Tank object</dd>
+<dt><em>Raise:</em></dt>
+<dd>TypeError : if Tank is not serialisable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.tank.Tank.loads_json">
+<tt class="descname">loads_json</tt><big>(</big><em>input_json</em><big>)</big><a class="headerlink" href="#dipplanner.tank.Tank.loads_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a json structure and update the tank object with the new
+values.</p>
+<p>This method can be used in http PUT method to update object
+value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">input_json:</th><td class="field-body">(string) &#8211; the json structure to be loaded</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last">
+<li><p class="first">ValueError : if json is not loadable</p>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidGas &#8211; When proportions of gas exceed</dt>
+<dd><p class="first last">100% for example (or negatives values)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2</dt>
+<dd><p class="first">or ABSOLUTE_MAX_MOD.</p>
+<p class="last">ABSOLUTE_MAX_MOD is a global settings which
+can not be exceeded.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidTank &#8211; when pressure or tank size exceed maximum</dt>
+<dd><p class="first last">values or are incorrect (like negatives) values</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -4087,6 +4354,219 @@ if false, segments represents segtime</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-dipplanner.gui">
+<span id="gui"></span><span id="dipplanner-autodoc-gui"></span><h2>gui<a class="headerlink" href="#module-dipplanner.gui" title="Permalink to this headline">¶</a></h2>
+<p>module generating the GUI</p>
+<p>It uses flask micro-framework to publish a full REST/json API over the
+dipplanner objects and methods</p>
+<dl class="class">
+<dt id="dipplanner.gui.TankApi">
+<em class="property">class </em><tt class="descclassname">dipplanner.gui.</tt><tt class="descname">TankApi</tt><big>(</big><em>name</em>, <em>mission</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>RestFull API for Tank Class</p>
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>mission</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for TankApi object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body">(str) &#8211; api name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">mission:</th><td class="field-body">(Mission) &#8211; mission object</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.register_api">
+<tt class="descname">register_api</tt><big>(</big><em>blueprint</em>, <em>endpoint</em>, <em>url</em>, <em>p_key</em>, <em>pk_type=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.register_api"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.register_api" title="Permalink to this definition">¶</a></dt>
+<dd><p>register a REST Api for a dipplanner object</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">app:</th><td class="field-body">(Flask) &#8211; Flask application object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">view:</th><td class="field-body">(MethodView) &#8211; MethodView herited object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">endpoint:</th><td class="field-body">(str) &#8211; name for the view</td>
+</tr>
+<tr class="field-even field"><th class="field-name">url:</th><td class="field-body">(str) &#8211; base url for the api</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">p_key:</th><td class="field-body">(str) &#8211; primary key name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">pk_type:</th><td class="field-body">(str) &#8211; type of primary key</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.json_resp">
+<tt class="descname">json_resp</tt><big>(</big><em>message</em>, <em>code</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.json_resp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.json_resp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pure json Flask response with
+application/json content type and message</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">message:</th><td class="field-body">(str) &#8211; json message</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">this method does not validate the correctness of the
+json message : this must be done before</p>
+</div>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">code:</th><td class="field-body">(int) &#8211; http response code</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>resp &#8211; Flask response objec</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.get">
+<tt class="descname">get</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>GET method for the Tank object Api</p>
+<p><em>Keyword Arguments:</em>
+:tank_name: (str) &#8211; name of the tank (or None if no tank name is</p>
+<blockquote>
+<div>provided)</div></blockquote>
+<dl class="docutils">
+<dt><em>Returns:</em></dt>
+<dd>resp &#8211; Flask response object: either:
+* list of tanks if no tank_name is given
+* tank datas if tank_name is given</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.post">
+<tt class="descname">post</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>POST method for the Tank object Api</p>
+<dl class="docutils">
+<dt><em>Keyword Arguments:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd><dl class="first last docutils">
+<dt>resp &#8211; Flask response object with the json dump of the newly</dt>
+<dd>created object</dd>
+</dl>
+</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.put">
+<tt class="descname">put</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>PUT method for the Tank object Api</p>
+<p><em>Keyword Arguments:</em>
+:tank_name: (str) &#8211; name of the tank (MANDATORY)</p>
+<dl class="docutils">
+<dt><em>Returns:</em></dt>
+<dd><dl class="first last docutils">
+<dt>resp &#8211; Flask response object with the json dump of the</dt>
+<dd>updated object</dd>
+</dl>
+</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.patch">
+<tt class="descname">patch</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>PATCH method for the Tank object Api</p>
+<p><em>Keyword Arguments:</em>
+:tank_name: (str) &#8211; name of the tank (MANDATORY)</p>
+<dl class="docutils">
+<dt><em>Returns:</em></dt>
+<dd><dl class="first last docutils">
+<dt>resp &#8211; Flask response object with the json dump of the</dt>
+<dd>updated object</dd>
+</dl>
+</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.gui.TankApi.delete">
+<tt class="descname">delete</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>DELETE method for the Tank object Api</p>
+<p><em>Keyword Arguments:</em>
+:tank_name: (str) &#8211; name of the tank (MANDATORY)</p>
+<dl class="docutils">
+<dt><em>Returns:</em></dt>
+<dd>resp &#8211; Flask response object (empty)</dd>
+<dt><em>Raise:</em></dt>
+<dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dipplanner.gui.TankApi.__str__">
+<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.gui.TankApi.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__str__() &lt;==&gt; str(x)</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dipplanner.gui.TankApi.as_view">
+<em class="property">classmethod </em><tt class="descname">as_view</tt><big>(</big><em>name</em>, <em>*class_args</em>, <em>**class_kwargs</em><big>)</big><a class="headerlink" href="#dipplanner.gui.TankApi.as_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the class into an actual view function that can be used
+with the routing system.  Internally this generates a function on the
+fly which will instantiate the <tt class="xref py py-class docutils literal"><span class="pre">View</span></tt> on each request and call
+the <tt class="xref py py-meth docutils literal"><span class="pre">dispatch_request()</span></tt> method on it.</p>
+<p>The arguments passed to <a class="reference internal" href="#dipplanner.gui.TankApi.as_view" title="dipplanner.gui.TankApi.as_view"><tt class="xref py py-meth docutils literal"><span class="pre">as_view()</span></tt></a> are forwarded to the
+constructor of the class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dipplanner.gui.start_gui">
+<tt class="descclassname">dipplanner.gui.</tt><tt class="descname">start_gui</tt><big>(</big><em>mission=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#start_gui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.start_gui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the html GUI server</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -4098,6 +4578,7 @@ if false, segments represents segtime</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Source code documentation</a><ul>
+<li><a class="reference internal" href="#module-dipplanner.mission">mission</a></li>
 <li><a class="reference internal" href="#module-dipplanner.dive">dive</a></li>
 <li><a class="reference internal" href="#module-dipplanner.segment">segment</a></li>
 <li><a class="reference internal" href="#module-dipplanner.tank">tank</a></li>
@@ -4113,6 +4594,7 @@ if false, segments represents segtime</p>
 <li><a class="reference internal" href="#module-dipplanner.tools">tools</a></li>
 <li><a class="reference internal" href="#module-dipplanner.main">main</a></li>
 <li><a class="reference internal" href="#module-dipplanner.settings">settings</a></li>
+<li><a class="reference internal" href="#module-dipplanner.gui">gui</a></li>
 </ul>
 </li>
 </ul>
@@ -4160,7 +4642,7 @@ if false, segments represents segtime</p>
         <li class="right" >
           <a href="template.html" title="Templates"
              >previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-11-gcf71 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-19-ga892 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

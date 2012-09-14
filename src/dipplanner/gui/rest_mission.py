@@ -91,7 +91,7 @@ class MissionApi(BaseApi):
             if self.mission is None or len(self.mission) == 0:
                 self.mission = Mission()
                 self.mission.loads_json(request.json)
-                return self.json_resp(self.mission.dumps_json(), 201)
+                return self.json_resp(self.mission.dumps_dict(), 201)
             else:
                 return self.json_resp('{ "message": "403: Forbidden: you MUST '
                                       'delete the current mission before '
@@ -116,7 +116,7 @@ class MissionApi(BaseApi):
         print "delete mission !!!!!"
         if resource_id is None:
             print "ok: resource if is none"
-            self.mission = None
+            self.mission.clean()
             print self.mission
             return self.json_resp('{ "message": "204: resource deleted" }',
                                   204)

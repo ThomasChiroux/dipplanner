@@ -44,7 +44,7 @@ from dipplanner import settings
 from dipplanner.gui import start_gui
 
 LOGGER = logging.getLogger("dipplanner")
-
+MISSION = None
 
 def activate_debug():
     """setup the default debug parameters
@@ -134,7 +134,6 @@ def main(cli_arguments=sys.argv):
 
     dipplanner_arguments = DipplannerCliArguments(cli_arguments)
     mission = dipplanner_arguments.mission
-
     mission.calculate()
 
     if dipplanner_arguments.args.gui:
@@ -145,3 +144,4 @@ def main(cli_arguments=sys.argv):
         tpl = env.get_template(settings.TEMPLATE)
         text = tpl.render(settings=settings, dives=mission)
         print text
+

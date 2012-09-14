@@ -34,6 +34,16 @@ import json
 from dipplanner import settings
 from dipplanner.dive import Dive
 
+class Singleton(type):
+    def __init__(cls, name, bases, dict):
+        super(Singleton, cls).__init__(name, bases, dict)
+        cls.instance = None
+
+    def __call__(cls,*args,**kw):
+        if cls.instance is None:
+            cls.instance = super(Singleton, cls).__call__(*args, **kw)
+        return cls.instance
+
 class Mission(object):
     """Mission Class
 
@@ -61,7 +71,12 @@ class Mission(object):
 
     .. todo:: decide if settings is included in Mission object or remains
               global
+
+    .. todo:: TODO creer un singleton de cette classe pour eviter la
+              reinstanciation de flask
     """
+    __metaclass__ = Singleton
+
     STATUS_NONE = "Not Calculated"
     STATUS_CHANGED = "Calculated but Changed"
     STATUS_OK = "Calculated and Up to date"
@@ -83,6 +98,7 @@ class Mission(object):
         Raise:
             TypeError: if dive_or_divelist contains another type than Dive
         """
+        print "Contructor Mission"
         self.dives = []
         self.description = description
         self.status = self.STATUS_NONE
@@ -197,6 +213,14 @@ class Mission(object):
 
         if mission_dict.has_key('description'):
             self.description = mission_dict['description']
+        # TODO here
+
+    def clean(self):
+        """clean the mission
+        """
+        self.dives = []
+        self.description = ""
+        self.status = self.STATUS_NONE
 
     def change_status(self, status=None):
         """Change the status of the mission

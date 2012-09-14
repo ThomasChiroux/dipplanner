@@ -498,7 +498,7 @@ class Tank(object):
         """
         return cmp(self.mod, othertank.mod)
 
-    def dumps_json(self):
+    def dumps_dict(self):
         """dumps the Tank object in json format
 
         *Keyword arguments:*
@@ -526,7 +526,7 @@ class Tank(object):
                       'min_gas': self.min_gas,
                       'tank_rule': self.tank_rule }
 
-        return json.dumps(tank_dict)
+        return tank_dict
 
     def loads_json(self, input_json):
         """loads a json structure and update the tank object with the new

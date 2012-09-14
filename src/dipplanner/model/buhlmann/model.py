@@ -60,6 +60,7 @@ class Model(object):
         * gradient (Gradient) -- gradient factor object
         * ox_tox (OxTox) -- OxTox object
         * metadata (str) -- Stores infos about where the model was created
+        * deco_model (str) -- name of the deco model
         * units (str) -- only 'metric' allowed
         * COMPS (int) -- static info : number of compartments
         * MODEL_VALIDATION_SUCCESS (int) -- static const for validation success
@@ -87,7 +88,7 @@ class Model(object):
         self.logger = logging.getLogger(
             "dipplanner.model.buhlmann.model.Model")
         self.logger.debug("creating an instance of Model")
-
+        self.deco_model = None
         self.units = 'metric'
         self.tissues = []
         self.ox_tox = OxTox()
@@ -221,6 +222,7 @@ mv_at:%s max_amb:%s MV:%s\n" % \
         # there is here a x10 factor for a coeficient
         #h_he, h_n2, a_he, b_he, a_n2, b_n2
         if deco_model == "ZHL16c":
+            self.deco_model = deco_model
             self.logger.info("model used: Buhlmann ZHL16c")
             self.tissues[0].set_compartment_time_constants(
                 1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)
@@ -255,6 +257,7 @@ mv_at:%s max_amb:%s MV:%s\n" % \
             self.tissues[15].set_compartment_time_constants(
                 240.03, 635.0,  5.119,  0.9267, 2.327,  0.9653)
         elif deco_model == "ZHL16b":
+            self.deco_model = deco_model
             self.logger.info("model used: Buhlmann ZHL16b")
             self.tissues[0].set_compartment_time_constants(
                 1.88,    5.0,    16.189, 0.4770, 11.696, 0.5578)

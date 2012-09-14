@@ -42,7 +42,6 @@ from jinja2 import Environment, PackageLoader
 from dipplanner.parse_cli_args import DipplannerCliArguments
 from dipplanner import settings
 from dipplanner.gui import start_gui
-from dipplanner.dive import Dive
 
 LOGGER = logging.getLogger("dipplanner")
 

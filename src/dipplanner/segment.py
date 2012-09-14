@@ -160,6 +160,77 @@ class Segment(object):
         """
         return u"%s" % self.__repr__()
 
+    def dumps_dict(self):
+        """dumps the Segment object in json format
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            string -- json dumps of Segment object
+
+        *Raise:*
+            TypeError : if Tank is not serialisable
+        """
+        segment_dict = {'type': self.type,
+                        'in_use': self.in_use,
+                        'depth': self.depth,
+                        'time':  self.time,
+                        'run_time': self.run_time,
+                        'setpoint': self.setpoint,
+                        'tank': self.tank.dumps_dict()}
+
+        return segment_dict
+
+    def loads_json(self, input_json):
+        """loads a json structure and update the tank object with the new
+        values.
+
+        This method can be used in http PUT method to update object
+        value
+
+        *Keyword arguments:*
+            :input_json: (string) -- the json structure to be loaded
+
+        *Returns:*
+            <none>
+
+        *Raise:*
+            * ValueError : if json is not loadable
+            * InvalidGas -- When proportions of gas exceed
+                      100% for example (or negatives values)
+            * InvalidMod -- if mod > max mod based on max_ppo2
+                            or ABSOLUTE_MAX_MOD.
+
+                            ABSOLUTE_MAX_MOD is a global settings which
+                            can not be exceeded.
+            * InvalidTank -- when pressure or tank size exceed maximum
+                      values or are incorrect (like negatives) values
+        """
+        if type(input_json) == str:
+            segment_dict = json.loads(input_json)
+        elif type(input_json) == dict:
+            segment_dict = input_json
+        else:
+            raise TypeError("json must be either str or dict (%s given"
+                            % type(input_json))
+
+        if segment_dict.has_key('type'):
+            #TODO: type validation
+            self.type = segment_dict['type']
+        if segment_dict.has_key('in_use'):
+            self.in_use = segment_dict['in_use']
+        if segment_dict.has_key('depth'):
+            self.depth = segment_dict['depth']
+        if segment_dict.has_key('time'):
+            self.time = segment_dict['time']
+        if segment_dict.has_key('run_time'):
+            self.run_time = segment_dict['run_time']
+        if segment_dict.has_key('setpoint'):
+            self.setpoint = segment_dict['setpoint']
+        if segment_dict.has_key('tank'):
+            self.tank = Tank().loads_json(segment_dict['tank'])
+
     def check(self):
         """check if it's a valid segment
         Should be executed before calculating dives

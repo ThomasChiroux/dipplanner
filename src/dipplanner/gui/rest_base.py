@@ -29,26 +29,22 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 # imports
+import json
 
 # dependencies imports
-from flask import Flask
-from flask import request
 from flask.views import MethodView
 from flask import make_response
 from flask import Blueprint
+from flask import g as self
 
-# local imports
-from dipplanner.tank import Tank
-from dipplanner.mission import Mission
+class BaseApi(MethodView):
+    """Base Class for the REST api
 
-WEBAPP = Flask(__name__)
-
-
-class TankApi(MethodView):
-    """RestFull API for Tank Class
+    This class should not be used directly, but serves as base class for
+    all api objects
     """
     def __init__(self, name, mission):
-        """Constructor for TankApi object
+        """Constructor for BaseApi object
 
         *Keyword Arguments:*
             :name: (str) -- api name
@@ -60,12 +56,13 @@ class TankApi(MethodView):
         *Raise:*
             <nothing>
         """
+        print "instanciation of BaseAPI"
         self.name = name
         self.mission = mission
         bp = Blueprint(name, __name__)
         bp_endpoint = '{0}_api'.format(name)
         bp_url = '/{0}/'.format(name)
-        bp_pk = '{0}_name'.format(name)
+        bp_pk = 'resource_id'
         self.register_api(bp, bp_endpoint, bp_url, bp_pk)
         self._blueprint = bp
 
@@ -89,7 +86,8 @@ class TankApi(MethodView):
         view_func = self.as_view(endpoint, self.name, self.mission)
         blueprint.add_url_rule(url, defaults={p_key: None},
                                view_func=view_func, methods=['GET', ])
-        blueprint.add_url_rule(url, view_func=view_func, methods=['POST', ])
+        blueprint.add_url_rule(url, view_func=view_func, methods=['POST',
+                                                                  'DELETE'])
         if pk_type is None:
             blueprint.add_url_rule('%s<%s>' % (url, p_key),
                                    view_func=view_func,
@@ -117,114 +115,99 @@ class TankApi(MethodView):
         *Raise:*
             <nothing>
         """
+        if type(message) == dict:
+            message = json.dumps(message)
         resp = make_response(message, code)
         resp.headers['Content-Type'] = 'application/json'
         return resp
 
-    def get(self, tank_name):
-        """GET method for the Tank object Api
+    def get(self, resource_id):
+        """GET method for the BaseApi
+
+        This method always return 405 Method not allowed
+        and should be redefined for each sub api
 
         *Keyword Arguments:*
-        :tank_name: (str) -- name of the tank (or None if no tank name is
-                             provided)
+        :resource_id: (str) -- key provided
 
         *Returns:*
-            resp -- Flask response object: either:
-            * list of tanks if no tank_name is given
-            * tank datas if tank_name is given
+            resp -- Flask response object
 
         *Raise:*
             <nothing>
         """
-        if tank_name is None:
-            return self.json_resp('', 200)
-        else:
-            return self.json_resp(self.mission[0].tanks[0].dumps_json(), 200)
+        return self.json_resp('{ "message": "405: Method not allowed" }',
+                              405)
 
     def post(self):
-        """POST method for the Tank object Api
+        """POST method for the BaseApi
+
+        This method always return 405 Method not allowed
+        and should be redefined for each sub api
 
         *Keyword Arguments:*
-            <nothing>
+            <none>
 
         *Returns:*
-            resp -- Flask response object with the json dump of the newly
-                    created object
+            resp -- Flask response object
 
         *Raise:*
             <nothing>
         """
-        print 'post tank'
-        if request.headers['Content-Type'] == 'application/json':
-            temp_tank = Tank()
-            temp_tank.loads_json(request.json)
-            return self.json_resp(temp_tank.dumps_json(), 201)
-        else:
-            return self.json_resp('{ "message": "400: Bad ContentType" }',
-                                  400)
+        return self.json_resp('{ "message": "405: Method not allowed" }',
+                              405)
 
-    def put(self, tank_name):
-        """PUT method for the Tank object Api
+    def put(self, resource_id):
+        """PUT method for the BaseApi
+
+        This method always return 405 Method not allowed
+        and should be redefined for each sub api
 
         *Keyword Arguments:*
-        :tank_name: (str) -- name of the tank (MANDATORY)
+        :resource_id: (str) -- key provided
 
         *Returns:*
-            resp -- Flask response object with the json dump of the
-                    updated object
+            resp -- Flask response object
 
         *Raise:*
             <nothing>
         """
-        temp_tank = Tank()
-        print 'put tank: %s' % tank_name
-        return self.json_resp(temp_tank.dumps_json(), 201)
+        return self.json_resp('{ "message": "405: Method not allowed" }',
+                              405)
 
-    def patch(self, tank_name):
-        """PATCH method for the Tank object Api
+    def patch(self, resource_id):
+        """PATCH method for the BaseApi
+
+        This method always return 405 Method not allowed
+        and should be redefined for each sub api
 
         *Keyword Arguments:*
-        :tank_name: (str) -- name of the tank (MANDATORY)
+        :resource_id: (str) -- key provided
 
         *Returns:*
-            resp -- Flask response object with the json dump of the
-                    updated object
+            resp -- Flask response object
 
         *Raise:*
             <nothing>
         """
-        temp_tank = Tank()
-        print 'patch tank: %s' % tank_name
-        return self.json_resp(temp_tank.dumps_json(), 200)
+        return self.json_resp('{ "message": "405: Method not allowed" }',
+                              405)
 
-    def delete(self, tank_name):
-        """DELETE method for the Tank object Api
+    def delete(self, resource_id=None):
+        """DELETE method for the BaseApi
+
+        This method always return 405 Method not allowed
+        and should be redefined for each sub api
 
         *Keyword Arguments:*
-        :tank_name: (str) -- name of the tank (MANDATORY)
+        :resource_id: (str) -- key provided
 
         *Returns:*
-            resp -- Flask response object (empty)
+            resp -- Flask response object
 
         *Raise:*
             <nothing>
         """
+        return self.json_resp('{ "message": "405: Method not allowed" }',
+                              405)
 
-        #temp_tank = Tank()
-        print 'delete tank: %s' % tank_name
-        return self.json_resp('', 204)
-
-
-def start_gui(mission=None):
-    """Starts the html GUI server
-    """
-    if mission is None:
-        tank_api = TankApi('tank', Mission())
-    else:
-        tank_api = TankApi('tank', mission)
-    WEBAPP.register_blueprint(tank_api._blueprint)
-    WEBAPP.run(debug=True)  # TODO: remove debug infos before release
-
-if __name__ == "__main__":
-    # for debug purposes
-    start_gui()

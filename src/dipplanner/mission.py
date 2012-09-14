@@ -28,6 +28,7 @@ __authors__ = [
     # alphabetical order by last name
     'Thomas Chiroux', ]
 
+import json
 
 # local imports
 from dipplanner import settings
@@ -44,6 +45,12 @@ class Mission(object):
     Attributes:
         dives (list) -- list of Dive object of the same mission
         description (str) -- description of the mission (OPTIONAL)
+        status (???) -- actual status of the mission. Could be either:
+        * STATUS_NONE: not calculated
+        * STATUS_CHANGED: changed (calculated, but something in input or parameter has changed
+                   and recalculation is needed)
+        * STATUS_OK: calculated (calculation is up to date)
+
 
     .. todo:: Insert dive(s) in a certain position
 
@@ -55,6 +62,9 @@ class Mission(object):
     .. todo:: decide if settings is included in Mission object or remains
               global
     """
+    STATUS_NONE = "Not Calculated"
+    STATUS_CHANGED = "Calculated but Changed"
+    STATUS_OK = "Calculated and Up to date"
 
     def __init__(self, dive_or_divelist=None, description=None):
         """Mission constructor
@@ -75,6 +85,7 @@ class Mission(object):
         """
         self.dives = []
         self.description = description
+        self.status = self.STATUS_NONE
         if dive_or_divelist is not None:
             self.add_dive(dive_or_divelist)
 
@@ -143,6 +154,78 @@ class Mission(object):
         """
         return self.dives[_slice]
 
+    def dumps_dict(self):
+        """dumps the Mission object in json format
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            string -- json dumps of Tank object
+
+        *Raise:*
+            TypeError : if Mission is not serialisable
+        """
+        mission_dict = {'description': self.description,
+                        'dives': [dive.dumps_dict() for dive in self.dives]}
+
+        return mission_dict
+
+    def loads_json(self, input_json):
+        """loads a json structure and update the tank object with the new
+        values.
+
+        This method can be used in http PUT method to update object
+        value
+
+        *Keyword arguments:*
+            :input_json: (string) -- the json structure to be loaded
+
+        *Returns:*
+            <none>
+
+        *Raise:*
+            * ValueError : if json is not loadable
+        """
+        if type(input_json) == str:
+            mission_dict = json.loads(input_json)
+        elif type(input_json) == dict:
+            mission_dict = input_json
+        else:
+            raise TypeError("json must be either str or dict (%s given"
+                            % type(input_json))
+
+        if mission_dict.has_key('description'):
+            self.description = mission_dict['description']
+
+    def change_status(self, status=None):
+        """Change the status of the mission
+
+        if no status is given in args, toggle the status from OK to
+        CHANGED
+        else, update the status with the given value
+
+        *Keyword arguments:*
+            :status: (str) -- status code (optionnal)
+
+        *Returns:*
+            <none>
+
+        *Raise:*
+            * ValueError : if wrong status code is given
+        """
+        if status is None:
+            if self.status == self.STATUS_OK:
+                self.status = self.STATUS_CHANGED
+        elif status == self.STATUS_NONE:
+            self.status = status
+        elif status == self.STATUS_CHANGED:
+            self.status = status
+        elif status == self.STATUS_OK:
+            self.status = status
+        else:
+            raise ValueError("Wrong status code")
+
     def add_dive(self, dive_or_divelist):
         """add a Dive or a list of dive to the Mission
 
@@ -174,16 +257,18 @@ class Mission(object):
         mission
 
         """
-        previous_dive = None
-        for dive in self.dives:
-            if previous_dive is not None:
-                # make a copy of the model, to keep the previous_dive
-                # model inchanged by further calculations
-                dive.set_repetitive(previous_dive)
-                dive.do_surface_interval()
-            dive.do_dive_without_exceptions()
-            previous_dive = dive
+        if len(self.dives) > 0:
+            previous_dive = None
+            for dive in self.dives:
+                if previous_dive is not None:
+                    # make a copy of the model, to keep the previous_dive
+                    # model inchanged by further calculations
+                    dive.set_repetitive(previous_dive)
+                    dive.do_surface_interval()
+                dive.do_dive_without_exceptions()
+                previous_dive = dive
 
-        # now calculate no flight time based on the last dive
-        self.dives[-1].no_flight_time_wo_exception()
+            # now calculate no flight time based on the last dive
+            self.dives[-1].no_flight_time_wo_exception()
+            self.status = self.STATUS_OK
 

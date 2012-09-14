@@ -165,7 +165,6 @@ class Dive(object):
     * tanks -- (list) Stores enabled dive tank objects
     * current_tank -- current tank object
     * current_depth -- current dive depth
-    * ambiant_pressure -- (current) ambiant pressure
     * current_f_he -- current gas fraction of He
     * current_f_n2 -- current gas fraction of N2
     * current_f_o2 -- current gas fraction of O2
@@ -174,7 +173,7 @@ class Dive(object):
     * pp_o2 -- CCR ppO2, if OC : 0.0
     * is_closed_circuit -- Flag to store CC or OC
     * in_final_ascent -- flag for final ascent
-    * is_repetative_dive -- Flag for repetitive dives
+    * is_repetitive_dive -- Flag for repetitive dives
     * surface_interval -- for surf. int. in seconds
     * no_flight_time_value -- calculated no flight time
     * metadata -- description for the dive
@@ -205,7 +204,7 @@ class Dive(object):
 
         # initiate dive exception list
         self.dive_exceptions = []
-
+        self.is_repetitive_dive = False
         if previous_profile is None:
             # new dive : new model
             self.is_repetitive_dive = False
@@ -309,6 +308,80 @@ class Dive(object):
             <nothing>
         """
         return cmp(self.run_time, otherdive.run_time)
+
+    def dumps_dict(self):
+        """dumps the Mission object in dict format for later json conversion
+
+        *Keyword arguments:*
+            <none>
+
+        *Returns:*
+            string -- dict dumps of Dive object
+
+        *Raise:*
+            TypeError : if Mission is not serialisable
+        """
+        dive_dict = {'input_segments': [seg.dumps_dict() for seg in \
+                                        self.input_segments],
+                     'output_segments': [seg.dumps_dict() for seg in \
+                                         self.output_segments],
+                     'tanks': [tank.dumps_dict() for tank in self.tanks],
+                     'current_tank': self.current_tank.dumps_dict(),
+                     'current_depth': self.current_depth,
+                     'model': self.model.deco_model,
+                     'run_time': self.run_time,
+                     'pp_o2': self.pp_o2,
+                     'is_closed_circuit': self.is_closed_circuit,
+                     'in_final_ascent': self.in_final_ascent,
+                     'is_repetitive_dive': self.is_repetitive_dive,
+                     'surface_interval': self.surface_interval,
+                     'no_flight_time_value': self.no_flight_time_value,
+                     'metadata': self.metadata}
+        return dive_dict
+
+    def loads_json(self, input_json):
+        """loads a json structure and update the tank object with the new
+        values.
+
+        This method can be used in http PUT method to update object
+        value
+
+        *Keyword arguments:*
+            :input_json: (string) -- the json structure to be loaded
+
+        *Returns:*
+            <none>
+
+        *Raise:*
+            * ValueError : if json is not loadable
+        """
+        if type(input_json) == str:
+            dive_dict = json.loads(input_json)
+        elif type(input_json) == dict:
+            dive_dict = input_json
+        else:
+            raise TypeError("json must be either str or dict (%s given"
+                            % type(input_json))
+        if dive_dict.has_key('current_tank'):
+            #TODO: check if it's ok to reinstanciate a new tank
+            self.current_tank = Tank().loads_json(dive_dict['current_tank'])
+        if dive_dict.has_key('current_depth'):
+            self.current_depth = dive_dict['current_depth']
+        if dive_dict.has_key('run_time'):
+            self.run_time = dive_dict['run_time']
+        if dive_dict.has_key('is_closed_circuit'):
+            self.is_closed_circuit = dive_dict['is_closed_circuit']
+        if dive_dict.has_key('is_repetitive_dive'):
+            self.is_repetitive_dive = dive_dict['is_repetitive_dive']
+        if dive_dict.has_key('surface_interval'):
+            self.surface_interval = dive_dict['surface_interval']
+        if dive_dict.has_key('metadata'):
+            self.metadata = dive_dict['metadata']
+        if dive_dict.has_key('input_segments'):
+            temp_segments = []
+            for dict_segment in dive_dict['input_segments']:
+                temp.segments.append(SegmentDive().loads_json(dict_segment))
+            self.input_segments = temp_segments
 
     def set_repetitive(self, previous_dive):
         """Make this dive a repetitive dive by cloning the previous

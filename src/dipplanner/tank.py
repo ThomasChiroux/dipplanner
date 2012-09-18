@@ -194,30 +194,28 @@ class Tank(object):
             :max_ppo2: (float) -- sets the maximum ppo2 you want for this tank
                                   (default: settings.DEFAULT_MAX_PPO2)
             :mod: (float) -- Specify the mod you want.
-                    * if not provided, calculates the mod based on max_ppo2
+                if not provided, calculates the mod based on max_ppo2
 
-                    * if provided and not compatible
-                      with max_ppo2: raise InvalidMod
+                if provided and not compatible
+                  with max_ppo2: raise InvalidMod
 
             :tank_vol: (float) -- Volume of the tank in liter
             :tank_pressure: (float) -- Pressure of the tank, in bar
-            :tank_rule: (float) -- rule for warning in the tank consumption
-                     must be either :
+            :tank_rule: -- rule for warning in the tank consumption
+                must be either : 'xxxb' or '1/x'.
 
-                     * xxxb (ex: 50b means 50 bar minimum at
-                             the end of the dive)
-                     * 1/x
-                        * ex : 1/3 for rule of thirds:
-                            * 1/3 for way in,
-                            * 1/3 for way out,
-                            * 1/3 remains at the end of the dive)
-                        * ex2: 1/6 rule:
-                            * 1/6 way IN,
-                            * 1/6 wau OUT,
-                            * 2/3 remains
+                .. note:: xxxb (ex: 50b) means 50 bar minimum at
+                          the end of the dive
+
+                .. note:: 1/x (ex : 1/3 for rule of thirds:
+                          1/3 for way in, 1/3 for way out,
+                          1/3 remains at the end of the dive)
+
+                          ex2: 1/6 rule: 1/6 way IN,1/6 way OUT, 2/3 remains
+
             :given_name: (str) -- set a specific name for the Tank.
-                    if not given, it will be generated automatically based
-                    on the gas.
+                if not given, it will be generated automatically based
+                on the gas.
         *Returns:*
             <nothing>
 

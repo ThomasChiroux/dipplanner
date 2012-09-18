@@ -33,6 +33,7 @@ from dipplanner import settings
 from dipplanner.dipp_exception import DipplannerException
 from dipplanner.tools import seconds_to_mmss
 from dipplanner.tools import depth_to_pressure, pressure_to_depth
+from dipplanner.tank import Tank
 
 
 class UnauthorizedMod(DipplannerException):
@@ -230,6 +231,7 @@ class Segment(object):
             self.setpoint = segment_dict['setpoint']
         if segment_dict.has_key('tank'):
             self.tank = Tank().loads_json(segment_dict['tank'])
+        return self
 
     def check(self):
         """check if it's a valid segment
@@ -419,7 +421,7 @@ class Segment(object):
 class SegmentDive(Segment):
     """Specialisation of segment class for dive segments
     """
-    def __init__(self, depth, time, tank, setpoint=0):
+    def __init__(self, depth=None, time=None, tank=None, setpoint=0):
         """Constructor for SegmentDive class.
         Look at base class for more explanations
 
@@ -447,11 +449,14 @@ class SegmentDive(Segment):
 
         self.type = 'const'  # type of segment
         self.in_use = True  # is this segment in use : default: yes
-        self.depth = float(depth)  # depth of this segment, in meter
-        self.time = float(time)  # time of this segment, in second
-
-        self.setpoint = float(setpoint)  # for CCR
-        self.tank = tank  # tank used for this segment
+        if depth is not None:
+            self.depth = float(depth)  # depth of this segment, in meter
+        if time is not None:
+            self.time = float(time)  # time of this segment, in second
+        if setpoint is not None:
+            self.setpoint = float(setpoint)  # for CCR
+        if tank is not None:
+            self.tank = tank  # tank used for this segment
 
     def gas_used(self):
         """calculates returns the quantity (in liter)

@@ -601,6 +601,7 @@ class Tank(object):
             self._set_min_gas()
 
         self._validate()
+        return self
 
     def _calculate_mod(self, max_ppo2):
         """calculate and returns mod for a given ppo2 based on this tank info

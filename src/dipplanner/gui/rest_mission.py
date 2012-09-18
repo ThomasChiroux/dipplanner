@@ -26,26 +26,24 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 # dependencies imports
-from flask import request
-from flask import g as self
+from bottle import request, response
 
 # local import
-from dipplanner.gui.rest_base import BaseApi
 from dipplanner.mission import Mission
 
-class MissionApi(BaseApi):
-    """RestFull API for Mission Class
 
-    As is inherit from BaseApi, there is no need to redefine constructor and
-    other common methods
+class MissionApiBottle(object):
 
-    URIs:
+    def __init__(self, mission=None):
+        self.mission = mission
 
-    (...)/mission/ : GET, POST, DELETE
-    (...)/mission/status : GET
-    (...)/mission/commands/calculate : POST
-    """
-    def get(self, resource_id):
+    def json_abort(self, code, message):
+        response.set_header("Content-Type", "application/json")
+        response.status = code
+        #response.body = { 'message': message}
+        return { 'message': message }
+
+    def get(self, resource_id=None):
         """GET method for the Mission object Api
 
         *Keyword Arguments:*
@@ -57,13 +55,18 @@ class MissionApi(BaseApi):
         *Raise:*
             <nothing>
         """
-        if resource_id is None:
-            return self.json_resp(self.mission.dumps_dict(), 200)
-        else:
-            if resource_id == 'status':
-                return self.json_resp({ 'status': self.mission.status }, 200)
+        print 'GET: resource_id:{}'.format(resource_id)
+        if request.get_header('Content-Type') == 'application/json':
+            if resource_id is None:
+                return self.mission.dumps_dict()
             else:
-                return self.json_resp('{ "message": "404: Not found" }', 404)
+                if resource_id == 'status':
+                    return { 'status': self.mission.status }
+                else:
+                    return self.json_abort(404, "404: Not found" )
+        else:
+            return self.json_abort(400, "400: Bad ContentType")
+
 
     def post(self):
         """POST method for the Mission object Api
@@ -87,19 +90,18 @@ class MissionApi(BaseApi):
         *Raise:*
             <nothing>
         """
-        if request.headers['Content-Type'] == 'application/json':
+        if request.get_header('Content-Type') == 'application/json':
             if self.mission is None or len(self.mission) == 0:
                 self.mission = Mission()
                 self.mission.loads_json(request.json)
-                return self.json_resp(self.mission.dumps_dict(), 201)
+                response.status = 201
+                return self.mission.dumps_dict()  #, 201)
             else:
-                return self.json_resp('{ "message": "403: Forbidden: you MUST '
-                                      'delete the current mission before '
-                                      'create a new one" }',
-                                      403)
+                return self.json_abort(403, "403: Forbidden: you MUST "
+                                            "delete the current mission "
+                                            "before create a new one")
         else:
-            return self.json_resp('{ "message": "400: Bad ContentType" }',
-                                  400)
+            return self.json_abort(400, "400: Bad ContentType")
 
     def delete(self, resource_id=None):
         """DELETE method for the Mission object Api
@@ -113,12 +115,11 @@ class MissionApi(BaseApi):
         *Raise:*
             <nothing>
         """
-        print "delete mission !!!!!"
-        if resource_id is None:
-            print "ok: resource if is none"
-            self.mission.clean()
-            print self.mission
-            return self.json_resp('{ "message": "204: resource deleted" }',
-                                  204)
+        if request.get_header('Content-Type') == 'application/json':
+            if resource_id is None:
+                self.mission.clean()
+                return self.mission.dumps_dict()
+            else:
+                return self.json_abort(404, "404: Not found")
         else:
-            return self.json_resp('{ "message": "404: Not found" }', 404)
+            return self.json_abort(400, "400: Bad ContentType")

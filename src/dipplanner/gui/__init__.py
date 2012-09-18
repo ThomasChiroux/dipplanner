@@ -26,20 +26,32 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 # dependencies imports
-from flask import Flask
+import bottle
 
 # local imports
 from dipplanner.mission import Mission
-from dipplanner.gui.rest_mission import MissionApi
+from dipplanner.gui.rest_mission import MissionApiBottle
 
-WEBAPP = Flask(__name__)
+
+ROOT_API_URL = "/api/v1/"
+
 
 def start_gui(mission=None):
     """Starts the html GUI server
     """
     if mission is None:
-        mission_api = MissionApi('mission', Mission())
+        bottle_api = MissionApiBottle(Mission())
     else:
-        mission_api = MissionApi('mission', mission)
-    WEBAPP.register_blueprint(mission_api._blueprint)
-    WEBAPP.run(debug=True)  # TODO: remove debug infos before release
+        bottle_api = MissionApiBottle(mission)
+
+    app = bottle.Bottle()
+    app.route(ROOT_API_URL+'mission/',
+              method='GET')(bottle_api.get)
+    app.route(ROOT_API_URL+'mission/<resource_id>',
+              method='GET')(bottle_api.get)
+    app.route(ROOT_API_URL+'mission/',
+              method='POST')(bottle_api.post)
+    app.route(ROOT_API_URL+'mission/',
+              method='DELETE')(bottle_api.delete)
+    bottle.debug(True)
+    bottle.run(app1, host='localhost', port=8080)

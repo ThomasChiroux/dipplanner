@@ -28,13 +28,20 @@ __authors__ = [
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 import os
+import sys
 
 # local imports
 from build_scripts.version import get_git_version
 
-here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.rst')).read()
-NEWS = open(os.path.join(here, 'NEWS.rst')).read()
+if not hasattr(sys, 'version_info') or sys.version_info < (2, 7, 0, 'final'):
+    raise SystemExit("dipplanner requires Python 2.7 or later.")
+
+with open("README.rst") as f:
+    README = f.read()
+
+with open("NEWS.rst") as f:
+    NEWS = f.read()
+
 
 VERSION = get_git_version()
 
@@ -63,6 +70,11 @@ install_requires = [
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
     'flask', 'lxml']
 
+try:
+    import argparse # NOQA
+except ImportError:
+    install_requires.append('argparse')
+
 setup(name='dipplanner',
       version=VERSION,
       description="Dive planner and decompression calculation program",
@@ -71,9 +83,10 @@ setup(name='dipplanner',
       classifiers=[
           # Get strings from
           # http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      ],
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 2.7"],
       keywords='diving plannification',
-      author='Thomas Chiroux',
+      author='Thomas Chiroux & contributors',
       author_email='',
       url='http://dipplanner.org',
       license='GPLv3',
@@ -87,7 +100,7 @@ setup(name='dipplanner',
       provides=('dipplanner', ),
       install_requires=install_requires,
       #test_suite = 'test.run_all_tests.run_all_tests',
-      tests_require = ['nose', 'coverage', ],
+      tests_require = ['nose', 'coverage', 'unittest2'],
       test_suite = 'nose.collector',
       extras_require = {
           'doc':  ["sphinx", ],

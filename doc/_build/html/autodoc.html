@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Source code documentation &mdash; dipplanner 0.3a-19-ga892 documentation</title>
+    <title>Source code documentation &mdash; dipplanner 0.3a-22-g6894 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.3a-19-ga892',
+        VERSION:     '0.3a-22-g6894',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="dipplanner 0.3a-19-ga892 documentation" href="index.html" />
+    <link rel="top" title="dipplanner 0.3a-22-g6894 documentation" href="index.html" />
     <link rel="next" title="Release Notes" href="NEWS.html" />
     <link rel="prev" title="Templates" href="template.html" /> 
   </head>
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="template.html" title="Templates"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-19-ga892 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-22-g6894 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -70,8 +70,17 @@ the Mission will keep consistency between repetitive dives</p>
 <p>An isolated dive is a Mission with only one dive inside</p>
 <dl class="docutils">
 <dt>Attributes:</dt>
-<dd>dives (list) &#8211; list of Dive object of the same mission
-description (str) &#8211; description of the mission (OPTIONAL)</dd>
+<dd><p class="first">dives (list) &#8211; list of Dive object of the same mission
+description (str) &#8211; description of the mission (OPTIONAL)
+status (???) &#8211; actual status of the mission. Could be either:
+* STATUS_NONE: not calculated
+* STATUS_CHANGED: changed (calculated, but something in input or parameter has changed</p>
+<blockquote>
+<div>and recalculation is needed)</div></blockquote>
+<ul class="last simple">
+<li>STATUS_OK: calculated (calculation is up to date)</li>
+</ul>
+</dd>
 </dl>
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
@@ -90,6 +99,11 @@ in this case, each dive will be able to pickup some tank</p>
 <p class="first admonition-title">Todo</p>
 <p class="last">decide if settings is included in Mission object or remains
 global</p>
+</div>
+<div class="admonition-todo admonition" id="index-4">
+<p class="first admonition-title">Todo</p>
+<p class="last">TODO creer un singleton de cette classe pour eviter la
+reinstanciation de flask</p>
 </div>
 <dl class="method">
 <dt id="dipplanner.mission.Mission.__init__">
@@ -154,6 +168,82 @@ or a list of Dive object</td>
 </tr>
 </tbody>
 </table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.dumps_dict">
+<tt class="descname">dumps_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.mission.Mission.dumps_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>dumps the Mission object in json format</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; json dumps of Tank object</dd>
+<dt><em>Raise:</em></dt>
+<dd>TypeError : if Mission is not serialisable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.loads_json">
+<tt class="descname">loads_json</tt><big>(</big><em>input_json</em><big>)</big><a class="headerlink" href="#dipplanner.mission.Mission.loads_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a json structure and update the tank object with the new
+values.</p>
+<p>This method can be used in http PUT method to update object
+value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">input_json:</th><td class="field-body">(string) &#8211; the json structure to be loaded</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last simple">
+<li>ValueError : if json is not loadable</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.clean">
+<tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.mission.Mission.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>clean the mission</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.mission.Mission.change_status">
+<tt class="descname">change_status</tt><big>(</big><em>status=None</em><big>)</big><a class="headerlink" href="#dipplanner.mission.Mission.change_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the status of the mission</p>
+<p>if no status is given in args, toggle the status from OK to
+CHANGED
+else, update the status with the given value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">status:</th><td class="field-body">(str) &#8211; status code (optionnal)</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last simple">
+<li>ValueError : if wrong status code is given</li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -432,7 +522,7 @@ In this case, it can not continue</p>
 
 <dl class="class">
 <dt id="dipplanner.dive.Dive">
-<em class="property">class </em><tt class="descclassname">dipplanner.dive.</tt><tt class="descname">Dive</tt><big>(</big><em>known_segments</em>, <em>known_tanks</em>, <em>previous_profile=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">dipplanner.dive.</tt><tt class="descname">Dive</tt><big>(</big><em>known_segments=None</em>, <em>known_tanks=None</em>, <em>previous_profile=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Conducts dive based on inputSegments, knownGases, and an existing model.
 Iterates through dive segments updating the Model. When all
 dive segments are processed then calls ascend(0.0) to
@@ -449,7 +539,6 @@ bailout is specified.</p>
 <li>tanks &#8211; (list) Stores enabled dive tank objects</li>
 <li>current_tank &#8211; current tank object</li>
 <li>current_depth &#8211; current dive depth</li>
-<li>ambiant_pressure &#8211; (current) ambiant pressure</li>
 <li>current_f_he &#8211; current gas fraction of He</li>
 <li>current_f_n2 &#8211; current gas fraction of N2</li>
 <li>current_f_o2 &#8211; current gas fraction of O2</li>
@@ -458,14 +547,14 @@ bailout is specified.</p>
 <li>pp_o2 &#8211; CCR ppO2, if OC : 0.0</li>
 <li>is_closed_circuit &#8211; Flag to store CC or OC</li>
 <li>in_final_ascent &#8211; flag for final ascent</li>
-<li>is_repetative_dive &#8211; Flag for repetitive dives</li>
+<li>is_repetitive_dive &#8211; Flag for repetitive dives</li>
 <li>surface_interval &#8211; for surf. int. in seconds</li>
 <li>no_flight_time_value &#8211; calculated no flight time</li>
 <li>metadata &#8211; description for the dive</li>
 </ul>
 <dl class="method">
 <dt id="dipplanner.dive.Dive.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>known_segments</em>, <em>known_tanks</em>, <em>previous_profile=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>known_segments=None</em>, <em>known_tanks=None</em>, <em>previous_profile=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/dive.html#Dive.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.dive.Dive.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor for Profile class</p>
 <p>For fist dive, instanciate the profile class with no model
 (profile will create one for you)
@@ -551,6 +640,48 @@ MUST still instantiate itself, with errors in his own object</p>
 <dd>Integer &#8211; result of cmp()</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.dive.Dive.dumps_dict">
+<tt class="descname">dumps_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.dive.Dive.dumps_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>dumps the Mission object in dict format for later json conversion</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; dict dumps of Dive object</dd>
+<dt><em>Raise:</em></dt>
+<dd>TypeError : if Mission is not serialisable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.dive.Dive.loads_json">
+<tt class="descname">loads_json</tt><big>(</big><em>input_json</em><big>)</big><a class="headerlink" href="#dipplanner.dive.Dive.loads_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a json structure and update the tank object with the new
+values.</p>
+<p>This method can be used in http PUT method to update object
+value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">input_json:</th><td class="field-body">(string) &#8211; the json structure to be loaded</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last simple">
+<li>ValueError : if json is not loadable</li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1001,6 +1132,69 @@ depth(s) of the segment</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="dipplanner.segment.Segment.dumps_dict">
+<tt class="descname">dumps_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.Segment.dumps_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>dumps the Segment object in json format</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; json dumps of Segment object</dd>
+<dt><em>Raise:</em></dt>
+<dd>TypeError : if Tank is not serialisable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.segment.Segment.loads_json">
+<tt class="descname">loads_json</tt><big>(</big><em>input_json</em><big>)</big><a class="headerlink" href="#dipplanner.segment.Segment.loads_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a json structure and update the tank object with the new
+values.</p>
+<p>This method can be used in http PUT method to update object
+value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">input_json:</th><td class="field-body">(string) &#8211; the json structure to be loaded</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last">
+<li><p class="first">ValueError : if json is not loadable</p>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidGas &#8211; When proportions of gas exceed</dt>
+<dd><p class="first last">100% for example (or negatives values)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2</dt>
+<dd><p class="first">or ABSOLUTE_MAX_MOD.</p>
+<p class="last">ABSOLUTE_MAX_MOD is a global settings which
+can not be exceeded.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidTank &#8211; when pressure or tank size exceed maximum</dt>
+<dd><p class="first last">values or are incorrect (like negatives) values</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="dipplanner.segment.Segment.check">
 <tt class="descname">check</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#Segment.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.Segment.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>check if it&#8217;s a valid segment
@@ -1129,11 +1323,11 @@ a small amount of argon</p>
 
 <dl class="class">
 <dt id="dipplanner.segment.SegmentDive">
-<em class="property">class </em><tt class="descclassname">dipplanner.segment.</tt><tt class="descname">SegmentDive</tt><big>(</big><em>depth</em>, <em>time</em>, <em>tank</em>, <em>setpoint=0</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDive" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">dipplanner.segment.</tt><tt class="descname">SegmentDive</tt><big>(</big><em>depth=None</em>, <em>time=None</em>, <em>tank=None</em>, <em>setpoint=0</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specialisation of segment class for dive segments</p>
 <dl class="method">
 <dt id="dipplanner.segment.SegmentDive.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>depth</em>, <em>time</em>, <em>tank</em>, <em>setpoint=0</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDive.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDive.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>depth=None</em>, <em>time=None</em>, <em>tank=None</em>, <em>setpoint=0</em><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentDive.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentDive.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor for SegmentDive class.
 Look at base class for more explanations</p>
 <dl class="docutils">
@@ -1263,6 +1457,20 @@ Should be executed before calculating dives</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="dipplanner.segment.SegmentDive.dumps_dict">
+<tt class="descname">dumps_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.dumps_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>dumps the Segment object in json format</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; json dumps of Segment object</dd>
+<dt><em>Raise:</em></dt>
+<dd>TypeError : if Tank is not serialisable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="dipplanner.segment.SegmentDive.get_end">
 <tt class="descname">get_end</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.get_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates and returns E.N.D :
@@ -1324,6 +1532,55 @@ Complex method : use real density of water, T°, etc...</p>
 <dd>string &#8211; segment time in the form MMM:SS</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.segment.SegmentDive.loads_json">
+<tt class="descname">loads_json</tt><big>(</big><em>input_json</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDive.loads_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a json structure and update the tank object with the new
+values.</p>
+<p>This method can be used in http PUT method to update object
+value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">input_json:</th><td class="field-body">(string) &#8211; the json structure to be loaded</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last">
+<li><p class="first">ValueError : if json is not loadable</p>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidGas &#8211; When proportions of gas exceed</dt>
+<dd><p class="first last">100% for example (or negatives values)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2</dt>
+<dd><p class="first">or ABSOLUTE_MAX_MOD.</p>
+<p class="last">ABSOLUTE_MAX_MOD is a global settings which
+can not be exceeded.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidTank &#8211; when pressure or tank size exceed maximum</dt>
+<dd><p class="first last">values or are incorrect (like negatives) values</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1471,6 +1728,20 @@ Should be executed before calculating dives</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="dipplanner.segment.SegmentDeco.dumps_dict">
+<tt class="descname">dumps_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.dumps_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>dumps the Segment object in json format</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; json dumps of Segment object</dd>
+<dt><em>Raise:</em></dt>
+<dd>TypeError : if Tank is not serialisable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="dipplanner.segment.SegmentDeco.get_end">
 <tt class="descname">get_end</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.get_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates and returns E.N.D :
@@ -1532,6 +1803,55 @@ Complex method : use real density of water, T°, etc...</p>
 <dd>string &#8211; segment time in the form MMM:SS</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.segment.SegmentDeco.loads_json">
+<tt class="descname">loads_json</tt><big>(</big><em>input_json</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentDeco.loads_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a json structure and update the tank object with the new
+values.</p>
+<p>This method can be used in http PUT method to update object
+value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">input_json:</th><td class="field-body">(string) &#8211; the json structure to be loaded</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last">
+<li><p class="first">ValueError : if json is not loadable</p>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidGas &#8211; When proportions of gas exceed</dt>
+<dd><p class="first last">100% for example (or negatives values)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2</dt>
+<dd><p class="first">or ABSOLUTE_MAX_MOD.</p>
+<p class="last">ABSOLUTE_MAX_MOD is a global settings which
+can not be exceeded.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidTank &#8211; when pressure or tank size exceed maximum</dt>
+<dd><p class="first last">values or are incorrect (like negatives) values</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1668,6 +1988,20 @@ Should be executed before calculating dives</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="dipplanner.segment.SegmentAscDesc.dumps_dict">
+<tt class="descname">dumps_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.dumps_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>dumps the Segment object in json format</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Returns:</em></dt>
+<dd>string &#8211; json dumps of Segment object</dd>
+<dt><em>Raise:</em></dt>
+<dd>TypeError : if Tank is not serialisable</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="dipplanner.segment.SegmentAscDesc.gas_used">
 <tt class="descname">gas_used</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/segment.html#SegmentAscDesc.gas_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.gas_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>calc. and returns the quantity (in liter) of gas used
@@ -1745,6 +2079,55 @@ Complex method : use real density of water, T°, etc...</p>
 <dd>string &#8211; segment time in the form MMM:SS</dd>
 <dt><em>Raise:</em></dt>
 <dd>&lt;nothing&gt;</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dipplanner.segment.SegmentAscDesc.loads_json">
+<tt class="descname">loads_json</tt><big>(</big><em>input_json</em><big>)</big><a class="headerlink" href="#dipplanner.segment.SegmentAscDesc.loads_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a json structure and update the tank object with the new
+values.</p>
+<p>This method can be used in http PUT method to update object
+value</p>
+<dl class="docutils">
+<dt><em>Keyword arguments:</em></dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">input_json:</th><td class="field-body">(string) &#8211; the json structure to be loaded</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><em>Returns:</em></dt>
+<dd>&lt;none&gt;</dd>
+<dt><em>Raise:</em></dt>
+<dd><ul class="first last">
+<li><p class="first">ValueError : if json is not loadable</p>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidGas &#8211; When proportions of gas exceed</dt>
+<dd><p class="first last">100% for example (or negatives values)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidMod &#8211; if mod &gt; max mod based on max_ppo2</dt>
+<dd><p class="first">or ABSOLUTE_MAX_MOD.</p>
+<p class="last">ABSOLUTE_MAX_MOD is a global settings which
+can not be exceeded.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>InvalidTank &#8211; when pressure or tank size exceed maximum</dt>
+<dd><p class="first last">values or are incorrect (like negatives) values</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -2284,8 +2667,8 @@ optional : if not provided, use self.f_he</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="dipplanner.tank.Tank.dumps_json">
-<tt class="descname">dumps_json</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.Tank.dumps_json" title="Permalink to this definition">¶</a></dt>
+<dt id="dipplanner.tank.Tank.dumps_dict">
+<tt class="descname">dumps_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#dipplanner.tank.Tank.dumps_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>dumps the Tank object in json format</p>
 <dl class="docutils">
 <dt><em>Keyword arguments:</em></dt>
@@ -3384,6 +3767,7 @@ constDepth() method of Compartment.</p>
 <li>gradient (Gradient) &#8211; gradient factor object</li>
 <li>ox_tox (OxTox) &#8211; OxTox object</li>
 <li>metadata (str) &#8211; Stores infos about where the model was created</li>
+<li>deco_model (str) &#8211; name of the deco model</li>
 <li>units (str) &#8211; only &#8216;metric&#8217; allowed</li>
 <li>COMPS (int) &#8211; static info : number of compartments</li>
 <li>MODEL_VALIDATION_SUCCESS (int) &#8211; static const for validation success</li>
@@ -4074,6 +4458,10 @@ using Antoine equation
 bin/dipplanner (which is an empty shell)</p>
 <p>runs in command line and output resulting dive profile
 also initiate log files</p>
+<dl class="docutils">
+<dt>TODO: logger.tutu(&#8220;message %s&#8221;, allo)</dt>
+<dd>au lieu de logger.tutu(&#8220;message %s&#8221; % allo)</dd>
+</dl>
 <dl class="function">
 <dt id="dipplanner.main.activate_debug">
 <tt class="descclassname">dipplanner.main.</tt><tt class="descname">activate_debug</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#activate_debug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.activate_debug" title="Permalink to this definition">¶</a></dt>
@@ -4106,7 +4494,7 @@ also initiate log files</p>
 
 <dl class="function">
 <dt id="dipplanner.main.main">
-<tt class="descclassname">dipplanner.main.</tt><tt class="descname">main</tt><big>(</big><em>cli_arguments=['/home/tchiroux/devel/perso/dipplanner/venv/dev/bin/sphinx-build', '-b', 'html', '-d', '_build/doctrees', '.', '_build/html']</em><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.main" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">dipplanner.main.</tt><tt class="descname">main</tt><big>(</big><em>cli_arguments=['/home/tchiroux/.virtualenvs/dipplanner2.7/bin/sphinx-build', '-b', 'html', '-d', '_build/doctrees', '.', '_build/html']</em><big>)</big><a class="reference internal" href="_modules/dipplanner/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.main.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>main uses the parameters, tanks and dives given in config file(s)
 and/or command line, calculates the dives and return the output in stdout.</p>
 <dl class="docutils">
@@ -4356,210 +4744,7 @@ if false, segments represents segtime</p>
 </div>
 <div class="section" id="module-dipplanner.gui">
 <span id="gui"></span><span id="dipplanner-autodoc-gui"></span><h2>gui<a class="headerlink" href="#module-dipplanner.gui" title="Permalink to this headline">¶</a></h2>
-<p>module generating the GUI</p>
-<p>It uses flask micro-framework to publish a full REST/json API over the
-dipplanner objects and methods</p>
-<dl class="class">
-<dt id="dipplanner.gui.TankApi">
-<em class="property">class </em><tt class="descclassname">dipplanner.gui.</tt><tt class="descname">TankApi</tt><big>(</big><em>name</em>, <em>mission</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi" title="Permalink to this definition">¶</a></dt>
-<dd><p>RestFull API for Tank Class</p>
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>mission</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor for TankApi object</p>
-<dl class="docutils">
-<dt><em>Keyword Arguments:</em></dt>
-<dd><table class="first last docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body">(str) &#8211; api name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">mission:</th><td class="field-body">(Mission) &#8211; mission object</td>
-</tr>
-</tbody>
-</table>
-</dd>
-<dt><em>Returns:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.register_api">
-<tt class="descname">register_api</tt><big>(</big><em>blueprint</em>, <em>endpoint</em>, <em>url</em>, <em>p_key</em>, <em>pk_type=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.register_api"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.register_api" title="Permalink to this definition">¶</a></dt>
-<dd><p>register a REST Api for a dipplanner object</p>
-<dl class="docutils">
-<dt><em>Keyword Arguments:</em></dt>
-<dd><table class="first last docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">app:</th><td class="field-body">(Flask) &#8211; Flask application object</td>
-</tr>
-<tr class="field-even field"><th class="field-name">view:</th><td class="field-body">(MethodView) &#8211; MethodView herited object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">endpoint:</th><td class="field-body">(str) &#8211; name for the view</td>
-</tr>
-<tr class="field-even field"><th class="field-name">url:</th><td class="field-body">(str) &#8211; base url for the api</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">p_key:</th><td class="field-body">(str) &#8211; primary key name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">pk_type:</th><td class="field-body">(str) &#8211; type of primary key</td>
-</tr>
-</tbody>
-</table>
-</dd>
-<dt><em>Returns:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.json_resp">
-<tt class="descname">json_resp</tt><big>(</big><em>message</em>, <em>code</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.json_resp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.json_resp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a pure json Flask response with
-application/json content type and message</p>
-<dl class="docutils">
-<dt><em>Keyword Arguments:</em></dt>
-<dd><table class="first docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">message:</th><td class="field-body">(str) &#8211; json message</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">this method does not validate the correctness of the
-json message : this must be done before</p>
-</div>
-<table class="last docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">code:</th><td class="field-body">(int) &#8211; http response code</td>
-</tr>
-</tbody>
-</table>
-</dd>
-<dt><em>Returns:</em></dt>
-<dd>resp &#8211; Flask response objec</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.get">
-<tt class="descname">get</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>GET method for the Tank object Api</p>
-<p><em>Keyword Arguments:</em>
-:tank_name: (str) &#8211; name of the tank (or None if no tank name is</p>
-<blockquote>
-<div>provided)</div></blockquote>
-<dl class="docutils">
-<dt><em>Returns:</em></dt>
-<dd>resp &#8211; Flask response object: either:
-* list of tanks if no tank_name is given
-* tank datas if tank_name is given</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.post">
-<tt class="descname">post</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.post" title="Permalink to this definition">¶</a></dt>
-<dd><p>POST method for the Tank object Api</p>
-<dl class="docutils">
-<dt><em>Keyword Arguments:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-<dt><em>Returns:</em></dt>
-<dd><dl class="first last docutils">
-<dt>resp &#8211; Flask response object with the json dump of the newly</dt>
-<dd>created object</dd>
-</dl>
-</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.put">
-<tt class="descname">put</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.put" title="Permalink to this definition">¶</a></dt>
-<dd><p>PUT method for the Tank object Api</p>
-<p><em>Keyword Arguments:</em>
-:tank_name: (str) &#8211; name of the tank (MANDATORY)</p>
-<dl class="docutils">
-<dt><em>Returns:</em></dt>
-<dd><dl class="first last docutils">
-<dt>resp &#8211; Flask response object with the json dump of the</dt>
-<dd>updated object</dd>
-</dl>
-</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.patch">
-<tt class="descname">patch</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.patch" title="Permalink to this definition">¶</a></dt>
-<dd><p>PATCH method for the Tank object Api</p>
-<p><em>Keyword Arguments:</em>
-:tank_name: (str) &#8211; name of the tank (MANDATORY)</p>
-<dl class="docutils">
-<dt><em>Returns:</em></dt>
-<dd><dl class="first last docutils">
-<dt>resp &#8211; Flask response object with the json dump of the</dt>
-<dd>updated object</dd>
-</dl>
-</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="dipplanner.gui.TankApi.delete">
-<tt class="descname">delete</tt><big>(</big><em>tank_name</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#TankApi.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.TankApi.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>DELETE method for the Tank object Api</p>
-<p><em>Keyword Arguments:</em>
-:tank_name: (str) &#8211; name of the tank (MANDATORY)</p>
-<dl class="docutils">
-<dt><em>Returns:</em></dt>
-<dd>resp &#8211; Flask response object (empty)</dd>
-<dt><em>Raise:</em></dt>
-<dd>&lt;nothing&gt;</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="dipplanner.gui.TankApi.__str__">
-<tt class="descname">__str__</tt><a class="headerlink" href="#dipplanner.gui.TankApi.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__str__() &lt;==&gt; str(x)</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="dipplanner.gui.TankApi.as_view">
-<em class="property">classmethod </em><tt class="descname">as_view</tt><big>(</big><em>name</em>, <em>*class_args</em>, <em>**class_kwargs</em><big>)</big><a class="headerlink" href="#dipplanner.gui.TankApi.as_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the class into an actual view function that can be used
-with the routing system.  Internally this generates a function on the
-fly which will instantiate the <tt class="xref py py-class docutils literal"><span class="pre">View</span></tt> on each request and call
-the <tt class="xref py py-meth docutils literal"><span class="pre">dispatch_request()</span></tt> method on it.</p>
-<p>The arguments passed to <a class="reference internal" href="#dipplanner.gui.TankApi.as_view" title="dipplanner.gui.TankApi.as_view"><tt class="xref py py-meth docutils literal"><span class="pre">as_view()</span></tt></a> are forwarded to the
-constructor of the class.</p>
-</dd></dl>
-
-</dd></dl>
-
+<p>dipplanner module</p>
 <dl class="function">
 <dt id="dipplanner.gui.start_gui">
 <tt class="descclassname">dipplanner.gui.</tt><tt class="descname">start_gui</tt><big>(</big><em>mission=None</em><big>)</big><a class="reference internal" href="_modules/dipplanner/gui.html#start_gui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dipplanner.gui.start_gui" title="Permalink to this definition">¶</a></dt>
@@ -4642,7 +4827,7 @@ constructor of the class.</p>
         <li class="right" >
           <a href="template.html" title="Templates"
              >previous</a> |</li>
-        <li><a href="index.html">dipplanner 0.3a-19-ga892 documentation</a> &raquo;</li> 
+        <li><a href="index.html">dipplanner 0.3a-22-g6894 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

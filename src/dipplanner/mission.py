@@ -32,17 +32,9 @@ import json
 
 # local imports
 from dipplanner import settings
+#from dipplanner.python_tools import Singleton
 from dipplanner.dive import Dive
 
-class Singleton(type):
-    def __init__(cls, name, bases, dict):
-        super(Singleton, cls).__init__(name, bases, dict)
-        cls.instance = None
-
-    def __call__(cls,*args,**kw):
-        if cls.instance is None:
-            cls.instance = super(Singleton, cls).__call__(*args, **kw)
-        return cls.instance
 
 class Mission(object):
     """Mission Class
@@ -75,7 +67,8 @@ class Mission(object):
     .. todo:: TODO creer un singleton de cette classe pour eviter la
               reinstanciation de flask
     """
-    __metaclass__ = Singleton
+    # Singleton metaclass was necessary for Flask, but is not for bottle (?)
+    #__metaclass__ = Singleton
 
     STATUS_NONE = "Not Calculated"
     STATUS_CHANGED = "Calculated but Changed"
@@ -98,7 +91,6 @@ class Mission(object):
         Raise:
             TypeError: if dive_or_divelist contains another type than Dive
         """
-        print "Contructor Mission"
         self.dives = []
         self.description = description
         self.status = self.STATUS_NONE
@@ -213,7 +205,13 @@ class Mission(object):
 
         if mission_dict.has_key('description'):
             self.description = mission_dict['description']
-        # TODO here
+        if mission_dict.has_key('dives'):
+            temp_dives = []
+            for dict_dive in mission_dict['dives']:
+                temp_dives.append(Dive().loads_json(dict_dive))
+            self.dives = temp_dives
+        return self
+
 
     def clean(self):
         """clean the mission
@@ -295,4 +293,3 @@ class Mission(object):
             # now calculate no flight time based on the last dive
             self.dives[-1].no_flight_time_wo_exception()
             self.status = self.STATUS_OK
-

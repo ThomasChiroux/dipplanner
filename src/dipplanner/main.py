@@ -26,6 +26,9 @@ bin/dipplanner (which is an empty shell)
 
 runs in command line and output resulting dive profile
 also initiate log files
+
+TODO: logger.tutu("message %s", allo)
+      au lieu de logger.tutu("message %s" % allo)
 """
 
 __authors__ = [
@@ -39,7 +42,6 @@ import logging
 from jinja2 import Environment, PackageLoader
 
 # local imports
-from dipplanner.parse_cli_args import DipplannerCliArguments
 from dipplanner import settings
 from dipplanner.gui import start_gui
 
@@ -116,8 +118,9 @@ def main(cli_arguments=sys.argv):
     *Raise:*
         <nothing>
     """
-    if sys.version_info < (2, 7):
-        raise SystemExit("ERROR: This programm needs python 2.7 or greater")
+    if not hasattr(sys, 'version_info') or sys.version_info < (2, 7, 0,
+                                                               'final'):
+        raise SystemExit("dipplanner requires Python 2.7 or later.")
 
     activate_debug()
 
@@ -132,6 +135,8 @@ def main(cli_arguments=sys.argv):
     except IOError:
         settings.__VERSION__ = "unknown"
 
+    from dipplanner.parse_cli_args import DipplannerCliArguments
+
     dipplanner_arguments = DipplannerCliArguments(cli_arguments)
     mission = dipplanner_arguments.mission
     mission.calculate()
@@ -144,4 +149,3 @@ def main(cli_arguments=sys.argv):
         tpl = env.get_template(settings.TEMPLATE)
         text = tpl.render(settings=settings, dives=mission)
         print text
-

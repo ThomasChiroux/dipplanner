@@ -179,7 +179,8 @@ class Dive(object):
     * metadata -- description for the dive
     """
 
-    def __init__(self, known_segments, known_tanks, previous_profile=None):
+    def __init__(self, known_segments=None, known_tanks=None,
+                 previous_profile=None):
         """Constructor for Profile class
 
         For fist dive, instanciate the profile class with no model
@@ -380,8 +381,14 @@ class Dive(object):
         if dive_dict.has_key('input_segments'):
             temp_segments = []
             for dict_segment in dive_dict['input_segments']:
-                temp.segments.append(SegmentDive().loads_json(dict_segment))
+                temp_segments.append(SegmentDive().loads_json(dict_segment))
             self.input_segments = temp_segments
+        if dive_dict.has_key('tanks'):
+            temp_tanks = []
+            for dict_tank in dive_dict['tanks']:
+                temp_tanks.append(Tank().loads_json(dict_tank))
+            self.tanks = temp_tanks
+        return self
 
     def set_repetitive(self, previous_dive):
         """Make this dive a repetitive dive by cloning the previous

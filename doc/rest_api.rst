@@ -1815,6 +1815,71 @@ Output segments are the result of the calculations, so they are read-only
 method: GET
 ^^^^^^^^^^^
 
+return the calculated output_segments
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/output_segments/ > /tmp/output_segs.json
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+        % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                       Dload  Upload   Total   Spent    Left  Speed
+        0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/output_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 21:50:01 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 3028
+      < Content-Type: application/json
+      <
+      { [data not shown]
+      100  3028  100  3028    0     0  1287k      0 --:--:-- --:--:-- --:--:-- 1478k
+      * Closing connection #0
+      {"output_segments": [{"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 30.0, "run_time": 90.0, "time": 90.0, "type": "descent"}, {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 30.0, "run_time": 1200.0, "time": 1110.0, "type": "const"}, {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 12.0, "run_time": 1308.0, "time": 108.0, "type": "ascent"}, {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 12.0, "run_time": 1309.0, "time": 1.0, "type": "deco"}, {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 9.0, "run_time": 1339.0, "time": 30.0, "type": "deco"}, {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 6.0, "run_time": 1435.0, "time": 96.0, "type": "deco"}, {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 3.0, "run_time": 1634.0, "time": 199.0, "type": "deco"}]}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id is not found,
+the API will return a simple 404:
+
+ex 1:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/output_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/42/output_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:54:52 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
 /api/v1/mission/dives/<dive_id>/output_segments/<segment_id>/
 -------------------------------------------------------------
 
@@ -1823,10 +1888,92 @@ Output segments are the result of the calculations, so they are read-only
 method: GET
 ^^^^^^^^^^^
 
-/api/v1/mission/dives/<dive_id>/OTHER DIVE ATTRIBUTES/
-------------------------------------------------------
+return a specific output segment
 
-TBD
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/output_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/output_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 21:51:27 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 428
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 30.0, "run_time": 90.0, "time": 90.0, "type": "descent"}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id or if the segment_id is not found,
+the API will return a simple 404:
+
+ex 1:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/output_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/42/output_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:55:16 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/output_segments/42
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/output_segments/42 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:55:45 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: segment (42) not found"}
+
 
 /api/v1/settings/
 -----------------

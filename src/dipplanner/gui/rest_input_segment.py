@@ -36,7 +36,7 @@ from dipplanner.gui.rest_main_api import ApiBottle
 from dipplanner.mission import Mission
 from dipplanner.segment import SegmentDive
 
-class SegmentApiBottle(ApiBottle):
+class InputSegmentApiBottle(ApiBottle):
     """api for dives inside the mission object
     """
 

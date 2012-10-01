@@ -45,7 +45,8 @@ from dipplanner.mission import Mission
 from dipplanner.gui.rest_mission import MissionApiBottle
 from dipplanner.gui.rest_dive import DiveApiBottle
 from dipplanner.gui.rest_tank import TankApiBottle
-from dipplanner.gui.rest_input_segment import SegmentApiBottle
+from dipplanner.gui.rest_input_segment import InputSegmentApiBottle
+from dipplanner.gui.rest_output_segment import OutputSegmentApiBottle
 from dipplanner.gui.error_api import ErrorApiBottle
 
 
@@ -64,7 +65,8 @@ def start_gui(mission=None):
 
     dive_api = DiveApiBottle(mission_api.mission)
     tank_api = TankApiBottle(mission_api.mission)
-    segment_api = SegmentApiBottle(mission_api.mission)
+    input_segment_api = InputSegmentApiBottle(mission_api.mission)
+    output_segment_api = OutputSegmentApiBottle(mission_api.mission)
 
     app = bottle.Bottle()
     # Mission
@@ -111,22 +113,30 @@ def start_gui(mission=None):
     # input_segments
     app.route(ROOT_API_URL
               + 'mission/dives/<dive_id>/input_segments/',
-              method='GET')(segment_api.get)
+              method='GET')(input_segment_api.get)
     app.route(ROOT_API_URL
               + 'mission/dives/<dive_id>/input_segments/<segment_id>',
-              method='GET')(segment_api.get)
+              method='GET')(input_segment_api.get)
     app.route(ROOT_API_URL
               + 'mission/dives/<dive_id>/input_segments/',
-              method='POST')(segment_api.post)
+              method='POST')(input_segment_api.post)
     app.route(ROOT_API_URL
               + 'mission/dives/<dive_id>/input_segments/<segment_id>',
-              method='PATCH')(segment_api.patch)
+              method='PATCH')(input_segment_api.patch)
     app.route(ROOT_API_URL
               + 'mission/dives/<dive_id>/input_segments/',
-              method='DELETE')(segment_api.delete)
+              method='DELETE')(input_segment_api.delete)
     app.route(ROOT_API_URL
               + 'mission/dives/<dive_id>/input_segments/<segment_id>',
-              method='DELETE')(segment_api.delete)
+              method='DELETE')(input_segment_api.delete)
+
+    # output_segments
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/output_segments/',
+              method='GET')(output_segment_api.get)
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/output_segments/<segment_id>',
+              method='GET')(output_segment_api.get)
 
     # custom error handling
     app.error(404)(error_api.error404)

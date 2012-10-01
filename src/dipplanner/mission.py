@@ -214,12 +214,30 @@ class Mission(object):
         return self
 
 
-    def clean(self):
+    def clean(self, what='all'):
         """clean the mission
+
+        *Keyword arguments:*
+            :what: (str) -- what the method should clean
+                by default: all (clean all)
+                Values allowed: ['all', 'dives', 'description', ]
+
+        *Returns:*
+            <none>
+
+        *Raise:*
+            * ValueError : if wrong status code is given
         """
-        self.dives = []
-        self.description = ""
-        self.status = self.STATUS_NONE
+        if what == 'all':
+            self.dives = []
+            self.description = ""
+            self.status = self.STATUS_NONE
+        elif what == 'dives':
+            self.dives = []
+            self.status = self.STATUS_NONE
+        elif what == 'description':
+            self.description = ""
+
 
     def change_status(self, status=None):
         """Change the status of the mission

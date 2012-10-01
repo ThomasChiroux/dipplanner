@@ -156,6 +156,8 @@ class Dive(object):
     Gas switching is done on the final ascent if OC deco or
     bailout is specified.
 
+    .. todo:: add a dive name ? (in addition to dive's metadata
+
     Outputs profile to a List of dive segments
 
     Attributes:
@@ -311,7 +313,7 @@ class Dive(object):
         return cmp(self.run_time, otherdive.run_time)
 
     def dumps_dict(self):
-        """dumps the Mission object in dict format for later json conversion
+        """dumps the Dive object in dict format for later json conversion
 
         *Keyword arguments:*
             <none>
@@ -322,12 +324,15 @@ class Dive(object):
         *Raise:*
             TypeError : if Mission is not serialisable
         """
+        current_tank_dict = {}
+        if self.current_tank is not None:
+            current_tank_dict = self.current_tank.dumps_dict()
         dive_dict = {'input_segments': [seg.dumps_dict() for seg in \
                                         self.input_segments],
                      'output_segments': [seg.dumps_dict() for seg in \
                                          self.output_segments],
                      'tanks': [tank.dumps_dict() for tank in self.tanks],
-                     'current_tank': self.current_tank.dumps_dict(),
+                     'current_tank': current_tank_dict,
                      'current_depth': self.current_depth,
                      'model': self.model.deco_model,
                      'run_time': self.run_time,

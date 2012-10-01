@@ -20,8 +20,9 @@
 # This module is part of dipplanner, a Dive planning Tool written in python
 """
 REST Api for Mission object
-=--------------------------
+---------------------------
 
+.. todo:: Possibility to modify Mission description (PATCH on /mission/)
 """
 
 __authors__ = [
@@ -32,10 +33,11 @@ __authors__ = [
 from bottle import request, response
 
 # local import
+from dipplanner.gui.rest_main_api import ApiBottle
 from dipplanner.mission import Mission
 
 
-class MissionApiBottle(object):
+class MissionApiBottle(ApiBottle):
     """At this time, there is only one Mission at a time for a dipplanner session
     (if the user need to work on another mission, he MUST close the current
     Mission first).
@@ -45,12 +47,6 @@ class MissionApiBottle(object):
 
     def __init__(self, mission=None):
         self.mission = mission
-
-    def json_abort(self, code, message):
-        response.set_header("Content-Type", "application/json")
-        response.status = code
-        #response.body = { 'message': message}
-        return { 'message': message }
 
     def get(self):
         """GET method for the Mission object Api
@@ -123,12 +119,40 @@ class MissionApiBottle(object):
                 self.mission = Mission()
 
                 self.mission.loads_json(request.json)
+                self.mission.change_status(Mission.STATUS_CHANGED)
                 response.status = 201
                 return self.mission.dumps_dict()  #, 201)
             else:
                 return self.json_abort(403, "403: Forbidden: you MUST "
                                             "delete the current mission "
                                             "before create a new one")
+        else:
+            return self.json_abort(400, "400: Bad ContentType")
+
+    def patch(self):
+        """PATCH method for the Mission object Api
+
+        update the mission object
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            resp -- response object - HTTP 200 + the patched mission object
+
+        *Raise:*
+            <nothing>
+
+        """
+        if request.get_header('Content-Type') == 'application/json':
+            try:
+                self.mission.loads_json(request.json)
+                self.mission.change_status(Mission.STATUS_CHANGED)
+            except (ValueError, KeyError, IndexError):
+                return self.json_abort(404, "404: dive_id ({0}) not "
+                                            "found".format(resource_id))
+            else:
+                return self.mission.dumps_dict()
         else:
             return self.json_abort(400, "400: Bad ContentType")
 

@@ -22,7 +22,6 @@
 REST Api for Mission object
 ---------------------------
 
-.. todo:: Possibility to modify Mission description (PATCH on /mission/)
 """
 
 __authors__ = [

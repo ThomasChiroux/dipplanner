@@ -41,7 +41,7 @@ class ErrorApiBottle(object):
         of classic html structure
         """
         response.set_header("Content-Type", "application/json")
-        return { 'message': '404 Not found' }
+        return '{"message": "404 Not found"}'
 
 
     def error405(self, code):
@@ -49,4 +49,4 @@ class ErrorApiBottle(object):
         structure instead of classic html structure
         """
         response.set_header("Content-Type", "application/json")
-        return { 'message': '405 Method not allowed' }
+        return '{"message": "405 Method not allowed"}'

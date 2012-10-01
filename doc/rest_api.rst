@@ -1313,11 +1313,221 @@ ex 2:
 method: GET
 ^^^^^^^^^^^
 
+returns the list of input segments for a specific dive
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/input_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 21:02:47 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 443
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"input_segments": [{"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 30.0, "run_time": 0.0, "time": 1200.0, "type": "const"}]}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id is not found, the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/input_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/42/input_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:04:02 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
 method: POST
 ^^^^^^^^^^^^
 
+add an input_segment to this dive
+
+Returns the json dump of the newly created Segment
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X POST -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/1/input_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 201 Created
+      < Date: Mon, 01 Oct 2012 21:15:07 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 106
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank": {}, "in_use": true, "setpoint": 0.0, "depth": 0.0, "run_time": 0.0, "time": 0.0, "type": "const"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X POST -d '{ "tank": {}, "depth": 25, "time": 2000}' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/1/input_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 40
+      >
+      * upload completely sent off: 40 out of 40 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 201 Created
+      < Date: Mon, 01 Oct 2012 21:14:19 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 405
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank": {"tank_rule": "30b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 12.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 200.0, "name": "Air", "f_he": 0.0, "used_gas": 0.0, "total_gas": 2423.0970252848065, "given_name": "Air", "min_gas": 363.48622083020496, "remaining_gas": 2423.0970252848065}, "in_use": true, "setpoint": 0.0, "depth": 25, "run_time": 0.0, "time": 2000, "type": "const"}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id is not found, the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X POST -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/input_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/42/input_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:05:07 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
 method: DELETE
 ^^^^^^^^^^^^^^
+
+delete all the input_segments of this dive
+returns the new list of input_segments (empty list in this case)
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/apis/1/input_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/1/input_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 21:23:33 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 22
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"input_segments": []}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id is not found, the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/input_segments/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/42/input_segments/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:24:02 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
 
 /api/v1/mission/dives/<dive_id>/input_segments/<segment_id>/
 ------------------------------------------------------------
@@ -1325,14 +1535,277 @@ method: DELETE
 method: GET
 ^^^^^^^^^^^
 
-method: POST
-^^^^^^^^^^^^
+returns a specific input_segment for a specific dive
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/input_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 21:25:58 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 427
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 30.0, "run_time": 0.0, "time": 1200.0, "type": "const"}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id or the given segment_id is not found,
+the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/input_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/42/input_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:26:45 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/42
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/input_segments/42 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:27:10 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: segment (42) not found"}
 
 method: PATCH
 ^^^^^^^^^^^^^
 
+Update parameter(s) for this specific input_segment.
+
+ex: change the depth from 30m to 45m
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{ "depth": 45 }' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/1/input_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 15
+      >
+      * upload completely sent off: 15 out of 15 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 21:32:34 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 425
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank": {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1595.1755578500001, "total_gas": 3387.1673441655867, "given_name": "airtank", "min_gas": 767.5548028677879, "remaining_gas": 1791.9917863155865}, "in_use": true, "setpoint": 0.0, "depth": 45, "run_time": 0.0, "time": 1200.0, "type": "const"}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id or the given segment_id is not found,
+the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{ "depth": 45 }' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/input_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/42/input_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 15
+      >
+      * upload completely sent off: 15 out of 15 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:34:06 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{ "depth": 45 }' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/42
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/1/input_segments/42 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 15
+      >
+      * upload completely sent off: 15 out of 15 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:34:36 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 45
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: segment_id (42) not found"}
+
 method: DELETE
 ^^^^^^^^^^^^^^
+
+delete the given input_segment
+returns the list of remaining input_segments in this dive
+
+ex (starting with a list of 4 input_segments):
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/1/input_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 21:36:55 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 344
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"input_segments": [{"tank": {}, "in_use": true, "setpoint": 0.0, "depth": 0.0, "run_time": 0.0, "time": 0.0, "type": "const"}, {"tank": {}, "in_use": true, "setpoint": 0.0, "depth": 0.0, "run_time": 0.0, "time": 0.0, "type": "const"}, {"tank": {}, "in_use": true, "setpoint": 0.0, "depth": 0.0, "run_time": 0.0, "time": 0.0, "type": "const"}]}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id or if the segment_id is not found,
+the API will return a simple 404:
+
+ex 1:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/input_segments/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/42/input_segments/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:37:42 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/input_segments/42
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/1/input_segments/42 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 21:38:03 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: segment (42) not found"}
+
 
 /api/v1/mission/dives/<dive_id>/output_segments/
 ------------------------------------------------

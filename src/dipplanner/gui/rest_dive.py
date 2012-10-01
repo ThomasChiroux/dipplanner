@@ -116,7 +116,6 @@ class DiveApiBottle(ApiBottle):
         if no resource_id is given, returns 404
         if resource_id is given, try to patch the resource and returns
         the entive patched Dive with code 200 OK
-        TODO: checker if it's 200 OK or SOMETHING UPDATED
 
         *Keyword Arguments:*
             :resource_id: --str : number of the dive, starting by 1

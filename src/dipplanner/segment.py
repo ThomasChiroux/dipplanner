@@ -173,13 +173,16 @@ class Segment(object):
         *Raise:*
             TypeError : if Tank is not serialisable
         """
+        current_tank_dict = {}
+        if self.tank is not None:
+            current_tank_dict = self.tank.dumps_dict()
         segment_dict = {'type': self.type,
                         'in_use': self.in_use,
                         'depth': self.depth,
                         'time':  self.time,
                         'run_time': self.run_time,
                         'setpoint': self.setpoint,
-                        'tank': self.tank.dumps_dict()}
+                        'tank': current_tank_dict}
 
         return segment_dict
 

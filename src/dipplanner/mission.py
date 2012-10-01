@@ -65,8 +65,6 @@ class Mission(object):
     .. todo:: decide if settings is included in Mission object or remains
               global
 
-    .. todo:: TODO creer un singleton de cette classe pour eviter la
-              reinstanciation de flask
     """
     # Singleton metaclass was necessary for Flask, but is not for bottle (?)
     #__metaclass__ = Singleton

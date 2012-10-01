@@ -21,6 +21,16 @@
 """dipplanner GUI module.
 
 Starts the GUI
+
+.. todo:: uniquely name the dives (in addition of dive_id (int)
+
+.. todo:: uniquely name the tanks (in addition of tank_id (int)
+          AND handle Tank references (from tank list) to:
+          current_tank
+          and segment.tank
+
+          Actually: each tank is separated
+
 """
 
 __authors__ = [
@@ -29,13 +39,13 @@ __authors__ = [
 
 # dependencies imports
 import bottle
-from bottle import error, response
 
 # local imports
 from dipplanner.mission import Mission
 from dipplanner.gui.rest_mission import MissionApiBottle
 from dipplanner.gui.rest_dive import DiveApiBottle
 from dipplanner.gui.rest_tank import TankApiBottle
+from dipplanner.gui.rest_input_segment import SegmentApiBottle
 from dipplanner.gui.error_api import ErrorApiBottle
 
 
@@ -54,52 +64,71 @@ def start_gui(mission=None):
 
     dive_api = DiveApiBottle(mission_api.mission)
     tank_api = TankApiBottle(mission_api.mission)
-    #segment_api = SegmentApiBottle(mission_api_mission)
+    segment_api = SegmentApiBottle(mission_api.mission)
 
     app = bottle.Bottle()
     # Mission
-    app.route(ROOT_API_URL+'mission/',
+    app.route(ROOT_API_URL + 'mission/',
               method='GET')(mission_api.get)
-    app.route(ROOT_API_URL+'mission/status',
+    app.route(ROOT_API_URL + 'mission/status',
               method='GET')(mission_api.get_status)
-    app.route(ROOT_API_URL+'mission/calculate',
+    app.route(ROOT_API_URL + 'mission/calculate',
               method='POST')(mission_api.calculate)
-    app.route(ROOT_API_URL+'mission/',
+    app.route(ROOT_API_URL + 'mission/',
               method='POST')(mission_api.post)
-    app.route(ROOT_API_URL+'mission/',
+    app.route(ROOT_API_URL + 'mission/',
               method='PATCH')(mission_api.patch)
-    app.route(ROOT_API_URL+'mission/',
+    app.route(ROOT_API_URL + 'mission/',
               method='DELETE')(mission_api.delete)
     # dives
-    app.route(ROOT_API_URL+'mission/dives/',
+    app.route(ROOT_API_URL + 'mission/dives/',
               method='GET')(dive_api.get)
-    app.route(ROOT_API_URL+'mission/dives/<resource_id>',
+    app.route(ROOT_API_URL + 'mission/dives/<resource_id>',
               method='GET')(dive_api.get)
-    app.route(ROOT_API_URL+'mission/dives/',
+    app.route(ROOT_API_URL + 'mission/dives/',
               method='POST')(dive_api.post)
-    app.route(ROOT_API_URL+'mission/dives/<resource_id>',
+    app.route(ROOT_API_URL + 'mission/dives/<resource_id>',
               method='PATCH')(dive_api.patch)
-    app.route(ROOT_API_URL+'mission/dives/',
+    app.route(ROOT_API_URL + 'mission/dives/',
               method='DELETE')(dive_api.delete)
-    app.route(ROOT_API_URL+'mission/dives/<resource_id>',
+    app.route(ROOT_API_URL + 'mission/dives/<resource_id>',
               method='DELETE')(dive_api.delete)
 
     # tanks
-    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/',
+    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
               method='GET')(tank_api.get)
-    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/<tank_id>',
+    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
               method='GET')(tank_api.get)
-    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/',
+    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
                 method='POST')(tank_api.post)
-    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/<tank_id>',
+    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
               method='PATCH')(tank_api.patch)
-    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/',
+    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
               method='DELETE')(tank_api.delete)
-    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/<tank_id>',
+    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
               method='DELETE')(tank_api.delete)
 
     # input_segments
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/input_segments/',
+              method='GET')(segment_api.get)
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/input_segments/<segment_id>',
+              method='GET')(segment_api.get)
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/input_segments/',
+              method='POST')(segment_api.post)
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/input_segments/<segment_id>',
+              method='PATCH')(segment_api.patch)
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/input_segments/',
+              method='DELETE')(segment_api.delete)
+    app.route(ROOT_API_URL
+              + 'mission/dives/<dive_id>/input_segments/<segment_id>',
+              method='DELETE')(segment_api.delete)
 
+    # custom error handling
     app.error(404)(error_api.error404)
     app.error(405)(error_api.error405)
 

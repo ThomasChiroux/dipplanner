@@ -35,6 +35,7 @@ from bottle import error, response
 from dipplanner.mission import Mission
 from dipplanner.gui.rest_mission import MissionApiBottle
 from dipplanner.gui.rest_dive import DiveApiBottle
+from dipplanner.gui.rest_tank import TankApiBottle
 from dipplanner.gui.error_api import ErrorApiBottle
 
 
@@ -52,7 +53,7 @@ def start_gui(mission=None):
         mission_api = MissionApiBottle(mission)
 
     dive_api = DiveApiBottle(mission_api.mission)
-    #tank_api = TankApiBottle(mission_api.mission)
+    tank_api = TankApiBottle(mission_api.mission)
     #segment_api = SegmentApiBottle(mission_api_mission)
 
     app = bottle.Bottle()
@@ -82,6 +83,22 @@ def start_gui(mission=None):
               method='DELETE')(dive_api.delete)
     app.route(ROOT_API_URL+'mission/dives/<resource_id>',
               method='DELETE')(dive_api.delete)
+
+    # tanks
+    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/',
+              method='GET')(tank_api.get)
+    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/<tank_id>',
+              method='GET')(tank_api.get)
+    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/',
+                method='POST')(tank_api.post)
+    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/<tank_id>',
+              method='PATCH')(tank_api.patch)
+    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/',
+              method='DELETE')(tank_api.delete)
+    app.route(ROOT_API_URL+'mission/dives/<dive_id>/tanks/<tank_id>',
+              method='DELETE')(tank_api.delete)
+
+    # input_segments
 
     app.error(404)(error_api.error404)
     app.error(405)(error_api.error405)

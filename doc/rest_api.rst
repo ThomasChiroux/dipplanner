@@ -562,7 +562,7 @@ will be overwritten by the PATCH method
 ex :
 file /tmp/modified_dive1.json contains:
 
-.. code-block:: javacript
+.. code-block:: javascript
 
     {"metadata": "Coucou", "model": "ZHL16B", "surface_interval": 1664, "is_repetitive_dive": true}
 
@@ -682,11 +682,290 @@ ex:
 method: GET
 ^^^^^^^^^^^
 
+returns the list of tanks for a specific dive
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 17:06:31 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 328
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tanks": [{"tank_rule": "30b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1527.8977473000002, "total_gas": 3387.1673441655867, "given_name": "Air", "min_gas": 767.5548028677879, "remaining_gas": 1859.2695968655864}]}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id is not found, the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/42/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 17:09:05 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
 method: POST
 ^^^^^^^^^^^^
 
+add a tank to this dive
+
+Returns the json dump of the newly created Tank
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X POST -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/1/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 201 Created
+      < Date: Mon, 01 Oct 2012 17:22:06 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 301
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank_rule": "30b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 12.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 200.0, "name": "Air", "f_he": 0.0, "used_gas": 0.0, "total_gas": 2423.0970252848065, "given_name": "Air", "min_gas": 363.48622083020496, "remaining_gas": 2423.0970252848065}
+
+ex2 (creation of a nitrox tank):
+
+.. code-block:: bash
+
+    $ curl -v -X POST -d '{"tank_rule": "50b", "f_n2": 0.7, "tank_vol": 12.0, "f_o2": 0.3, "tank_pressure": 230.0, "f_he": 0.0, "mod": "auto" }' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/1/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 117
+      >
+      * upload completely sent off: 117 out of 117 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 201 Created
+      < Date: Mon, 01 Oct 2012 17:28:58 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 304
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.7, "tank_vol": 12.0, "f_o2": 0.3, "mod": 43, "tank_pressure": 230.0, "name": "Nitrox 30", "f_he": 0.0, "used_gas": 0.0, "total_gas": 2741.1341414852973, "given_name": "Air", "min_gas": 615.1818387539787, "remaining_gas": 2741.1341414852973}
+
+.. note:: There is a special feature about MOD : in the json structure, when
+   creating tanks, you can specify the MOD in meter, but you can also ask
+   dipplanner to calculate MOD automatically based on max_ppo2 with the json
+   parameter: { "mod": "auto" }
+   If not given, dipplanner will use the default MOD (for air) and may raise
+   and error if you're try to create a tank with a shallower MOD
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id is not found, the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X POST -d '{"tank_rule": "50b", essure": 230.0, "f_he": 0.0 }' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/42/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 102
+      >
+      * upload completely sent off: 102 out of 102 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 17:38:39 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+server error
+""""""""""""
+
+If the given parameter are wrong and does not permits the creation of the tank,
+dipplanner will return error 500 with the reason of the error
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X POST -d '{"tank_rule": "50b", "f_n2": 0.7, "tank_vol": 12.0, "f_o2": 0.3, "tank_pressure": 230.0, "f_he": 0.0 }' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/1/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 102
+      >
+      * upload completely sent off: 102 out of 102 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 500 Internal Server Error
+      < Date: Mon, 01 Oct 2012 17:40:17 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 52
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "500: MOD exceed maximum tolerable MOD"}
+
+ex2:
+
+.. code-block:: bash
+
+    $ curl -v -X POST -d '{"tank_rule": "50b", "f_n2": 0.7, "tank_vol": 12.0, "f_o2": 0.5, "tank_pressure": 230.0, "f_he": 0.0 }' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > POST /api/v1/mission/dives/1/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 102
+      >
+      * upload completely sent off: 102 out of 102 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 500 Internal Server Error
+      < Date: Mon, 01 Oct 2012 17:40:44 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 54
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "500: Proportion of O2+He+N2 is not 100%"}
+
 method: DELETE
 ^^^^^^^^^^^^^^
+
+delete all the tanks of this dive
+returns the new list of tanks (empty list in this case)
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/1/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 17:55:48 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 13
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tanks": []}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id is not found, the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/tanks/
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/42/tanks/ HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 17:59:08 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
 
 /api/v1/mission/dives/<dive_id>/tanks/<tank_id>/
 ------------------------------------------------
@@ -694,14 +973,339 @@ method: DELETE
 method: GET
 ^^^^^^^^^^^
 
-method: POST
-^^^^^^^^^^^^
+returns a specific tank for a specific dive
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 17:08:03 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 315
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank_rule": "30b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1527.8977473000002, "total_gas": 3387.1673441655867, "given_name": "Air", "min_gas": 767.5548028677879, "remaining_gas": 1859.2695968655864}
+
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id or the given tank_id is not found,
+the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/42/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 17:09:51 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X GET -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/42
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > GET /api/v1/mission/dives/1/tanks/42 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 17:10:29 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 39
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: tank (42) not found"}
+
 
 method: PATCH
 ^^^^^^^^^^^^^
 
+Update parameter(s) for this specific tank.
+
+ex 1: change the tank rule from "30b" to "50b"
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{"tank_rule":"50b"}' -H "Content-type: application/json" http://11:8080/api/v1/mission/dives/1/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/1/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 19
+      >
+      * upload completely sent off: 19 out of 19 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 18:09:07 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 315
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tank_rule": "50b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 15.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 230.0, "name": "Air", "f_he": 0.0, "used_gas": 1527.8977473000002, "total_gas": 3387.1673441655867, "given_name": "Air", "min_gas": 767.5548028677879, "remaining_gas": 1859.2695968655864}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id or the given tank_id is not found,
+the API will return a simple 404:
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{"tank_rule":"50b"}' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/42/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 19
+      >
+      * upload completely sent off: 19 out of 19 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 18:10:39 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{"tank_rule":"50b"}' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/42
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/1/tanks/42 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 19
+      >
+      * upload completely sent off: 19 out of 19 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 18:11:22 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: tank_id (42) not found"}
+
+server error
+""""""""""""
+
+If the given parameter are wrong and does not permits the creation of the tank,
+dipplanner will return error 500 with the reason of the error
+
+ex:
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{"tank_rule":"50b", "f_o2": 0.66, "f_n2": 0.34}' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/1/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 47
+      >
+      * upload completely sent off: 47 out of 47 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 500 Internal Server Error
+      < Date: Mon, 01 Oct 2012 19:12:56 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 52
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "500: MOD exceed maximum tolerable MOD"}
+
+ex2:
+
+.. code-block:: bash
+
+    $ curl -v -X PATCH -d '{"tank_rule":"50b", "f_o2": 0.66}' -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > PATCH /api/v1/mission/dives/1/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      > Content-Length: 33
+      >
+      * upload completely sent off: 33 out of 33 bytes
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 500 Internal Server Error
+      < Date: Mon, 01 Oct 2012 19:12:02 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 54
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "500: Proportion of O2+He+N2 is not 100%"}
+
 method: DELETE
 ^^^^^^^^^^^^^^
+
+delete the given tank
+returns the list of remaining tanks in this dive
+
+ex (starting with a list of 3 AirTanks):
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/1/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 200 OK
+      < Date: Mon, 01 Oct 2012 17:57:58 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 617
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"tanks": [{"tank_rule": "30b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 12.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 200.0, "name": "Air", "f_he": 0.0, "used_gas": 0.0, "total_gas": 2423.0970252848065, "given_name": "Air", "min_gas": 363.48622083020496, "remaining_gas": 2423.0970252848065}, {"tank_rule": "30b", "max_ppo2": 1.6, "in_use": true, "f_n2": 0.79, "tank_vol": 12.0, "f_o2": 0.21, "mod": 66, "tank_pressure": 200.0, "name": "Air", "f_he": 0.0, "used_gas": 0.0, "total_gas": 2423.0970252848065, "given_name": "Air", "min_gas": 363.48622083020496, "remaining_gas": 2423.0970252848065}]}
+
+errors
+******
+
+not found
+"""""""""
+
+If the given dive_id or if the tank_id is not found,
+the API will return a simple 404:
+
+ex 1:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/42/tanks/1
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/42/tanks/1 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 18:00:07 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 42
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: dive_id (42) not found"}
+
+ex 2:
+
+.. code-block:: bash
+
+    $ curl -v -X DELETE -H "Content-type: application/json" http://127.0.0.1:8080/api/v1/mission/dives/1/tanks/42
+      * About to connect() to 127.0.0.1 port 8080 (#0)
+      *   Trying 127.0.0.1...
+      * connected
+      * Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+      > DELETE /api/v1/mission/dives/1/tanks/42 HTTP/1.1
+      > User-Agent: curl/7.27.0
+      > Host: 127.0.0.1:8080
+      > Accept: */*
+      > Content-type: application/json
+      >
+      * HTTP 1.0, assume close after body
+      < HTTP/1.0 404 Not Found
+      < Date: Mon, 01 Oct 2012 18:00:41 GMT
+      < Server: WSGIServer/0.1 Python/2.7.3
+      < Content-Length: 39
+      < Content-Type: application/json
+      <
+      * Closing connection #0
+      {"message": "404: tank (42) not found"}
+
 
 /api/v1/mission/dives/<dive_id>/input_segments/
 -----------------------------------------------
@@ -733,11 +1337,15 @@ method: DELETE
 /api/v1/mission/dives/<dive_id>/output_segments/
 ------------------------------------------------
 
+Output segments are the result of the calculations, so they are read-only
+
 method: GET
 ^^^^^^^^^^^
 
 /api/v1/mission/dives/<dive_id>/output_segments/<segment_id>/
 -------------------------------------------------------------
+
+Output segments are the result of the calculations, so they are read-only
 
 method: GET
 ^^^^^^^^^^^

@@ -580,7 +580,10 @@ class Tank(object):
         if tank_dict.has_key('min_gas'):
             self.min_gas = tank_dict['min_gas']
         if tank_dict.has_key('mod'):
-            self.mod = tank_dict['mod']
+            if tank_dict['mod'] == 'auto':
+                self.mod = self._calculate_mod(self.max_ppo2)
+            else:
+                self.mod = tank_dict['mod']
         if tank_dict.has_key('in_use'):
             self.in_use = tank_dict['in_use']
 

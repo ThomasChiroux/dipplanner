@@ -151,7 +151,7 @@ class DiveApiBottle(ApiBottle):
 
 
     def delete(self, resource_id=None):
-        """DELETE method for the Mission object Api
+        """DELETE method for the Dive object Api
 
         if no resource_id is given, all the dives will be deleted.
         If resource_id is given and exists, only one dive will be deleted

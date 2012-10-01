@@ -242,6 +242,13 @@ gui
    :member-order: bysource
    :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
 
+.. automodule:: dipplanner.gui.rest_tank
+   :members:
+   :private-members:
+   :inherited-members:
+   :member-order: bysource
+   :exclude-members: __delattr__, __weakref__, __format__, __getattribute__, __hash__, __new__, __reduce__, __reduce_ex__, __setattr__, __sizeof__, __getitem__, __getslice__,  __subclasshook__, __repr__
+
 .. automodule:: dipplanner.gui.error_api
    :members:
    :private-members:

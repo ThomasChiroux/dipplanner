@@ -48,9 +48,10 @@ class Mission(object):
         dives (list) -- list of Dive object of the same mission
         description (str) -- description of the mission (OPTIONAL)
         status (???) -- actual status of the mission. Could be either:
+
         * STATUS_NONE: not calculated
         * STATUS_CHANGED: changed (calculated, but something in input or parameter has changed
-                   and recalculation is needed)
+          and recalculation is needed)
         * STATUS_OK: calculated (calculation is up to date)
 
 

@@ -18,7 +18,10 @@
 # If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""REST Api for Mission object
+"""
+REST Api for Mission object
+=--------------------------
+
 """
 
 __authors__ = [
@@ -33,6 +36,12 @@ from dipplanner.mission import Mission
 
 
 class MissionApiBottle(object):
+    """At this time, there is only one Mission at a time for a dipplanner session
+    (if the user need to work on another mission, he MUST close the current
+    Mission first).
+
+    The API reflects this current limitation
+    """
 
     def __init__(self, mission=None):
         self.mission = mission
@@ -43,48 +52,67 @@ class MissionApiBottle(object):
         #response.body = { 'message': message}
         return { 'message': message }
 
-    def get(self, resource_id=None):
+    def get(self):
         """GET method for the Mission object Api
 
+        returns a json dumps of the mission object.
+
         *Keyword Arguments:*
-        :resource_id: (str) -- id of the requested resource
+            <none>
 
         *Returns:*
-            resp -- Flask response object
+            resp -- response object with the json dump of the mission object
 
         *Raise:*
             <nothing>
         """
-        print 'GET: resource_id:{}'.format(resource_id)
         if request.get_header('Content-Type') == 'application/json':
-            if resource_id is None:
-                return self.mission.dumps_dict()
-            else:
-                if resource_id == 'status':
-                    return { 'status': self.mission.status }
-                else:
-                    return self.json_abort(404, "404: Not found" )
+            return self.mission.dumps_dict()
         else:
             return self.json_abort(400, "400: Bad ContentType")
 
+    def get_status(self):
+        """returns the actual status of the mission
+
+        returns a json object with
+        the current status of the Mission object.
+
+        ex:
+
+        .. code-block:: json
+
+            { 'status': 'Calculated and Up to date' }
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            resp -- response object with the status
+
+        *Raise:*
+            <nothing>
+        """
+        if request.get_header('Content-Type') == 'application/json':
+            return { 'status': self.mission.status }
+        else:
+            return self.json_abort(400, "400: Bad ContentType")
 
     def post(self):
         """POST method for the Mission object Api
 
-        create a new (empty) mission
+        create a new mission
         an new mission may only be created if the existing mission is
         empty (api user MUST call DELETE before calling POST)
 
-        JSON: { "description" : "text describing the mission' }
-        (OPTIONAL)
-
-
+        if a json structure is POSTed with the request, dipplanner will
+        try to load this stucture inside the mission object.
+        A full structure may be given.
 
         *Keyword Arguments:*
             <nothing>
 
         *Returns:*
-            resp -- Flask response object with the json dump of the newly
+            resp -- response object with the json dump of the newly
                     created object
 
         *Raise:*
@@ -93,6 +121,7 @@ class MissionApiBottle(object):
         if request.get_header('Content-Type') == 'application/json':
             if self.mission is None or len(self.mission) == 0:
                 self.mission = Mission()
+
                 self.mission.loads_json(request.json)
                 response.status = 201
                 return self.mission.dumps_dict()  #, 201)
@@ -103,6 +132,33 @@ class MissionApiBottle(object):
         else:
             return self.json_abort(400, "400: Bad ContentType")
 
+    def calculate(self):
+        """launch the calculation of the mission
+
+        returns a json object with
+        the current status of the Mission object (after calculation).
+
+        ex:
+
+        .. code-block:: json
+
+            { 'status': 'Calculated and Up to date' }
+
+        *Keyword Arguments:*
+            <none>
+
+        *Returns:*
+            resp -- response object with the status
+
+        *Raise:*
+            <nothing>
+        """
+        if request.get_header('Content-Type') == 'application/json':
+            self.mission.calculate()
+            return { 'status': self.mission.status }
+        else:
+            return self.json_abort(400, "400: Bad ContentType")
+
     def delete(self, resource_id=None):
         """DELETE method for the Mission object Api
 
@@ -110,7 +166,7 @@ class MissionApiBottle(object):
             <none>
 
         *Returns:*
-            resp -- Flask response object (empty)
+            resp -- response object (empty)
 
         *Raise:*
             <nothing>

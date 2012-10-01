@@ -44,25 +44,43 @@ with open("NEWS.rst") as f:
 
 
 VERSION = get_git_version()
-
+if VERSION is None:
+    try:
+        file_name = "src/dipplanner/RELEASE-VERSION"
+        version_file = open(file_name, "r")
+        try:
+            VERSION = version_file.readlines()[0]
+            VERSION = VERSION.strip()
+        except:
+            VERSION = "0.0.0"
+        finally:
+            version_file.close()
+    except IOError:
+        VERSION = "0.0.0"
 
 class my_build_py(build_py):
     def run(self):
         # honor the --dry-run flag
         if not self.dry_run:
-            target_dir = os.path.join(self.build_lib, 'dipplanner')
+            target_dirs = []
+            target_dirs.append(os.path.join(self.build_lib, 'dipplanner'))
+            target_dirs.append(self.package_dir['dipplanner'])
 
             # mkpath is a distutils helper to create directories
-            self.mkpath(target_dir)
+            for dir in target_dirs:
+                self.mkpath(dir)
 
             try:
-                fobj = open(os.path.join(target_dir, 'RELEASE-VERSION'), 'w')
-                fobj.write(VERSION)
+                for dir in target_dirs:
+                    fobj = open(os.path.join(dir, 'RELEASE-VERSION'), 'w')
+                    fobj.write(VERSION)
+                    fobj.close()
             except:
                 pass
 
         # distutils uses old-style classes, so no super()
         build_py.run(self)
+
 
 install_requires = [
     # List your project dependencies here.
@@ -95,7 +113,8 @@ setup(name='dipplanner',
       },
       packages=find_packages('src'),
       package_dir={'': 'src'}, include_package_data=True,
-      package_data={'dipplanner': ['templates/*', ]},
+      package_data={'dipplanner': ['templates/*',
+                                   'RELEASE-VERSION', ]},
       zip_safe=False,
       provides=('dipplanner', ),
       install_requires=install_requires,

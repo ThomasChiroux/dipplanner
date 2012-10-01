@@ -18,7 +18,11 @@
 # If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""dipplanner module
+"""dipplanner GUI module.
+
+Starts the GUI
+
+.. todo:: define a custom (json) 404 error
 """
 
 __authors__ = [
@@ -40,18 +44,22 @@ def start_gui(mission=None):
     """Starts the html GUI server
     """
     if mission is None:
-        bottle_api = MissionApiBottle(Mission())
+        mission_api = MissionApiBottle(Mission())
     else:
-        bottle_api = MissionApiBottle(mission)
+        mission_api = MissionApiBottle(mission)
 
     app = bottle.Bottle()
     app.route(ROOT_API_URL+'mission/',
-              method='GET')(bottle_api.get)
-    app.route(ROOT_API_URL+'mission/<resource_id>',
-              method='GET')(bottle_api.get)
+              method='GET')(mission_api.get)
+    app.route(ROOT_API_URL+'mission/status',
+              method='GET')(mission_api.get_status)
+    app.route(ROOT_API_URL+'mission/calculate',
+              method='POST')(mission_api.calculate)
     app.route(ROOT_API_URL+'mission/',
-              method='POST')(bottle_api.post)
+              method='POST')(mission_api.post)
     app.route(ROOT_API_URL+'mission/',
-              method='DELETE')(bottle_api.delete)
+              method='DELETE')(mission_api.delete)
+
+
     bottle.debug(True)
-    bottle.run(app1, host='localhost', port=8080)
+    bottle.run(app, host='localhost', port=8080)

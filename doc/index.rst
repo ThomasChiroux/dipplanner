@@ -20,12 +20,13 @@ Welcome to dipplanner's documentation!
    IF YOU DO NOT UNDERSTAND OR DO NOT AGREE TO THIS STATEMENT DO NOT USE THIS SOFTWARE
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
    README
    command_line
    config_file
    template
+   rest_api
    autodoc
    NEWS
 

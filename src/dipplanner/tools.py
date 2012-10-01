@@ -181,7 +181,7 @@ def depth_to_pressure(depth, method=settings.METHOD_FOR_DEPTH_CALCULATION):
 
 def pressure_to_depth(pressure, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     """Calculates depth based on give pressure using a more complex
-    method than only *10
+    method than only x10
 
     *Keyword Arguments:*
         :pressure: (float) -- pressure in bar

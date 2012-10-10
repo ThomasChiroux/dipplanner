@@ -58,13 +58,14 @@ if VERSION is None:
     except IOError:
         VERSION = "0.0.0"
 
+
 class my_build_py(build_py):
     def run(self):
         # honor the --dry-run flag
         if not self.dry_run:
             target_dirs = []
             target_dirs.append(os.path.join(self.build_lib, 'dipplanner'))
-            target_dirs.append(self.package_dir['dipplanner'])
+            target_dirs.append('src/dipplanner')
 
             # mkpath is a distutils helper to create directories
             for dir in target_dirs:
@@ -86,7 +87,8 @@ install_requires = [
     # List your project dependencies here.
     # For more details, see:
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
-    'flask', 'lxml']
+    'bottle',
+    'lxml', ]
 
 try:
     import argparse # NOQA

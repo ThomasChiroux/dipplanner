@@ -24,3 +24,14 @@
 __authors__ = [
     # alphabetical order by last name
     'Thomas Chiroux', ]
+
+
+import pkg_resources
+
+__version__ = "unknown"
+
+try:
+    __version__ = pkg_resources.resource_string("dipplanner",
+                                                "RELEASE-VERSION").strip()
+except IOError:
+    __version__ = "0.0.0"

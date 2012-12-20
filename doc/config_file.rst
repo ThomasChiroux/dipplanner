@@ -14,45 +14,71 @@ to you to organise the config like as you wish.
 For example, you MAY create one config file for your dive parameters
 and another config file for your set of repetitive dives.
 
-dive profiles
--------------
+tanks
+-----
 
-Dive profiles are specific sections in the config file, in the form:
+At first you'll need to specify all the tanks you're planning to use in the
+entire mission.
+
+Later, for each dive, you'll only select one or several tanks previously defined
+
+Tanks definitions are specific sections in the config file, in the form:
 
 ::
 
-    [diveXXXX]
+    [tank:NAME]
 
-where XXXX represent a number.
-The dives whill be processed in crossant order
+where NAME represent the name you've choosen for the tank.
 
-Inside a [diveXXXX] section you specify tanks, segments and surface_interval
+.. warning:: NAME of tanks MUST be unique in the entire mission.
 
-tanks
-^^^^^
+.. hint:: you can provide in the config file as many **[tank:NAME]** sections as you want.
 
-Format:
+to define each tank, you can provide one of the following options:
 
-    ::
+.. cmdoption:: f_o2 = <VALUE>
 
-        tankXXX=tank_name;f_o2;f_he;Volume(l);Pressure(bar);Minimum gas rule
+   (float) fraction of oxygen in the tank. Between 0.0 and 1.0
 
-    * tank_name: (str) (you choose the name) for the tank
-    * f_02: (float) fraction of oxygen in the tank. Between 0.0 and 1.0
-    * f_he: (float) fraction of helium in the tank. Between 0.0 and 1.0
-    * Volume: (float) Volume of the tank in bar
-    * Pressure: (float) Pressure of the tank in bar
-    * Minimum gas rule: (str) quantity of gas that should remain in the
-      tank after the dive
+.. cmdoption:: f_he = <VALUE>
 
-      There two format for minimum gas rule:
+   (float) fraction of helium in the tank. Between 0.0 and 1.0
 
-      * quantity of bar that should remain in the tank:
+.. cmdoption:: f_n2 = <VALUE>
+
+   (float) fraction of nitrogen in the tank. Between 0.0 and 1.0
+
+.. note:: you're only needed to specify two of the 3 gases to define the tank
+
+          dipplanner will automatically complete the fraction of the third gas.
+
+.. note:: None of the previous fraction of gas is mandatory.
+
+          By default, dipplanner will create an Air Tank
+          (f_o2=0.21, f_he=0.0, f_n2=0.79)
+
+.. cmdoption:: volume = <VALUE>
+
+   (float) Volume of the tank in liter
+
+.. cmdoption:: pressure = <VALUE>
+
+   (float) Pressure of the tank in bar
+
+.. cmdoption:: rule = <VALUE>
+
+   Minimum gas rule (str) quantity of gas that should remain in the
+   tank after the dive
+
+   There two format for minimum gas rule:
+
+   * quantity of bar that should remain in the tank:
 
         format: "[0-9]+b"
 
         ex: "50b": it should remain 50 bar in the tank at the end of the dive
-      * "fraction rule" (like `the rule of third in cave diving <http://en.wikipedia.org/wiki/Rule_of_thirds_%28diving%29>`_)
+
+   * "fraction rule" (like `the rule of third in cave diving <http://en.wikipedia.org/wiki/Rule_of_thirds_%28diving%29>`_)
 
         format: "1/[0-9]"
 
@@ -60,25 +86,21 @@ Format:
 
         ex2: "1/6" : 1/6 of the tank to go in, 1/6 of the tank to go back and it should remain 2/3 of the tank at the end of the dive
 
-    .. note:: tank(s) list is only mandatory for the first dive.
+.. cmdoption:: max_ppo2 = <VALUE>
 
-        On subsequent dive, if you choose not to specify tank(s),
-        previous dive tanks will be used.
+   (float) max_ppo2 allowed for this tank use.
 
-        If 'automatic_tank_refill' is set to True, the tank will be full before the dive.
-        If set to False, it'll use the remaining gas from last dive
+   .. note:: if not provided, dipplanner will calculte the value automatically
 
-        .. warning::
+.. cmdoption:: mod = <VALUE>
 
-            If, for a [dive] at least ONE tank is provided,
-            ALL the Tank(s) MUST be specified (dipplanner will not add the new
-            tank(s) to the previous one: dipplanner will reset the tank list with
-            the new one.)
+    (float) maximum operating depth allowed for this tank use.
 
+   .. note:: if not provided, dipplanner will calculte the value automatically
 
 Example:
 
-    dive num 1 with two tanks:
+    Mission with two tanks:
 
     12l tank filled with 200b or air. It should remain 50b at the end of the dive.
 
@@ -86,31 +108,119 @@ Example:
 
     12l tank filled with Nitrox80. It should remain 30b at the end of the dive.
 
+    .. code-block:: ini
+
+        [tank:airtank]
+        f_o2=0.21
+        f_he=0
+        volume=12
+        pressure=230
+        rule=50b
+
+        [tank:decotank]
+        f_o2=0.80
+        f_he=0
+        volume=12
+        pressure=200
+        rule=30b
+
+dive profiles
+-------------
+
+Dive profiles are specific sections in the config file, in the form:
+
+::
+
+    [dive:NAME]
+
+where NAME represent a name for the dive (it can be a number if you want).
+The dives whill be processed in croissant order
+
+To define a dive, you MUST specify which tank(s) this specific dive will use.
+The Tank(s) must be defined before in the [tank:XXX] sections.
+
+.. hint:: you can provide in the config file as many **[dive:NAME]** sections as you want.
+
+the [dive:XXXX] sections use the following options:
+
+.. cmdoption:: tanks = <VALUE>
+
+   list of the tank name you'll be using during this dive.
+
+   The names MUST match the name provided in the [tank:NAME] sections.
+
+   ex: ::
+
+        tanks = airtank, decotank
+
+   in this example, the dive will use both airtank and decotank
+
+.. cmdoption:: surface_interval  = <VALUE>
+
+   surface interval (in seconds)
+
+   for repetitive dives, you can specify the surface time between the previous
+   dive and this dive
+
+.. cmdoption:: automatic_tank_refill = <true|false>
+
+    If 'automatic_tank_refill' is set to True, the tank will be full before the dive.
+    If set to False, it'll use the remaining gas from last dive
+
+    Default: true
+
+    .. note:: if you use this parameter inside a [dive:NAME] section, it will
+              override the global paramater for this specific Dive.
+
+    Example:
+
+    do not refill tank before this dive
+
     ::
 
-        [dive1]
-
-        tank1=airtank;0.21;0.0;12;200,50b
-        tank2=nitrox;0.80;0.0;12;200;30b
-
-    .. note:: this example is incomplete: it misses segments: see below
+        automatic_tank_refill = false
 
 segments
-^^^^^^^^
+--------
 
-Format:
+A segment belongs to a dive, so each segment section MUST refer to a dive.
 
-    ::
+The section structure must respect the following pattern:
 
-        segmentXXX="depth;duration;tank;setpoint"
+::
 
+    [dive:DIVENAME:segment:SEGNAME]
 
-    * depth: (float) in meter
-    * duration: (float) in seconds (operators are allowed like: '30 * 60')
-    * tank: name of the tank (the 'tank_name' specified in -t option)
-    * setpoint: (float) 0.0 if OC, setpoint if CCR
+dive:DIVENAME refers to the previously defined [dive:NAME] section
 
-    .. note::
+.. hint:: you can provide in the config file as many
+          **[dive:NAME:segment:SEGNAME]** sections as you want.
+
+SEGNAME is a name you choose for a segment, it can also be numbers
+
+segment sections uses the following options:
+
+.. cmdoption:: depth = <VALUE>
+
+   (float) in meter
+
+.. cmdoption:: time = <VALUE>
+
+   (float) in seconds (operators are allowed like: '30 * 60')
+
+   duration of the segment (in seconds)
+
+.. cmdoption:: tank = <VALUE>
+
+   (str)
+
+   name of the tank (the 'tank_name' specified in -t option or in config files)
+
+.. cmdoption:: set_point = <VALUE>
+
+   (float) 0.0 if OC, setpoint if CCR
+
+   .. note::
 
        If you specify a setpoint > 0.0, the dive will automatically switch
        in CCR mode.
@@ -119,15 +229,13 @@ Example:
 
     20 min at 30 meter using tank: airtank in OC mode
 
-    ::
+    .. code-block:: ini
 
-        [dive1]
-
-        tank1=airtank;0.21;0.0;12;200,50b
-        tank2=nitrox;0.80;0.0;12;200;30b
-
-        segment1=30;20*60;airtank;0.0
-
+        [dive:1:segment:bottom]
+        depth = 30
+        time = 20*60
+        tank = airtank
+        set_point = 0.0
 
     20 min at 30 meter using tank: airtank in OC mode
 
@@ -135,45 +243,60 @@ Example:
 
     25 min at 20 meter using tank: airtank in OC mode
 
-    ::
+    .. code-block:: ini
 
-        [dive1]
+        [dive:1:segment:1]
+        depth = 30
+        time = 20*60
+        tank = airtank
+        set_point = 0.0
 
-        tank1=airtank;0.21;0.0;12;200,50b
-        tank2=nitrox;0.80;0.0;12;200;30b
-
-        segment1=30;20*60;airtank;0.0
-        segment2=20;25*60;airtank;0.0
-
-surface_interval
-^^^^^^^^^^^^^^^^
-
-surface interval (in seconds)
-
-for repetitive dives, you can specify the surface time between the previous
-dive and this dive
+        [dive:1:segment:2]
+        depth = 20
+        time = 25*60
+        tank = airtank
+        set_point = 0.0
 
 Examples
 ^^^^^^^^
 
-Full example with two subsequent dives, with a surface interval of 1h30 between the two,
-using the same tanks for the two dives
+Full example with two subsequent dives, with a surface interval of 1h30 between the two
 
-::
+.. code-block:: ini
 
-        [dive1]
+        [tank:airtank]
+        f_o2=0.21
+        f_he=0
+        volume=15
+        pressure=230
+        rule=50b
 
-        tank1=airtank;0.21;0.0;12;200,50b
-        tank2=nitrox;0.80;0.0;12;200;30b
+        [tank:decotank]
+        f_o2=0.80
+        f_he=0
+        volume=12
+        pressure=230
+        rule=50b
 
-        segment1=30;20*60;airtank;0.0
-        segment2=20;25*60;airtank;0.0
+        [dive:1]
+        tanks = airtank, decotank
 
-        [dive2]
+        [dive:1:segment:bottom]
+        depth = 30
+        time = 20*60
+        tank = airtank
+        set_point = 0.0
 
+        [dive:2]
         surface_interval = 90*60
+        automatic_tank_refill = true
+        tanks = airtank
 
-        segment1=22;40*60;airtank;0.0
+        [dive:2:segment:bottom]
+        depth = 20
+        time = 30*60
+        tank = airtank
+        set_point = 0.0
 
 Controling the output
 ---------------------
@@ -200,7 +323,7 @@ It's done via the section:
 
         switch to html template
 
-        ::
+        .. code-block:: ini
 
             [output]
 
@@ -227,7 +350,7 @@ general dive parameters are in the section:
 
     switch to ZHL16b deco model
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -243,7 +366,7 @@ general dive parameters are in the section:
 
     Set the max allowed ppo2 at 1.4
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -260,7 +383,7 @@ general dive parameters are in the section:
 
     Set the min allowed ppo2 at 0.19
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -277,7 +400,7 @@ general dive parameters are in the section:
 
     Set the max END at 35m
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -303,7 +426,7 @@ general dive parameters are in the section:
 
     Plan a dive with 17 m/min descent rate
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -325,7 +448,7 @@ general dive parameters are in the section:
 
     Plan a dive with 9 m/min ascent rate
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -347,7 +470,7 @@ general dive parameters are in the section:
 
     GF low of 25%
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -370,7 +493,7 @@ general dive parameters are in the section:
 
     GF high of 85%
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -393,7 +516,7 @@ general dive parameters are in the section:
 
     Do a dive in a lake
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -413,7 +536,7 @@ general dive parameters are in the section:
 
     Dive at 1400m
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -433,7 +556,7 @@ general dive parameters are in the section:
 
     Plan a dive with 25 l/min dive consumption rate
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -455,7 +578,7 @@ general dive parameters are in the section:
 
     Plan a dive with 20 l/min deco consumption rate
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -483,7 +606,7 @@ general dive parameters are in the section:
 
     force segment time
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -506,7 +629,7 @@ general dive parameters are in the section:
 
     force the use of same gas for deco
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -525,7 +648,7 @@ general dive parameters are in the section:
 
     set multilevel mode to true
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -542,7 +665,7 @@ general dive parameters are in the section:
 
     do not refill tank between dives
 
-    ::
+    .. code-block:: ini
 
         [general]
 
@@ -695,7 +818,7 @@ avanced dive parameters are in the section:
 
     change ambiant pressure at sea level to 1 bar
 
-    ::
+    .. code-block:: ini
 
         [advanced]
 
@@ -714,7 +837,7 @@ avanced dive parameters are in the section:
 
     switch depth calc method to simple
 
-    ::
+    .. code-block:: ini
 
         [advanced]
 
@@ -733,7 +856,7 @@ avanced dive parameters are in the section:
 
     switch travel switch to early
 
-    ::
+    .. code-block:: ini
 
         [advanced]
 
@@ -759,27 +882,76 @@ Examples
 Small Example: only set dives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: ini
 
     # dipplanner config file
     # this file is used by the command line tool and
     # override the defaults parameters or input some dive profiles
+    # =============================== tank profiles ================================
+    # tanks are givent using [tank:NAME] section, where NAME represent a name
+    # for the tank.
+    # Tank names must be unique within the same Mission
+    # you can add as many tank sections as you want
+
+    [tank:airtank]
+    f_o2=0.21
+    f_he=0
+    volume=15
+    pressure=230
+    rule=50b
+
+    [tank:decotank]
+    f_o2=0.80
+    f_he=0
+    volume=12
+    pressure=230
+    rule=50b
+
 
     # =============================== dive profiles ================================
+    # repetitive dives are given using [dive:NAME] section, where NAME represent a
+    # name (or number if you want) of a dive.
+    # the dives will be done in give, order.
+    # Dive names must be unique within the same Mission
+    # you can add as many dive sections as you want
 
-    [dive1]
+    [dive:1]
 
-    tank1=airtank;0.21;0.0;12;200,50b
-    tank2=nitrox;0.80;0.0;12;200;30b
+    # define the tanks used in this dive: coma-separated tank names:
+    tanks = airtank, decotank
 
-    segment1=30;20*60;airtank;0.0
-    segment2=20;25*60;airtank;0.0
+    # ------------------------------- dive segment -------------------------------
+    # multiples segment are given using: [dive:NAME:segment:SEGNAME], where
+    # NAME represent the name (or number if you want) of the dive and
+    # SEGNAME represent the name (or number if you prefer) of the segment
+    # at least ONT segment (for a dive) is mandatory
+    [dive:1:segment:bottom]
+    depth = 30
+    time = 20*60
+    tank = airtank
+    set_point = 0.0
 
-    [dive2]
+    [dive:2]
+    # surface_interval (in seconds)
+    # for repetitive dives, you can specify the surface time between the previous
+    # dive and this dive
+    surface_interval = 60*60
 
-    surface_interval = 90*60
+    # automatic tank refill: if set to true, used tanks for this dive will be
+    # refilled before the dive
+    automatic_tank_refill = true
 
-    segment1=22;40*60;airtank;0.0
+
+    tanks = airtank
+
+    # segment list for this dive. At least ONE segment is mandatory
+
+    [dive:2:segment:bottom]
+
+    depth = 20
+    time = 30*60
+    tank = airtank
+    set_point = 0.0
 
 
 Full Example
@@ -790,27 +962,77 @@ Config file with all the settings set below.
 .. note:: the default_config.cfg in ./configs directory set all the parameters
     to their default values (wich is not the case in the following example)
 
-::
+.. code-block:: ini
 
     # dipplanner config file
     # this file is used by the command line tool and
     # override the defaults parameters or input some dive profiles
 
+    # =============================== tank profiles ================================
+    # tanks are givent using [tank:NAME] section, where NAME represent a name
+    # for the tank.
+    # Tank names must be unique within the same Mission
+    # you can add as many tank sections as you want
+
+    [tank:airtank]
+    f_o2=0.21
+    f_he=0
+    volume=15
+    pressure=230
+    rule=50b
+
+    [tank:decotank]
+    f_o2=0.80
+    f_he=0
+    volume=12
+    pressure=230
+    rule=50b
+
+
     # =============================== dive profiles ================================
+    # repetitive dives are given using [dive:NAME] section, where NAME represent a
+    # name (or number if you want) of a dive.
+    # the dives will be done in give, order.
+    # Dive names must be unique within the same Mission
+    # you can add as many dive sections as you want
 
-    [dive1]
+    [dive:1]
 
-    tank1=airtank;0.21;0.0;12;200,50b
-    tank2=nitrox;0.80;0.0;12;200;30b
+    # define the tanks used in this dive: coma-separated tank names:
+    tanks = airtank, decotank
 
-    segment1=30;20*60;airtank;0.0
-    segment2=20;25*60;airtank;0.0
+    # ------------------------------- dive segment -------------------------------
+    # multiples segment are given using: [dive:NAME:segment:SEGNAME], where
+    # NAME represent the name (or number if you want) of the dive and
+    # SEGNAME represent the name (or number if you prefer) of the segment
+    # at least ONT segment (for a dive) is mandatory
+    [dive:1:segment:bottom]
+    depth = 30
+    time = 20*60
+    tank = airtank
+    set_point = 0.0
 
-    [dive2]
+    [dive:2]
+    # surface_interval (in seconds)
+    # for repetitive dives, you can specify the surface time between the previous
+    # dive and this dive
+    surface_interval = 60*60
 
-    surface_interval = 90*60
+    # automatic tank refill: if set to true, used tanks for this dive will be
+    # refilled before the dive
+    automatic_tank_refill = true
 
-    segment1=22;40*60;airtank;0.0
+
+    tanks = airtank
+
+    # segment list for this dive. At least ONE segment is mandatory
+
+    [dive:2:segment:bottom]
+
+    depth = 20
+    time = 30*60
+    tank = airtank
+    set_point = 0.0
 
     # ============================== Other parameters ==============================
     [output]
@@ -932,7 +1154,7 @@ Config file with all the settings set below.
 Config file with default values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: ini
 
     # dipplanner config file
     # this file is used by the command line tool and
@@ -940,43 +1162,6 @@ Config file with default values
 
     # This file represent default configuration, without any dive profile nor tank.
 
-    # =============================== dive profiles ================================
-    # repetitive dives are given using [diveXXX] section, where XXX represent a
-    # number.
-    # the dives will be done in croissant order.
-    #[dive1]
-
-    # Tank list for this dive:
-    # Format: tankXXX=tank_name;fO2;fHe;Volume(l);Pressure(bar)
-    #tank1 = airtank;0.21;0.0;15;230;50b
-
-    # segment list for this dive. At least ONE segment is mandatory
-    # Format: segmentXXX=depth(m);duration(s);tank_name;set_point(for ccr)
-    #segment1 = 30;20*60;airtank;0.0
-
-    #[dive2]
-    # surface_interval (in seconds)
-    # for repetitive dives, you can specify the surface time between the previous
-    # dive and this dive
-    #surface_interval = 60*60
-
-    # Tanks
-    # see dive 1 for more explanation
-    # tank list is not mandatory for repetitive dives : if not given
-    # last dive tanks will be used.
-    # if 'automatic_tank_refill' is set to True, the tank will be full before the
-    # dive. If set to False, it'll use the remaining gas from last dive
-    # If at least ONE tank is provided for a repetitive dive, ALL the Tank MUST
-    # be specified
-    # newtank = txtank;0.21;0.30;15;230;50b
-    # tank1 = airtank;0.21;0.0;15;230;50b
-
-    # segment list for this dive. At least ONE segment is mandatory
-    #segment1 = 20;30*60;airtank;0.0
-
-    #[dive3]...
-
-    # ============================== Other parameters ==============================
     [output]
     # template used for output result
     # templating uses jinja2, see documentation for more infos

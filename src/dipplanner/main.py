@@ -153,4 +153,4 @@ def main(cli_arguments=sys.argv):
         env = Environment(loader=PackageLoader('dipplanner', 'templates'))
         tpl = env.get_template(settings.TEMPLATE)
         text = tpl.render(settings=settings, mission=mission)
-        print text
+        print(text)

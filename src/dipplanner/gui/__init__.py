@@ -22,8 +22,6 @@
 
 Starts the GUI
 
-.. todo:: uniquely name the dives (in addition of dive_id (int)
-
 .. todo:: uniquely name the tanks (in addition of tank_id (int)
           AND handle Tank references (from tank list) to:
           current_tank
@@ -32,6 +30,7 @@ Starts the GUI
           Actually: each tank is separated
 
           *WORK IN PROGRESS*
+          (reste en cours: les dumps_dict a modifier)
 
 """
 

@@ -47,17 +47,16 @@ class Mission(object):
     An isolated dive is a Mission with only one dive inside
 
     Attributes:
-        tanks (dict) -- list of each individual tank used (at least once)
+        :tanks: (dict) -- list of each individual tank used (at least once)
                         during the mission.
-        dives (list) -- list of Dive object of the same mission
-        description (str) -- description of the mission (OPTIONAL)
-        status (???) -- actual status of the mission. Could be either:
+        :dives: (list) -- list of Dive object of the same mission
+        :description: (str) -- description of the mission (OPTIONAL)
+        :status: (str) -- actual status of the mission. Could be either:
 
         * STATUS_NONE: not calculated
         * STATUS_CHANGED: changed (calculated, but something in input or parameter has changed
           and recalculation is needed)
         * STATUS_OK: calculated (calculation is up to date)
-
 
     .. todo:: Insert dive(s) in a certain position
 
@@ -134,7 +133,7 @@ class Mission(object):
 
           .. code-block:: python
 
-            print len(my_mission)
+             print(len(my_mission))
 
         *Args:*
           <none>

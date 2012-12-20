@@ -26,9 +26,7 @@ __authors__ = [
     # alphabetical order by last name
     'Thomas Chiroux', ]
 
-import sys
 import logging
-from collections import OrderedDict
 from ConfigParser import SafeConfigParser
 
 # local imports
@@ -233,9 +231,9 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'absolute_min_ppo2'):
                 settings.ABSOLUTE_MIN_PPO2 = float(
                     config.get(section, 'absolute_min_ppo2'))
-            if config.has_option(section, 'absolute_max_pressure'):
-                settings.ABSOLUTE_MAX_pressure = float(
-                    config.get(section, 'absolute_max_pressure'))
+            if config.has_option(section, 'absolute_max_tank_pressure'):
+                settings.ABSOLUTE_MAX_TANK_PRESSURE = float(
+                    config.get(section, 'absolute_max_tank_pressure'))
             if config.has_option(section, 'absolute_max_tank_size'):
                 settings.ABSOLUTE_MAX_TANK_SIZE = float(
                     config.get(section, 'absolute_max_tank_size'))

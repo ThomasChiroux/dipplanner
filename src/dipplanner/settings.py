@@ -39,7 +39,7 @@ FRESH_WATER_DENSITY = 1.0  #: water density kg/l
 SEA_WATER_DENSITY = 1.03  #: water density kg/l
 ABSOLUTE_MAX_PPO2 = 2.0  #: in bar
 ABSOLUTE_MIN_PPO2 = 0.16  #: in bar
-ABSOLUTE_MAX_pressure = 300  #: in bar
+ABSOLUTE_MAX_TANK_PRESSURE = 300  #: in bar
 ABSOLUTE_MAX_TANK_SIZE = 2 * 20  #: in liter
 
 #: Temperature at surface.

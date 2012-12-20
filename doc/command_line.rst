@@ -82,49 +82,58 @@ tanks and segments
 
     specify a tank that will be used for the dive
 
-    Format: ::
+    * Short Format ::
 
-                "tank_name;f_o2;f_he;Volume(l);Pressure(bar);Minimum gas rule"
+            "tank_name"
+
+      * tank_name: (str) name for the tank
+
+      In the short format, you only refer to an existing tank for the dive.
+      So, the Tank MUST be defined before in one of the config file(s)
+
+    * Long Format: ::
+
+            "tank_name;f_o2;f_he;Volume(l);Pressure(bar);Minimum gas rule"
 
 
-    * tank_name: (str) (you choose the name) for the tank
-    * f_02: (float) fraction of oxygen in the tank. Between 0.0 and 1.0
-    * f_he: (float) fraction of helium in the tank. Between 0.0 and 1.0
-    * Volume: (float) Volume of the tank in bar
-    * Pressure: (float) Pressure of the tank in bar
-    * Minimum gas rule: (str) quantity of gas that should remain in the
-      tank after the dive
+      * :tank_name: (str) (you choose the name) for the tank
+      * :f_02: (float) fraction of oxygen in the tank. Between 0.0 and 1.0
+      * :f_he: (float) fraction of helium in the tank. Between 0.0 and 1.0
+      * :Volume: (float) Volume of the tank in bar
+      * :Pressure: (float) Pressure of the tank in bar
+      * :Minimum gas rule: (str) quantity of gas that should remain in the
+                           tank after the dive
 
-      There two format for minimum gas rule:
+        There two format for minimum gas rule:
 
-      * quantity of bar that should remain in the tank:
+        * quantity of bar that should remain in the tank:
 
-        format: "[0-9]+b"
+            format: "[0-9]+b"
 
-        ex: "50b": it should remain 50 bar in the tank at the end of the dive
-      * "fraction rule" (like `the rule of third in cave diving <http://en.wikipedia.org/wiki/Rule_of_thirds_%28diving%29>`_)
+            ex: "50b": it should remain 50 bar in the tank at the end of the dive
+        * "fraction rule" (like `the rule of third in cave diving <http://en.wikipedia.org/wiki/Rule_of_thirds_%28diving%29>`_)
 
-        format: "1/[0-9]"
+            format: "1/[0-9]"
 
-        ex1: "1/3" : 1/3 of the tank to go in, 1/3 of the tank to go back and it should remain 1/3 of the tank at the end of the dive
+            ex1: "1/3" : 1/3 of the tank to go in, 1/3 of the tank to go back and it should remain 1/3 of the tank at the end of the dive
 
-        ex2: "1/6" : 1/6 of the tank to go in, 1/6 of the tank to go back and it should remain 2/3 of the tank at the end of the dive
+            ex2: "1/6" : 1/6 of the tank to go in, 1/6 of the tank to go back and it should remain 2/3 of the tank at the end of the dive
 
-    Example:
+    * Examples:
 
-    12l tank filled with 200b or air. It should remain 50b at the end of the dive.
+        12l tank filled with 200b or air. It should remain 50b at the end of the dive.
 
-    ::
+        ::
 
-        "airtank;0.21;0.0;12;200,50b"
+            "airtank;0.21;0.0;12;200,50b"
 
-    .. note::
+        .. note::
 
-        Multiple tanks may be provided
+            Multiple tanks may be provided
 
-        ex:
+            ex: ::
 
-        dipplanner -t "airtank;0.21;0.0;12;200,50b" -t "nitrox;0.80;0.0;12;200;50b"
+                  dipplanner -t "airtank;0.21;0.0;12;200,50b" -t "nitrox;0.80;0.0;12;200;50b"
 
 .. cmdoption:: -s <STRING>, --segment <STRING>
 

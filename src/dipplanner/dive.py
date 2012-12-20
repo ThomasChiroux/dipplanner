@@ -52,6 +52,7 @@ from dipplanner.tools import seconds_to_hhmmss
 from dipplanner.tools import altitude_or_depth_to_absolute_pressure
 from dipplanner.tools import safe_eval_calculator
 
+
 class NothingToProcess(DipplannerException):
     """raised when the is no input segments to process
     """
@@ -960,7 +961,7 @@ class Dive(object):
         # create a 'dummy' air tank
         no_flight_air_tank = Tank(
             volume=settings.ABSOLUTE_MAX_TANK_SIZE,
-            pressure=settings.ABSOLUTE_MAX_pressure,
+            pressure=settings.ABSOLUTE_MAX_TANK_PRESSURE,
             rule="30b")
 
         if tank is not None:

@@ -380,7 +380,7 @@ class Tank(object):
             math.sqrt(a_n2 * a_o2) * f_n2 * f_o2 +\
             math.sqrt(a_n2 * a_he) * f_n2 * f_he +\
             math.sqrt(a_n2 * a_n2) * f_n2 * f_n2
-        #print "a: %s" % a_gas
+
         b_gas = math.sqrt(b_o2 * b_o2) * f_o2 * f_o2 +\
             math.sqrt(b_o2 * b_he) * f_o2 * f_he +\
             math.sqrt(b_o2 * b_n2) * f_o2 * f_n2 +\
@@ -390,7 +390,7 @@ class Tank(object):
             math.sqrt(b_n2 * b_o2) * f_n2 * f_o2 +\
             math.sqrt(b_n2 * b_he) * f_n2 * f_he +\
             math.sqrt(b_n2 * b_n2) * f_n2 * f_n2
-        #print "b: %s" % b_gas
+
         # now approximate n (quantities of molecules of gas in the tank in mol)
         # using perfect gas law : PV = nRT : n = PV/RT
         approx_n = (float(pressure) * float(volume)) / (R * T)
@@ -423,7 +423,7 @@ class Tank(object):
                 n_right = n_mid
             else:
                 n_left = n_mid
-        #print "n_mid:%s" % n_mid
+
         # recalculate volume using van der waals again
         # V = nR3T3/(PR2T2+aP2) + nb
         total_gas_volume = n_mid * pow(R, 3) * pow(T, 3) / \
@@ -680,7 +680,7 @@ class Tank(object):
                 self.mod > self._calculate_mod(settings.ABSOLUTE_MAX_PPO2)):
             raise InvalidMod("MOD exceed maximum tolerable MOD")
 
-        if self.pressure > settings.ABSOLUTE_MAX_pressure:
+        if self.pressure > settings.ABSOLUTE_MAX_TANK_PRESSURE:
             raise InvalidTank(
                 "Tank pressure exceed maximum tolerable pressure")
         if self.pressure <= 0:

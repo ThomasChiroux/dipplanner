@@ -23,15 +23,25 @@ Settings will be usefull to display some dive parameters, like configured GF for
 
     Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
 
+mission
+-------
+
+the main object passed in template is the mission object.
+It contains:
+
+* mission.tanks: the tank dictionnary defined for the mission
+* mission.dives: the dives dictionnary
+* mission.settings: the global settings for the mission
+
 dives
 -----
 
-Because dipplanner sends a list of Dives, the template MUST iterate this
-list, event for one element :
+Dives are in the mission.
+To easilly iterate dive, you can use the following snippet:
 
 ::
 
-    {% for dive in dives %}
+    {% for dive in mission.dives.values() %}
 
     ...
 

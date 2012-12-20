@@ -29,8 +29,6 @@ also initiate log files
 
 .. todo:: logger.tutu("message %s", allo)
           au lieu de logger.tutu("message %s" % allo)
-
-.. todo:: revoir tous les dump_dict
 """
 
 __authors__ = [
@@ -145,7 +143,6 @@ def main(cli_arguments=sys.argv):
     dipplanner_arguments = DipplannerCliArguments(mission, cli_arguments)
     #mission = dipplanner_arguments.mission
     mission.calculate()
-
     if dipplanner_arguments.args.gui:
         start_gui(mission)
     else:

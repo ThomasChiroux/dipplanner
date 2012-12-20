@@ -362,16 +362,16 @@ class Dive(object):
         *Raise:*
             TypeError : if Mission is not serialisable
         """
-        current_tank_dict = {}
+        current_tank_name = ""
         if self.current_tank is not None:
-            current_tank_dict = self.current_tank.dumps_dict()
+            current_tank_name = self.current_tank.name
         dive_dict = {'name': self.name,
                      'input_segments': [seg.dumps_dict() for seg in \
                                         self.input_segments],
                      'output_segments': [seg.dumps_dict() for seg in \
                                          self.output_segments],
-                     'tanks': [tank.name for tank in self.tanks],
-                     'current_tank': current_tank_dict,
+                     'tanks': ','.join([tank.name for tank in self.tanks]),
+                     'current_tank': current_tank_name,
                      'current_depth': self.current_depth,
                      'model': self.model.deco_model,
                      'run_time': self.run_time,
@@ -498,7 +498,7 @@ class Dive(object):
         else:
             tpl = env.get_template(template)
         text = tpl.render(settings=settings,
-                          dives=[self, ])
+                          mission=self.mission)  # TOFIX: Attention ceci ne marche pas bien: on renvoie la missio plutot qu'une Dive simple
         return text
 
     def do_surface_interval(self, time=None):

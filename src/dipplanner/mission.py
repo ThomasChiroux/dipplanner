@@ -181,18 +181,21 @@ class Mission(object):
             <none>
 
         *Returns:*
-            string -- json dumps of Tank object
+            dict -- json dumps of Tank object
 
         *Raise:*
             TypeError : if Mission is not serialisable
         """
         mission_dict = {'description': self.description,
-                        'dives': [dive.dumps_dict() for dive in self.dives]}
+                        'tanks': {tank_name: tank.dumps_dict()
+                            for (tank_name, tank) in self.tanks.iteritems()},
+                        'dives': {dive_name: dive.dumps_dict()
+                            for (dive_name, dive) in self.dives.iteritems()}}
 
         return mission_dict
 
     def loads_json(self, input_json):
-        """loads a json structure and update the tank object with the new
+        """loads a json structure and update the mission object with the new
         values.
 
         This method can be used in http PUT method to update object
@@ -217,11 +220,15 @@ class Mission(object):
 
         if 'description' in mission_dict:
             self.description = mission_dict['description']
+        if 'tanks' in mission_dict:
+            for tank_name, dict_tank in mission_dict['tanks'].items():
+                temp_tank = Tank().loads_json(dict_tank)
+                self.tanks[tank_name] = temp_tank
         if 'dives' in mission_dict:
-            temp_dives = []
-            for dict_dive in mission_dict['dives']:
-                temp_dives.append(Dive().loads_json(dict_dive))
-            self.dives = temp_dives
+            for dive_name, dict_dive in mission_dict['dives'].items():
+                temp_dive = Dive().loads_json(dict_dive)
+                self.dives[dive_name] = temp_dive
+
         return self
 
     def clean(self, what='all'):

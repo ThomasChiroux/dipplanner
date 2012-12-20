@@ -233,8 +233,8 @@ class Tank(object):
         self.logger.debug("creating an instance of Tank: O2:%f, He:%f, "
                           "max_ppo2:%f, mod:%s, volume:%f, "
                           "pressure:%d" % (f_o2, f_he, max_ppo2,
-                                                mod, volume,
-                                                pressure))
+                                           mod, volume,
+                                           pressure))
 
         self.f_o2 = float(f_o2)
         self.f_he = float(f_he)
@@ -265,6 +265,7 @@ class Tank(object):
         else:
             self.total_gas = 0.0
         self.remaining_gas = self.total_gas
+        self.min_gas = 0
         self._set_min_gas()
 
     def _set_min_gas(self):
@@ -576,21 +577,24 @@ class Tank(object):
             if 'f_n2' in tank_dict and 'f_he' in tank_dict:
                 self.f_o2 = 1 - (self.f_n2 + self.f_he)
             else:
-                raise InvalidTank("Need at least two gas to instanciate a Tank")
+                raise InvalidTank("Need at least two gas to "
+                                  "instanciate a Tank")
         if 'f_he' in tank_dict:
             self.f_he = float(safe_eval_calculator(tank_dict['f_he']))
         else:
             if 'f_o2' in tank_dict and 'f_n2' in tank_dict:
                 self.f_he = 1 - (self.f_o2 + self.f_n2)
             else:
-                raise InvalidTank("Need at least two gas to instanciate a Tank")
+                raise InvalidTank("Need at least two gas to "
+                                  "instanciate a Tank")
         if 'f_n2' in tank_dict:
             self.f_n2 = float(safe_eval_calculator(tank_dict['f_n2']))
         else:
             if 'f_o2' in tank_dict and 'f_he' in tank_dict:
                 self.f_n2 = 1 - (self.f_o2 + self.f_he)
             else:
-                raise InvalidTank("Need at least two gas to instanciate a Tank")
+                raise InvalidTank("Need at least two gas to "
+                                  "instanciate a Tank")
         if 'max_ppo2' in tank_dict:
             self.max_ppo2 = float(safe_eval_calculator(tank_dict['max_ppo2']))
         if 'rule' in tank_dict:

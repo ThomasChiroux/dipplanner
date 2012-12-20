@@ -43,7 +43,6 @@ class ErrorApiBottle(object):
         response.set_header("Content-Type", "application/json")
         return '{"message": "404 Not found"}'
 
-
     def error405(self, code):
         """Handle 405 error (method not allowed) and returns a json
         structure instead of classic html structure

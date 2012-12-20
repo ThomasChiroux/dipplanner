@@ -144,7 +144,7 @@ class DiveApiBottle(ApiBottle):
                     return self.json_abort(404, "404: dive_id ({0}) not "
                                                 "found".format(resource_id))
                 else:
-                    return self.mission.dives[int(resource_id) - 1].dumps_dict()
+                    return self.mission.dives[int(resource_id) - 1].dumps_dict()  # TODO: Correct this using dive dict not list
         else:
             return self.json_abort(400, "400: Bad ContentType")
 

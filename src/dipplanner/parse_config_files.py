@@ -85,15 +85,17 @@ class DipplannerConfigFiles(object):
 
             missing = set(filenames) - set(filesread)
             if len(filesread) == 0:
-                self.logger.info("No config file found: skip config from files")
+                self.logger.info("No config file found: "
+                                 "skip config from files")
 
             if len(missing) > 0:
                 if len(missing) == 1:
                     self.logger.warning("Config file : %s not found, skip it"
-                                   % list(missing)[0])
+                                        % list(missing)[0])
                 else:
-                    self.logger.warning("Config files : %s not found, skip them"
-                                   % ', '.join(str(n) for n in list(missing)))
+                    self.logger.warning("Config files: %s not found, skip them"
+                                        % ', '.join(str(n) for n
+                                                    in list(missing)))
 
         if self.config is not None:
             # note: advanced MUST be run before general because of
@@ -113,7 +115,8 @@ class DipplannerConfigFiles(object):
             elif section.startswith('tank:'):
                 self.parse_config_tank_section(section)
             elif section.startswith('dive:'):
-                if len(section.split(':')) > 2 and "segment" in section.lower():
+                if len(section.split(':')) > 2 and \
+                        "segment" in section.lower():
                     self.parse_config_segment_section(section)
                 else:
                     self.parse_config_dive_section(section)
@@ -141,14 +144,12 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'gf_low'):
                 settings.GF_LOW = float(
                     safe_eval_calculator(''.join(config.get(section,
-                        'gf_low'))
-                    .strip('%'))) / 100
+                                         'gf_low')).strip('%'))) / 100
 
             if config.has_option(section, 'gf_high'):
                 settings.GF_HIGH = float(
                     safe_eval_calculator(''.join(config.get(section,
-                        'gf_high'))
-                    .strip('%'))) / 100
+                                         'gf_high')).strip('%'))) / 100
 
             if config.has_option(section, 'water'):
                 if config.get(section, 'water') == 'sea':
@@ -158,16 +159,16 @@ class DipplannerConfigFiles(object):
 
             if config.has_option(section, 'altitude'):
                 settings.AMBIANT_PRESSURE_SURFACE =\
-                altitude_to_pressure(float(config.get(section,
-                    'altitude')))
+                    altitude_to_pressure(float(config.get(section,
+                                                          'altitude')))
 
             if config.has_option(section, 'dive_consumption_rate'):
                 settings.DIVE_CONSUMPTION_RATE =\
-                float(config.get(section, 'dive_consumption_rate')) / 60
+                    float(config.get(section, 'dive_consumption_rate')) / 60
 
             if config.has_option(section, 'deco_consumption_rate'):
                 settings.DECO_CONSUMPTION_RATE =\
-                float(config.get(section, 'deco_consumption_rate')) / 60
+                    float(config.get(section, 'deco_consumption_rate')) / 60
 
             if config.has_option(section, 'descent_rate'):
                 settings.DESCENT_RATE = float(

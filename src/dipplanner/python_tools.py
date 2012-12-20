@@ -44,7 +44,7 @@ class Singleton(type):
         super(Singleton, cls).__init__(name, bases, dict)
         cls.instance = None
 
-    def __call__(cls,*args,**kw):
+    def __call__(cls, *args, **kw):
         """call
         """
         if cls.instance is None:

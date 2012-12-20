@@ -54,8 +54,8 @@ class Mission(object):
         :status: (str) -- actual status of the mission. Could be either:
 
         * STATUS_NONE: not calculated
-        * STATUS_CHANGED: changed (calculated, but something in input or parameter has changed
-          and recalculation is needed)
+        * STATUS_CHANGED: changed (calculated, but something in input or
+                          parameter has changed and recalculation is needed)
         * STATUS_OK: calculated (calculation is up to date)
 
     .. todo:: Insert dive(s) in a certain position
@@ -188,9 +188,11 @@ class Mission(object):
         """
         mission_dict = {'description': self.description,
                         'tanks': {tank_name: tank.dumps_dict()
-                            for (tank_name, tank) in self.tanks.iteritems()},
+                                  for (tank_name, tank)
+                                  in self.tanks.iteritems()},
                         'dives': {dive_name: dive.dumps_dict()
-                            for (dive_name, dive) in self.dives.iteritems()}}
+                                  for (dive_name, dive)
+                                  in self.dives.iteritems()}}
 
         return mission_dict
 

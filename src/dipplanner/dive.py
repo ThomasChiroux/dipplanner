@@ -43,7 +43,8 @@ from dipplanner.model.buhlmann.model_exceptions import ModelStateException
 from dipplanner.tank import InvalidGas, InvalidTank, InvalidMod, EmptyTank
 from dipplanner.tank import Tank
 from dipplanner.segment import UnauthorizedMod
-from dipplanner.segment import Segment, SegmentDive, SegmentDeco, SegmentAscDesc
+from dipplanner.segment import (Segment, SegmentDive,
+                                SegmentDeco, SegmentAscDesc)
 from dipplanner.model.buhlmann.model import Model as BuhlmannModel
 
 from dipplanner.tools import depth_to_pressure
@@ -320,9 +321,8 @@ class Dive(object):
         return cmp(self.run_time, otherdive.run_time)
 
     def add_input_segment(self, segment_or_segmentlist):
-        """add a Segment or a list of Segments to the Dive's input_segments list
-
-        they will be added at the end of the list
+        """add a Segment or a list of Segments to the Dive's
+        input_segments list. They will be added at the end of the list
 
         *Keyword Arguments:*
             :segment_or_segmentlist: -- either a Segment object
@@ -348,7 +348,7 @@ class Dive(object):
                 else:
                     raise TypeError("Bad Dive Type: %s " % type(segment))
         else:
-            raise TypeError("Bad Dive Type: %s " % type(segment_or_segmentlist))
+            raise TypeError("Bad Dive Type: %s" % type(segment_or_segmentlist))
 
     def dumps_dict(self):
         """dumps the Dive object in dict format for later json conversion
@@ -366,9 +366,9 @@ class Dive(object):
         if self.current_tank is not None:
             current_tank_name = self.current_tank.name
         dive_dict = {'name': self.name,
-                     'input_segments': [seg.dumps_dict() for seg in \
+                     'input_segments': [seg.dumps_dict() for seg in
                                         self.input_segments],
-                     'output_segments': [seg.dumps_dict() for seg in \
+                     'output_segments': [seg.dumps_dict() for seg in
                                          self.output_segments],
                      'tanks': ','.join([tank.name for tank in self.tanks]),
                      'current_tank': current_tank_name,

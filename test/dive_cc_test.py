@@ -30,6 +30,7 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner.main import activate_debug_for_tests
 
+from dipplanner.mission import Mission
 from dipplanner.dive import Dive
 from dipplanner.dive import ProcessingError, NothingToProcess, InfiniteDeco
 from dipplanner.tank import Tank
@@ -48,11 +49,11 @@ class TestDive(unittest.TestCase):
         # temporary hack (tests):
 
         activate_debug_for_tests()
-
-        self.air = Tank(tank_vol=3.0, tank_pressure=200, tank_rule='10b'
+        self.mission = Mission()
+        self.air = Tank(volume=3.0, pressure=200, rule='10b'
                         )
-        self.txhypo = Tank(0.10, 0.50, tank_vol=3.0, tank_pressure=200,
-                           tank_rule='10b')
+        self.txhypo = Tank(0.10, 0.50, volume=3.0, pressure=200,
+                           rule='10b')
         self.setpoint = 1.2
 
         settings.RUN_TIME = False
@@ -67,7 +68,7 @@ class TestDiveCCAir10m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 10 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -106,7 +107,7 @@ class TestDiveCCAir10m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 20 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -145,7 +146,7 @@ class TestDiveCCAir10m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 30 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -184,7 +185,7 @@ class TestDiveCCAir10m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 40 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -223,7 +224,7 @@ class TestDiveCCAir10m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 50 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -262,7 +263,7 @@ class TestDiveCCAir10m60min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 60 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -301,7 +302,7 @@ class TestDiveCCAir10m70min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 70 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -323,7 +324,7 @@ class TestDiveCCAir20m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 10 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -362,7 +363,7 @@ class TestDiveCCAir20m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 20 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -401,7 +402,7 @@ class TestDiveCCAir20m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 30 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -440,7 +441,7 @@ class TestDiveCCAir20m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 40 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -479,7 +480,7 @@ class TestDiveCCAir20m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 50 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -496,7 +497,7 @@ class TestDiveCCAir30m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 10 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -535,7 +536,7 @@ class TestDiveCCAir30m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 20 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -574,7 +575,7 @@ class TestDiveCCAir30m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 30 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -613,7 +614,7 @@ class TestDiveCCAir30m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 40 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -652,7 +653,7 @@ class TestDiveCCAir30m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 50 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -669,7 +670,7 @@ class TestDiveCCAir40m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 10 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -708,7 +709,7 @@ class TestDiveCCAir40m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 20 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -747,7 +748,7 @@ class TestDiveCCAir40m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 30 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -786,7 +787,7 @@ class TestDiveCCAir40m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 40 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -806,7 +807,7 @@ class TestDiveCCAir50m10min(TestDive):
     def runTest(self):
         try:
             diveseg1 = SegmentDive(50, 10 * 60, self.air, self.setpoint)
-            self.profile1 = Dive([diveseg1], [self.air])
+            self.profile1 = Dive(self.mission, [diveseg1], [self.air])
             self.profile1.do_dive()
         except UnauthorizedMod:
             pass
@@ -823,7 +824,7 @@ class TestDiveCCHypo50m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 10 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -851,7 +852,7 @@ class TestDiveCCHypo50m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -864,7 +865,7 @@ class TestDiveCCHypo50m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 20 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -892,7 +893,7 @@ class TestDiveCCHypo50m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -905,7 +906,7 @@ class TestDiveCCHypo50m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 30 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -933,7 +934,7 @@ class TestDiveCCHypo50m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -946,7 +947,7 @@ class TestDiveCCHypo50m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 40 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -974,7 +975,7 @@ class TestDiveCCHypo50m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -987,7 +988,7 @@ class TestDiveCCHypo50m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 50 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -995,7 +996,7 @@ class TestDiveCCHypo50m50min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 60m tests ==============
@@ -1005,7 +1006,7 @@ class TestDiveCCHypo60m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 10 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1033,7 +1034,7 @@ class TestDiveCCHypo60m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1046,7 +1047,7 @@ class TestDiveCCHypo60m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 20 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1074,7 +1075,7 @@ class TestDiveCCHypo60m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1087,7 +1088,7 @@ class TestDiveCCHypo60m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 30 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1115,7 +1116,7 @@ class TestDiveCCHypo60m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1128,7 +1129,7 @@ class TestDiveCCHypo60m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 40 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -1136,7 +1137,7 @@ class TestDiveCCHypo60m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 70m tests ==============
@@ -1146,7 +1147,7 @@ class TestDiveCCHypo70m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(70, 10 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1174,7 +1175,7 @@ class TestDiveCCHypo70m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1187,7 +1188,7 @@ class TestDiveCCHypo70m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(70, 20 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1215,7 +1216,7 @@ class TestDiveCCHypo70m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1228,7 +1229,7 @@ class TestDiveCCHypo70m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(70, 30 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -1236,7 +1237,7 @@ class TestDiveCCHypo70m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 80m tests ==============
@@ -1246,7 +1247,7 @@ class TestDiveCCHypo80m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(80, 10 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1274,7 +1275,7 @@ class TestDiveCCHypo80m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1287,7 +1288,7 @@ class TestDiveCCHypo80m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(80, 20 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1315,7 +1316,7 @@ class TestDiveCCHypo80m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1328,7 +1329,7 @@ class TestDiveCCHypo80m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(80, 30 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -1336,7 +1337,7 @@ class TestDiveCCHypo80m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 90m tests ==============
@@ -1346,7 +1347,7 @@ class TestDiveCCHypo90m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(90, 10 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1374,7 +1375,7 @@ class TestDiveCCHypo90m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1387,7 +1388,7 @@ class TestDiveCCHypo90m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(90, 20 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1415,7 +1416,7 @@ class TestDiveCCHypo90m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1428,7 +1429,7 @@ class TestDiveCCHypo90m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(90, 30 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -1436,7 +1437,7 @@ class TestDiveCCHypo90m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # =================================================== 100m tests ==============
@@ -1446,7 +1447,7 @@ class TestDiveCCHypo100m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(100, 10 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1474,7 +1475,7 @@ class TestDiveCCHypo100m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1487,7 +1488,7 @@ class TestDiveCCHypo100m15min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(100, 15 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1515,7 +1516,7 @@ class TestDiveCCHypo100m15min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1528,7 +1529,7 @@ class TestDiveCCHypo100m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(100, 20 * 60, self.txhypo, self.setpoint)
-        self.profile1 = Dive([diveseg1], [self.txhypo])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -1536,7 +1537,7 @@ class TestDiveCCHypo100m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # =================================================== 110m tests ==============
@@ -1550,7 +1551,7 @@ class TestDiveCCHypo110m10min(TestDive):
         try:
             diveseg1 = SegmentDive(110, 10 * 60, self.txhypo,
                                    self.setpoint)
-            self.profile1 = Dive([diveseg1], [self.txhypo])
+            self.profile1 = Dive(self.mission, [diveseg1], [self.txhypo])
             self.profile1.do_dive()
         except UnauthorizedMod:
             pass
@@ -1567,7 +1568,7 @@ class TestDiveMultilevel(TestDive):
         diveseg1 = SegmentDive(40, 10 * 60, self.air, self.setpoint)
         diveseg2 = SegmentDive(45, 12 * 60, self.air, self.setpoint)
         diveseg3 = SegmentDive(30, 15 * 60, self.air, self.setpoint)
-        self.profile1 = Dive([diveseg1, diveseg2, diveseg3], [self.air])
+        self.profile1 = Dive(self.mission, [diveseg1, diveseg2, diveseg3], [self.air])
         self.profile1.do_dive()
 
     def test_rt(self):

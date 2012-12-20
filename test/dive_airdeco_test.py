@@ -30,6 +30,7 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner.main import activate_debug_for_tests
 
+from dipplanner.mission import Mission
 from dipplanner.dive import Dive
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
@@ -47,24 +48,25 @@ class TestDive(unittest.TestCase):
         activate_debug_for_tests()
         settings.RUN_TIME = True
         settings.SURFACE_TEMP = 12
-        self.air12l = Tank(tank_vol=12.0, tank_pressure=200,
-                           tank_rule='10b')
-        self.airtank = Tank(tank_vol=18.0, tank_pressure=200,
-                            tank_rule='10b')
-        self.airtank12 = Tank(tank_vol=12.0, tank_pressure=200,
-                              tank_rule='10b')
-        self.airdouble = Tank(tank_vol=30.0, tank_pressure=200,
-                              tank_rule='10b')  # bi15l 200b
-        self.txtank1 = Tank(0.21, 0.30, tank_vol=20.0,
-                            tank_pressure=200, tank_rule='10b')
-        self.txtanknormodbl = Tank(0.21, 0.30, tank_vol=30.0,
-                                   tank_pressure=200, tank_rule='10b')
-        self.deco1 = Tank(0.8, 0.0, tank_vol=7.0, tank_pressure=200,
-                          tank_rule='10b')
-        self.deco2 = Tank(0.5, 0.0, tank_vol=7.0, tank_pressure=200,
-                          tank_rule='10b')
-        self.decoo2 = Tank(1.0, 0.0, tank_vol=7.0, tank_pressure=200,
-                           tank_rule='10b')
+        self.mission = Mission()
+        self.air12l = Tank(volume=12.0, pressure=200,
+                           rule='10b')
+        self.airtank = Tank(volume=18.0, pressure=200,
+                            rule='10b')
+        self.airtank12 = Tank(volume=12.0, pressure=200,
+                              rule='10b')
+        self.airdouble = Tank(volume=30.0, pressure=200,
+                              rule='10b')  # bi15l 200b
+        self.txtank1 = Tank(0.21, 0.30, volume=20.0,
+                            pressure=200, rule='10b')
+        self.txtanknormodbl = Tank(0.21, 0.30, volume=30.0,
+                                   pressure=200, rule='10b')
+        self.deco1 = Tank(0.8, 0.0, volume=7.0, pressure=200,
+                          rule='10b')
+        self.deco2 = Tank(0.5, 0.0, volume=7.0, pressure=200,
+                          rule='10b')
+        self.decoo2 = Tank(1.0, 0.0, volume=7.0, pressure=200,
+                           rule='10b')
 
 
 # AIR + DECO Nx80 =============================================================
@@ -75,7 +77,7 @@ class TestDiveAirDecoNx8010m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 10 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -103,14 +105,14 @@ class TestDiveAirDecoNx8010m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -123,7 +125,7 @@ class TestDiveAirDecoNx8010m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 20 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -152,14 +154,14 @@ class TestDiveAirDecoNx8010m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -172,7 +174,7 @@ class TestDiveAirDecoNx8010m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 30 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -200,14 +202,14 @@ class TestDiveAirDecoNx8010m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -220,7 +222,7 @@ class TestDiveAirDecoNx8010m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 40 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -249,14 +251,14 @@ class TestDiveAirDecoNx8010m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -269,7 +271,7 @@ class TestDiveAirDecoNx8010m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 50 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -298,14 +300,14 @@ class TestDiveAirDecoNx8010m50min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -318,7 +320,7 @@ class TestDiveAirDecoNx8010m60min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 60 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -347,14 +349,14 @@ class TestDiveAirDecoNx8010m60min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -367,7 +369,7 @@ class TestDiveAirDecoNx8010m70min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 70 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -375,14 +377,14 @@ class TestDiveAirDecoNx8010m70min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank1_cons(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), False,
                          'Wrong tank status : it should fail the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
 
 # ==================================================== 20m tests ==============
@@ -392,7 +394,7 @@ class TestDiveAirDecoNx8020m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 10 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -420,14 +422,14 @@ class TestDiveAirDecoNx8020m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -440,7 +442,7 @@ class TestDiveAirDecoNx8020m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 20 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -468,14 +470,14 @@ class TestDiveAirDecoNx8020m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -488,7 +490,7 @@ class TestDiveAirDecoNx8020m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 30 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -516,14 +518,14 @@ class TestDiveAirDecoNx8020m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -536,7 +538,7 @@ class TestDiveAirDecoNx8020m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 40 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -564,14 +566,14 @@ class TestDiveAirDecoNx8020m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -584,7 +586,7 @@ class TestDiveAirDecoNx8020m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 50 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12, self.deco1])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -592,14 +594,14 @@ class TestDiveAirDecoNx8020m50min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank1_cons(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), False,
                          'Wrong tank status : it should fail the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
 
 # ==================================================== 30m tests ==============
@@ -609,7 +611,7 @@ class TestDiveAirDecoNx8030m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 10 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -637,14 +639,14 @@ class TestDiveAirDecoNx8030m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -657,7 +659,7 @@ class TestDiveAirDecoNx8030m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 20 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -685,14 +687,14 @@ class TestDiveAirDecoNx8030m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -705,7 +707,7 @@ class TestDiveAirDecoNx8030m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -733,14 +735,14 @@ class TestDiveAirDecoNx8030m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -753,7 +755,7 @@ class TestDiveAirDecoNx8030m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 40 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -781,14 +783,14 @@ class TestDiveAirDecoNx8030m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -801,7 +803,7 @@ class TestDiveAirDecoNx8030m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 50 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -809,14 +811,14 @@ class TestDiveAirDecoNx8030m50min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank1_cons(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), False,
                          'Wrong tank status : it should fail the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
 
 # ==================================================== 40m tests ==============
@@ -826,7 +828,7 @@ class TestDiveAirDecoNx8040m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 10 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -854,14 +856,14 @@ class TestDiveAirDecoNx8040m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -874,7 +876,7 @@ class TestDiveAirDecoNx8040m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 20 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -902,14 +904,14 @@ class TestDiveAirDecoNx8040m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -922,7 +924,7 @@ class TestDiveAirDecoNx8040m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -950,14 +952,14 @@ class TestDiveAirDecoNx8040m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -970,7 +972,7 @@ class TestDiveAirDecoNx8040m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 40 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank, self.deco1])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -978,14 +980,14 @@ class TestDiveAirDecoNx8040m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank1_cons(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), False,
                          'Wrong tank status : it should fail the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
 
 # ==================================================== 50m tests ==============
@@ -995,7 +997,7 @@ class TestDiveAirDecoNx8050m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 10 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1023,14 +1025,14 @@ class TestDiveAirDecoNx8050m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1043,7 +1045,7 @@ class TestDiveAirDecoNx8050m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 20 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1071,14 +1073,14 @@ class TestDiveAirDecoNx8050m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1091,7 +1093,7 @@ class TestDiveAirDecoNx8050m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 30 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1119,14 +1121,14 @@ class TestDiveAirDecoNx8050m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1139,7 +1141,7 @@ class TestDiveAirDecoNx8050m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 40 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1167,14 +1169,14 @@ class TestDiveAirDecoNx8050m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1187,7 +1189,7 @@ class TestDiveAirDecoNx8050m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 50 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -1195,14 +1197,14 @@ class TestDiveAirDecoNx8050m50min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank1_cons(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), False,
                          'Wrong tank status : it should fail the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
 
 # ==================================================== 60m tests ==============
@@ -1212,7 +1214,7 @@ class TestDiveAirDecoNx8060m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 10 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1240,14 +1242,14 @@ class TestDiveAirDecoNx8060m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1260,7 +1262,7 @@ class TestDiveAirDecoNx8060m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 20 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1288,14 +1290,14 @@ class TestDiveAirDecoNx8060m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1308,7 +1310,7 @@ class TestDiveAirDecoNx8060m25min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 25 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1336,14 +1338,14 @@ class TestDiveAirDecoNx8060m25min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1356,7 +1358,7 @@ class TestDiveAirDecoNx8060m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 30 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1384,14 +1386,14 @@ class TestDiveAirDecoNx8060m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank_cons_rule_1(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), True,
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1404,7 +1406,7 @@ class TestDiveAirDecoNx8060m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 40 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble, self.deco1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble, self.deco1])
         self.profile1.do_dive()
 
     def test_tank0_cons(self):
@@ -1412,14 +1414,14 @@ class TestDiveAirDecoNx8060m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_tank1_cons(self):
         self.assertEqual(self.profile1.tanks[1].check_rule(), False,
                          'Wrong tank status : it should fail the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name()))
+                         self.profile1.tanks[1].name))
 
 
 # ==================================================== 70m tests ==============
@@ -1432,7 +1434,7 @@ class TestDiveAirDecoNx8070m10min(TestDive):
     def runTest(self):
         try:
             diveseg1 = SegmentDive(70, 10 * 60, self.airdouble, 0)
-            self.profile1 = Dive([diveseg1], [self.airdouble,
+            self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble,
                                  self.deco1])
             self.profile1.do_dive()
         except UnauthorizedMod:
@@ -1450,7 +1452,7 @@ class TestDiveMultilevel(TestDive):
         diveseg1 = SegmentDive(40, 10 * 60, self.airdouble, 0)
         diveseg2 = SegmentDive(50, 12 * 60, self.airdouble, 0)
         diveseg3 = SegmentDive(30, 15 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1, diveseg2, diveseg3],
+        self.profile1 = Dive(self.mission, [diveseg1, diveseg2, diveseg3],
                              [self.airdouble, self.deco1])
         self.profile1.do_dive()
 

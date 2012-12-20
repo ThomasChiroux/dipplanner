@@ -32,6 +32,7 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner.main import activate_debug_for_tests
 
+from dipplanner.mission import Mission
 from dipplanner.dive import Dive
 from dipplanner.dive import ProcessingError, NothingToProcess, InfiniteDeco
 from dipplanner.tank import Tank
@@ -52,36 +53,38 @@ class TestDive(unittest.TestCase):
         activate_debug_for_tests()
         settings.RUN_TIME = True
         settings.SURFACE_TEMP = 12
-        self.air12l = Tank(tank_vol=12.0, tank_pressure=200)
-        self.airtank = Tank(tank_vol=18.0, tank_pressure=200)
-        self.airtank12 = Tank(tank_vol=12.0, tank_pressure=200)
-        self.airdouble = Tank(tank_vol=30.0, tank_pressure=200)  # bi15l 200b
-        self.txtank1 = Tank(0.21, 0.30, tank_vol=20.0,
-                            tank_pressure=200)
-        self.txtanknormodbl = Tank(0.21, 0.30, tank_vol=30.0,
-                                   tank_pressure=200)
-        self.deco1 = Tank(0.8, 0.0, tank_vol=7.0, tank_pressure=200)
-        self.deco2 = Tank(0.5, 0.0, tank_vol=7.0, tank_pressure=200)
-        self.decoo2 = Tank(1.0, 0.0, tank_vol=7.0, tank_pressure=200)
+        self.mission = Mission()
+        self.air12l = Tank(volume=12.0, pressure=200)
+        self.airtank = Tank(volume=18.0, pressure=200)
+        self.airtank12 = Tank(volume=12.0, pressure=200)
+        self.airdouble = Tank(volume=30.0, pressure=200)  # bi15l 200b
+        self.txtank1 = Tank(0.21, 0.30, volume=20.0,
+                            pressure=200)
+        self.txtanknormodbl = Tank(0.21, 0.30, volume=30.0,
+                                   pressure=200)
+        self.deco1 = Tank(0.8, 0.0, volume=7.0, pressure=200)
+        self.deco2 = Tank(0.5, 0.0, volume=7.0, pressure=200)
+        self.decoo2 = Tank(1.0, 0.0, volume=7.0, pressure=200)
 
 
 class TestDiveNotEnoughGas1(TestDive):
 
     def runTest(self):
         diveseg1 = SegmentDive(60, 30 * 60, self.air12l, 0)
-        self.profile1 = Dive([diveseg1], [self.air12l])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.air12l])
         self.profile1.do_dive()
         self.assertEqual(self.profile1.tanks[0].check_rule(), False,
                          'Wrong tank status : it should fail the remaining '
                          'gas rule test (result:%s)'
                          % self.profile1.tanks[0].check_rule())
 
+
 class TestDiveAirDiveOutput1(TestDive):
 
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_segment1(self):
@@ -145,7 +148,7 @@ class TestDiveAirDiveOutput_woExc(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive_without_exceptions()
 
     def test_segment1(self):
@@ -209,7 +212,7 @@ class TestDiveAirDiveRunTime1(TestDive):
 
     def runTest(self):
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile1.run_time),
                          ' 48:24', 'bad dive runtime ? (%s)'
@@ -221,7 +224,7 @@ class TestDiveAirDiveOutput2(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg2 = SegmentDive(20, 30 * 60, self.airtank, 0)
-        self.profile2 = Dive([diveseg2], [self.airtank])
+        self.profile2 = Dive(self.mission, [diveseg2], [self.airtank])
         self.profile2.do_dive()
 
     def test_segment1(self):
@@ -271,7 +274,7 @@ class TestDiveAirDiveRunTime2(TestDive):
 
     def runTest(self):
         diveseg2 = SegmentDive(20, 30 * 60, self.airtank, 0)
-        self.profile2 = Dive([diveseg2], [self.airtank])
+        self.profile2 = Dive(self.mission, [diveseg2], [self.airtank])
         self.profile2.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile2.run_time),
                          ' 32:04', 'bad dive runtime (%s)'
@@ -283,7 +286,7 @@ class TestDiveAirDiveOutput3(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble])
+        self.profile3 = Dive(self.mission, [diveseg3], [self.airdouble])
         self.profile3.do_dive()
 
     def test_segment1(self):
@@ -382,7 +385,7 @@ class TestDiveAirDiveRunTime3(TestDive):
 
     def runTest(self):
         diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble])
+        self.profile3 = Dive(self.mission, [diveseg3], [self.airdouble])
         self.profile3.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile3.run_time),
                          '131:05', 'bad dive runtime (%s)'
@@ -394,7 +397,7 @@ class TestDiveAirDiveOutput4(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble, self.decoo2,
+        self.profile3 = Dive(self.mission, [diveseg3], [self.airdouble, self.decoo2,
                              self.deco2])
         self.profile3.do_dive()
 
@@ -494,7 +497,7 @@ class TestDiveAirDiveRunTime4(TestDive):
 
     def runTest(self):
         diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble, self.deco2,
+        self.profile3 = Dive(self.mission, [diveseg3], [self.airdouble, self.deco2,
                              self.decoo2])
         self.profile3.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile3.run_time),
@@ -507,7 +510,7 @@ class TestDiveTxDiveOutput1(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 30 * 60, self.txtank1, 0)
-        self.profile1 = Dive([diveseg1], [self.txtank1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txtank1])
         self.profile1.do_dive()
 
     def test_segment1(self):
@@ -571,7 +574,7 @@ class TestDiveTxDiveRunTime1(TestDive):
 
     def runTest(self):
         diveseg1 = SegmentDive(30, 30 * 60, self.txtank1, 0)
-        self.profile1 = Dive([diveseg1], [self.txtank1])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txtank1])
         self.profile1.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile1.run_time),
                          ' 55:03', 'bad dive runtime (%s)'
@@ -583,7 +586,7 @@ class TestDiveCCRDiveOutput1(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(55, 30 * 60, self.txtank1, 1.4)
-        self.profile1 = Dive([diveseg1], [self.txtank1, self.decoo2])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.txtank1, self.decoo2])
         self.profile1.do_dive()
 
     def test_segment1(self):

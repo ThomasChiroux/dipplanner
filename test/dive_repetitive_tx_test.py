@@ -30,6 +30,7 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner.main import activate_debug_for_tests
 
+from dipplanner.mission import Mission
 from dipplanner.dive import Dive
 from dipplanner.dive import ProcessingError, NothingToProcess, InfiniteDeco
 from dipplanner.tank import Tank
@@ -51,24 +52,25 @@ class TestDive(unittest.TestCase):
 
         settings.RUN_TIME = True
         settings.SURFACE_TEMP = 12
-        self.air12l = Tank(tank_vol=12.0, tank_pressure=200,
-                           tank_rule='10b')
-        self.airtank = Tank(tank_vol=18.0, tank_pressure=200,
-                            tank_rule='10b')
-        self.airtank12 = Tank(tank_vol=12.0, tank_pressure=200,
-                              tank_rule='10b')
-        self.airdouble = Tank(tank_vol=30.0, tank_pressure=200,
-                              tank_rule='10b')  # bi15l 200b
-        self.txtank1 = Tank(0.21, 0.30, tank_vol=30.0,
-                            tank_pressure=200, tank_rule='10b')
-        self.txtanknormodbl = Tank(0.21, 0.30, tank_vol=30.0,
-                                   tank_pressure=200, tank_rule='10b')
-        self.deco1 = Tank(0.8, 0.0, tank_vol=7.0, tank_pressure=200,
-                          tank_rule='10b')
-        self.deco2 = Tank(0.5, 0.0, tank_vol=7.0, tank_pressure=200,
-                          tank_rule='10b')
-        self.decoo2 = Tank(1.0, 0.0, tank_vol=7.0, tank_pressure=200,
-                           tank_rule='10b')
+        self.mission = Mission()
+        self.air12l = Tank(volume=12.0, pressure=200,
+                           rule='10b')
+        self.airtank = Tank(volume=18.0, pressure=200,
+                            rule='10b')
+        self.airtank12 = Tank(volume=12.0, pressure=200,
+                              rule='10b')
+        self.airdouble = Tank(volume=30.0, pressure=200,
+                              rule='10b')  # bi15l 200b
+        self.txtank1 = Tank(0.21, 0.30, volume=30.0,
+                            pressure=200, rule='10b')
+        self.txtanknormodbl = Tank(0.21, 0.30, volume=30.0,
+                                   pressure=200, rule='10b')
+        self.deco1 = Tank(0.8, 0.0, volume=7.0, pressure=200,
+                          rule='10b')
+        self.deco2 = Tank(0.5, 0.0, volume=7.0, pressure=200,
+                          rule='10b')
+        self.decoo2 = Tank(1.0, 0.0, volume=7.0, pressure=200,
+                           rule='10b')
 
 
 # =============================================================================
@@ -83,11 +85,11 @@ class TestRepetitiveTxDive1(TestDive):
         TestDive.setUp(self)
 
         diveseg1 = SegmentDive(55, 20 * 60, self.txtank1, 0)
-        self.profile0 = Dive([diveseg1], [self.txtank1])
+        self.profile0 = Dive(self.mission, [diveseg1], [self.txtank1])
         self.profile0.do_dive()
 
         diveseg2 = SegmentDive(50, 20 * 60, self.txtank1, 0)
-        self.profile1 = Dive([diveseg2], [self.txtank1], self.profile0)
+        self.profile1 = Dive(self.mission, [diveseg2], [self.txtank1], self.profile0)
         self.profile1.do_surface_interval(20 * 60)
 
         # self.profile1.refill_tanks()
@@ -132,16 +134,16 @@ class TestRepetitiveTxDive2(TestDive):
         TestDive.setUp(self)
 
         diveseg1 = SegmentDive(55, 20 * 60, self.txtank1, 0)
-        self.profile0 = Dive([diveseg1], [self.txtank1])
+        self.profile0 = Dive(self.mission, [diveseg1], [self.txtank1])
         self.profile0.do_dive()
 
         diveseg2 = SegmentDive(50, 20 * 60, self.txtank1, 0)
-        self.profile1 = Dive([diveseg2], [self.txtank1], self.profile0)
+        self.profile1 = Dive(self.mission, [diveseg2], [self.txtank1], self.profile0)
         self.profile1.do_surface_interval(30 * 60)
         self.profile1.do_dive()
 
         diveseg3 = SegmentDive(35, 35 * 60, self.txtank1, 0)
-        self.profile2 = Dive([diveseg3], [self.txtank1], self.profile1)
+        self.profile2 = Dive(self.mission, [diveseg3], [self.txtank1], self.profile1)
         self.profile2.do_surface_interval(60 * 60)
 
         # self.profile2.refill_tanks()
@@ -186,16 +188,16 @@ class TestRepetitiveTxDive3(TestDive):
         TestDive.setUp(self)
 
         diveseg1 = SegmentDive(55, 20 * 60, self.txtank1, 0)
-        self.profile0 = Dive([diveseg1], [self.txtank1])
+        self.profile0 = Dive(self.mission, [diveseg1], [self.txtank1])
         self.profile0.do_dive()
 
         diveseg2 = SegmentDive(50, 20 * 60, self.txtank1, 0)
-        self.profile1 = Dive([diveseg2], [self.txtank1], self.profile0)
+        self.profile1 = Dive(self.mission, [diveseg2], [self.txtank1], self.profile0)
         self.profile1.do_surface_interval(30 * 60)
         self.profile1.do_dive()
 
         diveseg3 = SegmentDive(35, 35 * 60, self.txtank1, 0)
-        self.profile2 = Dive([diveseg3], [self.txtank1], self.profile1)
+        self.profile2 = Dive(self.mission, [diveseg3], [self.txtank1], self.profile1)
         self.profile2.do_surface_interval(60 * 60)
 
         # self.profile2.refill_tanks()
@@ -203,7 +205,7 @@ class TestRepetitiveTxDive3(TestDive):
         self.profile2.do_dive()
 
         diveseg4 = SegmentDive(55, 20 * 60, self.txtank1, 0)
-        self.profile3 = Dive([diveseg4], [self.txtank1], self.profile2)
+        self.profile3 = Dive(self.mission, [diveseg4], [self.txtank1], self.profile2)
         self.profile3.do_surface_interval(12 * 60 * 60)
 
         # self.profile3.refill_tanks()

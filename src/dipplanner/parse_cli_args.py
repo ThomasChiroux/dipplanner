@@ -92,7 +92,6 @@ class DipplannerCliArguments(object):
         self.gui_params_arguments()
 
         self.args = None
-        self.dives = None
 
         self.mission = mission
 

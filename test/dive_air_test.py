@@ -29,6 +29,7 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner.main import activate_debug_for_tests
 
+from dipplanner.mission import Mission
 from dipplanner.dive import Dive
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
@@ -43,43 +44,44 @@ class TestDive(unittest.TestCase):
         activate_debug_for_tests()
         settings.RUN_TIME = True
         settings.SURFACE_TEMP = 12
-        self.air12l = Tank(tank_vol=12.0,
-                           tank_pressure=200,
-                           tank_rule="10b")
-        self.airtank = Tank(tank_vol=18.0,
-                            tank_pressure=200,
-                            tank_rule="10b")
-        self.airtank12 = Tank(tank_vol=12.0,
-                              tank_pressure=200,
-                              tank_rule="10b")
-        self.airdouble = Tank(tank_vol=30.0,
-                              tank_pressure=200,
-                              tank_rule="10b")  # bi15l 200b
+        self.mission = Mission()
+        self.air12l = Tank(volume=12.0,
+                           pressure=200,
+                           rule="10b")
+        self.airtank = Tank(volume=18.0,
+                            pressure=200,
+                            rule="10b")
+        self.airtank12 = Tank(volume=12.0,
+                              pressure=200,
+                              rule="10b")
+        self.airdouble = Tank(volume=30.0,
+                              pressure=200,
+                              rule="10b")  # bi15l 200b
         self.txtank1 = Tank(0.21,
                             0.30,
-                            tank_vol=20.0,
-                            tank_pressure=200,
-                            tank_rule="10b")
+                            volume=20.0,
+                            pressure=200,
+                            rule="10b")
         self.txtanknormodbl = Tank(0.21,
                                    0.30,
-                                   tank_vol=30.0,
-                                   tank_pressure=200,
-                                   tank_rule="10b")
+                                   volume=30.0,
+                                   pressure=200,
+                                   rule="10b")
         self.deco1 = Tank(0.8,
                           0.0,
-                          tank_vol=7.0,
-                          tank_pressure=200,
-                          tank_rule="10b")
+                          volume=7.0,
+                          pressure=200,
+                          rule="10b")
         self.deco2 = Tank(0.5,
                           0.0,
-                          tank_vol=7.0,
-                          tank_pressure=200,
-                          tank_rule="10b")
+                          volume=7.0,
+                          pressure=200,
+                          rule="10b")
         self.decoo2 = Tank(1.0,
                            0.0,
-                           tank_vol=7.0,
-                           tank_pressure=200,
-                           tank_rule="10b")
+                           volume=7.0,
+                           pressure=200,
+                           rule="10b")
 
 # ============================================================================
 # ======= S Y S T E M A T I C        T E S T S ===============================
@@ -92,7 +94,7 @@ class TestDiveAir10m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 10 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -137,7 +139,7 @@ class TestDiveAir10m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 20 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -182,7 +184,7 @@ class TestDiveAir10m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 30 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -228,7 +230,7 @@ class TestDiveAir10m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 40 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -274,7 +276,7 @@ class TestDiveAir10m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 50 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -320,7 +322,7 @@ class TestDiveAir10m60min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 60 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -365,7 +367,7 @@ class TestDiveAir10m70min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(10, 70 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -381,7 +383,7 @@ class TestDiveAir20m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 10 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -428,7 +430,7 @@ class TestDiveAir20m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 20 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -475,7 +477,7 @@ class TestDiveAir20m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 30 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -522,7 +524,7 @@ class TestDiveAir20m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 40 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -569,7 +571,7 @@ class TestDiveAir20m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(20, 50 * 60, self.airtank12, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank12])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank12])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -585,7 +587,7 @@ class TestDiveAir30m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 10 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -632,7 +634,7 @@ class TestDiveAir30m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 20 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -679,7 +681,7 @@ class TestDiveAir30m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -726,7 +728,7 @@ class TestDiveAir30m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 40 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -773,7 +775,7 @@ class TestDiveAir30m50min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 50 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -789,7 +791,7 @@ class TestDiveAir40m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 10 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -836,7 +838,7 @@ class TestDiveAir40m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 20 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -883,7 +885,7 @@ class TestDiveAir40m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -930,7 +932,7 @@ class TestDiveAir40m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(40, 40 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airtank])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -946,7 +948,7 @@ class TestDiveAir50m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 10 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -993,7 +995,7 @@ class TestDiveAir50m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 20 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1040,7 +1042,7 @@ class TestDiveAir50m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 30 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1087,7 +1089,7 @@ class TestDiveAir50m40min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(50, 40 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -1103,7 +1105,7 @@ class TestDiveAir60m10min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 10 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1150,7 +1152,7 @@ class TestDiveAir60m20min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 20 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1197,7 +1199,7 @@ class TestDiveAir60m25min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 25 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
         self.profile1.do_dive()
 
     def test_rt(self):
@@ -1244,7 +1246,7 @@ class TestDiveAir60m30min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(60, 30 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
 
     def runTest(self):
         self.profile1.do_dive()
@@ -1263,7 +1265,7 @@ class TestDiveAir70m10min(TestDive):
     def runTest(self):
         try:
             diveseg1 = SegmentDive(70, 10 * 60, self.airdouble, 0)
-            self.profile1 = Dive([diveseg1], [self.airdouble])
+            self.profile1 = Dive(self.mission, [diveseg1], [self.airdouble])
             self.profile1.do_dive()
         except UnauthorizedMod:
             pass
@@ -1278,7 +1280,7 @@ class TestDiveMultilevel(TestDive):
         diveseg1 = SegmentDive(40, 10 * 60, self.airdouble, 0)
         diveseg2 = SegmentDive(50, 12 * 60, self.airdouble, 0)
         diveseg3 = SegmentDive(30, 15 * 60, self.airdouble, 0)
-        self.profile1 = Dive([diveseg1, diveseg2, diveseg3], [self.airdouble])
+        self.profile1 = Dive(self.mission, [diveseg1, diveseg2, diveseg3], [self.airdouble])
         self.profile1.do_dive()
 
     def test_rt(self):

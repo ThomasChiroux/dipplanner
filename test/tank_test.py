@@ -320,7 +320,7 @@ class TestTankisHeliox2080_2(TestTank):
 class TestTankVolume1(TestTank):
 
     def setUp(self):
-        self.mytank = Tank(tank_vol=15, tank_pressure=207)
+        self.mytank = Tank(volume=15, pressure=207)
 
     def test_vol(self):
         self.assertAlmostEqual(self.mytank.total_gas, 3116, 0,
@@ -331,7 +331,7 @@ class TestTankVolume1(TestTank):
 class TestTankVolume2(TestTank):
 
     def setUp(self):
-        self.mytank = Tank(tank_vol=18, tank_pressure=230)
+        self.mytank = Tank(volume=18, pressure=230)
 
     def test_vol(self):
         self.assertAlmostEqual(self.mytank.total_gas, 4064.6008, 4,
@@ -342,7 +342,7 @@ class TestTankVolume2(TestTank):
 class TestTankVolume3(TestTank):
 
     def setUp(self):
-        self.mytank = Tank(tank_vol=15, tank_pressure=207)
+        self.mytank = Tank(volume=15, pressure=207)
 
     def test_vol(self):
         self.mytank.consume_gas(405)
@@ -354,7 +354,7 @@ class TestTankVolume3(TestTank):
 class TestTankVolume4(TestTank):
 
     def setUp(self):
-        self.mytank = Tank(tank_vol=15, tank_pressure=207)
+        self.mytank = Tank(volume=15, pressure=207)
 
     def test_vol(self):
         self.mytank.consume_gas(405)
@@ -368,7 +368,7 @@ class TestTankVolume4(TestTank):
 class TestTankRefill(TestTank):
 
     def setUp(self):
-        self.mytank = Tank(tank_vol=15, tank_pressure=207)
+        self.mytank = Tank(volume=15, pressure=207)
         self.mytank.consume_gas(405)
         self.mytank.consume_gas(2800)
 
@@ -401,7 +401,7 @@ class TestTankInvalidTank1(TestTank):
 
     def runTest(self):
         try:
-            mytank = Tank(f_o2=0.8, tank_vol=43)
+            mytank = Tank(f_o2=0.8, volume=43)
         except InvalidTank:
             pass
         else:
@@ -412,7 +412,7 @@ class TestTankInvalidTank2(TestTank):
 
     def runTest(self):
         try:
-            mytank = Tank(f_o2=0.3, tank_pressure=350)
+            mytank = Tank(f_o2=0.3, pressure=350)
         except InvalidTank:
             pass
         else:
@@ -432,7 +432,7 @@ class TestTankInvalidTank4(TestTank):
 
     def runTest(self):
         try:
-            mytank = Tank(tank_vol=-150)
+            mytank = Tank(volume=-150)
         except InvalidTank:
             pass
         else:
@@ -442,7 +442,7 @@ class TestTankInvalidTank5(TestTank):
 
     def runTest(self):
         try:
-            mytank = Tank(f_o2=0.3, tank_pressure=-100)
+            mytank = Tank(f_o2=0.3, pressure=-100)
         except InvalidTank:
             pass
         else:
@@ -486,19 +486,19 @@ class TestTankRules(TestTank):
         TestTank.setUp(self)
 
     def test_rule_bar_1(self):
-        mytank = Tank(tank_vol=15, tank_pressure=200, tank_rule="50b")
+        mytank = Tank(volume=15, pressure=200, rule="50b")
         self.assertAlmostEqual(mytank.min_gas, 767.5548, 4,
                                "bad Tank rule calculation: %s"
                                % mytank.min_gas)
 
     def test_rule_bar_2(self):
-        mytank = Tank(tank_vol=15, tank_pressure=200, tank_rule="1/3")
+        mytank = Tank(volume=15, pressure=200, rule="1/3")
         self.assertAlmostEqual(mytank.min_gas, 1009.62376, 4,
                                "bad Tank rule calculation: %s"
                                % mytank.min_gas)
 
     def test_rule_bar_3(self):
-        mytank = Tank(tank_vol=15, tank_pressure=200, tank_rule="1/6")
+        mytank = Tank(volume=15, pressure=200, rule="1/6")
         self.assertAlmostEqual(mytank.min_gas, 2019.24752, 4,
                                "bad Tank rule calculation: %s"
                                % mytank.min_gas)

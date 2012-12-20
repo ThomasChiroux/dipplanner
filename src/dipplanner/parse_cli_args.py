@@ -457,7 +457,6 @@ class DipplannerCliArguments(object):
                     dive_tank_name_list.append(tank_args[0])
                 else:
                     self.logger.error("Tank definition in args is incorrect")
-        #from pudb import set_trace; set_trace()
         if args.segments:
             dive_dict = {'name': 'diveCLI',
                          'tanks': ','.join(dive_tank_name_list)}

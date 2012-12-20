@@ -14,6 +14,7 @@ v0.3 (ongoing)
 New features
 ************
 
+* global definition of Tanks in mission, Dives refering to mission's tanks
 * new Mission object wich represent a set of repetitive dives
 * No-flight time calculation
 * non-blocking dive situations errors

@@ -223,9 +223,19 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'fresh_water_density'):
                 settings.FRESH_WATER_DENSITY = float(
                     config.get(section, 'fresh_water_density'))
+                if config.has_section('general'):
+                    if config.has_option('general', 'water'):
+                        if config.get('general', 'water') == 'fresh':
+                            settings.WATER_DENSITY = \
+                                settings.FRESH_WATER_DENSITY
             if config.has_option(section, 'sea_water_density'):
                 settings.SEA_WATER_DENSITY = float(
                     config.get(section, 'sea_water_density'))
+                if config.has_section('general'):
+                    if config.has_option('general', 'water'):
+                        if config.get('general', 'water') == 'sea':
+                            settings.WATER_DENSITY = \
+                                settings.SEA_WATER_DENSITY
             if config.has_option(section, 'absolute_max_ppo2'):
                 settings.ABSOLUTE_MAX_PPO2 = float(
                     config.get(section, 'absolute_max_ppo2'))
@@ -270,6 +280,11 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'ambiant_pressure_sea_level'):
                 settings.AMBIANT_PRESSURE_SEA_LEVEL = float(
                     config.get(section, 'ambiant_pressure_sea_level'))
+                if config.has_section('general'):
+                    if config.has_option('general', 'altitude'):
+                        settings.AMBIANT_PRESSURE_SURFACE =\
+                            altitude_to_pressure(float(config.get('general',
+                                                'altitude')))
             if config.has_option(section, 'method_for_depth_calculation'):
                 method = config.get(section, 'method_for_depth_calculation')
                 if method == 'simple' or method == 'complex':

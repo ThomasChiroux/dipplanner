@@ -36,7 +36,8 @@ import json
 # local imports
 from dipplanner import settings
 from dipplanner.dipp_exception import DipplannerException
-from dipplanner.tools import pressure_to_depth, depth_to_pressure
+from dipplanner.tools import (pressure_to_depth, depth_to_pressure,
+                              safe_eval_calculator)
 
 
 class InvalidGas(DipplannerException):
@@ -162,24 +163,24 @@ class Tank(object):
         * f_n2 (float) -- fraction of nitrogen in the gas in %
                           (>= 0.0 & <= 1.0)
         * max_ppo2 (float) -- maximum tolerated ppo2 for this tank
-        * tank_vol (float) -- volume of tank in liter
-        * tank_pressure (float) -- pressure of tank in bar
-        * tank_rule (str) -- tank rule for minimum gas calculation
+        * volume (float) -- volume of tank in liter
+        * pressure (float) -- pressure of tank in bar
+        * rule (str) -- tank rule for minimum gas calculation
         * mod (float) -- maximum operating depth of the tank
         * in_use (boolean) -- is the tank used for the dive of not
         * total_gas (float) -- total gas volume of the tank in liter
         * used_gas (float) -- used gas in liter
         * remaining_gas (float) -- remaining gas in liter
         * min_gas (float) -- minimum remaining gas in liter
-        * given_name (str) -- name of the Tank if not provided,
+        * name (str) -- name of the Tank if not provided,
                               try to set it automatically
     """
 
     def __init__(self,  f_o2=0.21, f_he=0.0,
                  max_ppo2=settings.DEFAULT_MAX_PPO2,
-                 mod=None, tank_vol=12.0, tank_pressure=200,
-                 tank_rule="30b",
-                 given_name = None):
+                 mod=None, volume=12.0, pressure=200,
+                 rule="30b",
+                 name=None):
         """Constructor for Tank class
 
         If nothing is provided, create a default 'Air' with 12l/200b tank
@@ -199,9 +200,9 @@ class Tank(object):
                 if provided and not compatible
                   with max_ppo2: raise InvalidMod
 
-            :tank_vol: (float) -- Volume of the tank in liter
-            :tank_pressure: (float) -- Pressure of the tank, in bar
-            :tank_rule: -- rule for warning in the tank consumption
+            :volume: (float) -- Volume of the tank in liter
+            :pressure: (float) -- Pressure of the tank, in bar
+            :rule: -- rule for warning in the tank consumption
                 must be either : 'xxxb' or '1/x'.
 
                 .. note:: xxxb (ex: 50b) means 50 bar minimum at
@@ -213,7 +214,7 @@ class Tank(object):
 
                           ex2: 1/6 rule: 1/6 way IN,1/6 way OUT, 2/3 remains
 
-            :given_name: (str) -- set a specific name for the Tank.
+            :name: (str) -- set a specific name for the Tank.
                 if not given, it will be generated automatically based
                 on the gas.
         *Returns:*
@@ -230,18 +231,18 @@ class Tank(object):
         #initiate class logger
         self.logger = logging.getLogger("dipplanner.tank.Tank")
         self.logger.debug("creating an instance of Tank: O2:%f, He:%f, "
-                          "max_ppo2:%f, mod:%s, tank_vol:%f, "
-                          "tank_pressure:%d" % (f_o2, f_he, max_ppo2,
-                                                mod, tank_vol,
-                                                tank_pressure))
+                          "max_ppo2:%f, mod:%s, volume:%f, "
+                          "pressure:%d" % (f_o2, f_he, max_ppo2,
+                                                mod, volume,
+                                                pressure))
 
         self.f_o2 = float(f_o2)
         self.f_he = float(f_he)
         self.f_n2 = 1.0 - (self.f_o2 + self.f_he)
         self.max_ppo2 = float(max_ppo2)
-        self.tank_vol = float(tank_vol)
-        self.tank_pressure = float(tank_pressure)
-        self.tank_rule = tank_rule
+        self.volume = float(volume)
+        self.pressure = float(pressure)
+        self.rule = rule
         if mod is not None:
             if mod > self._calculate_mod(self.max_ppo2):
                 raise InvalidMod(
@@ -251,15 +252,15 @@ class Tank(object):
             self.mod = self._calculate_mod(self.max_ppo2)
 
         self.in_use = True
-        if given_name is not None:
-            self.given_name = given_name
+        if name is not None:
+            self.name = name
         else:
-            self.given_name = self.name()
+            self.name = self.automatic_name()
 
         self._validate()
 
         self.used_gas = 0.0
-        if self.tank_vol and self.tank_pressure:
+        if self.volume and self.pressure:
             self.total_gas = self.calculate_real_volume()
         else:
             self.total_gas = 0.0
@@ -279,12 +280,12 @@ class Tank(object):
         *Raise:*
             <nothing>
         """
-        min_re = re.search("([0-9]+)b", self.tank_rule)
+        min_re = re.search("([0-9]+)b", self.rule)
         if min_re is not None:
-            self.min_gas = self.calculate_real_volume(self.tank_vol,
+            self.min_gas = self.calculate_real_volume(self.volume,
                                                       int(min_re.group(1)))
         else:
-            min_re = re.search("1/([0-9])", self.tank_rule)
+            min_re = re.search("1/([0-9])", self.rule)
             if min_re is not None:
                 self.min_gas = self.total_gas * \
                     (float(1) - 2 * (1 / float(min_re.group(1))))
@@ -311,8 +312,8 @@ class Tank(object):
         newobj.f_he = self.f_he
         newobj.f_n2 = self.f_n2
         newobj.max_ppo2 = self.max_ppo2
-        newobj.tank_vol = self.tank_vol
-        newobj.tank_pressure = self.tank_pressure
+        newobj.volume = self.volume
+        newobj.pressure = self.pressure
         newobj.mod = self.mod
         newobj.in_use = self.in_use
         newobj.used_gas = self.used_gas
@@ -321,7 +322,7 @@ class Tank(object):
         newobj.min_gas = self.min_gas
         return newobj
 
-    def calculate_real_volume(self, tank_vol=None, tank_pressure=None,
+    def calculate_real_volume(self, volume=None, pressure=None,
                               f_o2=None, f_he=None, temp=15):
         """
         Calculate the real gas volume of the tank (in liter) based
@@ -329,10 +330,10 @@ class Tank(object):
         (P+n2.a/V2).(V-n.b)=n.R.T
 
         *Keyword arguments:*
-            :tank_vol: (float) -- Volume of the tank in liter
-                    optional : if not provided, use self.tank_vol
-            :tank_pressure: (float) -- Pressure of the tank in bar
-                    optional : if not provided, use self.tank_pressure
+            :volume: (float) -- Volume of the tank in liter
+                    optional : if not provided, use self.volume
+            :pressure: (float) -- Pressure of the tank in bar
+                    optional : if not provided, use self.pressure
             :f_o2: (float) -- fraction of O2 in the gas
                     optional : if not provided, use self.f_o2
             :f_he: (float) -- fraction of He in the gas
@@ -346,10 +347,10 @@ class Tank(object):
 
         """
         # handle parameters
-        if tank_vol is None:
-            tank_vol = self.tank_vol
-        if tank_pressure is None:
-            tank_pressure = self.tank_pressure
+        if volume is None:
+            volume = self.volume
+        if pressure is None:
+            pressure = self.pressure
         if f_o2 is None:
             f_o2 = self.f_o2
         if f_he is None:
@@ -392,18 +393,18 @@ class Tank(object):
         #print "b: %s" % b_gas
         # now approximate n (quantities of molecules of gas in the tank in mol)
         # using perfect gas law : PV = nRT : n = PV/RT
-        approx_n = (float(tank_pressure) * float(tank_vol)) / (R * T)
+        approx_n = (float(pressure) * float(volume)) / (R * T)
 
         # recalculate pressure on the tank whith approx_n
         # P=n.R.T/(V-n.b)-n2.a/V2)
-        tank_pressure_mid = (approx_n * R * T) / (tank_vol - approx_n * b_gas)\
+        pressure_mid = (approx_n * R * T) / (volume - approx_n * b_gas)\
             - (approx_n * approx_n * a_gas)\
-            / (tank_vol * tank_vol)
+            / (volume * volume)
 
-        # now try to approx tank_pressure with new_tank_pressure by
+        # now try to approx pressure with new_pressure by
         # variating approx_n
         # start with *2 or /2 value (which is enormous !)
-        if tank_pressure_mid < tank_pressure:
+        if pressure_mid < pressure:
             n_left = approx_n
             n_right = approx_n * 2
         else:
@@ -411,13 +412,13 @@ class Tank(object):
             n_right = approx_n
 
         n_mid = (n_left + n_right) / 2
-        while round(tank_pressure_mid, 2) != round(tank_pressure, 2):
+        while round(pressure_mid, 2) != round(pressure, 2):
             n_mid = (n_left + n_right) / 2
             # new pressure calculated using:
             # P = nRT/(V - nb) - n2a/V2
-            tank_pressure_mid = (n_mid * R * T) / (tank_vol - n_mid * b_gas) -\
-                (n_mid * n_mid * a_gas) / (tank_vol * tank_vol)
-            if tank_pressure_mid > tank_pressure:
+            pressure_mid = (n_mid * R * T) / (volume - n_mid * b_gas) -\
+                (n_mid * n_mid * a_gas) / (volume * volume)
+            if pressure_mid > pressure:
                 # keep left
                 n_right = n_mid
             else:
@@ -430,7 +431,7 @@ class Tank(object):
              a_gas * pow(settings.AMBIANT_PRESSURE_SURFACE, 2)) + \
             n_mid * b_gas
         self.logger.debug("real total gas volume : %02fl instead of %02fl" %
-                          (total_gas_volume, tank_vol * tank_pressure))
+                          (total_gas_volume, volume * pressure))
         return total_gas_volume
 
     def __repr__(self):
@@ -446,7 +447,12 @@ class Tank(object):
         *Raise:*
             <nothing>
         """
-        return "%s - %s" % (self.name(), self.get_tank_info())
+        if self.name != self.automatic_name():
+            return "%s (%s) - %s" % (self.name,
+                                     self.automatic_name(),
+                                     self.get_tank_info())
+        else:
+            return "%s - %s" % (self.name, self.get_tank_info())
 
     def __str__(self):
         """Return a human readable name of the tank
@@ -463,7 +469,10 @@ class Tank(object):
         *Raise:*
             <nothing>
         """
-        return "%s" % self.name()
+        if self.name != self.automatic_name():
+            return "%s (%s)" % (self.name, self.automatic_name())
+        else:
+            return "%s" % self.name()
 
     def __unicode__(self):
         """Return a human readable name of the tank in unicode
@@ -480,7 +489,7 @@ class Tank(object):
         *Raise:*
             <nothing>
         """
-        return u"%s" % self.name()
+        return u"%s" % self.__str__()
 
     def __cmp__(self, othertank):
         """Compare a tank to another tank, based on MOD
@@ -508,21 +517,21 @@ class Tank(object):
         *Raise:*
             TypeError : if Tank is not serialisable
         """
-        tank_dict = { 'given_name': self.given_name,
-                      'name': self.name(),
-                      'f_o2': self.f_o2,
-                      'f_he': self.f_he,
-                      'f_n2': self.f_n2,
-                      'max_ppo2': self.max_ppo2,
-                      'tank_vol': self.tank_vol,
-                      'tank_pressure': self.tank_pressure,
-                      'mod': self.mod,
-                      'in_use': self.in_use,
-                      'total_gas': self.total_gas,
-                      'used_gas': self.used_gas,
-                      'remaining_gas': self.remaining_gas,
-                      'min_gas': self.min_gas,
-                      'tank_rule': self.tank_rule }
+        tank_dict = {'name': self.name,
+                     'automatic_name': self.automatic_name(),
+                     'f_o2': self.f_o2,
+                     'f_he': self.f_he,
+                     'f_n2': self.f_n2,
+                     'max_ppo2': self.max_ppo2,
+                     'volume': self.volume,
+                     'pressure': self.pressure,
+                     'mod': self.mod,
+                     'in_use': self.in_use,
+                     'total_gas': self.total_gas,
+                     'used_gas': self.used_gas,
+                     'remaining_gas': self.remaining_gas,
+                     'min_gas': self.min_gas,
+                     'rule': self.rule}
 
         return tank_dict
 
@@ -559,44 +568,62 @@ class Tank(object):
             raise TypeError("json must be either str or dict (%s given"
                             % type(input_json))
 
-        if tank_dict.has_key('given_name'):
-            self.given_name = tank_dict['given_name']
-        if tank_dict.has_key('f_o2'):
-            self.f_o2 = tank_dict['f_o2']
-        if tank_dict.has_key('f_he'):
-            self.f_he = tank_dict['f_he']
-        if tank_dict.has_key('f_n2'):
-            self.f_n2 = tank_dict['f_n2']
-        if tank_dict.has_key('max_ppo2'):
-            self.max_ppo2 = tank_dict['max_ppo2']
-        if tank_dict.has_key('tank_rule'):
-            self.tank_rule = tank_dict['tank_rule']
-        if tank_dict.has_key('total_gas'):
-            self.total_gas = tank_dict['total_gas']
-        if tank_dict.has_key('used_gas'):
-            self.used_gas = tank_dict['used_gas']
-        if tank_dict.has_key('remaining_gas'):
-            self.remaining_gas = tank_dict['remaining_gas']
-        if tank_dict.has_key('min_gas'):
-            self.min_gas = tank_dict['min_gas']
-        if tank_dict.has_key('mod'):
+        if 'name' in tank_dict:
+            self.name = tank_dict['name']
+        if 'f_o2' in tank_dict:
+            self.f_o2 = float(safe_eval_calculator(tank_dict['f_o2']))
+        else:
+            if 'f_n2' in tank_dict and 'f_he' in tank_dict:
+                self.f_o2 = 1 - (self.f_n2 + self.f_he)
+            else:
+                raise InvalidTank("Need at least two gas to instanciate a Tank")
+        if 'f_he' in tank_dict:
+            self.f_he = float(safe_eval_calculator(tank_dict['f_he']))
+        else:
+            if 'f_o2' in tank_dict and 'f_n2' in tank_dict:
+                self.f_he = 1 - (self.f_o2 + self.f_n2)
+            else:
+                raise InvalidTank("Need at least two gas to instanciate a Tank")
+        if 'f_n2' in tank_dict:
+            self.f_n2 = float(safe_eval_calculator(tank_dict['f_n2']))
+        else:
+            if 'f_o2' in tank_dict and 'f_he' in tank_dict:
+                self.f_n2 = 1 - (self.f_o2 + self.f_he)
+            else:
+                raise InvalidTank("Need at least two gas to instanciate a Tank")
+        if 'max_ppo2' in tank_dict:
+            self.max_ppo2 = float(safe_eval_calculator(tank_dict['max_ppo2']))
+        if 'rule' in tank_dict:
+            self.rule = tank_dict['rule']
+        if 'total_gas' in tank_dict:
+            self.total_gas = float(tank_dict['total_gas'])
+        if 'used_gas' in tank_dict:
+            self.used_gas = float(tank_dict['used_gas'])
+        if 'remaining_gas' in tank_dict:
+            self.remaining_gas = float(tank_dict['remaining_gas'])
+        if 'min_gas' in tank_dict:
+            self.min_gas = float(tank_dict['min_gas'])
+        if 'mod' in tank_dict:
             if tank_dict['mod'] == 'auto':
                 self.mod = self._calculate_mod(self.max_ppo2)
             else:
-                self.mod = tank_dict['mod']
-        if tank_dict.has_key('in_use'):
-            self.in_use = tank_dict['in_use']
+                self.mod = float(tank_dict['mod'])
+        else:
+            self.mod = self._calculate_mod(self.max_ppo2)
+        if 'in_use' in tank_dict:
+            self.in_use = bool(tank_dict['in_use'])
 
-        if tank_dict.has_key('tank_vol'):
-            self.tank_vol = tank_dict['tank_vol']
-            # tank_vol has changed, need to recalculate total_gas etc..
+        if 'volume' in tank_dict:
+            self.volume = float(safe_eval_calculator(tank_dict['volume']))
+            # volume has changed, need to recalculate total_gas etc..
             self.total_gas = self.calculate_real_volume()
             self.remaining_gas = self.total_gas - self.used_gas
             self._set_min_gas()
 
-        if tank_dict.has_key('tank_pressure'):
-            self.tank_pressure = tank_dict['tank_pressure']
-            # tank_pressure has changed: need to recalculate total_gas, etc..
+        if 'pressure' in tank_dict:
+            self.pressure = float(safe_eval_calculator(
+                tank_dict['pressure']))
+            # pressure has changed: need to recalculate total_gas, etc..
             self.total_gas = self.calculate_real_volume()
             self.remaining_gas = self.total_gas - self.used_gas
             self._set_min_gas()
@@ -653,19 +680,19 @@ class Tank(object):
                 self.mod > self._calculate_mod(settings.ABSOLUTE_MAX_PPO2)):
             raise InvalidMod("MOD exceed maximum tolerable MOD")
 
-        if self.tank_pressure > settings.ABSOLUTE_MAX_TANK_PRESSURE:
+        if self.pressure > settings.ABSOLUTE_MAX_pressure:
             raise InvalidTank(
                 "Tank pressure exceed maximum tolerable pressure")
-        if self.tank_pressure <= 0:
+        if self.pressure <= 0:
             raise InvalidTank("Tank pressure should be greated than zero")
-        if self.tank_vol > settings.ABSOLUTE_MAX_TANK_SIZE:
+        if self.volume > settings.ABSOLUTE_MAX_TANK_SIZE:
             raise InvalidTank("Tank size exceed maximum tolerable tank size")
-        if self.tank_vol <= 0:
+        if self.volume <= 0:
             raise InvalidTank("Tank size should be greater than zero")
 
-    def name(self):
+    def automatic_name(self):
         """returns a Human readable name for the gaz and tanks
-        Differnt possibilities:
+        Different possibilities:
         Air, Nitrox, Oxygen, Trimix, Heliox
 
         *Keyword arguments:*
@@ -717,7 +744,7 @@ class Tank(object):
         """
         if self.total_gas > 0:
             return "%sl-%s%% (%02.02f/%02.02fl)" % (
-                self.tank_vol,
+                self.volume,
                 round(100 * self.remaining_gas / self.total_gas, 1),
                 self.remaining_gas,
                 self.total_gas)

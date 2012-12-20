@@ -28,12 +28,14 @@ __authors__ = [
     # alphabetical order by last name
     'Thomas Chiroux', ]
 
+import logging
 import json
+from collections import OrderedDict
 
 # local imports
 from dipplanner import settings
 #from dipplanner.python_tools import Singleton
-from dipplanner.dive import Dive
+from dipplanner.dive import Dive, Tank
 
 
 class Mission(object):
@@ -45,6 +47,8 @@ class Mission(object):
     An isolated dive is a Mission with only one dive inside
 
     Attributes:
+        tanks (dict) -- list of each individual tank used (at least once)
+                        during the mission.
         dives (list) -- list of Dive object of the same mission
         description (str) -- description of the mission (OPTIONAL)
         status (???) -- actual status of the mission. Could be either:
@@ -73,15 +77,18 @@ class Mission(object):
     STATUS_CHANGED = "Calculated but Changed"
     STATUS_OK = "Calculated and Up to date"
 
-    def __init__(self, dive_or_divelist=None, description=None):
+    def __init__(self, dive_or_divelist=None,
+                 tank_or_tankdict=None, description=None):
         """Mission constructor
 
         Initialize the Mission object
         if no parameter is given, instantiate an 'empty' Mission
 
         *Keyword Arguments:*
-            :dive_or_divelist: -- either on Dive object
+            :dive_or_divelist: -- either a Dive object
                                   or a list of Dive object
+            :tank_or_tankdict: -- either a Tank object
+                                  or a dict of tanks
             :description: (str)-- description of the Mission
 
         Return:
@@ -90,9 +97,16 @@ class Mission(object):
         Raise:
             TypeError: if dive_or_divelist contains another type than Dive
         """
-        self.dives = []
+        self.logger = logging.getLogger("dipplanner.dive.Dive")
+        self.logger.debug("creating an instance of Mission")
+
+        self.settings = settings
+        self.tanks = {}
+        self.dives = OrderedDict()
         self.description = description
         self.status = self.STATUS_NONE
+        if tank_or_tankdict is not None:
+            self.add_tank(tank_or_tankdict)
         if dive_or_divelist is not None:
             self.add_dive(dive_or_divelist)
 
@@ -202,15 +216,14 @@ class Mission(object):
             raise TypeError("json must be either str or dict (%s given"
                             % type(input_json))
 
-        if mission_dict.has_key('description'):
+        if 'description' in mission_dict:
             self.description = mission_dict['description']
-        if mission_dict.has_key('dives'):
+        if 'dives' in mission_dict:
             temp_dives = []
             for dict_dive in mission_dict['dives']:
                 temp_dives.append(Dive().loads_json(dict_dive))
             self.dives = temp_dives
         return self
-
 
     def clean(self, what='all'):
         """clean the mission
@@ -227,15 +240,18 @@ class Mission(object):
             * ValueError : if wrong status code is given
         """
         if what == 'all':
+            self.tanks = {}
             self.dives = []
             self.description = ""
             self.status = self.STATUS_NONE
         elif what == 'dives':
             self.dives = []
             self.status = self.STATUS_NONE
+        elif what == 'tanks':
+            self.tanks = {}
+            self.status = self.STATUS_NONE
         elif what == 'description':
             self.description = ""
-
 
     def change_status(self, status=None):
         """Change the status of the mission
@@ -271,8 +287,8 @@ class Mission(object):
         they will be added at the end of the list
 
         *Keyword Arguments:*
-            :dive_or_divelist: -- either on Dive object
-                                  or a list of Dive object
+            :dive_or_divelist: -- either a Dive object
+                                  or a list of Dive objects
 
         Return:
             <nothing>
@@ -281,15 +297,47 @@ class Mission(object):
             TypeError: if dive_or_divelist contains another type than Dive
         """
         if type(dive_or_divelist) == Dive:
-            self.dives.append(dive_or_divelist)
+            self.dives[dive_or_divelist.name] = dive_or_divelist
         elif type(dive_or_divelist) == list:
             for dive in dive_or_divelist:
                 if type(dive) == Dive:
-                    self.dives.append(dive_or_divelist)
+                    self.dives[dive.name] = dive
                 else:
                     raise TypeError("Bad Dive Type: %s " % type(dive))
         else:
             raise TypeError("Bad Dive Type: %s " % type(dive_or_divelist))
+
+    def add_tank(self, tank_or_tankdict):
+        """add a Tank or a dict of tanks to the Mission
+
+        if a tank already exists in the dict with the same name, the new
+        one will not be added.
+
+        *Keyword Arguments:*
+            :tank_or_tanklist: -- either a Tank object
+                                  or a list of Tank objects
+
+        Return:
+            <nothing>
+
+        Raise:
+            TypeError: if tank_or_tanklist contains another type than Tank
+        """
+        if type(tank_or_tankdict) == Tank:
+            self.dives.append(tank_or_tankdict)
+        elif type(tank_or_tankdict) == dict:
+            for tank_name, tank in tank_or_tankdict:
+                if type(tank) == Tank:
+                    if tank_name not in self.tanks:
+                        self.tanks[tank_name] = tank
+                    else:
+                        self.logger.error("Same tank name already exists for"
+                                          " this mission... "
+                                          "ignoring current tank")
+                else:
+                    raise TypeError("Bad Tank Type: %s " % type(tank))
+        else:
+            raise TypeError("Bad Tank Type: %s " % type(tank_or_tankdict))
 
     def calculate(self):
         """Calculate all the decompression planning for all dives in this

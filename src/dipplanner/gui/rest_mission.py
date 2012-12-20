@@ -88,7 +88,7 @@ class MissionApiBottle(ApiBottle):
             <nothing>
         """
         if request.get_header('Content-Type') == 'application/json':
-            return { 'status': self.mission.status }
+            return {'status': self.mission.status}
         else:
             return self.json_abort(400, "400: Bad ContentType")
 
@@ -120,7 +120,7 @@ class MissionApiBottle(ApiBottle):
                 self.mission.loads_json(request.json)
                 self.mission.change_status(Mission.STATUS_CHANGED)
                 response.status = 201
-                return self.mission.dumps_dict()  #, 201)
+                return self.mission.dumps_dict()  # , 201)
             else:
                 return self.json_abort(403, "403: Forbidden: you MUST "
                                             "delete the current mission "
@@ -148,8 +148,8 @@ class MissionApiBottle(ApiBottle):
                 self.mission.loads_json(request.json)
                 self.mission.change_status(Mission.STATUS_CHANGED)
             except (ValueError, KeyError, IndexError):
-                return self.json_abort(404, "404: dive_id ({0}) not "
-                                            "found".format(resource_id))
+                return self.json_abort(500,
+                                       "Unknown error when patching mission")
             else:
                 return self.mission.dumps_dict()
         else:
@@ -178,7 +178,7 @@ class MissionApiBottle(ApiBottle):
         """
         if request.get_header('Content-Type') == 'application/json':
             self.mission.calculate()
-            return { 'status': self.mission.status }
+            return {'status': self.mission.status}
         else:
             return self.json_abort(400, "400: Bad ContentType")
 

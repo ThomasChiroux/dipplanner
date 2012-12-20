@@ -50,7 +50,7 @@ from dipplanner.gui.rest_output_segment import OutputSegmentApiBottle
 from dipplanner.gui.error_api import ErrorApiBottle
 
 
-ROOT_API_URL = "/api/v1/"
+ROOT_API_URL = "/api/v1/"  # TODO: put this in settings?
 
 
 def start_gui(mission=None):

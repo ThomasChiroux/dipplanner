@@ -133,7 +133,7 @@ if __name__ == '__main__':
     for k in tankData.keys():
         t = tankData[k]
         print str(k) + " " + str(t)
-        ttank.append(dipplanner.tank.Tank(f_o2 = t['gas'].f_o2, f_he = t['gas'].f_he, tank_vol = 1000 * t['tankvolume'], tank_pressure = t['tankpressurebegin'] * 0.0000101325))
+        ttank.append(dipplanner.tank.Tank(f_o2 = t['gas'].f_o2, f_he = t['gas'].f_he, volume = 1000 * t['tankvolume'], pressure = t['tankpressurebegin'] * 0.0000101325))
 
     print ttank
 

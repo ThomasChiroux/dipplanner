@@ -29,7 +29,7 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 # dependencies imports
-from bottle import request, response
+from bottle import response
 
 
 class ApiBottle(object):
@@ -40,4 +40,4 @@ class ApiBottle(object):
         response.set_header("Content-Type", "application/json")
         response.status = code
         #response.body = { 'message': message}
-        return { 'message': message }
+        return {'message': message}

@@ -50,7 +50,7 @@
     <td>{{ " %12s : "|format(tank|string) }}</td>
     <td>Total: {{ "%6.1f"|format(tank.total_gas) }}l</td>
     <td>Used: {{ "%6.1fl"|format(tank.used_gas) }}</td>
-    <td>{{ " (rem:%6.1fl or "|format(tank.remaining_gas) }} {{ "%db"|format(tank.remaining_gas / tank.tank_vol) }})</td>
+    <td>{{ " (rem:%6.1fl or "|format(tank.remaining_gas) }} {{ "%db"|format(tank.remaining_gas / tank.volume) }})</td>
     {% if not tank.check_rule() %}
       </tr>
       <tr><td colspan="4">{{color("       WARNING !!! Not enought remaining gas in the %s tank (min:" % tank, "red") }}

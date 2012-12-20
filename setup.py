@@ -87,11 +87,12 @@ install_requires = [
     # List your project dependencies here.
     # For more details, see:
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
+    'jinja2',
     'bottle',
     'lxml', ]
 
 try:
-    import argparse # NOQA
+    import argparse  # NOQA
 except ImportError:
     install_requires.append('argparse')
 
@@ -121,9 +122,9 @@ setup(name='dipplanner',
       provides=('dipplanner', ),
       install_requires=install_requires,
       #test_suite = 'test.run_all_tests.run_all_tests',
-      tests_require = ['nose', 'coverage', 'unittest2'],
-      test_suite = 'nose.collector',
-      extras_require = {
+      tests_require=['nose', 'coverage', 'unittest2'],
+      test_suite='nose.collector',
+      extras_require={
           'doc':  ["sphinx", ],
           'devel_tools':  ["ipython", "pylint", "pep8", ],
       },)

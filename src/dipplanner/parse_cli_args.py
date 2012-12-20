@@ -92,6 +92,8 @@ class DipplannerCliArguments(object):
         self.args = None
         self.dives = None
 
+        self.mission = Mission()
+
         # parse the options
         args = self.parser.parse_args(cli_arguments[1:])
 
@@ -229,7 +231,6 @@ class DipplannerCliArguments(object):
                             action="store_true",
                             help="Do not refill tanks between dives")
 
-
     def adv_params_arguments(self):
         """Advanced parameters
 
@@ -317,7 +318,8 @@ class DipplannerCliArguments(object):
         *Raise:*
             Nothing, but can exit
         """
-        parsed_config_files = DipplannerConfigFiles(args.config_files)
+        parsed_config_files = DipplannerConfigFiles(self.mission,
+                                                    args.config_files)
         dives = parsed_config_files.dives
 
         if dives is None:
@@ -439,10 +441,10 @@ class DipplannerCliArguments(object):
                     float(f_o2),
                     float(f_he),
                     max_ppo2=settings.DEFAULT_MAX_PPO2,
-                    tank_vol=float(safe_eval_calculator(volume)),
-                    tank_pressure=float(safe_eval_calculator(pressure)),
-                    tank_rule=rule,
-                    given_name=name)
+                    volume=float(safe_eval_calculator(volume)),
+                    pressure=float(safe_eval_calculator(pressure)),
+                    rule=rule,
+                    name=name)
 
         if tanks == {}:
             # no tank provided, try to get the previous tanks
@@ -490,9 +492,9 @@ class DipplannerCliArguments(object):
 
         self.args = args
         self.dives = dives
-        self.create_mission()
+        self.fill_mission()
 
-    def create_mission(self):
+    def fill_mission(self):
         """Create a mission object based of listed dives in self.dives
 
         *Keyword Arguments:*
@@ -504,7 +506,6 @@ class DipplannerCliArguments(object):
         *Raise:*
         <nothing>
         """
-        self.mission = Mission()
         #previous_dive = None
         for dive in self.dives:  # TODO: change 'dive' name here because it's actually not an instance of Dive object
             current_dive = Dive(self.dives[dive]['segments'].values(),

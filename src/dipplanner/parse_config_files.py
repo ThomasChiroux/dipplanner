@@ -34,11 +34,12 @@ from ConfigParser import SafeConfigParser
 # local imports
 from dipplanner import settings
 from dipplanner.tank import Tank
+from dipplanner.dive import Dive
 from dipplanner.segment import SegmentDive
 from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import safe_eval_calculator
 
-LOGGER = logging.getLogger("dipplanner")
+#LOGGER = logging.getLogger("dipplanner")
 
 
 class DipplannerConfigFiles(object):
@@ -60,47 +61,68 @@ class DipplannerConfigFiles(object):
                                  'surface_interval':60 }}
     """
 
-    def __init__(self, filenames):
+    def __init__(self, mission, filenames):
         """Constructor for DipplannerCliArguments object
 
         *Keyword Arguments:*
+            mission -- the current mission object
             filenames -- list of filenames to be parsed
 
         """
+        self.logger = logging.getLogger("dipplanner")
+
+        self.mission = mission
         self.config = None
-        self.dives = None
+        #self.dives = OrderedDict()
+        #self.tanks = {}
 
         if filenames is None:
-            LOGGER.info("No config file found: skip config from files")
+            self.logger.info("No config file found: skip config from files")
         else:
             self.config = SafeConfigParser()
             filesread = self.config.read(filenames)
 
             missing = set(filenames) - set(filesread)
             if len(filesread) == 0:
-                LOGGER.info("No config file found: skip config from files")
+                self.logger.info("No config file found: skip config from files")
 
             if len(missing) > 0:
                 if len(missing) == 1:
-                    LOGGER.warning("Config file : %s not found, skip it"
+                    self.logger.warning("Config file : %s not found, skip it"
                                    % list(missing)[0])
                 else:
-                    LOGGER.warning("Config files : %s not found, skip them"
+                    self.logger.warning("Config files : %s not found, skip them"
                                    % ', '.join(str(n) for n in list(missing)))
 
         if self.config is not None:
             # note: advanced MUST be run before general because of
             # order dependencies of settings elements
-            self.check_configs_advanced_section()
-            self.check_configs_general_section()
-            self.check_configs_output_section()
-            self.check_configs_dives_section()
+            self.parse_config()
 
-    def check_configs_general_section(self):
+    def parse_config(self):
+        """Parse the configuration file
+        """
+        from pudb import set_trace; set_trace()
+        for section in self.config.sections():
+            if section == 'advanced':
+                self.parse_config_advanced_section(section)
+            elif section == 'general':
+                self.parse_config_general_section(section)
+            elif section == 'output':
+                self.parse_config_output_section(section)
+            elif section.startswith('tank:'):
+                self.parse_config_tank_section(section)
+            elif section.startswith('dive:'):
+                if len(section.split(':')) > 2 and "segment" in section.lower():
+                    self.parse_config_segment_section(section)
+                else:
+                    self.parse_config_dive_section(section)
+
+    def parse_config_general_section(self, section):
         """check configs and change default settings values
 
         *Keyword Arguments:*
-            <none>
+            :section: config parser's section
 
         *Returns:*
             <nothing>
@@ -181,11 +203,11 @@ class DipplannerConfigFiles(object):
                     config.getboolean(section,
                                       'automatic_tank_refill')
 
-    def check_configs_advanced_section(self):
+    def parse_config_advanced_section(self, section):
         """check configs and change default settings values
 
         *Keyword Arguments:*
-            <none>
+            :section: config parser's section
 
         *Returns:*
             <nothing>
@@ -209,9 +231,9 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'absolute_min_ppo2'):
                 settings.ABSOLUTE_MIN_PPO2 = float(
                     config.get(section, 'absolute_min_ppo2'))
-            if config.has_option(section, 'absolute_max_tank_pressure'):
-                settings.ABSOLUTE_MAX_TANK_PRESSURE = float(
-                    config.get(section, 'absolute_max_tank_pressure'))
+            if config.has_option(section, 'absolute_max_pressure'):
+                settings.ABSOLUTE_MAX_pressure = float(
+                    config.get(section, 'absolute_max_pressure'))
             if config.has_option(section, 'absolute_max_tank_size'):
                 settings.ABSOLUTE_MAX_TANK_SIZE = float(
                     config.get(section, 'absolute_max_tank_size'))
@@ -249,7 +271,7 @@ class DipplannerConfigFiles(object):
                     config.get(section, 'ambiant_pressure_sea_level'))
             if config.has_option(section, 'method_for_depth_calculation'):
                 method = config.get(section, 'method_for_depth_calculation')
-                if  method == 'simple' or method == 'complex':
+                if method == 'simple' or method == 'complex':
                     settings.METHOD_FOR_DEPTH_CALCULATION = method
             if config.has_option(section, 'travel_switch'):
                 travel = config.get(section, 'travel_switch')
@@ -259,11 +281,11 @@ class DipplannerConfigFiles(object):
                 settings.FLIGHT_ALTITUDE = float(
                     config.get(section, 'flight_altitude'))
 
-    def check_configs_output_section(self):
+    def parse_config_output_section(self, section):
         """check configs and change default settings values
 
         *Keyword Arguments:*
-            <none>
+            :section: config parser's section
 
         *Returns:*
             <nothing>
@@ -277,11 +299,11 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'template'):
                 settings.TEMPLATE = config.get(section, 'template')
 
-    def check_configs_dives_section(self):
+    def parse_config_tank_section(self, section):
         """check configs and change default settings values
 
         *Keyword Arguments:*
-            <none>
+            :section: config parser's section
 
         *Returns:*
             <nothing>
@@ -289,64 +311,51 @@ class DipplannerConfigFiles(object):
         *Raise:*
             Nothing, but can exit
         """
-        config = self.config
-        #dives = { 'dive1': { 'tanks': {},
-        #                     'segments': {},
-        #                     'surface_interval':0} }
-        dives = {}
-        dive_number = 1  # initialization
-        while config.has_section('dive%s' % dive_number):
-            section = 'dive%s' % dive_number
-            dives[section] = {'tanks': {},
-                              'segments': {},
-                              'surface_interval': 0}
-            for parameter_name, parameter_value in config.items(section):
-                if parameter_name == 'surface_interval':
-                    dives[section]['surface_interval'] = \
-                        safe_eval_calculator(parameter_value)
-                elif parameter_name[0:4] == 'tank':
-                    #number = parameter_name[4:]
-                    (name, f_o2, f_he, volume, pressure, rule) = \
-                        parameter_value.split(";")
-                    dives[section]['tanks'][name] = Tank(
-                        float(f_o2),
-                        float(f_he),
-                        max_ppo2=settings.DEFAULT_MAX_PPO2,
-                        tank_vol=float(safe_eval_calculator(volume)),
-                        tank_pressure=float(safe_eval_calculator(pressure)),
-                        tank_rule=rule,
-                        given_name=name)
+        tank_dict = dict(self.config.items(section))
+        tank_dict['name'] = section.split("tank:")[-1].lower()
+        tank = Tank()
+        tank.loads_json(tank_dict)
+        if tank.name not in self.mission.tanks:
+            self.mission.tanks[tank.name] = tank
+        else:
+            self.logger.error("Tank already exists with the same name: %s"
+                              % tank.name)
 
-            if dives[section]['tanks'] == {}:
-                # no tank provided, try to get the previous tanks
-                try:
-                    dives[section]['tanks'] = \
-                        dives['dive%s' % (dive_number - 1)]['tanks']
-                except KeyError:
-                    print "Error : no tank provided for this dive !"
-                    sys.exit(0)
+    def parse_config_dive_section(self, section):
+        """check configs and change default settings values
 
-            for parameter_name, parameter_value in config.items(section):
-                if parameter_name[0:7] == 'segment':
-                    #number = parameter_name[4:]
-                    (depth, time,
-                     tankname, setpoint) = parameter_value.split(";")
-                    try:
-                        dives[section]['segments'][parameter_name] = \
-                            SegmentDive(float(safe_eval_calculator(depth)),
-                                        float(safe_eval_calculator(time)),
-                                        dives[section]['tanks'][tankname],
-                                        float(setpoint))
-                    except KeyError:
-                        print("Error : tank name (%s) in not found"
-                              " in tank list !"
-                              % tankname)
-                        sys.exit(0)
-                    except:
-                        raise
+        *Keyword Arguments:*
+            :section: config parser's section
 
-            dives[section]['segments'] = OrderedDict(
-                sorted(dives[section]['segments'].items(), key=lambda t: t[0]))
-            dive_number += 1
+        *Returns:*
+            <nothing>
 
-        self.dives = OrderedDict(sorted(dives.items(), key=lambda t: t[0]))
+        *Raise:*
+            Nothing, but can exit
+        """
+        dive_dict = dict(self.config.items(section))
+        dive_dict['name'] = section.split("dive:")[-1].lower().split(':')[0]
+        dive = Dive(self.mission)
+        dive.loads_json(dive_dict)
+
+        self.mission.add_dive(dive)
+
+    def parse_config_segment_section(self, section):
+        """check configs and change default settings values
+
+        *Keyword Arguments:*
+            :section: config parser's section
+
+        *Returns:*
+            <nothing>
+
+        *Raise:*
+            Nothing, but can exit
+        """
+        segment_dict = dict(self.config.items(section))
+        segment_dict['name'] = section.split(":")[-1].lower()
+        dive_name = section.split("dive:")[-1].lower().split(':')[0]
+        segment = SegmentDive()
+        segment.dive = self.mission.dives[dive_name]
+        segment.loads_json(segment_dict)
+        self.mission.dives[dive_name].add_input_segment(segment)

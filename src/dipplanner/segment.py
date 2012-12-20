@@ -28,12 +28,13 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 import logging
+import json
 # local import
 from dipplanner import settings
 from dipplanner.dipp_exception import DipplannerException
 from dipplanner.tools import seconds_to_mmss
-from dipplanner.tools import depth_to_pressure, pressure_to_depth
-from dipplanner.tank import Tank
+from dipplanner.tools import (depth_to_pressure, pressure_to_depth,
+                              safe_eval_calculator)
 
 
 class UnauthorizedMod(DipplannerException):
@@ -63,7 +64,7 @@ class Segment(object):
     """Base class for all types of segments
 
     *Attributes:*
-
+        * dive (Dive) -- Dive object the segment belongs to
         * type (str) -- type of segment
 
           types of segments can be :
@@ -99,7 +100,7 @@ class Segment(object):
         #initiate class logger
         self.logger = logging.getLogger("dipplanner.segment.Segment")
         #self.logger.debug("creating an instance of Segment")
-
+        self.dive = None
         self.type = None  # type of segment : base class has no type
         self.in_use = True  # is this segment in use : default: yes
         self.depth = 0.0  # depth of this segment, in meter
@@ -187,7 +188,7 @@ class Segment(object):
         return segment_dict
 
     def loads_json(self, input_json):
-        """loads a json structure and update the tank object with the new
+        """loads a json structure and update the segment object with the new
         values.
 
         This method can be used in http PUT method to update object
@@ -219,21 +220,38 @@ class Segment(object):
             raise TypeError("json must be either str or dict (%s given"
                             % type(input_json))
 
-        if segment_dict.has_key('type'):
+        if 'type' in segment_dict:
             #TODO: type validation
             self.type = segment_dict['type']
-        if segment_dict.has_key('in_use'):
-            self.in_use = segment_dict['in_use']
-        if segment_dict.has_key('depth'):
-            self.depth = segment_dict['depth']
-        if segment_dict.has_key('time'):
-            self.time = segment_dict['time']
-        if segment_dict.has_key('run_time'):
-            self.run_time = segment_dict['run_time']
-        if segment_dict.has_key('setpoint'):
-            self.setpoint = segment_dict['setpoint']
-        if segment_dict.has_key('tank'):
-            self.tank = Tank().loads_json(segment_dict['tank'])
+        if 'in_use' in segment_dict:
+            self.in_use = bool(segment_dict['in_use'])
+        if 'depth' in segment_dict:
+            self.depth = float(segment_dict['depth'])
+        if 'time' in segment_dict:
+            self.time = float(safe_eval_calculator(segment_dict['time']))
+        if 'run_time' in segment_dict:
+            self.run_time = float(segment_dict['run_time'])
+        if 'setpoint' in segment_dict:
+            self.setpoint = float(segment_dict['setpoint'])
+        if 'tank' in segment_dict:  # tank name, needs to find it in dive.tanks
+            segment_dict['tank'] = segment_dict['tank'].strip()
+            if self.dive is not None:
+                if segment_dict['tank'] in \
+                        [tank.name for tank in self.dive.tanks]:
+                    # small hack here: we know the tank is in dive, so it's
+                    # also present in the mission which has a tank dict instead
+                    # of tank list which is more convenient to use
+                    self.tank = self.dive.mission.tanks[segment_dict['tank']]
+                else:
+                    self.logger.warning("Tank not found in current dive: %s"
+                                        % segment_dict['tank'])
+            else:
+                # self.dive is not yet known
+                # (segment not yet associated to a dive)
+                # in this case, we only store tank name in self.tank
+                self.tank = segment_dict['tank']
+            # TODO: add a new method to refind the tank when association with dive is done.
+
         return self
 
     def check(self):

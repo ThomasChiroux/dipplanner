@@ -36,6 +36,7 @@ from dipplanner.gui.rest_main_api import ApiBottle
 from dipplanner.mission import Mission
 from dipplanner.dive import Dive
 
+
 class DiveApiBottle(ApiBottle):
     """api for dives inside the mission object
     """
@@ -70,7 +71,7 @@ class DiveApiBottle(ApiBottle):
                     # TODO: try to find a dive with his name
                     return self.json_abort(404, "404: dive_id ({0}) not "
                                                 "found".format(resource_id))
-                except (KeyError, IndexError) :
+                except (KeyError, IndexError):
                     return self.json_abort(404, "404: dive_id ({0}) not "
                                                 "found".format(resource_id))
         else:
@@ -106,7 +107,6 @@ class DiveApiBottle(ApiBottle):
             return new_dive.dumps_dict()
         else:
             return self.json_abort(400, "400: Bad ContentType")
-
 
     def patch(self, resource_id=None):
         """PATCH method for the Dive object Api
@@ -144,10 +144,9 @@ class DiveApiBottle(ApiBottle):
                     return self.json_abort(404, "404: dive_id ({0}) not "
                                                 "found".format(resource_id))
                 else:
-                    return self.mission.dives[int(resource_id)-1].dumps_dict()
+                    return self.mission.dives[int(resource_id) - 1].dumps_dict()
         else:
             return self.json_abort(400, "400: Bad ContentType")
-
 
     def delete(self, resource_id=None):
         """DELETE method for the Dive object Api
@@ -173,7 +172,7 @@ class DiveApiBottle(ApiBottle):
                                   self.mission.dives]}
             else:
                 try:
-                    self.mission.dives.pop(int(resource_id)-1)
+                    self.mission.dives.pop(int(resource_id) - 1)
                     self.mission.change_status(Mission.STATUS_CHANGED)
                 except ValueError:
                     # TODO: try to find a dive with his name

@@ -34,7 +34,7 @@ Gas: {% for tank in dive.tanks %}
     {{ " %12s"|format(tank|string) -}}: Total: {{- "%6.1f"|format(tank.total_gas) -}}l, Used:
     {{- "%6.1fl"|format(tank.used_gas) -}}
     {{- " (rem:%6.1fl or "|format(tank.remaining_gas) -}}
-    {{- "%db"|format(tank.remaining_gas / tank.tank_vol) -}})
+    {{- "%db"|format(tank.remaining_gas / tank.volume) -}})
   {%- if not tank.check_rule() %}
 {{color("       WARNING !!! Not enought remaining gas in the %s tank (min:" % tank, "red") -}}
 {{- color("%6.1fl) !"|format(tank.min_gas),"red") -}}

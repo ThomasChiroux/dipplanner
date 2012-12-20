@@ -27,8 +27,10 @@ bin/dipplanner (which is an empty shell)
 runs in command line and output resulting dive profile
 also initiate log files
 
-TODO: logger.tutu("message %s", allo)
-      au lieu de logger.tutu("message %s" % allo)
+.. todo:: logger.tutu("message %s", allo)
+          au lieu de logger.tutu("message %s" % allo)
+
+.. todo:: revoir tous les dump_dict
 """
 
 __authors__ = [
@@ -47,6 +49,7 @@ from dipplanner.gui import start_gui
 
 LOGGER = logging.getLogger("dipplanner")
 MISSION = None
+
 
 def activate_debug():
     """setup the default debug parameters

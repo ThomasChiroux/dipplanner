@@ -31,6 +31,7 @@ __authors__ = [
 
 import logging
 import copy
+import json
 # dependencies imports
 from jinja2 import Environment, PackageLoader
 
@@ -42,14 +43,14 @@ from dipplanner.model.buhlmann.model_exceptions import ModelStateException
 from dipplanner.tank import InvalidGas, InvalidTank, InvalidMod, EmptyTank
 from dipplanner.tank import Tank
 from dipplanner.segment import UnauthorizedMod
-from dipplanner.segment import SegmentDive, SegmentDeco, SegmentAscDesc
+from dipplanner.segment import Segment, SegmentDive, SegmentDeco, SegmentAscDesc
 from dipplanner.model.buhlmann.model import Model as BuhlmannModel
 
 from dipplanner.tools import depth_to_pressure
 from dipplanner.tools import seconds_to_mmss
 from dipplanner.tools import seconds_to_hhmmss
 from dipplanner.tools import altitude_or_depth_to_absolute_pressure
-
+from dipplanner.tools import safe_eval_calculator
 
 class NothingToProcess(DipplannerException):
     """raised when the is no input segments to process
@@ -156,12 +157,12 @@ class Dive(object):
     Gas switching is done on the final ascent if OC deco or
     bailout is specified.
 
-    .. todo:: add a dive name ? (in addition to dive's metadata
-
     Outputs profile to a List of dive segments
 
     Attributes:
 
+    * mission -- (Mission) Mission object the dive belongs to
+    * name -- (str) name of the dive
     * input_segments -- (list) Stores enabled input dive segment objects
     * output_segments -- (list) Stores output segments produced by this class
     * tanks -- (list) Stores enabled dive tank objects
@@ -181,7 +182,7 @@ class Dive(object):
     * metadata -- description for the dive
     """
 
-    def __init__(self, known_segments=None, known_tanks=None,
+    def __init__(self, mission, known_segments=None, known_tanks=None,
                  previous_profile=None):
         """Constructor for Profile class
 
@@ -190,6 +191,7 @@ class Dive(object):
         For repetative dives, instanciate profile class with the previous model
 
         *Keyword Arguments:*
+            :mission: (Mission) -- mission object the dive belongs to
             :known_segments: -- list of input segments
             :known_tanks: -- list of tanks for this dive
             :previous_profile: (Model) -- model object of the precedent dive
@@ -205,6 +207,8 @@ class Dive(object):
         self.logger = logging.getLogger("dipplanner.dive.Dive")
         self.logger.debug("creating an instance of Dive")
 
+        self.mission = mission
+        self.name = ""
         # initiate dive exception list
         self.dive_exceptions = []
         self.is_repetitive_dive = False
@@ -222,23 +226,25 @@ class Dive(object):
 
         # filter input segment for only enabled segments
         self.input_segments = []
-        try:
-            for segment in known_segments:
-                if segment.in_use:
-                    self.input_segments.append(segment)
-        except:
-            self.dive_exceptions.append(
-                InstanciationError("Problem while adding segments"))
+        if known_segments is not None:
+            try:
+                for segment in known_segments:
+                    if segment.in_use:
+                        self.input_segments.append(segment)
+            except:
+                self.dive_exceptions.append(
+                    InstanciationError("Problem while adding segments"))
 
         # filter lists of gases to make the used list of gases
         self.tanks = []
-        try:
-            for tank in known_tanks:
-                if tank.in_use:
-                    self.tanks.append(tank)
-        except:
-            self.dive_exceptions.append(
-                InstanciationError("Problem while adding tanks"))
+        if known_tanks is not None:
+            try:
+                for tank in known_tanks:
+                    if tank.in_use:
+                        self.tanks.append(tank)
+            except:
+                self.dive_exceptions.append(
+                    InstanciationError("Problem while adding tanks"))
 
         # initalise output_segment list
         self.output_segments = []
@@ -312,6 +318,37 @@ class Dive(object):
         """
         return cmp(self.run_time, otherdive.run_time)
 
+    def add_input_segment(self, segment_or_segmentlist):
+        """add a Segment or a list of Segments to the Dive's input_segments list
+
+        they will be added at the end of the list
+
+        *Keyword Arguments:*
+            :segment_or_segmentlist: -- either a Segment object
+                                        or a list of Segment objects
+
+        Return:
+            <nothing>
+
+        Raise:
+            TypeError: if segment_or_segmentlist contains another type than
+                       Segment\*
+        """
+        if type(segment_or_segmentlist) in (Segment, SegmentDive,
+                                            SegmentDeco, SegmentAscDesc):
+            segment_or_segmentlist.dive = self
+            self.input_segments.append(segment_or_segmentlist)
+        elif type(segment_or_segmentlist) == list:
+            for segment in segment_or_segmentlist:
+                if type(segment) in (Segment, SegmentDive,
+                                     SegmentDeco, SegmentAscDesc):
+                    segment.dive = self
+                    self.input_segments.append(segment)
+                else:
+                    raise TypeError("Bad Dive Type: %s " % type(segment))
+        else:
+            raise TypeError("Bad Dive Type: %s " % type(segment_or_segmentlist))
+
     def dumps_dict(self):
         """dumps the Dive object in dict format for later json conversion
 
@@ -327,11 +364,12 @@ class Dive(object):
         current_tank_dict = {}
         if self.current_tank is not None:
             current_tank_dict = self.current_tank.dumps_dict()
-        dive_dict = {'input_segments': [seg.dumps_dict() for seg in \
+        dive_dict = {'name': self.name,
+                     'input_segments': [seg.dumps_dict() for seg in \
                                         self.input_segments],
                      'output_segments': [seg.dumps_dict() for seg in \
                                          self.output_segments],
-                     'tanks': [tank.dumps_dict() for tank in self.tanks],
+                     'tanks': [tank.name for tank in self.tanks],
                      'current_tank': current_tank_dict,
                      'current_depth': self.current_depth,
                      'model': self.model.deco_model,
@@ -352,6 +390,8 @@ class Dive(object):
         This method can be used in http PUT method to update object
         value
 
+        TODO: do something with automatic_tank_refill: global or local (dive) parameter ?
+
         *Keyword arguments:*
             :input_json: (string) -- the json structure to be loaded
 
@@ -368,31 +408,52 @@ class Dive(object):
         else:
             raise TypeError("json must be either str or dict (%s given"
                             % type(input_json))
-        if dive_dict.has_key('current_tank'):
-            #TODO: check if it's ok to reinstanciate a new tank
-            self.current_tank = Tank().loads_json(dive_dict['current_tank'])
-        if dive_dict.has_key('current_depth'):
-            self.current_depth = dive_dict['current_depth']
-        if dive_dict.has_key('run_time'):
-            self.run_time = dive_dict['run_time']
-        if dive_dict.has_key('is_closed_circuit'):
-            self.is_closed_circuit = dive_dict['is_closed_circuit']
-        if dive_dict.has_key('is_repetitive_dive'):
-            self.is_repetitive_dive = dive_dict['is_repetitive_dive']
-        if dive_dict.has_key('surface_interval'):
-            self.surface_interval = dive_dict['surface_interval']
-        if dive_dict.has_key('metadata'):
+        if 'name' in dive_dict:
+            self.name = dive_dict['name']
+        if 'current_tank' in dive_dict:
+            # this should be a tank name
+            if type(dive_dict['current_tank']) == str:
+                if dive_dict['current_tank'].strip() in self.mission.tanks:
+                    self.current_tank = \
+                        self.mission.tanks[dive_dict['current_tank']]
+                else:
+                    self.logger.error("Tank not found in mission's"
+                                      " tank list: %s"
+                                      % dive_dict['current_tank'])
+            #DONE: check if it's ok to reinstanciate a new tank
+            #self.current_tank = Tank().loads_json(dive_dict['current_tank'])
+        if 'current_depth' in dive_dict:
+            self.current_depth = float(dive_dict['current_depth'])
+        if 'run_time' in dive_dict:
+            self.run_time = float(dive_dict['run_time'])
+        if 'is_closed_circuit' in dive_dict:
+            self.is_closed_circuit = bool(dive_dict['is_closed_circuit'])
+        if 'is_repetitive_dive' in dive_dict:
+            self.is_repetitive_dive = bool(dive_dict['is_repetitive_dive'])
+        if 'surface_interval' in dive_dict:
+            self.surface_interval = float(safe_eval_calculator(
+                dive_dict['surface_interval']))
+        if 'metadata' in dive_dict:
             self.metadata = dive_dict['metadata']
-        if dive_dict.has_key('input_segments'):
+        if 'tanks' in dive_dict:
+            used_tanks_dict = {}
+            for tank_name in dive_dict['tanks'].split(','):
+                tank_name = tank_name.strip()
+                if tank_name in self.mission.tanks:
+                    used_tanks_dict[tank_name] = self.mission.tanks[tank_name]
+                else:
+                    self.logger.error("Trying to use an undeclared tank: %s",
+                                      tank_name)
+            self.tanks = used_tanks_dict.values()
+        else:
+            self.logger.warning("No tank listed for this dive: %s",
+                                self.name)
+        if 'input_segments' in dive_dict:
             temp_segments = []
             for dict_segment in dive_dict['input_segments']:
                 temp_segments.append(SegmentDive().loads_json(dict_segment))
             self.input_segments = temp_segments
-        if dive_dict.has_key('tanks'):
-            temp_tanks = []
-            for dict_tank in dive_dict['tanks']:
-                temp_tanks.append(Tank().loads_json(dict_tank))
-            self.tanks = temp_tanks
+
         return self
 
     def set_repetitive(self, previous_dive):
@@ -898,9 +959,9 @@ class Dive(object):
         # need to change gaz to air:
         # create a 'dummy' air tank
         no_flight_air_tank = Tank(
-            tank_vol=settings.ABSOLUTE_MAX_TANK_SIZE,
-            tank_pressure=settings.ABSOLUTE_MAX_TANK_PRESSURE,
-            tank_rule="30b")
+            volume=settings.ABSOLUTE_MAX_TANK_SIZE,
+            pressure=settings.ABSOLUTE_MAX_pressure,
+            rule="30b")
 
         if tank is not None:
             no_flight_tank = tank

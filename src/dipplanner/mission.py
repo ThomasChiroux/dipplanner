@@ -346,7 +346,7 @@ class Mission(object):
         """
         if len(self.dives) > 0:
             previous_dive = None
-            for dive in self.dives:
+            for dive in self.dives.values():
                 if previous_dive is not None:
                     # make a copy of the model, to keep the previous_dive
                     # model inchanged by further calculations
@@ -356,5 +356,6 @@ class Mission(object):
                 previous_dive = dive
 
             # now calculate no flight time based on the last dive
-            self.dives[-1].no_flight_time_wo_exception()
+            if previous_dive is not None:
+                previous_dive.no_flight_time_wo_exception()
             self.status = self.STATUS_OK

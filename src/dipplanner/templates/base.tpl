@@ -2,7 +2,7 @@
 Dipplanner v{{ settings.__VERSION__ }}
 {% endblock -%}
 
-{%- for dive in dives -%}
+{%- for dive in mission.dives.values() -%}
 
 {%- block separator -%}{%- endblock %}
 Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}

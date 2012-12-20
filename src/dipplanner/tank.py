@@ -472,7 +472,7 @@ class Tank(object):
         if self.name != self.automatic_name():
             return "%s (%s)" % (self.name, self.automatic_name())
         else:
-            return "%s" % self.name()
+            return "%s" % self.name
 
     def __unicode__(self):
         """Return a human readable name of the tank in unicode

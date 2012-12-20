@@ -26,8 +26,8 @@ __authors__ = [
     # alphabetical order by last name
     'Thomas Chiroux', ]
 
+import logging
 import argparse
-from collections import OrderedDict
 
 # local imports
 from dipplanner.parse_config_files import DipplannerConfigFiles
@@ -35,7 +35,6 @@ from dipplanner import settings
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
 from dipplanner.dive import Dive
-from dipplanner.mission import Mission
 from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import safe_eval_calculator
 
@@ -60,13 +59,16 @@ class DipplannerCliArguments(object):
                                  'surface_interval':60 }}
     """
 
-    def __init__(self, cli_arguments):
+    def __init__(self, mission, cli_arguments):
         """Constructor for DipplannerCliArguments object
 
         *Keyword Arguments:*
-            cli_arguments (list of string) -- list of arguments, like sys.argv
+            :mission: (Mission) -- mission object
+            :cli_arguments: (list) -- list of arguments, like sys.argv
 
         """
+        self.logger = logging.getLogger("dipplanner")
+
         description = """%(prog)s calculates and output dive profile
       Thomas Chiroux, 2011-2012 - see http://dipplanner.org
       """
@@ -92,7 +94,7 @@ class DipplannerCliArguments(object):
         self.args = None
         self.dives = None
 
-        self.mission = Mission()
+        self.mission = mission
 
         # parse the options
         args = self.parser.parse_args(cli_arguments[1:])
@@ -318,12 +320,8 @@ class DipplannerCliArguments(object):
         *Raise:*
             Nothing, but can exit
         """
-        parsed_config_files = DipplannerConfigFiles(self.mission,
-                                                    args.config_files)
-        dives = parsed_config_files.dives
-
-        if dives is None:
-            dives = {}
+        # At first, parse the eventual config files
+        DipplannerConfigFiles(self.mission, args.config_files)
 
         if args.gflow:
             try:
@@ -431,101 +429,64 @@ class DipplannerCliArguments(object):
         # if found, add this dive to the (eventually) other dives defined
         # in config files.
         # this will be the last dive
-        tanks = {}
-
+        dive_tank_name_list = []
         if args.tanks:
-            for tank in args.tanks:
-                (name, f_o2, f_he, volume, pressure, rule) = tank.split(";")
+            for tank_string in args.tanks:
+                tank_args = tank_string.split(";")
+                if len(tank_args) == 6:  # new instance of Tank:
+                    (name, f_o2, f_he,
+                     volume, pressure, rule) = tank_args
 
-                tanks[name] = Tank(
-                    float(f_o2),
-                    float(f_he),
-                    max_ppo2=settings.DEFAULT_MAX_PPO2,
-                    volume=float(safe_eval_calculator(volume)),
-                    pressure=float(safe_eval_calculator(pressure)),
-                    rule=rule,
-                    name=name)
+                    tank = Tank(
+                        float(f_o2),
+                        float(f_he),
+                        max_ppo2=settings.DEFAULT_MAX_PPO2,
+                        volume=float(safe_eval_calculator(volume)),
+                        pressure=float(safe_eval_calculator(pressure)),
+                        rule=rule,
+                        name=name)
 
-        if tanks == {}:
-            # no tank provided, try to get the previous tanks
-            try:
-                tanks = dives[dives.items()[-1][0]]['tanks']
-            except (KeyError, IndexError):
-                self.parser.error("Error : no tank provided for this dive !")
-
-        segments = {}
+                    if tank.name not in self.mission.tanks:
+                        self.mission.tanks[tank.name] = tank
+                        dive_tank_name_list.append(tank.name)
+                    else:
+                        self.logger.warning("Tank already exists with "
+                                            "the same name: %s"
+                                            % tank.name)
+                elif len(tank_args) == 1:  # only a tank name which
+                                           # should be found in mission
+                    dive_tank_name_list.append(tank_args[0])
+                else:
+                    self.logger.error("Tank definition in args is incorrect")
+        #from pudb import set_trace; set_trace()
         if args.segments:
+            dive_dict = {'name': 'diveCLI',
+                         'tanks': ','.join(dive_tank_name_list)}
+            if args.surfaceinterval:
+                dive_dict['surface_interval'] = args.surfaceinterval
+            else:
+                dive_dict['surface_interval'] = "0.0"
+            dive = Dive(self.mission)
+            dive.loads_json(dive_dict)
+
             num_seg = 1
             for seg in args.segments:
-                (depth, time, tankname, setpoint) = seg.split(";")
-                # looks for tank in tanks
-                try:
-                    #seg_name = 'segment%s' % num_seg
-                    #print seg_name
-                    segments['segment%s' % num_seg] = SegmentDive(
-                        float(safe_eval_calculator(depth)),
-                        float(safe_eval_calculator(time)),
-                        tanks[tankname],
-                        float(setpoint))
-                except KeyError:
-                    self.parser.error(
-                        "Error : tank name (%s) in not found in tank list !" %
-                        tankname)
-                except:
-                    pass
+                (depth, time, tank, setpoint) = seg.split(";")
+                segment_dict = {'name': '%s' % num_seg,
+                                'depth': depth,
+                                'time': time,
+                                'tank': tank,
+                                'setpoint': setpoint}
+                segment = SegmentDive()
+                segment.dive = dive
+                segment.loads_json(segment_dict)
+                dive.add_input_segment(segment)
                 num_seg += 1
-            segments = OrderedDict(sorted(segments.items(),
-                                   key=lambda t: t[0]))
-            if args.surfaceinterval:
-                dives['diveCLI'] = {'tanks': tanks,
-                                    'segments': segments,
-                                    'surface_interval':
-                                    safe_eval_calculator(args.surfaceinterval)}
-            else:
-                dives['diveCLI'] = {'tanks': tanks,
-                                    'segments': segments,
-                                    'surface_interval': 0}
+
+            self.mission.add_dive(dive)
 
         if args.template:
             settings.TEMPLATE = args.template
             # returns
 
         self.args = args
-        self.dives = dives
-        self.fill_mission()
-
-    def fill_mission(self):
-        """Create a mission object based of listed dives in self.dives
-
-        *Keyword Arguments:*
-        <none>
-
-        *Returns:*
-        <nothing>
-
-        *Raise:*
-        <nothing>
-        """
-        #previous_dive = None
-        for dive in self.dives:  # TODO: change 'dive' name here because it's actually not an instance of Dive object
-            current_dive = Dive(self.dives[dive]['segments'].values(),
-                                self.dives[dive]['tanks'].values())
-            if self.dives[dive]['surface_interval']:
-                current_dive.surface_interval = \
-                    self.dives[dive]['surface_interval']
-            self.mission.add_dive(current_dive)
-
-
-#            if previous_dive is None:
-#                current_dive = Dive(self.dives[dive]['segments'].values(),
-#                                    self.dives[dive]['tanks'].values())
-#                self.mission.add_dive(current_dive)
-#            else:
-#                current_dive = Dive(self.dives[dive]['segments'].values(),
-#                                    self.dives[dive]['tanks'].values(),
-#                                    previous_dive)
-#                if self.dives[dive]['surface_interval']:
-#                    current_dive.surface_interval = \
-#                        self.dives[dive]['surface_interval']
-#                self.mission.add_dive(current_dive)
-#            previous_dive = current_dive

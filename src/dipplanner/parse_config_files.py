@@ -65,8 +65,11 @@ class DipplannerConfigFiles(object):
         """Constructor for DipplannerCliArguments object
 
         *Keyword Arguments:*
-            mission -- the current mission object
-            filenames -- list of filenames to be parsed
+            :mission: -- the current mission object
+            :filenames: -- list of filenames to be parsed
+
+        *Returns*
+            <nothing>
 
         """
         self.logger = logging.getLogger("dipplanner")
@@ -102,7 +105,6 @@ class DipplannerConfigFiles(object):
     def parse_config(self):
         """Parse the configuration file
         """
-        from pudb import set_trace; set_trace()
         for section in self.config.sections():
             if section == 'advanced':
                 self.parse_config_advanced_section(section)

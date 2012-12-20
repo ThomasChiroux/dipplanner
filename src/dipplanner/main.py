@@ -45,6 +45,7 @@ from jinja2 import Environment, PackageLoader
 
 # local imports
 from dipplanner import settings
+from dipplanner.mission import Mission
 from dipplanner.gui import start_gui
 
 LOGGER = logging.getLogger("dipplanner")
@@ -140,8 +141,9 @@ def main(cli_arguments=sys.argv):
 
     from dipplanner.parse_cli_args import DipplannerCliArguments
 
-    dipplanner_arguments = DipplannerCliArguments(cli_arguments)
-    mission = dipplanner_arguments.mission
+    mission = Mission()
+    dipplanner_arguments = DipplannerCliArguments(mission, cli_arguments)
+    #mission = dipplanner_arguments.mission
     mission.calculate()
 
     if dipplanner_arguments.args.gui:
@@ -150,5 +152,5 @@ def main(cli_arguments=sys.argv):
         # now Prepare the output
         env = Environment(loader=PackageLoader('dipplanner', 'templates'))
         tpl = env.get_template(settings.TEMPLATE)
-        text = tpl.render(settings=settings, dives=mission)
+        text = tpl.render(settings=settings, mission=mission)
         print text

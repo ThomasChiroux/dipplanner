@@ -89,7 +89,9 @@ install_requires = [
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
     'jinja2',
     'bottle',
-    'lxml', ]
+    'lxml',
+    'requests',  # used for automated REST api tests
+]
 
 try:
     import argparse  # NOQA

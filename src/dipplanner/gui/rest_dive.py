@@ -50,8 +50,9 @@ class DiveApiBottle(ApiBottle):
         returns a json dumps of the dives in the current mission object.
 
         *Keyword Arguments:*
-            :resource_id: (int) -- number of the dive,
-                first dive is dive 1
+            :resource_id: (str) -- either a number representing the position
+                                   of the dive (first dive is dive 1)
+                                   or the name of the dive
 
         *Returns:*
             resp -- response object with the json dump of the dives
@@ -61,19 +62,27 @@ class DiveApiBottle(ApiBottle):
         """
         if request.get_header('Content-Type') == 'application/json':
             if resource_id is None:
-                return {'dives': [dive.dumps_dict() for dive in
-                                  self.mission.dives]}
+                # in this (special) case, we dump only the dives dict
+                # from mission
+                return {'dives': {dive_name: dive.dumps_dict()
+                                  for (dive_name, dive)
+                                  in self.dives.iteritems()}}
             else:
                 try:
-                    return self.mission.dives[int(resource_id)
-                                              - 1].dumps_dict()
+                    position = int(resource_id)
+                    try:
+                        return self.mission.dives[self.mission.dives.keys()[
+                            position - 1]].dumps_dict()
+                    except IndexError:
+                        return self.json_abort(404, "404: dive_id ({0}) not "
+                                               "found".format(resource_id))
                 except ValueError:
-                    # TODO: try to find a dive with his name
-                    return self.json_abort(404, "404: dive_id ({0}) not "
-                                                "found".format(resource_id))
-                except (KeyError, IndexError):
-                    return self.json_abort(404, "404: dive_id ({0}) not "
-                                                "found".format(resource_id))
+                    # not a number, try by the name
+                    if resource_id in self.mission.dives.keys():
+                        return self.mission.dives[resource_id].dumps_dict()
+                    else:
+                        return self.json_abort(404, "404: dive name ({0}) not "
+                                               "found".format(resource_id))
         else:
             return self.json_abort(400, "400: Bad ContentType")
 

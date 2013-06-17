@@ -60,6 +60,12 @@ class MissionApiBottle(ApiBottle):
 
         *Raise:*
             <nothing>
+
+        Sample usage:
+
+        .. code-block:: bash
+
+           curl -H "Content-Type: application/json" http://localhost:8080/api/v1/mission/
         """
         if request.get_header('Content-Type') == 'application/json':
             return self.mission.dumps_dict()

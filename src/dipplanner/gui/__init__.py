@@ -39,7 +39,7 @@ __authors__ = [
     'Thomas Chiroux', ]
 
 # dependencies imports
-import bottle
+from bottle import debug, run, Bottle, ServerAdapter
 
 # local imports
 from dipplanner.mission import Mission
@@ -53,10 +53,31 @@ from dipplanner.gui.error_api import ErrorApiBottle
 
 ROOT_API_URL = "/api/v1/"  # TODO: put this in settings?
 
+# class MyWSGIRefServer(ServerAdapter):
+#     #server = None
 
-def start_gui(mission=None):
-    """Starts the html GUI server
+#     def run(self, handler):
+#         from wsgiref.simple_server import make_server, WSGIRequestHandler
+#         if self.quiet:
+#             class QuietHandler(WSGIRequestHandler):
+#                 def log_request(*args, **kw): pass
+#             self.options['handler_class'] = QuietHandler
+#         self.server = make_server(self.host, self.port, handler, **self.options)
+#         print("self.server: %s" % self.server)
+#         self.server.serve_forever()
+
+#     def stop(self):
+#         print('shutting down wsgi server...')
+#         self.server.shutdown()  # server_close()
+
+#server = MyWSGIRefServer(host='localhost', port=8080)
+
+
+def instanciates_app(mission=None):
+    """defines all the routes and others parameters for the app
     """
+    app = Bottle()
+
     error_api = ErrorApiBottle()
 
     if mission is None:
@@ -69,7 +90,6 @@ def start_gui(mission=None):
     input_segment_api = InputSegmentApiBottle(mission_api.mission)
     output_segment_api = OutputSegmentApiBottle(mission_api.mission)
 
-    app = bottle.Bottle()
     # Mission
     app.route(ROOT_API_URL + 'mission/',
               method='GET')(mission_api.get)
@@ -103,7 +123,7 @@ def start_gui(mission=None):
     app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
               method='GET')(tank_api.get)
     app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
-                method='POST')(tank_api.post)
+              method='POST')(tank_api.post)
     app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
               method='PATCH')(tank_api.patch)
     app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
@@ -143,5 +163,15 @@ def start_gui(mission=None):
     app.error(404)(error_api.error404)
     app.error(405)(error_api.error405)
 
-    bottle.debug(True)
-    bottle.run(app, host='localhost', port=8080)
+    return app
+
+def start_gui(mission=None, http_host='locahost', http_port=8080):
+    """Starts the html GUI server
+    """
+    print("Starting Gui on %s:%s" % (http_host, http_port))
+    #global server
+    #server = MyWSGIRefServer(host=http_host, port=http_port)
+    app = instanciates_app(mission)
+
+    debug(True)
+    run(app, server=server, host=http_host, port=http_port)

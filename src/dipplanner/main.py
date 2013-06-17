@@ -142,9 +142,12 @@ def main(cli_arguments=sys.argv):
     mission = Mission()
     dipplanner_arguments = DipplannerCliArguments(mission, cli_arguments)
     #mission = dipplanner_arguments.mission
+    #from pudb import set_trace; set_trace()  # TODO: ICI !!
     mission.calculate()
     if dipplanner_arguments.args.gui:
-        start_gui(mission)
+        start_gui(mission=mission,
+                  http_host=dipplanner_arguments.args.http_host,
+                  http_port=dipplanner_arguments.args.http_port)
     else:
         # now Prepare the output
         env = Environment(loader=PackageLoader('dipplanner', 'templates'))

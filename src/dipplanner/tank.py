@@ -887,7 +887,7 @@ class Tank(object):
             <nothing>
         """
         #if self.remaining_gas - gas_consumed < 0:
-            #raise EmptyTank("There is not enought gas in this tank")
+            #raise EmptyTank("There is not enough gas in this tank")
         #else:
         self.used_gas += gas_consumed
         self.remaining_gas -= gas_consumed

@@ -303,6 +303,13 @@ class DipplannerCliArguments(object):
         group5.add_argument("--gui",
                             action="store_true",
                             help="Start web gui instead of CLI output")
+        group5.add_argument("--http-port",
+                            default=8080,
+                            help="http port for the web server (default:8080)")
+        group5.add_argument(
+            "--http-host",
+            default='localhost',
+            help="http host for the web server (default:localhost)")
 
     def check_arguments(self, args):
         """parse all command lines options

@@ -53,7 +53,7 @@
     <td>{{ " (rem:%6.1fl or "|format(tank.remaining_gas) }} {{ "%db"|format(tank.remaining_gas / tank.volume) }})</td>
     {% if not tank.check_rule() %}
       </tr>
-      <tr><td colspan="4">{{color("       WARNING !!! Not enought remaining gas in the %s tank (min:" % tank, "red") }}
+      <tr><td colspan="4">{{color("       WARNING !!! Not enough remaining gas in the %s tank (min:" % tank, "red") }}
       {{ color("%6.1fl) !"|format(tank.min_gas),"red") }}</td></tr>
     {% else %}
       </tr>

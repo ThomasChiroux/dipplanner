@@ -36,7 +36,7 @@ Gas: {% for tank in dive.tanks %}
     {{- " (rem:%6.1fl or "|format(tank.remaining_gas) -}}
     {{- "%db"|format(tank.remaining_gas / tank.volume) -}})
   {%- if not tank.check_rule() %}
-{{color("       WARNING !!! Not enought remaining gas in the %s tank (min:" % tank, "red") -}}
+{{color("       WARNING !!! Not enough remaining gas in the %s tank (min:" % tank, "red") -}}
 {{- color("%6.1fl) !"|format(tank.min_gas),"red") -}}
   {%- endif -%}
   {%- endfor -%}

@@ -18,11 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""dive class module
-
-Each Dive represent one dive (and only one)
-For successive dives, it is possible to provide the parameters of the
-previous dive in order to calculate the next one.
+"""UDDF import/export module
 """
 
 __authors__ = [

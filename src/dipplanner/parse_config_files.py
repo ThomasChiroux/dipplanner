@@ -331,6 +331,7 @@ class DipplannerConfigFiles(object):
         tank_dict['name'] = section.split("tank:")[-1].lower()
         tank = Tank()
         tank.loads_json(tank_dict)
+
         if tank.name not in self.mission.tanks:
             self.mission.tanks[tank.name] = tank
         else:

@@ -50,22 +50,25 @@ class TestRestApi(unittest.TestCase):
 
         self.app = instanciates_app(self.mission)
         self.testapp = TestApp(self.app)
-        # start gui in a thread
-        #self.thread_server = Thread(
-        #    target=start_gui,
-        #    kwargs={'mission': self.mission,
-        #            'http_host': 'localhost',
-        #            'http_port': 8080})
-        #self.thread_server.setDaemon(True)
-        #self.thread_server.start()
-        #time.sleep(1)
+
+        self.tank_json_1 = {u'automatic_name': u'Nitrox 80',
+                            u'f_he': 0.0,
+                            u'f_n2': 0.2,
+                            u'f_o2': 0.8,
+                            u'in_use': True,
+                            u'max_ppo2': 1.6,
+                            u'min_gas': 621.2968024772183,
+                            u'mod': 10.0,
+                            u'name': u'decotank',
+                            u'pressure': 200.0,
+                            u'remaining_gas': 2374.0258146129518,
+                            u'rule': u'50b',
+                            u'total_gas': 2602.167779412952,
+                            u'used_gas': 228.1419648,
+                            u'volume': 12.0}
 
     def tearDown(self):
         pass
-        #time.sleep(1)
-        #server.stop()
-        #self.thread_server.join()
-        #time.sleep(10)
 
 
 class TestRestApiBadRessources(TestRestApi):
@@ -79,12 +82,12 @@ class TestRestApiBadRessources(TestRestApi):
         self.assertEqual(r.json['message'], u'400: Bad ContentType')
 
 
-class testRestApiDefaultUris(TestRestApi):
+class testRestApiMission(TestRestApi):
 
     def setUp(self):
-        super(testRestApiDefaultUris, self).setUp()
+        super(testRestApiMission, self).setUp()
 
-    def test_mission_api(self):
+    def test_mission_api_base(self):
         r = self.testapp.get(self.base_uri + 'mission/',
                              headers=self.default_headers)
         self.assertEqual(r.status_int, 200)
@@ -92,6 +95,95 @@ class testRestApiDefaultUris(TestRestApi):
             r.json,
             {u'description': None, u'dives': {}, u'tanks': {}})
 
+    def test_mission_api_status(self):
+        r = self.testapp.get(self.base_uri + 'mission/status',
+                             headers=self.default_headers)
+        self.assertEqual(r.status_int, 200)
+        self.assertEqual(
+            r.json,
+            {u'status': u'Not Calculated'})
+
+    def test_mission_api_get_calculate(self):
+        r = self.testapp.get(self.base_uri + 'mission/calculate',
+                             headers=self.default_headers,
+                             expect_errors=True)
+        self.assertEqual(r.status_int, 405)
+        self.assertEqual(
+            r.json,
+            {u'message': u'405 Method not allowed'})
+
+    def test_mission_api_post_calculate(self):
+        """This test will still return 'not calculated' because we did not
+        populate any dive to be calculated
+        """
+        r = self.testapp.post(self.base_uri + 'mission/calculate',
+                              headers=self.default_headers)
+        self.assertEqual(r.status_int, 200)
+        self.assertEqual(
+            r.json,
+            {u'status': u'Not Calculated'})
+
+
+class testRestApiTanks(TestRestApi):
+
+    def setUp(self):
+        super(testRestApiTanks, self).setUp()
+
+    def test_tanks_api_base(self):
+        """should return an empty tank list
+        """
+        r = self.testapp.get(self.base_uri + 'mission/tanks/',
+                             headers=self.default_headers)
+        self.assertEqual(r.status_int, 200)
+        self.assertEqual(
+            r.json,
+            {})
+
+    def test_tanks_api_post(self):
+        r = self.testapp.post_json(self.base_uri + 'mission/tanks/',
+                                   self.tank_json_1)
+        self.assertEqual(r.status_int, 201)
+        self.assertEqual(r.json, self.tank_json_1)
+
+
+    def test_tanks_api_post2(self):
+        r = self.testapp.post_json(self.base_uri + 'mission/tanks/',
+                                   self.tank_json_1)
+        self.assertEqual(r.status_int, 201)
+        self.assertEqual(r.json, self.tank_json_1)
+        r2 = self.testapp.post_json(self.base_uri + 'mission/tanks/',
+                                    self.tank_json_1,
+                                    expect_errors=True)
+        self.assertEqual(r2.status_int, 400)
+        self.assertEqual(r2.json, {'message':
+                                   '400: Tank with same name already created'})
+
+    def test_tank_api_patch1(self):
+        r = self.testapp.post_json(self.base_uri + 'mission/tanks/',
+                                   self.tank_json_1)
+        self.assertEqual(r.status_int, 201)
+        self.assertEqual(r.json, self.tank_json_1)
+        patched_data = {u'f_o2': 0.5,
+                        u'f_n2': 0.5,
+                        u'f_he': 0.0}
+        r2 = self.testapp.patch_json(self.base_uri + 'mission/tanks/decotank',
+                                     patched_data)
+        self.assertEqual(r2.status_int, 200)
+        self.assertEqual(r2.json, {u'automatic_name': u'Nitrox 50',
+                                   u'f_he': 0.0,
+                                   u'f_n2': 0.5,
+                                   u'f_o2': 0.5,
+                                   u'in_use': True,
+                                   u'max_ppo2': 1.6,
+                                   u'min_gas': 621.2968024772183,
+                                   u'mod': 22.0,
+                                   u'name': u'decotank',
+                                   u'pressure': 200.0,
+                                   u'remaining_gas': 2374.0258146129518,
+                                   u'rule': u'50b',
+                                   u'total_gas': 2602.167779412952,
+                                   u'used_gas': 228.1419648,
+                                   u'volume': 12.0})
 
 # =============================================================================
 # ========================= M A I N ===========================================

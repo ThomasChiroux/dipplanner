@@ -89,8 +89,7 @@ install_requires = [
     # http://packages.python.org/distribute/setuptools.html#declaring-dependencies
     'jinja2',
     'bottle',
-    'lxml',
-    'requests',  # used for automated REST api tests
+    'lxml'
 ]
 
 try:
@@ -124,7 +123,7 @@ setup(name='dipplanner',
       provides=('dipplanner', ),
       install_requires=install_requires,
       #test_suite = 'test.run_all_tests.run_all_tests',
-      tests_require=['nose', 'coverage', 'unittest2'],
+      tests_require=['nose', 'coverage', 'unittest2', 'webtest'],
       test_suite='nose.collector',
       extras_require={
           'doc':  ["sphinx", ],

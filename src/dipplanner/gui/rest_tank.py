@@ -36,6 +36,7 @@ from dipplanner.gui.rest_main_api import ApiBottle
 from dipplanner.mission import Mission
 from dipplanner.tank import Tank
 
+
 class TankApiBottle(ApiBottle):
     """api for dives inside the mission object
     """
@@ -43,7 +44,7 @@ class TankApiBottle(ApiBottle):
     def __init__(self, mission=None):
         self.mission = mission
 
-    def get(self, dive_id, tank_id=None):
+    def get(self, tank_id=None):
         """GET method for the Tank object Api
 
         returns a json dumps of the tanks in the current mission object.
@@ -61,38 +62,27 @@ class TankApiBottle(ApiBottle):
         if request.get_header('Content-Type') == 'application/json':
             if tank_id is None:
                 try:
-                    return {'tanks': [tank.dumps_dict() for tank in
-                                      self.mission.dives[int(dive_id)
-                                                         - 1].tanks]}
+                    return {tank_name: tank.dumps_dict()
+                            for (tank_name, tank)
+                            in self.mission.tanks.iteritems()}
                 except (ValueError, KeyError, IndexError):
                     return self.json_abort(404, "404: dive_id ({0}) not "
                                                 "found".format(dive_id))
             else:
                 try:
-                    dive = self.mission.dives[int(dive_id) - 1]
+                    tank = self.mission.tanks[tank_id]
                 except ValueError:
-                    # TODO: try to find a dive with his name
-                    return self.json_abort(404, "404: dive_id ({0}) not "
-                                                "found".format(dive_id))
+                    return self.json_abort(404, "404: tank ({0}) not "
+                                                "found".format(tank_id))
                 except (KeyError, IndexError):
-                    return self.json_abort(404, "404: dive_id ({0}) not "
-                                                "found".format(dive_id))
+                    return self.json_abort(404, "404: tank ({0}) not "
+                                                "found".format(tank_id))
                 else:
-                    try:
-                        tank = dive.tanks[int(tank_id) - 1]
-                    except ValueError:
-                        # TODO: try to find a tank with his name
-                        return self.json_abort(404, "404: tank ({0}) not "
-                                                    "found".format(tank_id))
-                    except (KeyError, IndexError):
-                        return self.json_abort(404, "404: tank ({0}) not "
-                                                    "found".format(tank_id))
-                    else:
-                        return tank.dumps_dict()
+                    return tank.dumps_dict()
         else:
             return self.json_abort(400, "400: Bad ContentType")
 
-    def post(self, dive_id):
+    def post(self):
         """POST method for the Tank object Api
 
         create a new tank for this dive
@@ -113,40 +103,32 @@ class TankApiBottle(ApiBottle):
             <nothing>
         """
         if request.get_header('Content-Type') == 'application/json':
-            try:
-                dive = self.mission.dives[int(dive_id) - 1]
-            except ValueError:
-                # TODO: try to find a dive with his name
-                return self.json_abort(404, "404: dive_id ({0}) not "
-                                            "found".format(dive_id))
-            except (KeyError, IndexError):
-                return self.json_abort(404, "404: dive_id ({0}) not "
-                                            "found".format(dive_id))
-            except Exception as exc:  # generic unknown exception
-                return self.json_abort(500, "500: {0}".format(exc))
-            else:
-                new_tank = Tank()
-                if request.json is not None:
-                    try:
-                        new_tank.loads_json(request.json)
-                    except Exception as exc:  # generic unknown exception
-                        return self.json_abort(500, "500: {0}".format(exc))
-                dive.tanks.append(new_tank)
-                self.mission.change_status(Mission.STATUS_CHANGED)
-                response.status = 201
-                return new_tank.dumps_dict()
+            new_tank = Tank()
+            #from pudb import set_trace; set_trace()
+            if request.json is not None:
+                try:
+                    new_tank.loads_json(request.json)
+                except Exception as exc:  # generic unknown exception
+                    return self.json_abort(500, "500: {0}".format(exc))
+            if new_tank.name in self.mission.tanks:
+                return self.json_abort(
+                    400,
+                    "400: Tank with same name already created")
+            self.mission.tanks[new_tank.name] = new_tank
+            self.mission.change_status(Mission.STATUS_CHANGED)
+            response.status = 201
+            return new_tank.dumps_dict()
         else:
             return self.json_abort(400, "400: Bad ContentType")
 
-
-    def patch(self, dive_id, tank_id=None):
+    def patch(self, tank_id=None):
         """PATCH method for the Tank object Api
 
         update the tank object
 
         if no tank_id is given, returns 404
         if tank_id is given, try to patch the resource and returns
-        the entive patched Dive with code 200 OK
+        the entive patched Tank with code 200 OK
 
         *Keyword Arguments:*
             :dive_id: -- (str): number of the tank, starting by 1
@@ -161,35 +143,27 @@ class TankApiBottle(ApiBottle):
 
         """
         if request.get_header('Content-Type') == 'application/json':
-            try:
-                dive = self.mission.dives[int(dive_id) - 1]
-            except (ValueError, KeyError, IndexError):
-                return self.json_abort(404, "404: dive_id ({0}) not "
-                                            "found".format(dive_id))
+            if tank_id is None:
+                return self.json_abort(404, "404: you must provide "
+                                            "a tank ID")
             else:
-                if tank_id is None:
-                    return self.json_abort(404, "404: you must provide "
-                                                "a tank ID")
+                try:
+                    self.mission.tanks[tank_id].loads_json(request.json)
+                    self.mission.change_status(Mission.STATUS_CHANGED)
+                except ValueError:
+                    return self.json_abort(404, "404: tank_id ({0}) not "
+                                                "found".format(tank_id))
+                except (KeyError, IndexError):
+                    return self.json_abort(404, "404: tank_id ({0}) not "
+                                                "found".format(tank_id))
+                except Exception as exc:  # generic unknown exception
+                    return self.json_abort(500, "500: {0}".format(exc))
                 else:
-                    try:
-                        dive.tanks[int(tank_id) - 1].loads_json(request.json)
-                        self.mission.change_status(Mission.STATUS_CHANGED)
-                    except ValueError:
-                        # TODO: try to find a dive with his name
-                        return self.json_abort(404, "404: tank_id ({0}) not "
-                                                    "found".format(tank_id))
-                    except (KeyError, IndexError):
-                        return self.json_abort(404, "404: tank_id ({0}) not "
-                                                    "found".format(tank_id))
-                    except Exception as exc:  # generic unknown exception
-                        return self.json_abort(500, "500: {0}".format(exc))
-                    else:
-                        return dive.tanks[int(tank_id) - 1].dumps_dict()
+                    return self.mission.tanks[tank_id].dumps_dict()
         else:
             return self.json_abort(400, "400: Bad ContentType")
 
-
-    def delete(self, dive_id, tank_id=None):
+    def delete(self, tank_id=None):
         """DELETE method for the Tank object Api
 
         if no resource_id is given, all the tanks will be deleted.
@@ -206,30 +180,26 @@ class TankApiBottle(ApiBottle):
             <nothing>
         """
         if request.get_header('Content-Type') == 'application/json':
-            try:
-                dive = self.mission.dives[int(dive_id) - 1]
-            except (ValueError, KeyError, IndexError):
-                return self.json_abort(404, "404: dive_id ({0}) not "
-                                            "found".format(dive_id))
+            if tank_id is None:
+                dive.tanks = []
+                self.mission.change_status(Mission.STATUS_CHANGED)
+                return {tank_name: tank.dumps_dict()
+                        for (tank_name, tank)
+                        in self.mission.tanks.iteritems()}
             else:
-                if tank_id is None:
-                    dive.tanks = []
+                try:
+                    self.mission.tanks.pop(tank_id)
                     self.mission.change_status(Mission.STATUS_CHANGED)
-                    return { 'tanks': [tank.dumps_dict() for tank in
-                                       dive.tanks]}
+                except ValueError:
+                    # TODO: try to find a tank with his name
+                    return self.json_abort(404, "404: tank ({0}) not "
+                                                "found".format(tank_id))
+                except (KeyError, IndexError):
+                    return self.json_abort(404, "404: tank ({0}) not "
+                                                "found".format(tank_id))
                 else:
-                    try:
-                        dive.tanks.pop(int(tank_id) - 1)
-                        self.mission.change_status(Mission.STATUS_CHANGED)
-                    except ValueError:
-                        # TODO: try to find a tank with his name
-                        return self.json_abort(404, "404: tank ({0}) not "
-                                                    "found".format(tank_id))
-                    except (KeyError, IndexError):
-                        return self.json_abort(404, "404: tank ({0}) not "
-                                                    "found".format(tank_id))
-                    else:
-                        return { 'tanks': [tank.dumps_dict() for tank in
-                                           dive.tanks]}
+                    return {tank_name: tank.dumps_dict()
+                            for (tank_name, tank)
+                            in self.mission.tanks.iteritems()}
         else:
             return self.json_abort(400, "400: Bad ContentType")

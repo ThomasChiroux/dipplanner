@@ -118,17 +118,17 @@ def instanciates_app(mission=None):
               method='DELETE')(dive_api.delete)
 
     # tanks
-    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
+    app.route(ROOT_API_URL + 'mission/tanks/',
               method='GET')(tank_api.get)
-    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
+    app.route(ROOT_API_URL + 'mission/tanks/<tank_id>',
               method='GET')(tank_api.get)
-    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
+    app.route(ROOT_API_URL + 'mission/tanks/',
               method='POST')(tank_api.post)
-    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
+    app.route(ROOT_API_URL + 'mission/tanks/<tank_id>',
               method='PATCH')(tank_api.patch)
-    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/',
+    app.route(ROOT_API_URL + 'mission/tanks/',
               method='DELETE')(tank_api.delete)
-    app.route(ROOT_API_URL + 'mission/dives/<dive_id>/tanks/<tank_id>',
+    app.route(ROOT_API_URL + 'mission/tanks/<tank_id>',
               method='DELETE')(tank_api.delete)
 
     # input_segments
@@ -174,4 +174,4 @@ def start_gui(mission=None, http_host='locahost', http_port=8080):
     app = instanciates_app(mission)
 
     debug(True)
-    run(app, server=server, host=http_host, port=http_port)
+    run(app, host=http_host, port=http_port)

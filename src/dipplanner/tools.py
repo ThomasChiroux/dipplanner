@@ -39,7 +39,7 @@ def safe_eval_calculator(text_to_eval):
     (only the basic operators)
 
     *Keyword Arguments:*
-        :text_to_eval: (float) -- the text (formula) that should be evaluated
+        :text_to_eval: (str) -- the text (formula) that should be evaluated
 
     *Returns:*
         float -- the result of the calculation.
@@ -51,6 +51,7 @@ def safe_eval_calculator(text_to_eval):
         SyntaxError: when the given expression is incorrect
 
     """
+    text_to_eval = "%s" % text_to_eval
     expr = "^([0-9]|\+|\*|\/|\-|\.|\ )+$"
     re_result = re.match(expr, text_to_eval)
     if re_result is None:

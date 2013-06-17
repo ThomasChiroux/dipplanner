@@ -230,9 +230,9 @@ class Tank(object):
         """
         #initiate class logger
         self.logger = logging.getLogger("dipplanner.tank.Tank")
-        self.logger.debug("creating an instance of Tank: O2:%f, He:%f, "
+        self.logger.debug("creating an instance of Tank: %s: O2:%f, He:%f, "
                           "max_ppo2:%f, mod:%s, volume:%f, "
-                          "pressure:%d" % (f_o2, f_he, max_ppo2,
+                          "pressure:%d" % (name, f_o2, f_he, max_ppo2,
                                            mod, volume,
                                            pressure))
 

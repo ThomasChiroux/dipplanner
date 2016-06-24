@@ -437,8 +437,8 @@ class DipplannerCliArguments(object):
                 (depth, time, tankname, setpoint) = seg.split(";")
                 # looks for tank in tanks
                 try:
-                    #seg_name = 'segment%s' % num_seg
-                    #print seg_name
+                    # seg_name = 'segment%s' % num_seg
+                    # print(seg_name)
                     segments['segment%s' % num_seg] = SegmentDive(
                         float(safe_eval_calculator(depth)),
                         float(safe_eval_calculator(time)),

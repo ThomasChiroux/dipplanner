@@ -144,8 +144,8 @@ class Model(object):
         """
         model_string = ""  # "Compartment pressures:\n"
         for comp_number in range(0, self.COMPS):
-            model_string += "C:%s He:%s N2:%s gf:%s \
-mv_at:%s max_amb:%s MV:%s\n" % \
+            model_string += "C:%s He:%02.06f N2:%02.06f gf:%01.02f \
+mv_at:%02.06f max_amb:%02.06f MV:%02.06f\n" % \
                 (comp_number,
                  self.tissues[comp_number].pp_he,
                  self.tissues[comp_number].pp_n2,

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,18 +16,12 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""uses config parser to parse config files
-"""
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
+"""Use config parser to parse config files."""
 
 import sys
 import logging
 from collections import OrderedDict
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 
 # local imports
 from dipplanner import settings
@@ -38,12 +30,15 @@ from dipplanner.segment import SegmentDive
 from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import safe_eval_calculator
 
+__authors__ = [
+    # alphabetical order by last name
+    'Thomas Chiroux', ]
+
 LOGGER = logging.getLogger("dipplanner")
 
 
-class DipplannerConfigFiles(object):
-    """This class contains all methods and elements to parse the config files
-    and launch dipplanner
+class DipplannerConfigFiles():
+    """Methods and elements to parse the config files and launch dipplanner.
 
     Attributes:
 
@@ -61,7 +56,7 @@ class DipplannerConfigFiles(object):
     """
 
     def __init__(self, filenames):
-        """Constructor for DipplannerCliArguments object
+        """Constructor for DipplannerCliArguments object.
 
         *Keyword Arguments:*
             filenames -- list of filenames to be parsed
@@ -97,7 +92,7 @@ class DipplannerConfigFiles(object):
             self.check_configs_dives_section()
 
     def check_configs_general_section(self):
-        """check configs and change default settings values
+        """Check configs and change default settings values.
 
         *Keyword Arguments:*
             <none>
@@ -118,15 +113,13 @@ class DipplannerConfigFiles(object):
 
             if config.has_option(section, 'gf_low'):
                 settings.GF_LOW = float(
-                    safe_eval_calculator(''.join(config.get(section,
-                        'gf_low'))
-                    .strip('%'))) / 100
+                    safe_eval_calculator(''.join(config.get(
+                        section, 'gf_low')).strip('%'))) / 100
 
             if config.has_option(section, 'gf_high'):
                 settings.GF_HIGH = float(
-                    safe_eval_calculator(''.join(config.get(section,
-                        'gf_high'))
-                    .strip('%'))) / 100
+                    safe_eval_calculator(''.join(config.get(
+                        section, 'gf_high')).strip('%'))) / 100
 
             if config.has_option(section, 'water'):
                 if config.get(section, 'water') == 'sea':
@@ -180,6 +173,7 @@ class DipplannerConfigFiles(object):
                 settings.AUTOMATIC_TANK_REFILL = \
                     config.getboolean(section,
                                       'automatic_tank_refill')
+
 
     def check_configs_advanced_section(self):
         """check configs and change default settings values
@@ -249,7 +243,7 @@ class DipplannerConfigFiles(object):
                     config.get(section, 'ambiant_pressure_sea_level'))
             if config.has_option(section, 'method_for_depth_calculation'):
                 method = config.get(section, 'method_for_depth_calculation')
-                if  method == 'simple' or method == 'complex':
+                if method == 'simple' or method == 'complex':
                     settings.METHOD_FOR_DEPTH_CALCULATION = method
             if config.has_option(section, 'travel_switch'):
                 travel = config.get(section, 'travel_switch')
@@ -259,8 +253,9 @@ class DipplannerConfigFiles(object):
                 settings.FLIGHT_ALTITUDE = float(
                     config.get(section, 'flight_altitude'))
 
+
     def check_configs_output_section(self):
-        """check configs and change default settings values
+        """Check configs and change default settings values.
 
         *Keyword Arguments:*
             <none>
@@ -277,6 +272,7 @@ class DipplannerConfigFiles(object):
             if config.has_option(section, 'template'):
                 settings.TEMPLATE = config.get(section, 'template')
 
+
     def check_configs_dives_section(self):
         """check configs and change default settings values
 
@@ -290,7 +286,7 @@ class DipplannerConfigFiles(object):
             Nothing, but can exit
         """
         config = self.config
-        #dives = { 'dive1': { 'tanks': {},
+        # dives = { 'dive1': { 'tanks': {},
         #                     'segments': {},
         #                     'surface_interval':0} }
         dives = {}
@@ -305,7 +301,7 @@ class DipplannerConfigFiles(object):
                     dives[section]['surface_interval'] = \
                         safe_eval_calculator(parameter_value)
                 elif parameter_name[0:4] == 'tank':
-                    #number = parameter_name[4:]
+                    # number = parameter_name[4:]
                     (name, f_o2, f_he, volume, pressure, rule) = \
                         parameter_value.split(";")
                     dives[section]['tanks'][name] = Tank(
@@ -322,12 +318,12 @@ class DipplannerConfigFiles(object):
                     dives[section]['tanks'] = \
                         dives['dive%s' % (dive_number - 1)]['tanks']
                 except KeyError:
-                    print "Error : no tank provided for this dive !"
+                    print("Error : no tank provided for this dive !")
                     sys.exit(0)
 
             for parameter_name, parameter_value in config.items(section):
                 if parameter_name[0:7] == 'segment':
-                    #number = parameter_name[4:]
+                    # number = parameter_name[4:]
                     (depth, time,
                      tankname, setpoint) = parameter_value.split(";")
                     try:

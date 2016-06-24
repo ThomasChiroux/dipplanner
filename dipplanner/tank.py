@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,15 +16,10 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""
-Contains a Tank Class
+"""Tank Class.
 
 .. note:: in MVPlan, this class was the 'Gas' class
 """
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
 
 import logging
 import math
@@ -37,13 +30,16 @@ from dipplanner import settings
 from dipplanner.dipp_exception import DipplannerException
 from dipplanner.tools import pressure_to_depth, depth_to_pressure
 
+__authors__ = [
+    # alphabetical order by last name
+    'Thomas Chiroux', ]
+
 
 class InvalidGas(DipplannerException):
-    """Exception raised when the gas informations provided for the Tank
-    are invalid
-    """
+    """Gas informations provided for the Tank are invalid."""
+
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger
+        """constructor : call the upper constructor and set the logger.
 
         *Keyword Arguments:*
             :description: (str) -- text describing the error
@@ -62,10 +58,10 @@ class InvalidGas(DipplannerException):
 
 
 class InvalidTank(DipplannerException):
-    """Exception raised when the tank infos provided are invalid
-    """
+    """Tank infos provided are invalid."""
+
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger
+        """constructor : call the upper constructor and set the logger.
 
         *Keyword Arguments:*
             :description: (str) -- text describing the error
@@ -84,11 +80,10 @@ class InvalidTank(DipplannerException):
 
 
 class InvalidMod(DipplannerException):
-    """Exception raised when the given MOD is incompatible with the gas
-    provided for the tank
-    """
+    """The given MOD is incompatible with the gas provided for the tank."""
+
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger
+        """constructor : call the upper constructor and set the logger.
 
         *Keyword Arguments:*
             :description: (str) -- text describing the error
@@ -107,11 +102,10 @@ class InvalidMod(DipplannerException):
 
 
 class EmptyTank(DipplannerException):
-    """Exception raised when trying to consume more gas in tank than the
-    remaining gas
-    """
+    """Trying to consume more gas in tank than the remaining gas."""
+
     def __init__(self, description):
-        """constructor : call the upper constructor and set the logger
+        """constructor : call the upper constructor and set the logger.
 
         *Keyword Arguments:*
             :description: (str) -- text describing the error
@@ -129,9 +123,9 @@ class EmptyTank(DipplannerException):
             "Raising an exception: EmptyTank ! (%s)" % description)
 
 
-class Tank(object):
-    """This class implements a representation of dive tanks wich
-    contains breathing Gas
+class Tank():
+    """Representation of dive tanks wich contains breathing Gas.
+
     We provide proportion of N2, O2, He, calculates MOD and volumes during the
     dives
     We can also (optionally) provide the type of tanks :
@@ -172,11 +166,11 @@ class Tank(object):
 
     """
 
-    def __init__(self,  f_o2=0.21, f_he=0.0,
+    def __init__(self, f_o2=0.21, f_he=0.0,
                  max_ppo2=settings.DEFAULT_MAX_PPO2,
                  mod=None, tank_vol=12.0, tank_pressure=200,
                  tank_rule="30b"):
-        """Constructor for Tank class
+        """Initialisation of the Tank class.
 
         If nothing is provided, create a default 'Air' with 12l/200b tank
         and max_ppo2 to 1.6 (used to calculate mod)
@@ -223,7 +217,7 @@ class Tank(object):
             * InvalidTank -- see validate()
 
         """
-        #initiate class logger
+        # init class logger
         self.logger = logging.getLogger("dipplanner.tank.Tank")
         self.logger.debug("creating an instance of Tank: O2:%f, He:%f, "
                           "max_ppo2:%f, mod:%s, tank_vol:%f, "
@@ -270,7 +264,7 @@ class Tank(object):
         self.logger.debug("minimum gas authorised: %s" % self.min_gas)
 
     def __deepcopy__(self, memo):
-        """deepcopy method will be called by copy.deepcopy
+        """deepcopy method will be called by copy.deepcopy.
 
         Used for "cloning" the object into another new object.
 
@@ -300,10 +294,11 @@ class Tank(object):
 
     def calculate_real_volume(self, tank_vol=None, tank_pressure=None,
                               f_o2=None, f_he=None, temp=15):
-        """
-        Calculate the real gas volume of the tank (in liter) based
-        on Van der waals equation:
-        (P+n2.a/V2).(V-n.b)=n.R.T
+        """Calculate the real gas volume of the tank (in liter).
+
+        based on Van der waals equation:
+
+            (P+n2.a/V2).(V-n.b)=n.R.T
 
         *Keyword arguments:*
             :tank_vol: (float) -- Volume of the tank in liter
@@ -340,9 +335,9 @@ class Tank(object):
         b_n2 = 0.0387
         a_he = 0.0346
         b_he = 0.0238
-        #vm_o2 = 31.9988  # not used
-        #vm_n2 = 28.01348  # not used
-        #vm_he = 4.0020602  # not used
+        # vm_o2 = 31.9988  # not used
+        # vm_n2 = 28.01348  # not used
+        # vm_he = 4.0020602  # not used
         R = 0.0831451
         T = 273.15 + temp  # default temp at 15°C
 
@@ -356,7 +351,7 @@ class Tank(object):
             math.sqrt(a_n2 * a_o2) * f_n2 * f_o2 +\
             math.sqrt(a_n2 * a_he) * f_n2 * f_he +\
             math.sqrt(a_n2 * a_n2) * f_n2 * f_n2
-        #print "a: %s" % a_gas
+        # print "a: %s" % a_gas
         b_gas = math.sqrt(b_o2 * b_o2) * f_o2 * f_o2 +\
             math.sqrt(b_o2 * b_he) * f_o2 * f_he +\
             math.sqrt(b_o2 * b_n2) * f_o2 * f_n2 +\
@@ -366,7 +361,7 @@ class Tank(object):
             math.sqrt(b_n2 * b_o2) * f_n2 * f_o2 +\
             math.sqrt(b_n2 * b_he) * f_n2 * f_he +\
             math.sqrt(b_n2 * b_n2) * f_n2 * f_n2
-        #print "b: %s" % b_gas
+        # print "b: %s" % b_gas
         # now approximate n (quantities of molecules of gas in the tank in mol)
         # using perfect gas law : PV = nRT : n = PV/RT
         approx_n = (float(tank_pressure) * float(tank_vol)) / (R * T)
@@ -399,7 +394,8 @@ class Tank(object):
                 n_right = n_mid
             else:
                 n_left = n_mid
-        #print "n_mid:%s" % n_mid
+        # print("n_mid:%s" % n_mid)
+
         # recalculate volume using van der waals again
         # V = nR3T3/(PR2T2+aP2) + nb
         total_gas_volume = n_mid * pow(R, 3) * pow(T, 3) / \
@@ -411,7 +407,7 @@ class Tank(object):
         return total_gas_volume
 
     def __repr__(self):
-        """Returns a string representing the actual tank
+        """Return a string representing the actual tank.
 
         *Keyword arguments:*
             <none>
@@ -426,7 +422,7 @@ class Tank(object):
         return "%s - %s" % (self.name(), self.get_tank_info())
 
     def __str__(self):
-        """Return a human readable name of the tank
+        """Return a human readable name of the tank.
 
         *Keyword arguments:*
             <none>
@@ -443,7 +439,7 @@ class Tank(object):
         return "%s" % self.name()
 
     def __unicode__(self):
-        """Return a human readable name of the tank in unicode
+        """Return a human readable name of the tank in unicode.
 
         *Keyword arguments:*
             <none>
@@ -459,8 +455,8 @@ class Tank(object):
         """
         return u"%s" % self.name()
 
-    def __cmp__(self, othertank):
-        """Compare a tank to another tank, based on MOD
+    def __lt__(self, othertank):
+        """Compare a tank to another tank, based on MOD.
 
         *Keyword arguments:*
             othertank (Tank) -- another tank object
@@ -471,10 +467,25 @@ class Tank(object):
         *Raise:*
             <nothing>
         """
-        return cmp(self.mod, othertank.mod)
+        return self.mod < othertank.mod
+
+    def __eq__(self, othertank):
+        """Compare a tank to another tank, based on MOD.
+
+        *Keyword arguments:*
+            othertank (Tank) -- another tank object
+
+        *Returns:*
+            integer -- result of cmp()
+
+        *Raise:*
+            <nothing>
+        """
+        return self.mod == othertank.mod
 
     def _calculate_mod(self, max_ppo2):
-        """calculate and returns mod for a given ppo2 based on this tank info
+        """Calculate and returns mod for a given ppo2 based on this tank info.
+
         result in meter
 
         *Keyword arguments:*
@@ -490,7 +501,8 @@ class Tank(object):
         return max(int(10 * (float(max_ppo2) / self.f_o2) - 10), 0)
 
     def _validate(self):
-        """Test the validity of the tank informations inside this object
+        """Test the validity of the tank informations inside this object.
+
         if validity check fails raise an Exception 'InvalidTank'
 
         *Keyword arguments:*
@@ -531,7 +543,8 @@ class Tank(object):
             raise InvalidTank("Tank size should be greater than zero")
 
     def name(self):
-        """returns a Human readable name for the gaz and tanks
+        """Return a Human readable name for the gaz and tanks.
+
         Differnt possibilities:
         Air, Nitrox, Oxygen, Trimix, Heliox
 
@@ -567,7 +580,8 @@ class Tank(object):
         return name
 
     def get_tank_info(self):
-        """returns tank infos : size, remaining vol
+        """Return tank infos : size, remaining vol.
+
         example of tank info:
         15l-90% (2800/3000l)
 
@@ -592,7 +606,8 @@ class Tank(object):
             return "(no tank info, used:%sl)" % self.used_gas
 
     def get_mod(self, max_ppo2=None):
-        """return mod (maximum operating depth) in meter
+        """Return mod (maximum operating depth) in meter.
+
         if no argument provided, return the mod based on the current tank (and
         configured max_ppo2)
         if max_ppo2 is provided, returns the (new) mod based on the given ppo2
@@ -612,7 +627,8 @@ class Tank(object):
             return self._calculate_mod(max_ppo2)
 
     def get_min_od(self, min_ppo2=settings.ABSOLUTE_MIN_PPO2):
-        """return in meter the minimum operating depth for the gas in the tank
+        """Return in meter the minimum operating depth for the gas in the tank.
+
         return 0 if diving from/to surface is ok with this gaz
 
         *Keyword arguments:*
@@ -627,7 +643,7 @@ class Tank(object):
         return self._calculate_mod(min_ppo2)
 
     def get_mod_for_given_end(self, end):
-        """calculate a mod based on given end and based on gaz inside the tank
+        """Calculate a mod based on given end and based on gaz inside the tank.
 
         .. note::
             end calculation is based on narcotic index for all gases.
@@ -651,12 +667,12 @@ class Tank(object):
         # Air consists of: Nitrogen N2: 78.08%,
         #                  Oxygen O2: 20.95%,
         #                  Argon Ar: 0.934%
-        #OC
+        # OC
         reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * \
             (settings.N2_NARCOTIC_VALUE * 0.7808 +
              settings.O2_NARCOTIC_VALUE * 0.2095 +
              settings.AR_NARCOTIC_VALUE * 0.00934)
-        #OC mode
+        # OC mode
         narcotic_tank = (self.f_n2 * settings.N2_NARCOTIC_VALUE +
                          self.f_o2 * settings.O2_NARCOTIC_VALUE +
                          self.f_he * settings.HE_NARCOTIC_VALUE)
@@ -668,7 +684,8 @@ class Tank(object):
         return mod
 
     def get_end_for_given_depth(self, depth):
-        """calculate end (equivalent narcotic depth)
+        """Calculate end (equivalent narcotic depth).
+
         based on given depth and based on gaz inside the tank
 
         .. note::
@@ -699,7 +716,7 @@ class Tank(object):
             (settings.N2_NARCOTIC_VALUE * 0.7808 +
              settings.O2_NARCOTIC_VALUE * 0.2095 +
              settings.AR_NARCOTIC_VALUE * 0.00934)
-        #OC mode
+        # OC mode
         narcotic_index = p_absolute * (self.f_n2 * settings.N2_NARCOTIC_VALUE +
                                        self.f_o2 * settings.O2_NARCOTIC_VALUE +
                                        self.f_he * settings.HE_NARCOTIC_VALUE)
@@ -711,7 +728,7 @@ class Tank(object):
         return end
 
     def consume_gas(self, gas_consumed):
-        """Consume gas inside this tank
+        """Consume gas inside this tank.
 
         *Keyword arguments:*
             :gas_consumed: (float) -- gas consumed in liter
@@ -722,15 +739,15 @@ class Tank(object):
         *Raise:*
             <nothing>
         """
-        #if self.remaining_gas - gas_consumed < 0:
-            #raise EmptyTank("There is not enought gas in this tank")
-        #else:
+        # if self.remaining_gas - gas_consumed < 0:
+        #     raise EmptyTank("There is not enought gas in this tank")
+        # else:
         self.used_gas += gas_consumed
         self.remaining_gas -= gas_consumed
         return self.remaining_gas
 
     def refill(self):
-        """Refill the tank
+        """Refill the tank.
 
          *Keyword arguments:*
             <none>
@@ -746,7 +763,7 @@ class Tank(object):
         return self.remaining_gas
 
     def check_rule(self):
-        """Checks the rule agains the remaining gas in the tank
+        """Check the rule agains the remaining gas in the tank.
 
         *Keyword arguments:*
             :gas_consumed: (float) -- gas consumed in liter

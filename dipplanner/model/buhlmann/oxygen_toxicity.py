@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright 2011-2012 Thomas Chiroux
 #
@@ -18,13 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""Oxygen Toxicity model
-"""
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
+"""Oxygen Toxicity model."""
 
 import math
 import logging

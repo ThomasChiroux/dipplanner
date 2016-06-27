@@ -851,7 +851,7 @@ class TestDiveCCHypo50m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -892,7 +892,7 @@ class TestDiveCCHypo50m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -933,7 +933,7 @@ class TestDiveCCHypo50m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -974,7 +974,7 @@ class TestDiveCCHypo50m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -995,7 +995,7 @@ class TestDiveCCHypo50m50min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 60m tests ==============
@@ -1033,7 +1033,7 @@ class TestDiveCCHypo60m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1074,7 +1074,7 @@ class TestDiveCCHypo60m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1115,7 +1115,7 @@ class TestDiveCCHypo60m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1136,7 +1136,7 @@ class TestDiveCCHypo60m40min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 70m tests ==============
@@ -1174,7 +1174,7 @@ class TestDiveCCHypo70m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1215,7 +1215,7 @@ class TestDiveCCHypo70m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1236,7 +1236,7 @@ class TestDiveCCHypo70m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 80m tests ==============
@@ -1274,7 +1274,7 @@ class TestDiveCCHypo80m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1315,7 +1315,7 @@ class TestDiveCCHypo80m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1336,7 +1336,7 @@ class TestDiveCCHypo80m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # ==================================================== 90m tests ==============
@@ -1374,7 +1374,7 @@ class TestDiveCCHypo90m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1415,7 +1415,7 @@ class TestDiveCCHypo90m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1436,7 +1436,7 @@ class TestDiveCCHypo90m30min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # =================================================== 100m tests ==============
@@ -1474,7 +1474,7 @@ class TestDiveCCHypo100m10min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1515,7 +1515,7 @@ class TestDiveCCHypo100m15min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
@@ -1536,7 +1536,7 @@ class TestDiveCCHypo100m20min(TestDive):
                          'Wrong tank status : it should pass the remaining '
                          'gas rule test (result:%s on %s)'
                          % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name()))
+                         self.profile1.tanks[0].name))
 
 
 # =================================================== 110m tests ==============

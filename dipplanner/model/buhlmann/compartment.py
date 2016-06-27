@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,12 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""Defines a Buhlmann compartment
-"""
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
+"""Define a Buhlmann compartment."""
 
 import math
 import logging

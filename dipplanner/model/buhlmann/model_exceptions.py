@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright 2011-2012 Thomas Chiroux
 #
@@ -18,13 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""Defines Exceptions for buhlmann model
-"""
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
+"""Define Exceptions for buhlmann model."""
 
 #import math
 import logging
@@ -54,7 +46,7 @@ class ModelException(DipplannerException):
         self.logger = logging.getLogger(
             "dipplanner.DipplannerException.ModelException")
         self.logger.error(
-            "Raising an exception: ModelException ! (%s)" % description)
+            "Raising an exception: ModelException ! (%s)", description)
 
 
 class ModelStateException(DipplannerException):
@@ -77,4 +69,4 @@ class ModelStateException(DipplannerException):
         self.logger = logging.getLogger(
             "dipplanner.DipplannerException.ModelStateException")
         self.logger.error(
-            "Raising an exception: ModelStateException ! (%s)" % description)
+            "Raising an exception: ModelStateException ! (%s)", description)

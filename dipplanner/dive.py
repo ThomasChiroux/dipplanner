@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,17 +16,12 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""dive class module
+"""Dive class module.
 
 Each Dive represent one dive (and only one)
 For successive dives, it is possible to provide the parameters of the
 previous dive in order to calculate the next one.
 """
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
-
 import logging
 import copy
 # dependencies imports
@@ -38,10 +31,7 @@ from jinja2 import Environment, PackageLoader
 from dipplanner import settings
 from dipplanner.dipp_exception import DipplannerException
 from dipplanner.model.buhlmann.model_exceptions import ModelException
-from dipplanner.model.buhlmann.model_exceptions import ModelStateException
-from dipplanner.tank import InvalidGas, InvalidTank, InvalidMod, EmptyTank
 from dipplanner.tank import Tank
-from dipplanner.segment import UnauthorizedMod
 from dipplanner.segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from dipplanner.model.buhlmann.model import Model as BuhlmannModel
 
@@ -52,100 +42,63 @@ from dipplanner.tools import altitude_or_depth_to_absolute_pressure
 
 
 class NothingToProcess(DipplannerException):
-    """raised when the is no input segments to process
-    """
+    """Raised when the is no input segments to process."""
 
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger
+        """Init of the Exception.
 
-        *Keyword Arguments:*
-            :description: (str) -- text describing the error
-
-        *Return:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
+        :param str description: text describing the error
         """
-        DipplannerException.__init__(self, description)
-        self.logger = logging.getLogger(
-            "dipplanner.dipp_exception.NothingToProcess")
+        super().__init__(description)
         self.logger.error(
-            "Raising an exception: NothingToProcess ! (%s)" % description)
+            "Raising an exception: NothingToProcess ! (%s)", description)
 
 
 class InstanciationError(DipplannerException):
-    """raised when the Dive constructor encounters a problem.
-       In this case, it can not continue
+    """Raised when the Dive constructor encounters a problem.
+
+    In this case, it can not continue
     """
 
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger
+        """Init of the Exception.
 
-        *Keyword Arguments:*
-            :description: (str) -- text describing the error
-
-        *Return:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
+        :param str description: text describing the error
         """
-        DipplannerException.__init__(self, description)
-        self.logger = logging.getLogger(
-            "dipplanner.dipp_exception.InstanciationError")
+        super().__init__(description)
         self.logger.error(
-            "Raising an exception: InstanciationError ! (%s)" % description)
+            "Raising an exception: InstanciationError ! (%s)", description)
 
 
 class ProcessingError(DipplannerException):
-    """raised when the is no input segments to process
-    """
+    """Raised when the is no input segments to process."""
 
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger
+        """Init of the Exception.
 
-        *Keyword Arguments:*
-            :description: (str) -- text describing the error
-
-        *Return:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
+        :param str description: text describing the error
         """
-        DipplannerException.__init__(self, description)
-        self.logger = logging.getLogger(
-            "dipplanner.dipp_exception.ProcessingError")
+        super().__init__(description)
         self.logger.error(
-            "Raising an exception: ProcessingError ! (%s)" % description)
+            "Raising an exception: ProcessingError ! (%s)", description)
 
 
 class InfiniteDeco(DipplannerException):
-    """raised when the deco time becomes enourmous (like infinite)
-    """
+    """Raised when the deco time becomes enourmous (like infinite)."""
 
     def __init__(self, description=""):
-        """constructor : call the upper constructor and set the logger
+        """Init of the Exception.
 
-        *Keyword Arguments:*
-            :description: (str) -- text describing the error
-
-        *Return:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
+        :param str description: text describing the error
         """
-        DipplannerException.__init__(self, description)
-        self.logger = logging.getLogger(
-            "dipplanner.dipp_exception.InfiniteDeco")
+        super().__init__(description)
         self.logger.error(
-            "Raising an exception: InfiniteDeco ! (%s)" % description)
+            "Raising an exception: InfiniteDeco ! (%s)", description)
 
 
-class Dive(object):
+class Dive():
     """Conducts dive based on inputSegments, knownGases, and an existing model.
+
     Iterates through dive segments updating the Model. When all
     dive segments are processed then calls ascend(0.0) to
     return to the surface.
@@ -181,25 +134,23 @@ class Dive(object):
     """
 
     def __init__(self, known_segments, known_tanks, previous_profile=None):
-        """Constructor for Profile class
+        """Init for Dive class.
 
         For fist dive, instanciate the profile class with no model
         (profile will create one for you)
         For repetative dives, instanciate profile class with the previous model
 
-        *Keyword Arguments:*
-            :known_segments: -- list of input segments
-            :known_tanks: -- list of tanks for this dive
-            :previous_profile: (Model) -- model object of the precedent dive
+        :param known_segments: -- list of input segments
+        :type known_segments: list of :class:`dipplanner.segment.Segment`
+        :param known_tanks: list of tanks for this dive
+        :type known_tanks: list of :class:`dipplanner.tank.Tank`
+        :param previous_profile: model object of the precedent dive
+        :type previous_profile: :class:`dipplanner.model`
 
-        Return:
-            <nothing>
-
-        .. note:: the constructor should not fail. If something if wrong, it
+        .. note:: the initialisation should not fail. If something if wrong, it
                   MUST still instantiate itself, with errors in his own object
         """
-
-        #initiate class logger
+        # initiate class logger
         self.logger = logging.getLogger("dipplanner.dive.Dive")
         self.logger.debug("creating an instance of Dive")
 
@@ -260,76 +211,65 @@ class Dive(object):
         self.metadata = ""
 
     def __repr__(self):
-        """Returns a string representing the result of the dive using default
-           template
+        """Return a str representing the result of the dive.
 
-        *Keyword Arguments:*
-            <none>
+        Using the default template
 
-        *Return:*
-            str -- a string with the result of the calculation of the dives
-                   using the default template
-        *Raise:*
-            <nothing>
+        :returns: a string with the result of the calculation of the dives
+                  using the default template
+        :rtype: str
         """
         return self.output("default.tpl")
 
     def __str__(self):
-        """Return a human readable name of the segment
+        """Return a str representing the result of the dive.
 
-        *Keyword Arguments:*
-            <none>
+        Using the default template
 
-        *Return:*
-            str -- a string with the result of the calculation of the dives
-                   using the default template
-        *Raise:*
-            <nothing>
+        :returns: a string with the result of the calculation of the dives
+                  using the default template
+        :rtype: str
         """
         return self.__repr__()
 
-    def __unicode__(self):
-        """Return a human readable name of the segment in unicode
+    # def __unicode__(self):
+    #     """Return a human readable name of the segment in unicode
 
-        *Keyword Arguments:*
-            <none>
+    #     *Keyword Arguments:*
+    #         <none>
 
-        *Return:*
-            ustr -- an unicode string with the result of the calculation of
-                    the dives using the default template
+    #     *Return:*
+    #         ustr -- an unicode string with the result of the calculation of
+    #                 the dives using the default template
 
-        *Raise:*
-            <nothing>
-        """
-        return u"%s" % self.__repr__()
+    #     *Raise:*
+    #         <nothing>
+    #     """
+    #     return u"%s" % self.__repr__()
 
-    def __cmp__(self, otherdive):
-        """Compare a dive to another dive, based on run_time
+    # def __cmp__(self, otherdive):
+    #     """Compare a dive to another dive, based on run_time
 
-        *Keyword arguments:*
-            otherdive (Dive) -- another dive object
+    #     *Keyword arguments:*
+    #         otherdive (Dive) -- another dive object
 
-        *Returns:*
-            Integer -- result of cmp()
+    #     *Returns:*
+    #         Integer -- result of cmp()
 
-        *Raise:*
-            <nothing>
-        """
-        return cmp(self.run_time, otherdive.run_time)
+    #     *Raise:*
+    #         <nothing>
+    #     """
+    #     return cmp(self.run_time, otherdive.run_time)
 
     def output(self, template=None):
-        """Returns the dive profile calculated, using the template given
-        in settings or command lines.
+        """Return the dive profile calculated.
+
+        using the template given in settings or command lines.
         (and not only the default template)
 
-        *Keyword Arguments:*
-            <none>
-
-        *Return:*
-            str -- a string with the result of the calculation of the dives
-                   using the choosen template
-        *Raise:*
-            <nothing>
+        :returns: a string with the result of the calculation of the dives
+                  using the choosen template
+        :rtype: str
         """
         env = Environment(loader=PackageLoader('dipplanner', 'templates'))
         if template is None:
@@ -341,18 +281,11 @@ class Dive(object):
         return text
 
     def do_surface_interval(self, time):
-        """Conducts a surface interval
+        """Conduct a surface interval.
+
         by performing a constant depth calculation on air at zero meters
 
-        *Keyword Arguments:*
-            :time: (int) -- duration of the interval, in seconds
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <Exceptions from model>
-
+        :param int time: duration of the interval, in seconds
         """
         try:
             self.model.const_depth(pressure=0.0, seg_time=time,
@@ -367,114 +300,52 @@ class Dive(object):
             self.refill_tanks()
 
     def get_surface_interval(self):
-        """Returns surface interval in mm:ss format
+        """Return surface interval in mm:ss format.
 
-        *Keyword Arguments:*
-            <nothing>
-
-        *Returns:*
-            str -- surface interval time in mmm:ss format
-
-        *Raise:*
-            <nothing>
+        :returns: surface interval time in mmm:ss format
+        :rtype: str
         """
         return seconds_to_mmss(self.surface_interval)
 
     def refill_tanks(self):
-        """refile all tanks defined in this dive
+        """refile all tanks defined in this dive.
+
         it is used for repetitive dives
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
         """
         for tank in self.tanks:
             tank.refill()
 
     def is_dive_segments(self):
-        """Returns true if there are loaded dive segments
+        """Return true if there are loaded dive segments.
+
         else false means there is nothing to process
 
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            True (bool) -- if there is at least one input
-                           dive segment to process
-
-            False (bool) -- if there is no dive segment to process
-
-        *Raise:*
-            <nothing>
+        :returns: True -- if there is at least one input
+                          dive segment to process
+                  False -- if there is no dive segment to process
+        :rtype:  bool
         """
-        if len(self.input_segments) > 0:
-            return True
-        else:
-            return False
+        return bool(len(self.input_segments) > 0)
 
     def do_dive_without_exceptions(self):
-        """Call do_dive, and handle exceptions internally : do not raise any
-        "dive related" exception : add the exception inside
+        """Call do_dive, and handle exceptions internally.
+
+        do not raise any "dive related" exception : add the exception inside
         self.dive_exceptions instead.
-
-        *Keyword Arguments:*
-            <none>
-
-        *Return:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
         """
         try:
             self.do_dive()
-        except ModelStateException as exc:
-            self.dive_exceptions.append(exc)
-        except ModelException as exc:
-            self.dive_exceptions.append(exc)
-        except UnauthorizedMod as exc:
-            self.dive_exceptions.append(exc)
-        except EmptyTank as exc:
-            self.dive_exceptions.append(exc)
-        except InvalidGas as exc:
-            self.dive_exceptions.append(exc)
-        except InvalidTank as exc:
-            self.dive_exceptions.append(exc)
-        except InvalidMod as exc:
-            self.dive_exceptions.append(exc)
-        except ProcessingError as exc:
-            self.dive_exceptions.append(exc)
-        except NothingToProcess as exc:
-            self.dive_exceptions.append(exc)
-        except InstanciationError as exc:
-            self.dive_exceptions.append(exc)
-        except InfiniteDeco as exc:
+        except DipplannerException as exc:
             self.dive_exceptions.append(exc)
         except Exception as exc:  # unknown generic exception
             self.dive_exceptions.append(
-                DipplannerException("Unknown exception occured: %s (%s)" %
-                                    (exc.__repr__(),
-                                     exc.message)))
+                DipplannerException("Unknown exception occured: %s" % exc))
 
     def do_dive(self):
-        """Process the dive
+        """Process the dive.
 
-        *Keyword Arguments:*
-            <none>
-
-        *Return:*
-            <nothing>
-
-        *Raise:*
-            NothingToProcess -- if there is no input segment to process
-            or
-            <Exceptions from model>
-
+        :raises NothingToProcess: if there is no input segment to process
+        :raises ModelException: <Exceptions from model>
         """
         if self.is_dive_segments() is False:
             raise NothingToProcess
@@ -488,7 +359,7 @@ class Dive(object):
         # sets initial state
         #
 
-        #else:
+        # else:
         first_segment = self.input_segments[0]
         self.current_tank = first_segment.tank
 
@@ -514,18 +385,18 @@ class Dive(object):
                 for tank in self.tanks:
                     if tank.get_min_od() == 0:
                         self.logger.debug("This tank may be suitable:%s, "
-                                          "mod:%s, end at d:%s" %
-                                          (str(tank), tank.mod,
-                                           tank.get_end_for_given_depth(
-                                               self.input_segments[0].depth)))
+                                          "mod:%s, end at d:%s",
+                                          str(tank), tank.mod,
+                                          tank.get_end_for_given_depth(
+                                              self.input_segments[0].depth))
 
-                        if tank.mod >= self.input_segments[0].depth and\
+                        if (tank.mod >= self.input_segments[0].depth and
                                 tank.get_end_for_given_depth(
-                                    self.input_segments[0].depth) < \
-                                settings.DEFAULT_MAX_END:
+                                    self.input_segments[0].depth) <
+                                settings.DEFAULT_MAX_END):
                             # ok we have a winner
                             self.logger.info("Changed tank for "
-                                             "descent to:%s" % str(tank))
+                                             "descent to:%s", str(tank))
                             self.current_tank = tank
                             break
                 if self.current_tank == self.input_segments[0].tank:
@@ -538,11 +409,11 @@ class Dive(object):
                         if tank.get_min_od() == 0:
                             self.logger.debug(
                                 "This tank may be suitable:%s, "
-                                "mod:%s, end at d:%s" %
-                                (str(tank),
-                                 tank.mod,
-                                 tank.get_end_for_given_depth(
-                                 self.input_segments[0].depth)))
+                                "mod:%s, end at d:%s",
+                                str(tank),
+                                tank.mod,
+                                tank.get_end_for_given_depth(
+                                    self.input_segments[0].depth))
 
                             if settings.TRAVEL_SWITCH == 'late':
                                 depth = min(
@@ -601,9 +472,9 @@ class Dive(object):
                                        self.pp_o2))
                     self.run_time += (float(delta_depth) /
                                       float(settings.DESCENT_RATE))
-                    self.logger.debug("descent time : %ss" %
-                                      (float(delta_depth) /
-                                       settings.DESCENT_RATE))
+                    self.logger.debug("descent time : %ss",
+                                      float(delta_depth) /
+                                      settings.DESCENT_RATE)
                 else:  # ascent
                     # call ascend method of this class
                     # for decompression calculation
@@ -626,16 +497,16 @@ class Dive(object):
                                         seg.time - self.run_time,
                                         self.current_tank,
                                         self.pp_o2))
-                        self.metadata += "Dive to %s for %ss\n" % \
-                            (seg.depth, seg.time - self.run_time)
-                        self.logger.debug("Dive to %s for %ss" %
-                                          (seg.depth,
-                                           seg.time - self.run_time))
+                        self.metadata += "Dive to %s for %ss\n" % (
+                            seg.depth, seg.time - self.run_time)
+                        self.logger.debug("Dive to %s for %ss",
+                                          seg.depth,
+                                          seg.time - self.run_time)
                         # run_time = seg_time because it's
                         # only done the first time
                         self.run_time = seg.time
                         self.logger.debug(
-                            "update run time : %ss" % self.run_time)
+                            "update run time : %ss", self.run_time)
                     else:
                         self.model.const_depth(depth_to_pressure(seg.depth),
                                                seg.time,
@@ -647,12 +518,12 @@ class Dive(object):
                                         seg.time,
                                         self.current_tank,
                                         self.pp_o2))
-                        self.metadata += "Dive to %s for %ss\n" % \
-                            (seg.depth, seg.time)
-                        self.logger.debug("Dive to %s for %ss" %
-                                          (seg.depth, seg.time))
+                        self.metadata += "Dive to %s for %ss\n" % (seg.depth,
+                                                                   seg.time)
+                        self.logger.debug("Dive to %s for %ss",
+                                          seg.depth, seg.time)
                         self.run_time += seg.time
-                        self.logger.debug("update run time : %ss" %
+                        self.logger.debug("update run time : %ss",
                                           self.run_time)
                 else:  # process waypoint
                     self.output_segments.append(
@@ -672,8 +543,8 @@ class Dive(object):
             output_seg.run_time = total_time
         if total_time != self.run_time:
             self.logger.warning("dive run_time (%ss) differs from"
-                                " all segments time (%ss)" %
-                                (self.run_time, total_time))
+                                " all segments time (%ss)",
+                                self.run_time, total_time)
 
         # write metadata into the model
         self.model.metadata = self.metadata
@@ -688,7 +559,8 @@ class Dive(object):
         self.tanks = saved_tanks
 
     def get_no_flight_hhmmss(self):
-        """Returns no flight time (if calculated) in hhmmss format
+        """Return no flight time (if calculated) in hhmmss format.
+
         instead of an int in seconds
 
         .. note::
@@ -697,12 +569,9 @@ class Dive(object):
            you need to call no_flight_time() or
            no_flight_time_wo_exception() before.
 
-        *Keyword Arguments:*
-            <none>
-
-        Returns:
-            str -- "hh:mm:ss" no flight time
-            str -- "" if no flight time is not calculated
+        :returns: "hh:mm:ss" no flight time
+                  "" (empty string) if no flight time is not calculated
+        :rtype: str
         """
         if self.no_flight_time_value is not None:
             return seconds_to_hhmmss(self.no_flight_time_value)
@@ -712,7 +581,8 @@ class Dive(object):
     def no_flight_time_wo_exception(self,
                                     altitude=settings.FLIGHT_ALTITUDE,
                                     tank=None):
-        """Call no_flight_time, and handle exceptions internally:
+        """Call no_flight_time, and handle exceptions internally.
+
         do not raise any "dive related" exception: add the
         exception inside self.dive_exceptions instead.
 
@@ -734,58 +604,37 @@ class Dive(object):
         """
         try:
             result = self.no_flight_time(altitude, tank)
-        except ModelStateException as exc:
-            self.dive_exceptions.append(exc)
-        except ModelException as exc:
-            self.dive_exceptions.append(exc)
-        except UnauthorizedMod as exc:
-            self.dive_exceptions.append(exc)
-        except EmptyTank as exc:
-            self.dive_exceptions.append(exc)
-        except InvalidGas as exc:
-            self.dive_exceptions.append(exc)
-        except InvalidTank as exc:
-            self.dive_exceptions.append(exc)
-        except InvalidMod as exc:
-            self.dive_exceptions.append(exc)
-        except ProcessingError as exc:
-            self.dive_exceptions.append(exc)
-        except NothingToProcess as exc:
-            self.dive_exceptions.append(exc)
-        except InstanciationError as exc:
-            self.dive_exceptions.append(exc)
-        except InfiniteDeco as exc:
+        except DipplannerException as exc:
             self.dive_exceptions.append(exc)
         except Exception as exc:  # unknown generic exception
             self.dive_exceptions.append(
-                DipplannerException("Unknown exception occured: %s (%s)" %
-                                    (exc.__repr__(),
-                                     exc.message)))
+                DipplannerException("Unknown exception occured: %s" % exc))
         else:
             return result
 
     def no_flight_time(self, altitude=settings.FLIGHT_ALTITUDE, tank=None):
-        """Evaluate the no flight time by 'ascending' to the choosen
-        flight altitude. Ascending will generate the necessary 'stop' at the
-        current depth (which is 0m). The stop time represents the no flight
-        time
+        """Evaluate the no flight time.
 
-        *Keyword Arguments:*
-            :altitude: (int) -- in meter : altitude used for the calculation
-            :flight_ascent_rate: (float) -- in m/s
-            :tank: (Tank) -- optionnal:
+        by 'ascending' to the choosen flight altitude.
+        Ascending will generate the necessary 'stop' at the current depth
+        (which is 0m) .
+        The stop time represents the no flight time
+
+        :param int altitude: in meter : altitude used for the calculation
+        :param float flight_ascent_rate: in m/s
+        :param tank: (optionnal)
                     it is possible to provide a tank while calling
                     no_flight_time to force "no flight deco" with
                     another mix than air.
                     In this case, we will 'consume' the tank
                     When the tank is empty, it automatically switch to air
+        :type tank: :class:`dipplanner.tank.Tank`
 
-        *Returns:*
-            int -- no fight time in seconds
+        :returns: no fight time in seconds
+        :rtype: int
 
-        *Raise:*
-            InfiniteDeco - if the no flight time can not achieve enough
-                           decompression to be able to go to give altitude
+        :raises InfiniteDeco: if the no flight time can not achieve enough
+                              decompression to be able to go to give altitude
         """
         no_flight_time = 0
         deco_uses_tank = False  # set to true when deco is using a tank
@@ -800,7 +649,7 @@ class Dive(object):
             no_flight_tank = tank
             deco_uses_tank = True
             self.logger.info("Accelerating no flight"
-                             "time using a tank:%s" % tank)
+                             "time using a tank:%s", tank)
         else:
             no_flight_tank = no_flight_air_tank
 
@@ -811,9 +660,8 @@ class Dive(object):
 
         model_copy = copy.deepcopy(self.model)
         model_ceiling = model_copy.ceiling_in_pabs()
-        while model_ceiling > next_stop_pressure:  # loop for "deco"
-                                                   # calculation based
-                                                   # on the new ceiling
+        while model_ceiling > next_stop_pressure:
+            # loop for "deco" calculation based on the new ceiling
             model_copy.const_depth(0.0,
                                    stop_time,
                                    no_flight_tank.f_he,  # f_he
@@ -827,7 +675,7 @@ class Dive(object):
                     deco_uses_tank = False
                     self.logger.info("Tank used for accelerating "
                                      "no flight time is empty, "
-                                     "swithing to air at %s s" %
+                                     "swithing to air at %s s",
                                      no_flight_time)
                 else:
                     no_flight_tank.consume_gas(
@@ -840,20 +688,15 @@ class Dive(object):
 
     def ascend(self, target_depth):
         """Ascend to target depth, decompressing if necessary.
+
         If inFinalAscent then gradient factors start changing,
         and automatic gas selection is made.
 
         This method is called by do_dive()
 
-        *Keyword Arguments:*
-            :target_depth: (float) -- in meter, target depth for the ascend
+        :param float target_depth: in meter, target depth for the ascend
 
-        Returns:
-        <nothing>
-
-        Raise:
-        <Exceptions from model>
-
+        :raises ModelException: <Exceptions from model>
         """
         force_deco_stop = False
         in_deco_cycle = False
@@ -877,7 +720,7 @@ class Dive(object):
             next_stop_depth = int(self.current_depth -
                                   settings.STOP_DEPTH_INCREMENT)
 
-        self.logger.debug("next_stop_depth: %s" % next_stop_depth)
+        self.logger.debug("next_stop_depth: %s", next_stop_depth)
         # hack in case we are overshooting or hit last stop or any of
         # the other bizzar combinations ...
         if next_stop_depth < target_depth or \
@@ -889,8 +732,8 @@ class Dive(object):
         elif next_stop_depth < settings.LAST_STOP_DEPTH:
             next_stop_depth = settings.LAST_STOP_DEPTH
 
-        start_depth = self.current_depth  # Initialise ascent
-                                          # segment start depth
+        # Initialise ascent segment start depth
+        start_depth = self.current_depth
         in_ascent_cycle = True  # Start in free ascent
 
         # Initialise gradient factor for next (in this case first) stop depth
@@ -901,20 +744,20 @@ class Dive(object):
         control = self.model.control_compartment()
 
         while self.current_depth > target_depth:
-            self.logger.debug("ascent -- debug : %s, %s" %
-                              (self.current_depth, target_depth))
+            self.logger.debug("ascent -- debug : %s, %s",
+                              self.current_depth, target_depth)
             # can we move to the proposed next stop depth ?
             model_ceiling = self.model.ceiling()
-            self.logger.debug("model ceiling: %s" % model_ceiling)
+            self.logger.debug("model ceiling: %s", model_ceiling)
             while force_deco_stop or next_stop_depth < model_ceiling:
                 in_deco_cycle = True
-                force_deco_stop = False  # Only used for first entry
-                                         # into deco stop
-                if in_ascent_cycle:  # Finalise last ascent cycle
-                                     # as we are now decomp
+                # Only used for first entry into deco stop
+                force_deco_stop = False
+                if in_ascent_cycle:
+                    # Finalise last ascent cycle as we are now decomp
                     if start_depth > self.current_depth:
                         # add ascent segment
-                        #self.logger.debug("Add AscDesc(1): start_depth:%s, \
+                        # self.logger.debug("Add AscDesc(1): start_depth:%s, \
                         #                   current_depth:%s" % \
                         #                   (start_depth, self.current_depth))
                         self.output_segments.append(
@@ -933,12 +776,12 @@ class Dive(object):
                 #     surfacing before setting it
                 if (not settings.MULTILEVEL_MODE or self.in_final_ascent) and \
                         (not self.model.gradient.gf_set):
-                    #self.logger.debug("...set m-value gradient")
+                    # self.logger.debug("...set m-value gradient")
                     self.model.gradient.set_gf_slope_at_depth(
                         self.current_depth)
                     self.model.gradient.set_gf_at_depth(next_stop_depth)
 
-                #calculate stop_time
+                # calculate stop_time
                 if deco_stop_time == 0 and \
                         self.run_time % settings.STOP_TIME_INCREMENT > 0:
                     stop_time = int(self.run_time /
@@ -970,7 +813,7 @@ class Dive(object):
                 self.logger.debug("...in deco cycle")
                 # finalise the last deco cycle
                 self.run_time += deco_stop_time
-                self.logger.debug("update run time : %ss" % self.run_time)
+                self.logger.debug("update run time : %ss", self.run_time)
                 if settings.FORCE_ALL_STOPS:
                     force_deco_stop = True
 
@@ -986,7 +829,7 @@ class Dive(object):
                 in_deco_cycle = False
                 deco_stop_time = 0
             elif in_ascent_cycle:
-                #self.logger.debug("...in ascent cycle")
+                # self.logger.debug("...in ascent cycle")
                 # did not decompress, just ascend
                 # TODO : if we enable this code always (not in elif,
                 #        but direct) then
@@ -1002,11 +845,11 @@ class Dive(object):
                                      float(next_stop_depth)) / \
                     (float(settings.ASCENT_RATE))
 
-                self.logger.debug("update run time : %ss" % self.run_time)
+                self.logger.debug("update run time : %ss", self.run_time)
                 # TODO: Issue here is that this ascent time is not accounted
                 #       for in any segments unless it was in an ascent cycle
 
-            #now we moved up the the next depth
+            # now we moved up the the next depth
             self.current_depth = next_stop_depth
             max_mv = self.model.m_value(depth_to_pressure(self.current_depth))
             control = self.model.control_compartment()
@@ -1016,8 +859,8 @@ class Dive(object):
             if self.set_deco_gas(self.current_depth):  # True if we changed gas
                 if in_ascent_cycle:
                     self.logger.debug("Add AscDesc(2): start_depth:%s, "
-                                      "current_depth:%s" %
-                                      (start_depth, self.current_depth))
+                                      "current_depth:%s",
+                                      start_depth, self.current_depth)
                     self.output_segments.append(
                         SegmentAscDesc(start_depth,
                                        self.current_depth,
@@ -1030,29 +873,29 @@ class Dive(object):
             next_stop_depth = int(self.current_depth) - \
                 settings.STOP_DEPTH_INCREMENT
 
-            self.logger.debug("next stop depth: %s, target: %s" %
-                              (next_stop_depth, target_depth))
+            self.logger.debug("next stop depth: %s, target: %s",
+                              next_stop_depth, target_depth)
 
             # check in cas we are overshooting or hit last stop
             if next_stop_depth < target_depth or \
                     self.current_depth < settings.LAST_STOP_DEPTH:
-                self.logger.debug("next_stop_depth (%s) < target_depth (%s)" %
-                                  (next_stop_depth, target_depth))
+                self.logger.debug("next_stop_depth (%s) < target_depth (%s)",
+                                  next_stop_depth, target_depth)
                 next_stop_depth = target_depth
             elif self.current_depth < settings.LAST_STOP_DEPTH:
-                self.logger.debug("current_depth (%s) < LAST_STOP_DEPTH (%s)" %
-                                  (self.current_depth,
-                                   settings.LAST_STOP_DEPTH))
+                self.logger.debug("current_depth (%s) < LAST_STOP_DEPTH (%s)",
+                                  self.current_depth,
+                                  settings.LAST_STOP_DEPTH)
                 next_stop_depth = target_depth
             # !!! BEGIN FORCE COMMENT (SEE BELOW)
-            #elif next_stop_depth < settings.LAST_STOP_DEPTH:
+            # elif next_stop_depth < settings.LAST_STOP_DEPTH:
             #  self.logger.debug("next_stop_depth (%s) < "
             #                    "settings.LAST_STOP_DEPTH (%s)" %
             #                    (next_stop_depth, settings.LAST_STOP_DEPTH))
             #  next_stop_depth = settings.LAST_STOP_DEPTH
             # !!! END FORCE COMMENT
-            #TODO: j'ai commenté les lignes ci-dessus pour éviter
-            #      une boucle infinie commprendre pourquoi elles existent...
+            # TODO: j'ai commenté les lignes ci-dessus pour éviter
+            #       une boucle infinie: commprendre pourquoi...
 
             if self.model.gradient.gf_set:  # update gf for next stop
                 self.model.gradient.set_gf_at_depth(next_stop_depth)
@@ -1060,8 +903,8 @@ class Dive(object):
         # are we still in ascent segment ?
         if in_ascent_cycle:
             self.logger.debug("Add AscDesc(3): start_depth:%s, "
-                              "current_depth:%s" %
-                              (start_depth, self.current_depth))
+                              "current_depth:%s",
+                              start_depth, self.current_depth)
             self.output_segments.append(
                 SegmentAscDesc(start_depth,
                                self.current_depth,
@@ -1070,36 +913,33 @@ class Dive(object):
                                self.pp_o2))
 
     def do_gas_calcs(self):
-        """Estimate gas consumption for all output segments
+        """Estimate gas consumption for all output segments.
+
         and set this into the respective gas objects
 
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <Exceptions from tank>
-
+        :raises InvalidGas: <Exceptions from tank>
+        :raises InvalidTank: <Exceptions from tank>
+        :raises InvalidMod: <Exceptions from tank>
+        :raises EmptyTank: <Exceptions from tank>
         """
         for seg in self.output_segments:
-            seg.tank.consume_gas(seg.gas_used())
+            seg.tank.consume_gas(seg.gas_used)
 
     def set_deco_gas(self, depth):
-        """Select appropriate deco gas for the depth specified
+        """Select appropriate deco gas for the depth specified.
+
         Returns true if a gas switch occured
 
-        *Keyword Arguments:*
-            :depth: (float) -- target depth to make the choice
+        :param float depth: target depth to make the choice
 
-        *Returns:*
-            True -- if gas swich occured
-            False -- if no gas switch occured
+        :returns: True -- if gas swich occured
+                  False -- if no gas switch occured
+        :rtype: bool
 
-        *Raise:*
-            <Exceptions from tank>
-
+        :raises InvalidGas: <Exceptions from tank>
+        :raises InvalidTank: <Exceptions from tank>
+        :raises InvalidMod: <Exceptions from tank>
+        :raises EmptyTank: <Exceptions from tank>
         """
         gas_switch = False
 
@@ -1115,9 +955,9 @@ class Dive(object):
         # check and switch deco gases
         current_tank_sav = self.current_tank
         for temp_tank in self.tanks:
-            if temp_tank.get_mod() >= depth and \
-                    temp_tank.get_min_od() < depth:  # authorised tank
-                                                     # at this depth
+            if (temp_tank.get_mod() >= depth and
+                    temp_tank.get_min_od() < depth):
+                # authorised tank  at this depth
                 if temp_tank < current_tank_sav:
                     if self.is_closed_circuit:
                         # only change from CC to OC when a valid tank
@@ -1128,11 +968,11 @@ class Dive(object):
                     self.current_tank = temp_tank
                     gas_switch = True
                     self.logger.info("Changing gas from %s (mod:%s)"
-                                     "to %s (mod:%s)" %
-                                     (current_tank_sav,
-                                      current_tank_sav.get_mod(),
-                                      self.current_tank,
-                                      self.current_tank.get_mod()))
-            #else:
-            #  break
+                                     "to %s (mod:%s)",
+                                     current_tank_sav,
+                                     current_tank_sav.get_mod(),
+                                     self.current_tank,
+                                     self.current_tank.get_mod())
+            # else:
+            #   break
         return gas_switch

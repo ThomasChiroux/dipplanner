@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,8 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""main dipplanner module for command line usage.
+"""Main dipplanner module for command line usage.
 
 This module is used by the only "executable" of the project:
 bin/dipplanner (which is an empty shell)
@@ -27,11 +24,6 @@ bin/dipplanner (which is an empty shell)
 runs in command line and output resulting dive profile
 also initiate log files
 """
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
-
 import sys
 import logging
 
@@ -47,19 +39,9 @@ LOGGER = logging.getLogger("dipplanner")
 
 
 def activate_debug():
-    """setup the default debug parameters
+    """Setup the default debug parameters.
 
     it's mainly used for test cases who needs also logging to be set
-
-    *Keyword Arguments:*
-        <none>
-
-    *Return:*
-        <nothing>
-
-    *Raise:*
-        <nothing>
-
     """
     LOGGER.setLevel(logging.DEBUG)
     # create file handler which logs even debug messages
@@ -79,18 +61,9 @@ def activate_debug():
 
 
 def activate_debug_for_tests():
-    """setup the default debug parameters
+    """Setup the default debug parameters.
 
     it's mainly used for test cases who needs also logging to be set
-
-    *Keyword Arguments:*
-        <none>
-
-    *Return:*
-        <nothing>
-
-    *Raise:*
-        <nothing>
     """
     LOGGER.setLevel(logging.CRITICAL)
     stream_handler = logging.StreamHandler()
@@ -102,22 +75,15 @@ def activate_debug_for_tests():
 
 
 def main(cli_arguments=sys.argv):
-    """main
+    """Main entry point.
 
     main uses the parameters, tanks and dives given in config file(s)
     and/or command line, calculates the dives and return the output in stdout.
 
-    *Keyword Arguments:*
-        arguments (list of string) -- list of arguments, like sys.argv
-
-    *Return:*
-        <nothing>
-
-    *Raise:*
-        <nothing>
+    :param list cli_arguments: list of arguments, like sys.argv
     """
-    if sys.version_info < (2, 7):
-        raise SystemExit("ERROR: This programm needs python 2.7 or greater")
+    if sys.version_info < (3, 4):
+        raise SystemExit("ERROR: This programm needs python 3.4 or greater")
 
     activate_debug()
 

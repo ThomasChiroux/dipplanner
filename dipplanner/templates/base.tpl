@@ -20,12 +20,12 @@ Configuration : GF:{{ settings.GF_LOW*100 }}-{{ settings.GF_HIGH*100 }}
   {%- for segment in dive.output_segments %}
     {{ "%8s"|format(segment.type|upper) -}}:
     {{- " at %3d"|format(segment.depth|int) -}}m for
-    {{- segment.get_time_str() }} [RT:{{ segment.get_run_time_str() -}}], on
+    {{- segment.segment_time_str }} [RT:{{ segment.run_time_str -}}], on
     {{- " %12s"|format(segment.tank|string) }}, SP:{{ segment.setpoint -}},
-    {%- if segment.get_end() > settings.DEFAULT_MAX_END -%}
-      {{-color(" END:%im"|format(segment.get_end()), "red") -}}
+    {%- if segment.end > settings.DEFAULT_MAX_END -%}
+      {{-color(" END:%im"|format(segment.end), "red") -}}
     {%- else -%}
-      {{- " END:%im"|format(segment.get_end()) -}}
+      {{- " END:%im"|format(segment.end) -}}
     {%- endif -%}
   {%- endfor -%}
 

@@ -17,7 +17,6 @@
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
 """Use config parser to parse config files."""
-
 import sys
 import logging
 from collections import OrderedDict
@@ -30,9 +29,6 @@ from dipplanner.segment import SegmentDive
 from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import safe_eval_calculator
 
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
 
 LOGGER = logging.getLogger("dipplanner")
 
@@ -56,11 +52,9 @@ class DipplannerConfigFiles():
     """
 
     def __init__(self, filenames):
-        """Constructor for DipplannerCliArguments object.
+        """Init of DipplannerCliArguments object.
 
-        *Keyword Arguments:*
-            filenames -- list of filenames to be parsed
-
+        :param list filenames: list of filenames to be parsed
         """
         self.config = None
         self.dives = None
@@ -77,11 +71,11 @@ class DipplannerConfigFiles():
 
             if len(missing) > 0:
                 if len(missing) == 1:
-                    LOGGER.warning("Config file : %s not found, skip it"
-                                   % list(missing)[0])
+                    LOGGER.warning("Config file : %s not found, skip it",
+                                   list(missing)[0])
                 else:
-                    LOGGER.warning("Config files : %s not found, skip them"
-                                   % ', '.join(str(n) for n in list(missing)))
+                    LOGGER.warning("Config files : %s not found, skip them",
+                                   ', '.join(str(n) for n in list(missing)))
 
         if self.config is not None:
             # note: advanced MUST be run before general because of
@@ -92,17 +86,7 @@ class DipplannerConfigFiles():
             self.check_configs_dives_section()
 
     def check_configs_general_section(self):
-        """Check configs and change default settings values.
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            Nothing, but can exit
-        """
+        """Check configs and change default settings values."""
         config = self.config
         if config.has_section('general'):
             section = 'general'
@@ -128,17 +112,16 @@ class DipplannerConfigFiles():
                     settings.WATER_DENSITY = settings.FRESH_WATER_DENSITY
 
             if config.has_option(section, 'altitude'):
-                settings.AMBIANT_PRESSURE_SURFACE =\
-                altitude_to_pressure(float(config.get(section,
-                    'altitude')))
+                settings.AMBIANT_PRESSURE_SURFACE = altitude_to_pressure(
+                    float(config.get(section, 'altitude')))
 
             if config.has_option(section, 'dive_consumption_rate'):
-                settings.DIVE_CONSUMPTION_RATE =\
-                float(config.get(section, 'dive_consumption_rate')) / 60
+                settings.DIVE_CONSUMPTION_RATE = float(
+                    config.get(section, 'dive_consumption_rate')) / 60
 
             if config.has_option(section, 'deco_consumption_rate'):
-                settings.DECO_CONSUMPTION_RATE =\
-                float(config.get(section, 'deco_consumption_rate')) / 60
+                settings.DECO_CONSUMPTION_RATE = float(
+                    config.get(section, 'deco_consumption_rate')) / 60
 
             if config.has_option(section, 'descent_rate'):
                 settings.DESCENT_RATE = float(
@@ -170,23 +153,11 @@ class DipplannerConfigFiles():
                                                              'multilevel_mode')
 
             if config.has_option(section, 'automatic_tank_refill'):
-                settings.AUTOMATIC_TANK_REFILL = \
-                    config.getboolean(section,
-                                      'automatic_tank_refill')
-
+                settings.AUTOMATIC_TANK_REFILL = config.getboolean(
+                    section, 'automatic_tank_refill')
 
     def check_configs_advanced_section(self):
-        """check configs and change default settings values
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            Nothing, but can exit
-        """
+        """Check configs and change default settings values."""
         # now try to find each parameter and set the new setting
         config = self.config
         if config.has_section('advanced'):
@@ -253,38 +224,16 @@ class DipplannerConfigFiles():
                 settings.FLIGHT_ALTITUDE = float(
                     config.get(section, 'flight_altitude'))
 
-
     def check_configs_output_section(self):
-        """Check configs and change default settings values.
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            Nothing, but can exit
-        """
+        """Check configs and change default settings values."""
         config = self.config
         if config.has_section('output'):
             section = 'output'
             if config.has_option(section, 'template'):
                 settings.TEMPLATE = config.get(section, 'template')
 
-
     def check_configs_dives_section(self):
-        """check configs and change default settings values
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            Nothing, but can exit
-        """
+        """Check configs and change default settings values."""
         config = self.config
         # dives = { 'dive1': { 'tanks': {},
         #                     'segments': {},

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,15 +16,11 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""Global settings for dipplannerand their default values
+"""Global settings for dipplannerand their default values.
 
 All the settings can be changed by :ref:`dipplanner_cmdline`
 and/or :ref:`dipplanner_configfile`
 """
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
 
 # ======= "Internal" Settings ========
 # software version, populated automatically

@@ -28,14 +28,14 @@
     <tr>
     <td>{{ "%8s"|format(segment.type|upper) }}</td>
     <td>{{ " at %3d"|format(segment.depth|int) }}m</td>
-    <td>for {{ segment.get_time_str() }}</td>
-    <td>[RT:{{ segment.get_run_time_str() }}]</td>
+    <td>for {{ segment.segment_time_str }}</td>
+    <td>[RT:{{ segment.run_time_str }}]</td>
     <td>on {{ " %12s"|format(segment.tank|string) }}</td>
     <td>SP:{{ segment.setpoint }}</td>
-    {% if segment.get_end() > settings.DEFAULT_MAX_END %}
-      <td>{{color(" END:%im"|format(segment.get_end()), "red") }}</td>
+    {% if segment.end > settings.DEFAULT_MAX_END %}
+      <td>{{color(" END:%im"|format(segment.end), "red") }}</td>
     {% else %}
-      <td>{{ " END:%im"|format(segment.get_end()) }}</td>
+      <td>{{ " END:%im"|format(segment.end) }}</td>
     {% endif %}
     </tr>
   {% endfor %}

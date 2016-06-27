@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,14 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""uses argparse to parse Command Line Arguments
-"""
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
-
+"""Use argparse to parse Command Line Arguments."""
 import argparse
 from collections import OrderedDict
 
@@ -38,9 +29,8 @@ from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import safe_eval_calculator
 
 
-class DipplannerCliArguments(object):
-    """This class contains all methods and elements to parse the cli
-    arguments and launch dipplanner
+class DipplannerCliArguments():
+    """Parse the cli arguments and launch dipplanner.
 
     Attributes:
 
@@ -59,11 +49,10 @@ class DipplannerCliArguments(object):
     """
 
     def __init__(self, cli_arguments):
-        """Constructor for DipplannerCliArguments object
+        """init of DipplannerCliArguments object.
 
-        *Keyword Arguments:*
-            cli_arguments (list of string) -- list of arguments, like sys.argv
-
+        :param list cli_arguments: list of arguments, like sys.argv
+                                   (list of str)
         """
         description = """%(prog)s calculates and output dive profile
       Thomas Chiroux, 2011-2012 - see http://dipplanner.org
@@ -73,7 +62,7 @@ class DipplannerCliArguments(object):
 
         self.parser = argparse.ArgumentParser(
             description=description,
-            #usage=usage,
+            # usage=usage,
             epilog=epilog,
             formatter_class=argparse.RawTextHelpFormatter)
 
@@ -95,17 +84,7 @@ class DipplannerCliArguments(object):
         self.check_arguments(args)
 
     def mandatory_arguments(self):
-        """Mandatory options
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
-        """
+        """Mandatory options."""
         group1 = self.parser.add_argument_group(
             "Mandatory Options",
             """Either presence of tank and segment inside a config file or
@@ -149,17 +128,7 @@ class DipplannerCliArguments(object):
             help="""Optional Surface Interval in seconds""")
 
     def dive_params_arguments(self):
-        """Dive parameters
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
-        """
+        """Dive parameters."""
         group2 = self.parser.add_argument_group("Dive Parameters")
         group2.add_argument(
             "--model", metavar="VAL", type=str,
@@ -226,19 +195,8 @@ class DipplannerCliArguments(object):
                             action="store_true",
                             help="Do not refill tanks between dives")
 
-
     def adv_params_arguments(self):
-        """Advanced parameters
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
-        """
+        """Advanced parameters."""
         group3 = self.parser.add_argument_group("Advanced Parameters")
         group3.add_argument(
             "--depthcalcmethod", metavar="simple|complex",
@@ -264,17 +222,7 @@ class DipplannerCliArguments(object):
             help="""Change ambiant pressure at sea level (in bar)""")
 
     def output_params_arguments(self):
-        """Output parameters
-
-        *Keyword Arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
-        """
+        """Output parameters."""
         group4 = self.parser.add_argument_group("Output Parameters")
         group4.add_argument(
             "--template", metavar="TEMPLATE",
@@ -283,19 +231,9 @@ class DipplannerCliArguments(object):
       The template file should be present in ./templates""")
 
     def check_arguments(self, args):
-        """parse all command lines options
+        """Parse all command lines options.
 
         could also exit from program because of wrong arguments
-
-        *Keyword Arguments:*
-            args -- parsed arguments object
-
-        *Returns:*
-            <nothing>
-
-
-        *Raise:*
-            Nothing, but can exit
         """
         parsed_config_files = DipplannerConfigFiles(args.config_files)
         dives = parsed_config_files.dives
@@ -305,19 +243,19 @@ class DipplannerCliArguments(object):
 
         if args.gflow:
             try:
-                settings.GF_LOW = \
-                    float(safe_eval_calculator(args.gflow.strip('%'))) / 100
+                settings.GF_LOW = float(
+                    safe_eval_calculator(args.gflow.strip('%'))) / 100
             except ValueError:
-                self.parser.error("Error while parsing option gflow : %s"
-                                  % args.gflow)
+                self.parser.error("Error while parsing option gflow : %s" %
+                                  args.gflow)
 
         if args.gfhigh:
             try:
-                settings.GF_HIGH = \
-                    float(safe_eval_calculator(args.gfhigh.strip('%'))) / 100
+                settings.GF_HIGH = float(
+                    safe_eval_calculator(args.gfhigh.strip('%'))) / 100
             except ValueError:
-                self.parser.error("Error while parsing option gfhigh: %s"
-                                  % args.gfhigh)
+                self.parser.error("Error while parsing option gfhigh: %s" %
+                                  args.gfhigh)
 
         if args.water:
             if args.water.lower() == "sea":
@@ -326,44 +264,40 @@ class DipplannerCliArguments(object):
                 settings.WATER_DENSITY = settings.FRESH_WATER_DENSITY
 
         if args.altitude:
-            settings.AMBIANT_PRESSURE_SURFACE = \
-                altitude_to_pressure(args.altitude)
+            settings.AMBIANT_PRESSURE_SURFACE = altitude_to_pressure(
+                args.altitude)
 
         if args.diveconsrate:
             try:
-                settings.DIVE_CONSUMPTION_RATE = \
-                    float(safe_eval_calculator(args.diveconsrate)) / 60
+                settings.DIVE_CONSUMPTION_RATE = float(
+                    safe_eval_calculator(args.diveconsrate)) / 60
             except ValueError:
                 self.parser.error("Error while parsing option "
-                                  "diveconsrate : %s"
-                                  % args.diveconsrate)
+                                  "diveconsrate : %s" % args.diveconsrate)
 
         if args.decoconsrate:
             try:
-                settings.DECO_CONSUMPTION_RATE = \
-                    float(safe_eval_calculator(args.decoconsrate)) / 60
+                settings.DECO_CONSUMPTION_RATE = float(
+                    safe_eval_calculator(args.decoconsrate)) / 60
             except ValueError:
                 self.parser.error("Error while parsing option "
-                                  "decoconsrate : %s"
-                                  % args.decoconsrate)
+                                  "decoconsrate : %s" % args.decoconsrate)
 
         if args.descentrate:
             try:
-                settings.DESCENT_RATE = \
-                    float(safe_eval_calculator(args.descentrate)) / 60
+                settings.DESCENT_RATE = float(
+                    safe_eval_calculator(args.descentrate)) / 60
             except ValueError:
                 self.parser.error("Error while parsing option "
-                                  "descentrate : %s"
-                                  % args.descentrate)
+                                  "descentrate : %s" % args.descentrate)
 
         if args.ascentrate:
             try:
-                settings.ASCENT_RATE = \
-                    float(safe_eval_calculator(args.ascentrate)) / 60
+                settings.ASCENT_RATE = float(
+                    safe_eval_calculator(args.ascentrate)) / 60
             except ValueError:
                 self.parser.error("Error while parsing option "
-                                  "ascentrate : %s"
-                                  % args.ascentrate)
+                                  "ascentrate : %s" % args.ascentrate)
 
         if args.model:
             settings.DECO_MODEL = args.model
@@ -383,11 +317,10 @@ class DipplannerCliArguments(object):
         if args.forcesegmenttime:
             settings.RUN_TIME = False
 
-        if args.depthcalcmethod == 'simple' or \
-                args.depthcalcmethod == 'complex':
+        if args.depthcalcmethod in ('simple', 'complex'):
             settings.METHOD_FOR_DEPTH_CALCULATION = args.depthcalcmethod
 
-        if args.travelswitch == 'late' or args.travelswitch == 'early':
+        if args.travelswitch in ('late', 'early'):
             settings.TRAVEL_SWITCH = args.travelswitch
 
         if args.surfacetemp is not None:
@@ -426,7 +359,7 @@ class DipplannerCliArguments(object):
         if tanks == {}:
             # no tank provided, try to get the previous tanks
             try:
-                tanks = dives[dives.items()[-1][0]]['tanks']
+                tanks = dives[list(dives.items())[-1][0]]['tanks']
             except (KeyError, IndexError):
                 self.parser.error("Error : no tank provided for this dive !")
 
@@ -452,7 +385,7 @@ class DipplannerCliArguments(object):
                     pass
                 num_seg += 1
             segments = OrderedDict(sorted(segments.items(),
-                                   key=lambda t: t[0]))
+                                          key=lambda t: t[0]))
             if args.surfaceinterval:
                 dives['diveCLI'] = {'tanks': tanks,
                                     'segments': segments,

@@ -66,10 +66,10 @@ class TestTankisAir(TestTank):
                                % self.mytank.get_end_for_given_depth(40))
 
     def test_tank_info(self):
-        self.assertEqual(self.mytank.get_tank_info(),
+        self.assertEqual(self.mytank.tank_info,
                          '12.0l-100.0% (2423.10/2423.10l)',
                          "Wrong Tank infos: %s"
-                         % self.mytank.get_tank_info())
+                         % self.mytank.tank_info)
 
 
 class TestTankNitrox32(TestTank):

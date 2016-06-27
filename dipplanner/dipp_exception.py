@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011-2012 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,59 +16,41 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""Base Class for exceptions for dipplanner module
-"""
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
+"""Base Class for exceptions for dipplanner module."""
 
 import logging
 
 
 class DipplannerException(Exception):
-    """Base exception class for dipplanner
-    """
+    """Base exception class for dipplanner."""
+
     def __init__(self, description):
-        """DipplannerException constructor
+        """Init of DipplannerException.
 
-        *Keyword Arguments:*
-            :description: (str) -- text describing the error
-
-        *Return:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
+        :param str description: text describing the error
         """
         Exception.__init__(self)
-        self.logger = logging.getLogger("dipplanner.DipplannerException")
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.description = description
 
     def __str__(self):
-        """String representing the object
+        """String representing the object.
 
-        *Keyword Arguments:*
-            <none>
-
-        *Return:*
-            str -- a string describing the Exception
-
-        *Raise:*
-            <nothing>
+        :returns: a string describing the Exception
+        :rtype: str
         """
         return ''.join(self.description)
 
-    def __unicode__(self):
-        """unicode string representing the object
+    # def __unicode__(self):
+    #     """unicode string representing the object
 
-        *Keyword Arguments:*
-            <none>
+    #     *Keyword Arguments:*
+    #         <none>
 
-        *Return:*
-            ustr -- a unicode string describing the Exception
+    #     *Return:*
+    #         ustr -- a unicode string describing the Exception
 
-        *Raise:*
-            <nothing>
-        """
-        return u''.join(self.description)
+    #     *Raise:*
+    #         <nothing>
+    #     """
+    #     return u''.join(self.description)

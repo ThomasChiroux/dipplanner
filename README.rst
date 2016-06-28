@@ -111,6 +111,8 @@ It is recommended (but optional) to setup a virtualvenv before running or instal
 In this way, you will not break or change your real environment.
 So after getting the source, go in the dipplanner directory:
 
+dipplanner needs at least python 3.4 to work.
+
 ::
 
    cd dipplanner

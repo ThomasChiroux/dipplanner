@@ -11,6 +11,12 @@ v0.3 (ongoing)
 
     See GitHub Issues for more infos.
 
+Python
+******
+
+* dipplanner is now (only) python 3.4+ compatible
+  now old python 2.7 compatible version is frozen in py2.7 branch.
+
 New features
 ************
 

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
-# Copyright 2011 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,14 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-"""
-Test for main: arguments in command line and config files
-"""
-
-__authors__ = [
-    # alphabetical order by last name
-    'Thomas Chiroux', ]
-
+"""Test for main: arguments in command line and config files."""
 import unittest
 # import here the module / classes to be tested
 from dipplanner import settings

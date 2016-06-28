@@ -1,8 +1,5 @@
-#!/usr/bin/python2
-# -*- coding: utf-8 -*-
-
 #
-# Copyright 2011 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -19,13 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""
-Test for tools
-"""
-
-__authors__ = ['Thomas Chiroux']  # alphabetical order by last name
-
+"""Test for tools."""
 import unittest
 
 # import here the module / classes to be tested
@@ -46,6 +37,7 @@ from dipplanner.tools import convert_meter_to_feet
 from dipplanner.tools import convert_psi_to_bar
 from dipplanner.tools import safe_eval_calculator
 
+
 class TestTools(unittest.TestCase):
 
     def setUp(self):
@@ -53,6 +45,7 @@ class TestTools(unittest.TestCase):
         # temporary hack (tests):
 
         activate_debug_for_tests()
+
 
 class SafeEvalTools(TestTools):
 
@@ -117,6 +110,7 @@ class SafeEvalTools(TestTools):
         else:
             self.fail('should raise SyntaxError')
 
+
 class TimeTools(TestTools):
 
     def setUp(self):
@@ -177,6 +171,7 @@ class TimeTools(TestTools):
             pass
         else:
             self.fail('should raise ValueError')
+
 
 class TestAltOrDepthToAbsPressure0m(TestTools):
 

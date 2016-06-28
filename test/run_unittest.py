@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # This script is based on the one found at http://vim.wikia.com/wiki/VimTip280
 # but has been generalised. It searches the current working directory for
@@ -11,7 +10,6 @@
 #
 # Place this file somewhere where it can be run, such
 # as ${HOME}/bin/alltests.py
-
 import unittest
 import sys
 import os

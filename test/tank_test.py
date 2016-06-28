@@ -1,8 +1,5 @@
-#!/usr/bin/python2
-# -*- coding: utf-8 -*-
-
 #
-# Copyright 2011 Thomas Chiroux
+# Copyright 2011-2016 Thomas Chiroux
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -19,13 +16,7 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""
-Test for tank class
-"""
-
-__authors__ = ['Thomas Chiroux']  # alphabetical order by last name
-
+"""Test for tank class."""
 import unittest
 
 # local imports

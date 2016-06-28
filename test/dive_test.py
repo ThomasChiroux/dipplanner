@@ -1,6 +1,3 @@
-#!/usr/bin/python2
-# -*- coding: utf-8 -*-
-
 #
 # Copyright 2011 Thomas Chiroux
 #
@@ -19,14 +16,10 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
-
-"""Test for Dive class
+"""Test for Dive class.
 
 TODO: more test profiles
 """
-
-__authors__ = ['Thomas Chiroux']  # alphabetical order by last name
-
 import unittest
 
 # import here the module / classes to be tested

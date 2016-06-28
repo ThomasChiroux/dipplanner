@@ -108,21 +108,6 @@ class Segment():
         """
         return self.__repr__()
 
-    # def __unicode__(self):
-    #     """Return a human readable name of the segment in unicode
-
-    #     *Keyword arguments:*
-    #         <none>
-
-    #     *Returns:*
-    #         str -- representation of the segment in the form:
-    #         (see __repr__)
-
-    #     *Raise:*
-    #         <nothing>
-    #     """
-    #     return u"%s" % self.__repr__()
-
     def check(self):
         """Check if it's a valid segment.
 

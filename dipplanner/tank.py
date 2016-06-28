@@ -368,23 +368,6 @@ class Tank():
         """
         return "%s" % self.name
 
-    # def __unicode__(self):
-    #     """Return a human readable name of the tank in unicode.
-
-    #     *Keyword arguments:*
-    #         <none>
-
-    #     *Returns:*
-    #         str -- name of the tank in the form:
-    #                "Air"
-    #                "Nitrox 80"
-    #                ...
-
-    #     *Raise:*
-    #         <nothing>
-    #     """
-    #     return u"%s" % self.name
-
     def __lt__(self, othertank):
         """Compare a tank to another tank, based on MOD.
 

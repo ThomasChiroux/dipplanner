@@ -22,8 +22,8 @@ import math
 import logging
 
 
-class OxTox(object):
-    """Defines a Oxygen Toxicity model
+class OxTox():
+    """Define a Oxygen Toxicity model.
 
     *Attributes:*
         * cns (float) -- central nervous system toxicity
@@ -31,22 +31,11 @@ class OxTox(object):
           (see http://en.wikipedia.org/wiki/Oxygen_toxicity#Signs_and_symptoms)
         * otu (float- -- Oxygen toxicity Units
         * max_ox (float) -- maximum ppo2
-
     """
 
     def __init__(self):
-        """Constructor for OxTox class
-
-        *Keyword arguments:*
-            <none>
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
-        """
-        #initiate class logger
+        """Init of OxTox class."""
+        # initiate class logger
         self.logger = logging.getLogger(
             "dipplanner.model.buhlmann.oxygen_toxicity.OxTox")
         self.logger.debug("creating an instance of Oxtox")
@@ -56,18 +45,14 @@ class OxTox(object):
         self.max_ox = 0.0
 
     def __deepcopy__(self, memo):
-        """deepcopy method will be called by copy.deepcopy
+        """Deepcopy method will be called by copy.deepcopy.
 
         Used for "cloning" the object into another new object.
 
-        *Keyword Arguments:*
-            :memo: -- not used here
+        :param memo: not used here
 
-        *Returns:*
-            Gradient -- Gradient object copy of itself
-
-        *Raise:*
-            <nothing>
+        :returns: Compartment object copy of itself
+        :rtype: :class:`Model`
         """
         newobj = OxTox()
         newobj.cns = self.cns
@@ -76,7 +61,7 @@ class OxTox(object):
         return newobj
 
     def add_o2(self, time, pp_o2):
-        """Adds oxygen load into model.
+        """Add oxygen load into model.
 
         Uses NOAA lookup table to add percentage based on time and ppO2.
         Calculate OTU using formula OTU= T * (0.5/(pO2-0.5))^-(5/6)
@@ -84,15 +69,8 @@ class OxTox(object):
         this OTU formula need T (time) in minutes, so we need to convert the
         time in second to minutes while using this formula
 
-        *Keyword arguments:*
-            :pp_o2: (float) -- partial pressure of oxygen
-            :time: (float) -- time of segment (in seconds)
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
+        :param float pp_o2: partial pressure of oxygen
+        :param float time: time of segment (in seconds)
         """
         if pp_o2 > 0.5:
             # only accumulate OTU for ppO2 > 0.5 atm
@@ -139,16 +117,9 @@ class OxTox(object):
             self.max_ox = pp_o2
 
     def remove_o2(self, time):
-        """Removes oxygen load from model during surface intervals
+        """Remove oxygen load from model during surface intervals.
 
-        *Keyword arguments:*
-            :time: (float) -- time of segment (in seconds)
-
-        *Returns:*
-            <nothing>
-
-        *Raise:*
-            <nothing>
+        :param float time: time of segment (in seconds)
         """
         # very simple OTU recovery model: one day of no diving reset OTU
         if time >= 86400:

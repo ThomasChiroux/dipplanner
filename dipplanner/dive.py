@@ -232,21 +232,6 @@ class Dive():
         """
         return self.__repr__()
 
-    # def __unicode__(self):
-    #     """Return a human readable name of the segment in unicode
-
-    #     *Keyword Arguments:*
-    #         <none>
-
-    #     *Return:*
-    #         ustr -- an unicode string with the result of the calculation of
-    #                 the dives using the default template
-
-    #     *Raise:*
-    #         <nothing>
-    #     """
-    #     return u"%s" % self.__repr__()
-
     # def __cmp__(self, otherdive):
     #     """Compare a dive to another dive, based on run_time
 

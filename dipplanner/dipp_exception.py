@@ -29,7 +29,7 @@ class DipplannerException(Exception):
 
         :param str description: text describing the error
         """
-        Exception.__init__(self)
+        super().__init__()
         self.logger = logging.getLogger(self.__class__.__name__)
         self.description = description
 
@@ -40,17 +40,3 @@ class DipplannerException(Exception):
         :rtype: str
         """
         return ''.join(self.description)
-
-    # def __unicode__(self):
-    #     """unicode string representing the object
-
-    #     *Keyword Arguments:*
-    #         <none>
-
-    #     *Return:*
-    #         ustr -- a unicode string describing the Exception
-
-    #     *Raise:*
-    #         <nothing>
-    #     """
-    #     return u''.join(self.description)

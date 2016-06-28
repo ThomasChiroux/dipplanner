@@ -239,7 +239,7 @@ class DipplannerCliArguments():
         dives = parsed_config_files.dives
 
         if dives is None:
-            dives = {}
+            dives = OrderedDict()
 
         if args.gflow:
             try:
@@ -363,7 +363,7 @@ class DipplannerCliArguments():
             except (KeyError, IndexError):
                 self.parser.error("Error : no tank provided for this dive !")
 
-        segments = {}
+        segments = OrderedDict()
         if args.segments:
             num_seg = 1
             for seg in args.segments:
@@ -381,7 +381,7 @@ class DipplannerCliArguments():
                     self.parser.error(
                         "Error : tank name (%s) in not found in tank list !" %
                         tankname)
-                except:
+                except Exception:
                     pass
                 num_seg += 1
             segments = OrderedDict(sorted(segments.items(),

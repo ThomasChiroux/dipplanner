@@ -31,7 +31,8 @@ from dipplanner.tools import depth_to_pressure, pressure_to_depth
 class UnauthorizedMod(DipplannerException):
     """Raised when the MOD is not possible.
 
-    ...according to the depth(s) of the segment"""
+    ...according to the depth(s) of the segment
+    """
 
     def __init__(self, description):
         """Init of the Exception.

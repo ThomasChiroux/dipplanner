@@ -193,7 +193,7 @@ class Model():
             self.tissues[14].set_compartment_time_constants(
                 188.24, 498.0, 05.172, 0.9217, 02.523, 0.9602)
             self.tissues[15].set_compartment_time_constants(
-                240.03, 635.0, 00.119, 0.9267, 02.327, 0.9653)
+                240.03, 635.0, 05.119, 0.9267, 02.327, 0.9653)
         elif deco_model == "ZHL16b":
             self.logger.info("model used: Buhlmann ZHL16b")
             self.tissues[0].set_compartment_time_constants(

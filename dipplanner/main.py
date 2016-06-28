@@ -74,7 +74,7 @@ def activate_debug_for_tests():
     LOGGER.addHandler(stream_handler)
 
 
-def main(cli_arguments=sys.argv):
+def main(cli_arguments=None):
     """Main entry point.
 
     main uses the parameters, tanks and dives given in config file(s)
@@ -84,6 +84,9 @@ def main(cli_arguments=sys.argv):
     """
     if sys.version_info < (3, 4):
         raise SystemExit("ERROR: This programm needs python 3.4 or greater")
+
+    if cli_arguments is None:
+        cli_arguments = sys.argv
 
     activate_debug()
 
@@ -131,5 +134,7 @@ def main(cli_arguments=sys.argv):
     # now Prepare the output
     env = Environment(loader=PackageLoader('dipplanner', 'templates'))
     tpl = env.get_template(settings.TEMPLATE)
+    # pylint: disable=no-member
     text = tpl.render(settings=settings, dives=profiles)
+    # pylint: enable=no-member
     print(text)

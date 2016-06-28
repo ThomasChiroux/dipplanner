@@ -162,9 +162,10 @@ class Dive():
             self.is_repetitive_dive = False
             try:
                 self.model = BuhlmannModel()  # buhlman model by default
-            except Exception:
+            except Exception as exc:
                 self.dive_exceptions.append(
-                    InstanciationError("Unable to instanciate model"))
+                    InstanciationError(
+                        "Unable to instanciate model: %s" % exc))
             self.metadata = ""
         else:
             # repetative dive
@@ -172,9 +173,10 @@ class Dive():
             self.model = previous_profile.model
             try:
                 self.model.init_gradient()
-            except Exception:
+            except Exception as exc:
                 self.dive_exceptions.append(
-                    InstanciationError("Unable to reset model gradients"))
+                    InstanciationError(
+                        "Unable to reset model gradients: %s" % exc))
 
         # filter input segment for only enabled segments
         self.input_segments = []
@@ -182,9 +184,9 @@ class Dive():
             for segment in known_segments:
                 if segment.in_use:
                     self.input_segments.append(segment)
-        except:
+        except Exception as exc:
             self.dive_exceptions.append(
-                InstanciationError("Problem while adding segments"))
+                InstanciationError("Problem while adding segments: %s" % exc))
 
         # filter lists of gases to make the used list of gases
         self.tanks = []
@@ -192,9 +194,9 @@ class Dive():
             for tank in known_tanks:
                 if tank.in_use:
                     self.tanks.append(tank)
-        except:
+        except Exception as exc:
             self.dive_exceptions.append(
-                InstanciationError("Problem while adding tanks"))
+                InstanciationError("Problem while adding tanks: %s" % exc))
 
         # initalise output_segment list
         self.output_segments = []
@@ -261,8 +263,10 @@ class Dive():
             tpl = env.get_template(settings.TEMPLATE)
         else:
             tpl = env.get_template(template)
+        # pylint: disable=no-member
         text = tpl.render(settings=settings,
                           dives=[self, ])
+        # pylint: enable=no-member
         return text
 
     def do_surface_interval(self, time):
@@ -275,9 +279,9 @@ class Dive():
         try:
             self.model.const_depth(pressure=0.0, seg_time=time,
                                    f_he=0.0, f_n2=0.79, pp_o2=0.0)
-        except Exception:
+        except Exception as exc:
             self.dive_exceptions.append(
-                ModelException("Unable to do surface interval"))
+                ModelException("Unable to do surface interval: %s" % exc))
 
         self.surface_interval = time
 

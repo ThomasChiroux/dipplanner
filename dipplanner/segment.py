@@ -25,7 +25,7 @@ import logging
 from dipplanner import settings
 from dipplanner.dipp_exception import DipplannerException
 from dipplanner.tools import seconds_to_mmss
-from dipplanner.tools import depth_to_pressure, pressure_to_depth
+from dipplanner.tools import depth_to_pressure
 
 
 class UnauthorizedMod(DipplannerException):
@@ -194,8 +194,8 @@ class Segment():
         if method == 'simple':
             return float(self.depth) / 10 + settings.AMBIANT_PRESSURE_SURFACE
         elif method == 'complex':
-            return depth_to_pressure(self.depth) + \
-                settings.AMBIANT_PRESSURE_SURFACE
+            return (depth_to_pressure(self.depth) +
+                    settings.AMBIANT_PRESSURE_SURFACE)
         else:
             raise ValueError("invalid method of calculation")
 
@@ -203,64 +203,10 @@ class Segment():
     def end(self):
         """Calculate and returns E.N.D (Equivalent Narcosis Depth).
 
-        Instead of Mvplan, dipplanner uses a 'calculation method' based on
-        narcosis effet of all gas used, assuming there is no trace of
-        other gases (like argon) in the breathing gas, but compare the narcotic
-        effect with surface gas, wich is 'air' and contains
-        a small amount of argon
-
-
         :returns: Equivalent Narcosis Depth in meter
         :rtype: int
         """
-        # TODO: refactor with get_end_for_given_depth in Tank
-        p_absolute = self.get_p_absolute()
-        # calculate the reference narcotic effect of air
-        # Air consists of: Nitrogen N2: 78.08%,
-        #                  Oxygen O2: 20.95%,
-        #                  Argon Ar: 0.934%
-        reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * \
-            (settings.N2_NARCOTIC_VALUE * 0.7808 +
-             settings.O2_NARCOTIC_VALUE * 0.2095 +
-             settings.AR_NARCOTIC_VALUE * 0.00934)
-
-        if self.setpoint > 0:
-            # CCR mode
-            f_inert = self.tank.f_he + self.tank.f_n2
-            if f_inert > 0:
-                pp_inert = p_absolute - self.setpoint
-            else:
-                pp_inert = 0
-            if pp_inert > 0:
-                # sort of approximation here ?
-                # calculate here a narcotic index based on the proportion
-                # of innertgases in the dilluent tank
-                # should (perhaps) calculate based on proportion
-                # of innert gases inthe loop ?
-                ppn2_inspired = (pp_inert * self.tank.f_n2) / f_inert
-                pphe_inspired = (pp_inert * self.tank.f_he) / f_inert
-                narcotic_index = (ppn2_inspired * settings.N2_NARCOTIC_VALUE +
-                                  self.setpoint * settings.O2_NARCOTIC_VALUE +
-                                  pphe_inspired * settings.HE_NARCOTIC_VALUE)
-
-                self.logger.debug("pabs: %.3f, pp_inert: %.3f at %sm, "
-                                  "ppn2i:%s, pphei:%s, narco idx:%s",
-                                  p_absolute, pp_inert,
-                                  self.depth, ppn2_inspired,
-                                  pphe_inspired, narcotic_index)
-            else:
-                narcotic_index = 0
-        else:
-            # OC mode
-            narcotic_index = p_absolute * \
-                (self.tank.f_n2 * settings.N2_NARCOTIC_VALUE +
-                 self.tank.f_o2 * settings.O2_NARCOTIC_VALUE +
-                 self.tank.f_he * settings.HE_NARCOTIC_VALUE)
-        end = pressure_to_depth(narcotic_index / reference_narcotic -
-                                settings.AMBIANT_PRESSURE_SURFACE)
-        if end < 0:
-            end = 0
-        return end
+        return self.tank.get_end_for_given_depth(self.depth, self.setpoint)
 
     @property
     def gas_used(self):

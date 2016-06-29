@@ -22,9 +22,9 @@ from collections import OrderedDict
 
 # local imports
 from dipplanner.parse_config_files import DipplannerConfigFiles
+from dipplanner.segment import SegmentDive
 from dipplanner import settings
 from dipplanner.tank import Tank
-from dipplanner.segment import SegmentDive
 from dipplanner.tools import altitude_to_pressure
 from dipplanner.tools import safe_eval_calculator
 
@@ -381,8 +381,6 @@ class DipplannerCliArguments():
                     self.parser.error(
                         "Error : tank name (%s) in not found in tank list !" %
                         tankname)
-                except Exception:
-                    pass
                 num_seg += 1
             segments = OrderedDict(sorted(segments.items(),
                                           key=lambda t: t[0]))

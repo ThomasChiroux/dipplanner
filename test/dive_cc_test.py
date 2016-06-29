@@ -23,11 +23,8 @@ import unittest
 from dipplanner.main import activate_debug_for_tests
 
 from dipplanner.dive import Dive
-from dipplanner.dive import ProcessingError, NothingToProcess, InfiniteDeco
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
-from dipplanner.segment import SegmentDeco
-from dipplanner.segment import SegmentAscDesc
 from dipplanner.segment import UnauthorizedMod
 from dipplanner.tools import seconds_to_mmss
 from dipplanner import settings
@@ -358,18 +355,18 @@ class TestDiveCCAir20m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 22:43', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 23:43', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               26.8561831629, 7, 'bad dive OTU ? (%s)'
+                               26.989928776184342, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               9.66165846032, 7, 'bad dive CNS ? (%s)'
+                               9.709774174603176, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -397,18 +394,18 @@ class TestDiveCCAir20m30min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 32:43', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 33:43', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               40.092687746, 7, 'bad dive OTU ? (%s)'
+                               40.226433359261875, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               14.4235632222, 7, 'bad dive CNS ? (%s)'
+                               14.471678936507931, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -436,18 +433,18 @@ class TestDiveCCAir20m40min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 42:43', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 43:43', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               53.3291923291, 7, 'bad dive OTU ? (%s)'
+                               53.46293794233939, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               19.1854679841, 7, 'bad dive CNS ? (%s)'
+                               19.233583698412694, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -462,7 +459,7 @@ class TestDiveCCAir20m40min(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 180, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 120, 'Bad no flight time: %s'
                          % no_flight_time)
 
 
@@ -492,18 +489,18 @@ class TestDiveCCAir30m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 13:56', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 15:56', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               13.8022341567, 7, 'bad dive OTU ? (%s)'
+                               14.069725383247963, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               4.96542906349, 7, 'bad dive CNS ? (%s)'
+                               5.0616604920634956, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -531,18 +528,18 @@ class TestDiveCCAir30m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 24:56', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 27:45', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               28.7193606516, 7, 'bad dive OTU ? (%s)'
+                               28.87792824071702, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               10.3319467302, 7, 'bad dive CNS ? (%s)'
+                               10.388992285714304, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -557,7 +554,7 @@ class TestDiveCCAir30m20min(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 540, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 480, 'Bad no flight time: %s'
                          % no_flight_time)
 
 
@@ -570,18 +567,18 @@ class TestDiveCCAir30m30min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 38:10', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 41:53', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               46.5926398368, 7, 'bad dive OTU ? (%s)'
+                               46.752587993265855, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               16.7619564603, 7, 'bad dive CNS ? (%s)'
+                               16.819498682539365, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -609,18 +606,18 @@ class TestDiveCCAir30m40min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 52:17', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 56:01', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               65.2781721399, 7, 'bad dive OTU ? (%s)'
+                               65.46018113734856, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               23.4841786825, 7, 'bad dive CNS ? (%s)'
+                               23.549657412697815, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -635,7 +632,7 @@ class TestDiveCCAir30m40min(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 2040, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 1980, 'Bad no flight time: %s'
                          % no_flight_time)
 
 
@@ -665,18 +662,18 @@ class TestDiveCCAir40m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 16:32', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 20:15', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               16.1728109878, 7, 'bad dive OTU ? (%s)'
+                               16.33275914430105, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               5.81825701587, 7, 'bad dive CNS ? (%s)'
+                               5.875799238095263, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -704,18 +701,18 @@ class TestDiveCCAir40m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 33:00', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 38:32', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               38.682864775, 7, 'bad dive OTU ? (%s)'
+                               38.867634907293095, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               13.9163717143, 7, 'bad dive CNS ? (%s)'
+                               13.982843777777653, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -743,18 +740,18 @@ class TestDiveCCAir40m30min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 52:23', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 58:51', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               64.6965942787, 7, 'bad dive OTU ? (%s)'
+                               64.92686666037831, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               23.274952873, 7, 'bad dive CNS ? (%s)'
+                               23.35779461904639, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -819,18 +816,18 @@ class TestDiveCCHypo50m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 22:55', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 29:22', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               23.908170173, 5, 'bad dive OTU ? (%s)'
+                               24.11638171369745, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               8.60109469841, 5, 'bad dive CNS ? (%s)'
+                               8.675999936508044, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -860,18 +857,18 @@ class TestDiveCCHypo50m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 49:52', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 58:09', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               60.2944929314, 5, 'bad dive OTU ? (%s)'
+                               60.549587288921494, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               21.6912728889, 5, 'bad dive CNS ? (%s)'
+                               21.783044476189254, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -901,18 +898,18 @@ class TestDiveCCHypo50m30min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 80:55', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 89:14', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               101.393839662, 5, 'bad dive OTU ? (%s)'
+                               101.69305570131004, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               36.4769871746, 5, 'bad dive CNS ? (%s)'
+                               36.584631777774675, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -942,18 +939,18 @@ class TestDiveCCHypo50m40min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '113:14', \
+        assert seconds_to_mmss(self.profile1.run_time) == '122:29', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               144.52678176, 5, 'bad dive OTU ? (%s)'
+                               144.87150004849605, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               51.9942984921, 5, 'bad dive CNS ? (%s)'
+                               52.11831277777457, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1001,18 +998,18 @@ class TestDiveCCHypo60m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 29:50', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 38:07', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               31.9925048157, 5, 'bad dive OTU ? (%s)'
+                               32.24759917324864, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               11.5094782063, 5, 'bad dive CNS ? (%s)'
+                               11.601249793650988, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1042,18 +1039,18 @@ class TestDiveCCHypo60m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 65:57', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 76:06', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               80.5122901086, 5, 'bad dive OTU ? (%s)'
+                               80.85838896489913, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               28.9647357619, 5, 'bad dive CNS ? (%s)'
+                               29.089246714283455, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1083,18 +1080,18 @@ class TestDiveCCHypo60m30min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '107:43', \
+        assert seconds_to_mmss(self.profile1.run_time) == '118:48', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               136.153729037, 5, 'bad dive OTU ? (%s)'
+                               136.54533014309, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               48.9820470794, 5, 'bad dive CNS ? (%s)'
+                               49.12292771428083, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1142,18 +1139,18 @@ class TestDiveCCHypo70m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 37:16', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 48:19', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               41.1176969821, 5, 'bad dive OTU ? (%s)'
+                               41.46517640581184, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               14.7923158889, 5, 'bad dive CNS ? (%s)'
+                               14.917323507936386, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1183,18 +1180,18 @@ class TestDiveCCHypo70m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 84:36', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 97:31', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               104.484428249, 5, 'bad dive OTU ? (%s)'
+                               104.92291217147395, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               37.5888432857, 5, 'bad dive CNS ? (%s)'
+                               37.74659026983778, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1242,18 +1239,18 @@ class TestDiveCCHypo80m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 46:24', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 59:17', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               52.1361234741, 5, 'bad dive OTU ? (%s)'
+                               52.530485714612006, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               18.7562549524, 5, 'bad dive CNS ? (%s)'
+                               18.89812892063423, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1283,18 +1280,18 @@ class TestDiveCCHypo80m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '107:46', \
+        assert seconds_to_mmss(self.profile1.run_time) == '122:31', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               134.078082839, 5, 'bad dive OTU ? (%s)'
+                               134.56344957851755, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               48.2353220317, 5, 'bad dive CNS ? (%s)'
+                               48.40993536507436, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1311,7 +1308,7 @@ class TestDiveCCHypo80m20min(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 8700, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 8760, 'Bad no flight time: %s'
                          % no_flight_time)
 
 
@@ -1342,18 +1339,18 @@ class TestDiveCCHypo90m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 56:33', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 71:16', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               64.5002612654, 5, 'bad dive OTU ? (%s)'
+                               64.94150632269152, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               23.204321, 5, 'bad dive CNS ? (%s)'
+                               23.363061317458993, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1370,7 +1367,7 @@ class TestDiveCCHypo90m10min(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 3600, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 3660, 'Bad no flight time: %s'
                          % no_flight_time)
 
 
@@ -1383,18 +1380,18 @@ class TestDiveCCHypo90m20min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '132:07', \
+        assert seconds_to_mmss(self.profile1.run_time) == '149:42', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               165.595028592, 5, 'bad dive OTU ? (%s)'
+                               166.26102376133153, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               59.5737152698, 5, 'bad dive CNS ? (%s)'
+                               59.813310666666865, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1411,7 +1408,7 @@ class TestDiveCCHypo90m20min(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 11580, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 11640, 'Bad no flight time: %s'
                          % no_flight_time)
 
 
@@ -1442,18 +1439,18 @@ class TestDiveCCHypo100m10min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 68:28', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 85:04', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               79.2028481997, 5, 'bad dive OTU ? (%s)'
+                               79.75715859669238, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               28.4936568889, 5, 'bad dive CNS ? (%s)'
+                               28.693073079362996, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1483,18 +1480,18 @@ class TestDiveCCHypo100m15min(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '112:54', \
+        assert seconds_to_mmss(self.profile1.run_time) == '131:22', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               138.730993137, 5, 'bad dive OTU ? (%s)'
+                               139.3763080332561, 5, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               49.9092319048, 5, 'bad dive CNS ? (%s)'
+                               50.14138746031232, 5, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -1563,18 +1560,18 @@ class TestDiveMultilevel(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 61:41', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 66:19', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               75.4001720001, 7, 'bad dive OTU ? (%s)'
+                               75.58356156502136, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               27.125623373, 7, 'bad dive CNS ? (%s)'
+                               27.19159876983997, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):

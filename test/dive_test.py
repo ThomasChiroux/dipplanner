@@ -26,12 +26,8 @@ import unittest
 from dipplanner.main import activate_debug_for_tests
 
 from dipplanner.dive import Dive
-from dipplanner.dive import ProcessingError, NothingToProcess, InfiniteDeco
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
-from dipplanner.segment import SegmentDeco
-from dipplanner.segment import SegmentAscDesc
-from dipplanner.segment import UnauthorizedMod
 from dipplanner.tools import seconds_to_mmss
 from dipplanner import settings
 
@@ -71,69 +67,53 @@ class TestDiveNotEnoughGas1(TestDive):
 
 class TestDiveAirDiveOutput1(TestDive):
 
+    expected_result = [
+        " DESCENT: at  30m for   1:30 [RT:  1:30], on Air,  SP:0.0, END:29m",
+        "   CONST: at  30m for  28:30 [RT: 30:00], on Air,  SP:0.0, END:29m",
+        "  ASCENT: at  15m for   1:30 [RT: 31:30], on Air,  SP:0.0, END:14m",
+        "    DECO: at  15m for   0:01 [RT: 31:31], on Air,  SP:0.0, END:14m",
+        "  ASCENT: at  12m for   1:00 [RT: 32:31], on Air,  SP:0.0, END:11m",
+        "    DECO: at  12m for   0:20 [RT: 32:51], on Air,  SP:0.0, END:11m",
+        "  ASCENT: at   9m for   1:00 [RT: 33:51], on Air,  SP:0.0, END:8m",
+        "    DECO: at   9m for   2:39 [RT: 36:30], on Air,  SP:0.0, END:8m",
+        "  ASCENT: at   6m for   1:00 [RT: 37:30], on Air,  SP:0.0, END:5m",
+        "    DECO: at   6m for   4:59 [RT: 42:29], on Air,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 43:29], on Air,  SP:0.0, END:2m",
+        "    DECO: at   3m for   8:43 [RT: 52:12], on Air,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 53:12], on Air,  SP:0.0, END:0m", ]
+
     def setUp(self):
         TestDive.setUp(self)
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
         self.profile1 = Dive([diveseg1], [self.airtank])
         self.profile1.do_dive()
 
-    def test_segment1(self):
-        self.assertEqual(str(self.profile1.output_segments[0]),
-            ' DESCENT: at  30m for   1:30 [RT:  1:30], '
-            'on Air,  SP:0.0, END:29m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[0])
+    def test_segments(self):
+        for idx in range(len(self.expected_result)):
+            self.assertEqual(
+                str(self.profile1.output_segments[idx]),
+                self.expected_result[idx],
+                'bad segment n°%s (%s)' % (
+                    idx, self.profile1.output_segments[idx]))
 
-    def test_segment2(self):
-        self.assertEqual(str(self.profile1.output_segments[1]),
-            '   CONST: at  30m for  28:30 [RT: 30:00], '
-            'on Air,  SP:0.0, END:29m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[1])
-
-    def test_segment3(self):
-        self.assertEqual(str(self.profile1.output_segments[2]),
-            '  ASCENT: at  15m for   1:30 [RT: 31:30], '
-            'on Air,  SP:0.0, END:14m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[2])
-
-    def test_segment4(self):
-        self.assertEqual(str(self.profile1.output_segments[3]),
-            '    DECO: at  15m for   0:01 [RT: 31:31], '
-            'on Air,  SP:0.0, END:14m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[3])
-
-    def test_segment5(self):
-        self.assertEqual(str(self.profile1.output_segments[4]),
-            '    DECO: at  12m for   0:25 [RT: 31:56], '
-            'on Air,  SP:0.0, END:11m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[4])
-
-    def test_segment6(self):
-        self.assertEqual(str(self.profile1.output_segments[5]),
-            '    DECO: at   9m for   2:42 [RT: 34:38], '
-            'on Air,  SP:0.0, END:8m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[5])
-
-    def test_segment7(self):
-        self.assertEqual(str(self.profile1.output_segments[6]),
-            '    DECO: at   6m for   5:02 [RT: 39:40], '
-            'on Air,  SP:0.0, END:5m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[6])
-
-    def test_segment8(self):
-        self.assertEqual(str(self.profile1.output_segments[7]),
-            '    DECO: at   3m for   8:44 [RT: 48:24], '
-            'on Air,  SP:0.0, END:2m',
-            'bad segment (%s)'
-            % self.profile1.output_segments[7])
 
 class TestDiveAirDiveOutput_woExc(TestDive):
+
+    expected_result = [
+        " DESCENT: at  30m for   1:30 [RT:  1:30], on Air,  SP:0.0, END:29m",
+        "   CONST: at  30m for  28:30 [RT: 30:00], on Air,  SP:0.0, END:29m",
+        "  ASCENT: at  15m for   1:30 [RT: 31:30], on Air,  SP:0.0, END:14m",
+        "    DECO: at  15m for   0:01 [RT: 31:31], on Air,  SP:0.0, END:14m",
+        "  ASCENT: at  12m for   1:00 [RT: 32:31], on Air,  SP:0.0, END:11m",
+        "    DECO: at  12m for   0:20 [RT: 32:51], on Air,  SP:0.0, END:11m",
+        "  ASCENT: at   9m for   1:00 [RT: 33:51], on Air,  SP:0.0, END:8m",
+        "    DECO: at   9m for   2:39 [RT: 36:30], on Air,  SP:0.0, END:8m",
+        "  ASCENT: at   6m for   1:00 [RT: 37:30], on Air,  SP:0.0, END:5m",
+        "    DECO: at   6m for   4:59 [RT: 42:29], on Air,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 43:29], on Air,  SP:0.0, END:2m",
+        "    DECO: at   3m for   8:43 [RT: 52:12], on Air,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 53:12], on Air,  SP:0.0, END:0m", ]
+
 
     def setUp(self):
         TestDive.setUp(self)
@@ -141,61 +121,14 @@ class TestDiveAirDiveOutput_woExc(TestDive):
         self.profile1 = Dive([diveseg1], [self.airtank])
         self.profile1.do_dive_without_exceptions()
 
-    def test_segment1(self):
-        self.assertEqual(str(self.profile1.output_segments[0]),
-                         ' DESCENT: at  30m for   1:30 [RT:  1:30], '
-                         'on Air,  SP:0.0, END:29m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[0])
+    def test_segments(self):
+        for idx in range(len(self.expected_result)):
+            self.assertEqual(
+                str(self.profile1.output_segments[idx]),
+                self.expected_result[idx],
+                'bad segment n°%s (%s)' % (
+                    idx, self.profile1.output_segments[idx]))
 
-    def test_segment2(self):
-        self.assertEqual(str(self.profile1.output_segments[1]),
-                         '   CONST: at  30m for  28:30 [RT: 30:00], '
-                         'on Air,  SP:0.0, END:29m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[1])
-
-    def test_segment3(self):
-        self.assertEqual(str(self.profile1.output_segments[2]),
-                         '  ASCENT: at  15m for   1:30 [RT: 31:30], '
-                         'on Air,  SP:0.0, END:14m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[2])
-
-    def test_segment4(self):
-        self.assertEqual(str(self.profile1.output_segments[3]),
-                         '    DECO: at  15m for   0:01 [RT: 31:31], '
-                         'on Air,  SP:0.0, END:14m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[3])
-
-    def test_segment5(self):
-        self.assertEqual(str(self.profile1.output_segments[4]),
-                         '    DECO: at  12m for   0:25 [RT: 31:56], '
-                         'on Air,  SP:0.0, END:11m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[4])
-
-    def test_segment6(self):
-        self.assertEqual(str(self.profile1.output_segments[5]),
-                         '    DECO: at   9m for   2:42 [RT: 34:38], '
-                         'on Air,  SP:0.0, END:8m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[5])
-
-    def test_segment7(self):
-        self.assertEqual(str(self.profile1.output_segments[6]),
-                         '    DECO: at   6m for   5:02 [RT: 39:40], '
-                         'on Air,  SP:0.0, END:5m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[6])
-
-    def test_segment8(self):
-        self.assertEqual(str(self.profile1.output_segments[7]),
-                         '    DECO: at   3m for   8:44 [RT: 48:24], '
-                         'on Air,  SP:0.0, END:2m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[7])
 
 
 class TestDiveAirDiveRunTime1(TestDive):
@@ -205,11 +138,22 @@ class TestDiveAirDiveRunTime1(TestDive):
         self.profile1 = Dive([diveseg1], [self.airtank])
         self.profile1.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile1.run_time),
-                         ' 48:24', 'bad dive runtime ? (%s)'
+                         ' 53:12', 'bad dive runtime ? (%s)'
                          % seconds_to_mmss(self.profile1.run_time))
 
 
 class TestDiveAirDiveOutput2(TestDive):
+
+    expected_result = [
+        " DESCENT: at  20m for   1:00 [RT:  1:00], on Air,  SP:0.0, END:19m",
+        "   CONST: at  20m for  29:00 [RT: 30:00], on Air,  SP:0.0, END:19m",
+        "  ASCENT: at   9m for   1:06 [RT: 31:06], on Air,  SP:0.0, END:8m",
+        "    DECO: at   9m for   0:01 [RT: 31:07], on Air,  SP:0.0, END:8m",
+        "  ASCENT: at   6m for   1:00 [RT: 32:07], on Air,  SP:0.0, END:5m",
+        "    DECO: at   6m for   0:01 [RT: 32:08], on Air,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 33:08], on Air,  SP:0.0, END:2m",
+        "    DECO: at   3m for   0:50 [RT: 33:58], on Air,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 34:58], on Air,  SP:0.0, END:0m", ]
 
     def setUp(self):
         TestDive.setUp(self)
@@ -217,47 +161,13 @@ class TestDiveAirDiveOutput2(TestDive):
         self.profile2 = Dive([diveseg2], [self.airtank])
         self.profile2.do_dive()
 
-    def test_segment1(self):
-        self.assertEqual(str(self.profile2.output_segments[0]),
-                         ' DESCENT: at  20m for   1:00 [RT:  1:00], '
-                         'on Air,  SP:0.0, END:19m',
-                         'bad segment (%s)'
-                         % self.profile2.output_segments[0])
-
-    def test_segment2(self):
-        self.assertEqual(str(self.profile2.output_segments[1]),
-                         '   CONST: at  20m for  29:00 [RT: 30:00], '
-                         'on Air,  SP:0.0, END:19m',
-                         'bad segment (%s)'
-                         % self.profile2.output_segments[1])
-
-    def test_segment3(self):
-        self.assertEqual(str(self.profile2.output_segments[2]),
-                         '  ASCENT: at   9m for   1:06 [RT: 31:06], '
-                         'on Air,  SP:0.0, END:8m',
-                         'bad segment (%s)'
-                         % self.profile2.output_segments[2])
-
-    def test_segment4(self):
-        self.assertEqual(str(self.profile2.output_segments[3]),
-                         '    DECO: at   9m for   0:01 [RT: 31:07], '
-                         'on Air,  SP:0.0, END:8m',
-                         'bad segment (%s)'
-                         % self.profile2.output_segments[3])
-
-    def test_segment5(self):
-        self.assertEqual(str(self.profile2.output_segments[4]),
-                         '    DECO: at   6m for   0:01 [RT: 31:08], '
-                         'on Air,  SP:0.0, END:5m',
-                         'bad segment (%s)'
-                         % self.profile2.output_segments[4])
-
-    def test_segment6(self):
-        self.assertEqual(str(self.profile2.output_segments[5]),
-                         '    DECO: at   3m for   0:56 [RT: 32:04], '
-                         'on Air,  SP:0.0, END:2m',
-                         'bad segment (%s)'
-                         % self.profile2.output_segments[5])
+    def test_segments(self):
+        for idx in range(len(self.expected_result)):
+            self.assertEqual(
+                str(self.profile2.output_segments[idx]),
+                self.expected_result[idx],
+                'bad segment n°%s (%s)' % (
+                    idx, self.profile2.output_segments[idx]))
 
 
 class TestDiveAirDiveRunTime2(TestDive):
@@ -267,11 +177,36 @@ class TestDiveAirDiveRunTime2(TestDive):
         self.profile2 = Dive([diveseg2], [self.airtank])
         self.profile2.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile2.run_time),
-                         ' 32:04', 'bad dive runtime (%s)'
+                         ' 34:58', 'bad dive runtime (%s)'
                          % seconds_to_mmss(self.profile2.run_time))
 
 
 class TestDiveAirDiveOutput3(TestDive):
+
+    expected_result = [
+        " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:53m",
+        "   CONST: at  55m for  27:15 [RT: 30:00], on Air,  SP:0.0, END:53m",
+        "  ASCENT: at  30m for   2:30 [RT: 32:30], on Air,  SP:0.0, END:29m",
+        "    DECO: at  30m for   0:01 [RT: 32:31], on Air,  SP:0.0, END:29m",
+        "  ASCENT: at  27m for   1:00 [RT: 33:31], on Air,  SP:0.0, END:26m",
+        "    DECO: at  27m for   1:11 [RT: 34:42], on Air,  SP:0.0, END:26m",
+        "  ASCENT: at  24m for   1:00 [RT: 35:42], on Air,  SP:0.0, END:23m",
+        "    DECO: at  24m for   1:27 [RT: 37:09], on Air,  SP:0.0, END:23m",
+        "  ASCENT: at  21m for   1:00 [RT: 38:09], on Air,  SP:0.0, END:20m",
+        "    DECO: at  21m for   2:34 [RT: 40:43], on Air,  SP:0.0, END:20m",
+        "  ASCENT: at  18m for   1:00 [RT: 41:43], on Air,  SP:0.0, END:17m",
+        "    DECO: at  18m for   3:17 [RT: 45:00], on Air,  SP:0.0, END:17m",
+        "  ASCENT: at  15m for   1:00 [RT: 46:00], on Air,  SP:0.0, END:14m",
+        "    DECO: at  15m for   5:24 [RT: 51:24], on Air,  SP:0.0, END:14m",
+        "  ASCENT: at  12m for   1:00 [RT: 52:24], on Air,  SP:0.0, END:11m",
+        "    DECO: at  12m for   6:37 [RT: 59:01], on Air,  SP:0.0, END:11m",
+        "  ASCENT: at   9m for   1:00 [RT: 60:01], on Air,  SP:0.0, END:8m",
+        "    DECO: at   9m for  11:01 [RT: 71:02], on Air,  SP:0.0, END:8m",
+        "  ASCENT: at   6m for   1:00 [RT: 72:02], on Air,  SP:0.0, END:5m",
+        "    DECO: at   6m for  21:45 [RT: 93:47], on Air,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 94:47], on Air,  SP:0.0, END:2m",
+        "    DECO: at   3m for  45:11 [RT:139:58], on Air,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT:140:58], on Air,  SP:0.0, END:0m", ]
 
     def setUp(self):
         TestDive.setUp(self)
@@ -279,96 +214,13 @@ class TestDiveAirDiveOutput3(TestDive):
         self.profile3 = Dive([diveseg3], [self.airdouble])
         self.profile3.do_dive()
 
-    def test_segment1(self):
-        self.assertEqual(str(self.profile3.output_segments[0]),
-                         ' DESCENT: at  55m for   2:45 [RT:  2:45], '
-                         'on Air,  SP:0.0, END:53m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[0])
-
-    def test_segment2(self):
-        self.assertEqual(str(self.profile3.output_segments[1]),
-                         '   CONST: at  55m for  27:15 [RT: 30:00], '
-                         'on Air,  SP:0.0, END:53m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[1])
-
-    def test_segment3(self):
-        self.assertEqual(str(self.profile3.output_segments[2]),
-                         '  ASCENT: at  30m for   2:30 [RT: 32:30], '
-                         'on Air,  SP:0.0, END:29m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[2])
-
-    def test_segment4(self):
-        self.assertEqual(str(self.profile3.output_segments[3]),
-                         '    DECO: at  30m for   0:01 [RT: 32:31], '
-                         'on Air,  SP:0.0, END:29m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[3])
-
-    def test_segment5(self):
-        self.assertEqual(str(self.profile3.output_segments[4]),
-                         '    DECO: at  27m for   1:15 [RT: 33:46], '
-                         'on Air,  SP:0.0, END:26m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[4])
-
-    def test_segment6(self):
-        self.assertEqual(str(self.profile3.output_segments[5]),
-                         '    DECO: at  24m for   1:33 [RT: 35:19], '
-                         'on Air,  SP:0.0, END:23m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[5])
-
-    def test_segment7(self):
-        self.assertEqual(str(self.profile3.output_segments[6]),
-                         '    DECO: at  21m for   2:37 [RT: 37:56], '
-                         'on Air,  SP:0.0, END:20m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[6])
-
-    def test_segment8(self):
-        self.assertEqual(str(self.profile3.output_segments[7]),
-                         '    DECO: at  18m for   3:23 [RT: 41:19], '
-                         'on Air,  SP:0.0, END:17m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[7])
-
-    def test_segment9(self):
-        self.assertEqual(str(self.profile3.output_segments[8]),
-                         '    DECO: at  15m for   5:26 [RT: 46:45], '
-                         'on Air,  SP:0.0, END:14m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[8])
-
-    def test_segment10(self):
-        self.assertEqual(str(self.profile3.output_segments[9]),
-                         '    DECO: at  12m for   6:41 [RT: 53:26], '
-                         'on Air,  SP:0.0, END:11m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[9])
-
-    def test_segment11(self):
-        self.assertEqual(str(self.profile3.output_segments[10]),
-                         '    DECO: at   9m for  11:01 [RT: 64:27], '
-                         'on Air,  SP:0.0, END:8m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[10])
-
-    def test_segment12(self):
-        self.assertEqual(str(self.profile3.output_segments[11]),
-                         '    DECO: at   6m for  21:36 [RT: 86:03], '
-                         'on Air,  SP:0.0, END:5m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[11])
-
-    def test_segment13(self):
-        self.assertEqual(str(self.profile3.output_segments[12]),
-                         '    DECO: at   3m for  45:02 [RT:131:05], '
-                         'on Air,  SP:0.0, END:2m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[12])
+    def test_segments(self):
+        for idx in range(len(self.expected_result)):
+            self.assertEqual(
+                str(self.profile3.output_segments[idx]),
+                self.expected_result[idx],
+                'bad segment n°%s (%s)' % (
+                    idx, self.profile3.output_segments[idx]))
 
 
 class TestDiveAirDiveRunTime3(TestDive):
@@ -378,11 +230,36 @@ class TestDiveAirDiveRunTime3(TestDive):
         self.profile3 = Dive([diveseg3], [self.airdouble])
         self.profile3.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile3.run_time),
-                         '131:05', 'bad dive runtime (%s)'
+                         '140:58', 'bad dive runtime (%s)'
                          % seconds_to_mmss(self.profile3.run_time))
 
 
 class TestDiveAirDiveOutput4(TestDive):
+
+    expected_result = [
+        " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:53m",
+        "   CONST: at  55m for  27:15 [RT: 30:00], on Air,  SP:0.0, END:53m",
+        "  ASCENT: at  30m for   2:30 [RT: 32:30], on Air,  SP:0.0, END:29m",
+        "    DECO: at  30m for   0:01 [RT: 32:31], on Air,  SP:0.0, END:29m",
+        "  ASCENT: at  27m for   1:00 [RT: 33:31], on Air,  SP:0.0, END:26m",
+        "    DECO: at  27m for   1:11 [RT: 34:42], on Air,  SP:0.0, END:26m",
+        "  ASCENT: at  24m for   1:00 [RT: 35:42], on Air,  SP:0.0, END:23m",
+        "    DECO: at  24m for   1:27 [RT: 37:09], on Air,  SP:0.0, END:23m",
+        "  ASCENT: at  21m for   1:00 [RT: 38:09], on Air,  SP:0.0, END:20m",
+        "    DECO: at  21m for   1:35 [RT: 39:44], on Nitrox 50,  SP:0.0, END:20m",
+        "  ASCENT: at  18m for   1:00 [RT: 40:44], on Nitrox 50,  SP:0.0, END:17m",
+        "    DECO: at  18m for   2:03 [RT: 42:47], on Nitrox 50,  SP:0.0, END:17m",
+        "  ASCENT: at  15m for   1:00 [RT: 43:47], on Nitrox 50,  SP:0.0, END:14m",
+        "    DECO: at  15m for   2:55 [RT: 46:42], on Nitrox 50,  SP:0.0, END:14m",
+        "  ASCENT: at  12m for   1:00 [RT: 47:42], on Nitrox 50,  SP:0.0, END:11m",
+        "    DECO: at  12m for   4:13 [RT: 51:55], on Nitrox 50,  SP:0.0, END:11m",
+        "  ASCENT: at   9m for   1:00 [RT: 52:55], on Nitrox 50,  SP:0.0, END:8m",
+        "    DECO: at   9m for   5:45 [RT: 58:40], on Nitrox 50,  SP:0.0, END:8m",
+        "  ASCENT: at   6m for   1:00 [RT: 59:40], on Nitrox 50,  SP:0.0, END:5m",
+        "    DECO: at   6m for   6:39 [RT: 66:19], on Oxygen,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 67:19], on Oxygen,  SP:0.0, END:2m",
+        "    DECO: at   3m for  11:28 [RT: 78:47], on Oxygen,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 79:47], on Oxygen,  SP:0.0, END:0m", ]
 
     def setUp(self):
         TestDive.setUp(self)
@@ -391,96 +268,13 @@ class TestDiveAirDiveOutput4(TestDive):
                              self.deco2])
         self.profile3.do_dive()
 
-    def test_segment1(self):
-        self.assertEqual(str(self.profile3.output_segments[0]),
-                         ' DESCENT: at  55m for   2:45 [RT:  2:45], '
-                         'on Air,  SP:0.0, END:53m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[0])
-
-    def test_segment2(self):
-        self.assertEqual(str(self.profile3.output_segments[1]),
-                         '   CONST: at  55m for  27:15 [RT: 30:00], '
-                         'on Air,  SP:0.0, END:53m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[1])
-
-    def test_segment3(self):
-        self.assertEqual(str(self.profile3.output_segments[2]),
-                         '  ASCENT: at  30m for   2:30 [RT: 32:30], '
-                         'on Air,  SP:0.0, END:29m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[2])
-
-    def test_segment4(self):
-        self.assertEqual(str(self.profile3.output_segments[3]),
-                         '    DECO: at  30m for   0:01 [RT: 32:31], '
-                         'on Air,  SP:0.0, END:29m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[3])
-
-    def test_segment5(self):
-        self.assertEqual(str(self.profile3.output_segments[4]),
-                         '    DECO: at  27m for   1:15 [RT: 33:46], '
-                         'on Air,  SP:0.0, END:26m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[4])
-
-    def test_segment6(self):
-        self.assertEqual(str(self.profile3.output_segments[5]),
-                         '    DECO: at  24m for   1:33 [RT: 35:19], '
-                         'on Air,  SP:0.0, END:23m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[5])
-
-    def test_segment7(self):
-        self.assertEqual(str(self.profile3.output_segments[6]),
-                         '    DECO: at  21m for   1:37 [RT: 36:56], '
-                         'on Nitrox 50,  SP:0.0, END:20m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[6])
-
-    def test_segment8(self):
-        self.assertEqual(str(self.profile3.output_segments[7]),
-                         '    DECO: at  18m for   2:09 [RT: 39:05], '
-                         'on Nitrox 50,  SP:0.0, END:17m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[7])
-
-    def test_segment9(self):
-        self.assertEqual(str(self.profile3.output_segments[8]),
-                         '    DECO: at  15m for   2:59 [RT: 42:04], '
-                         'on Nitrox 50,  SP:0.0, END:14m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[8])
-
-    def test_segment10(self):
-        self.assertEqual(str(self.profile3.output_segments[9]),
-                         '    DECO: at  12m for   4:18 [RT: 46:22], '
-                         'on Nitrox 50,  SP:0.0, END:11m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[9])
-
-    def test_segment11(self):
-        self.assertEqual(str(self.profile3.output_segments[10]),
-                         '    DECO: at   9m for   5:48 [RT: 52:10], '
-                         'on Nitrox 50,  SP:0.0, END:8m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[10])
-
-    def test_segment12(self):
-        self.assertEqual(str(self.profile3.output_segments[11]),
-                         '    DECO: at   6m for   6:40 [RT: 58:50], '
-                         'on Oxygen,  SP:0.0, END:5m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[11])
-
-    def test_segment13(self):
-        self.assertEqual(str(self.profile3.output_segments[12]),
-                         '    DECO: at   3m for  11:31 [RT: 70:21], '
-                         'on Oxygen,  SP:0.0, END:2m',
-                         'bad segment (%s)'
-                         % self.profile3.output_segments[12])
+    def test_segments(self):
+        for idx in range(len(self.expected_result)):
+            self.assertEqual(
+                str(self.profile3.output_segments[idx]),
+                self.expected_result[idx],
+                'bad segment n°%s (%s)' % (
+                    idx, self.profile3.output_segments[idx]))
 
 
 class TestDiveAirDiveRunTime4(TestDive):
@@ -491,11 +285,26 @@ class TestDiveAirDiveRunTime4(TestDive):
                              self.decoo2])
         self.profile3.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile3.run_time),
-                         ' 70:21', 'bad dive runtime (%s)'
+                         ' 79:47', 'bad dive runtime (%s)'
                          % seconds_to_mmss(self.profile3.run_time))
 
 
 class TestDiveTxDiveOutput1(TestDive):
+
+    expected_result = [
+        " DESCENT: at  30m for   1:30 [RT:  1:30], on Trimix 21/30,  SP:0.0, END:19m",
+        "   CONST: at  30m for  28:30 [RT: 30:00], on Trimix 21/30,  SP:0.0, END:19m",
+        "  ASCENT: at  15m for   1:30 [RT: 31:30], on Trimix 21/30,  SP:0.0, END:8m",
+        "    DECO: at  15m for   0:01 [RT: 31:31], on Trimix 21/30,  SP:0.0, END:8m",
+        "  ASCENT: at  12m for   1:00 [RT: 32:31], on Trimix 21/30,  SP:0.0, END:6m",
+        "    DECO: at  12m for   0:38 [RT: 33:09], on Trimix 21/30,  SP:0.0, END:6m",
+        "  ASCENT: at   9m for   1:00 [RT: 34:09], on Trimix 21/30,  SP:0.0, END:4m",
+        "    DECO: at   9m for   3:04 [RT: 37:13], on Trimix 21/30,  SP:0.0, END:4m",
+        "  ASCENT: at   6m for   1:00 [RT: 38:13], on Trimix 21/30,  SP:0.0, END:1m",
+        "    DECO: at   6m for   5:13 [RT: 43:26], on Trimix 21/30,  SP:0.0, END:1m",
+        "  ASCENT: at   3m for   1:00 [RT: 44:26], on Trimix 21/30,  SP:0.0, END:0m",
+        "    DECO: at   3m for  14:26 [RT: 58:52], on Trimix 21/30,  SP:0.0, END:0m",
+        "  ASCENT: at   0m for   1:00 [RT: 59:52], on Trimix 21/30,  SP:0.0, END:0m", ]
 
     def setUp(self):
         TestDive.setUp(self)
@@ -503,61 +312,13 @@ class TestDiveTxDiveOutput1(TestDive):
         self.profile1 = Dive([diveseg1], [self.txtank1])
         self.profile1.do_dive()
 
-    def test_segment1(self):
-        self.assertEqual(str(self.profile1.output_segments[0]),
-                         ' DESCENT: at  30m for   1:30 [RT:  1:30], '
-                         'on Trimix 21/30,  SP:0.0, END:19m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[0])
-
-    def test_segment2(self):
-        self.assertEqual(str(self.profile1.output_segments[1]),
-                         '   CONST: at  30m for  28:30 [RT: 30:00], '
-                         'on Trimix 21/30,  SP:0.0, END:19m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[1])
-
-    def test_segment3(self):
-        self.assertEqual(str(self.profile1.output_segments[2]),
-                         '  ASCENT: at  15m for   1:30 [RT: 31:30], '
-                         'on Trimix 21/30,  SP:0.0, END:8m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[2])
-
-    def test_segment4(self):
-        self.assertEqual(str(self.profile1.output_segments[3]),
-                         '    DECO: at  15m for   0:01 [RT: 31:31], '
-                         'on Trimix 21/30,  SP:0.0, END:8m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[3])
-
-    def test_segment5(self):
-        self.assertEqual(str(self.profile1.output_segments[4]),
-                         '    DECO: at  12m for   0:43 [RT: 32:14], '
-                         'on Trimix 21/30,  SP:0.0, END:6m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[4])
-
-    def test_segment6(self):
-        self.assertEqual(str(self.profile1.output_segments[5]),
-                         '    DECO: at   9m for   3:08 [RT: 35:22], '
-                         'on Trimix 21/30,  SP:0.0, END:4m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[5])
-
-    def test_segment7(self):
-        self.assertEqual(str(self.profile1.output_segments[6]),
-                         '    DECO: at   6m for   5:15 [RT: 40:37], '
-                         'on Trimix 21/30,  SP:0.0, END:1m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[6])
-
-    def test_segment8(self):
-        self.assertEqual(str(self.profile1.output_segments[7]),
-                         '    DECO: at   3m for  14:26 [RT: 55:03], '
-                         'on Trimix 21/30,  SP:0.0, END:0m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[7])
+    def test_segments(self):
+        for idx in range(len(self.expected_result)):
+            self.assertEqual(
+                str(self.profile1.output_segments[idx]),
+                self.expected_result[idx],
+                'bad segment n°%s (%s)' % (
+                    idx, self.profile1.output_segments[idx]))
 
 
 class TestDiveTxDiveRunTime1(TestDive):
@@ -567,11 +328,36 @@ class TestDiveTxDiveRunTime1(TestDive):
         self.profile1 = Dive([diveseg1], [self.txtank1])
         self.profile1.do_dive()
         self.assertEqual(seconds_to_mmss(self.profile1.run_time),
-                         ' 55:03', 'bad dive runtime (%s)'
+                         ' 59:52', 'bad dive runtime (%s)'
                          % seconds_to_mmss(self.profile1.run_time))
 
 
 class TestDiveCCRDiveOutput1(TestDive):
+
+    expected_result = [
+        " DESCENT: at  55m for   2:45 [RT:  2:45], on Trimix 21/30,  SP:1.4, END:38m",
+        "   CONST: at  55m for  27:15 [RT: 30:00], on Trimix 21/30,  SP:1.4, END:38m",
+        "  ASCENT: at  30m for   2:30 [RT: 32:30], on Trimix 21/30,  SP:1.4, END:21m",
+        "    DECO: at  30m for   0:01 [RT: 32:31], on Trimix 21/30,  SP:1.4, END:21m",
+        "  ASCENT: at  27m for   1:00 [RT: 33:31], on Trimix 21/30,  SP:1.4, END:19m",
+        "    DECO: at  27m for   0:31 [RT: 34:02], on Trimix 21/30,  SP:1.4, END:19m",
+        "  ASCENT: at  24m for   1:00 [RT: 35:02], on Trimix 21/30,  SP:1.4, END:17m",
+        "    DECO: at  24m for   1:02 [RT: 36:04], on Trimix 21/30,  SP:1.4, END:17m",
+        "  ASCENT: at  21m for   1:00 [RT: 37:04], on Trimix 21/30,  SP:1.4, END:15m",
+        "    DECO: at  21m for   1:26 [RT: 38:30], on Trimix 21/30,  SP:1.4, END:15m",
+        "  ASCENT: at  18m for   1:00 [RT: 39:30], on Trimix 21/30,  SP:1.4, END:13m",
+        "    DECO: at  18m for   1:55 [RT: 41:25], on Trimix 21/30,  SP:1.4, END:13m",
+        "  ASCENT: at  15m for   1:00 [RT: 42:25], on Trimix 21/30,  SP:1.4, END:11m",
+        "    DECO: at  15m for   2:09 [RT: 44:34], on Trimix 21/30,  SP:1.4, END:11m",
+        "  ASCENT: at  12m for   1:00 [RT: 45:34], on Trimix 21/30,  SP:1.4, END:9m",
+        "    DECO: at  12m for   3:16 [RT: 48:50], on Trimix 21/30,  SP:1.4, END:9m",
+        "  ASCENT: at   9m for   1:00 [RT: 49:50], on Trimix 21/30,  SP:1.4, END:7m",
+        "    DECO: at   9m for   4:59 [RT: 54:49], on Trimix 21/30,  SP:1.4, END:7m",
+        "  ASCENT: at   6m for   1:00 [RT: 55:49], on Trimix 21/30,  SP:1.4, END:4m",
+        "    DECO: at   6m for   6:24 [RT: 62:13], on Oxygen,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 63:13], on Oxygen,  SP:0.0, END:2m",
+        "    DECO: at   3m for  11:46 [RT: 74:59], on Oxygen,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 75:59], on Oxygen,  SP:0.0, END:0m", ]
 
     def setUp(self):
         TestDive.setUp(self)
@@ -579,97 +365,13 @@ class TestDiveCCRDiveOutput1(TestDive):
         self.profile1 = Dive([diveseg1], [self.txtank1, self.decoo2])
         self.profile1.do_dive()
 
-    def test_segment1(self):
-        self.assertEqual(str(self.profile1.output_segments[0]),
-                         ' DESCENT: at  55m for   2:45 [RT:  2:45], '
-                         'on Trimix 21/30,  SP:1.4, END:38m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[0])
-
-    def test_segment2(self):
-        self.assertEqual(str(self.profile1.output_segments[1]),
-                         '   CONST: at  55m for  27:15 [RT: 30:00], '
-                         'on Trimix 21/30,  SP:1.4, END:38m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[1])
-
-    def test_segment3(self):
-        self.assertEqual(str(self.profile1.output_segments[2]),
-                         '  ASCENT: at  30m for   2:30 [RT: 32:30], '
-                         'on Trimix 21/30,  SP:1.4, END:21m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[2])
-
-    def test_segment4(self):
-        self.assertEqual(str(self.profile1.output_segments[3]),
-                         '    DECO: at  30m for   0:01 [RT: 32:31], '
-                         'on Trimix 21/30,  SP:1.4, END:21m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[3])
-
-    def test_segment5(self):
-        self.assertEqual(str(self.profile1.output_segments[4]),
-                         '    DECO: at  27m for   0:36 [RT: 33:07], '
-                         'on Trimix 21/30,  SP:1.4, END:19m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[4])
-
-    def test_segment6(self):
-        self.assertEqual(str(self.profile1.output_segments[5]),
-                         '    DECO: at  24m for   1:08 [RT: 34:15], '
-                         'on Trimix 21/30,  SP:1.4, END:17m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[5])
-
-    def test_segment7(self):
-        self.assertEqual(str(self.profile1.output_segments[6]),
-                         '    DECO: at  21m for   1:32 [RT: 35:47], '
-                         'on Trimix 21/30,  SP:1.4, END:15m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[6])
-
-    def test_segment8(self):
-        self.assertEqual(str(self.profile1.output_segments[7]),
-                         '    DECO: at  18m for   2:01 [RT: 37:48], '
-                         'on Trimix 21/30,  SP:1.4, END:13m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[7])
-
-    def test_segment9(self):
-        self.assertEqual(str(self.profile1.output_segments[8]),
-                         '    DECO: at  15m for   2:14 [RT: 40:02], '
-                         'on Trimix 21/30,  SP:1.4, END:11m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[8])
-
-    def test_segment10(self):
-        self.assertEqual(str(self.profile1.output_segments[9]),
-                         '    DECO: at  12m for   3:21 [RT: 43:23], '
-                         'on Trimix 21/30,  SP:1.4, END:9m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[9])
-
-    def test_segment11(self):
-        self.assertEqual(str(self.profile1.output_segments[10]),
-                         '    DECO: at   9m for   5:05 [RT: 48:28], '
-                         'on Trimix 21/30,  SP:1.4, END:7m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[10])
-
-    def test_segment12(self):
-        self.assertEqual(str(self.profile1.output_segments[11]),
-                         '    DECO: at   6m for   6:28 [RT: 54:56], '
-                         'on Oxygen,  SP:0.0, END:5m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[11])
-
-    def test_segment13(self):
-        self.assertEqual(str(self.profile1.output_segments[12]),
-                         '    DECO: at   3m for  11:52 [RT: 66:48], '
-                         'on Oxygen,  SP:0.0, END:2m',
-                         'bad segment (%s)'
-                         % self.profile1.output_segments[12])
-
+    def test_segments(self):
+        for idx in range(len(self.expected_result)):
+            self.assertEqual(
+                str(self.profile1.output_segments[idx]),
+                self.expected_result[idx],
+                'bad segment n°%s (%s)' % (
+                    idx, self.profile1.output_segments[idx]))
 
 # =============================================================================
 # ========================== M A I N ==========================================

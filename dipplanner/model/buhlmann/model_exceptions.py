@@ -33,7 +33,7 @@ class ModelException(DipplannerException):
             "Raising an exception: ModelException ! (%s)", description)
 
 
-class ModelStateException(DipplannerException):
+class ModelStateException(ModelException):
     """Model State Exception."""
 
     def __init__(self, description):
@@ -44,3 +44,17 @@ class ModelStateException(DipplannerException):
         super().__init__(description)
         self.logger.error(
             "Raising an exception: ModelStateException ! (%s)", description)
+
+
+class ModelValidationException(ModelException):
+    """Model State Exception."""
+
+    def __init__(self, description):
+        """Init of ModelValidationException.
+
+        :param str description: text describing the error
+        """
+        super().__init__(description)
+        self.logger.error(
+            "Raising an exception: ModelValidationException ! (%s)",
+            description)

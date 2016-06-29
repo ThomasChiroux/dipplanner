@@ -247,12 +247,12 @@ class DipplannerConfigFiles():
                               'surface_interval': 0}
             for parameter_name, parameter_value in config.items(section):
                 if parameter_name == 'surface_interval':
-                    dives[section]['surface_interval'] = \
-                        safe_eval_calculator(parameter_value)
+                    dives[section]['surface_interval'] = safe_eval_calculator(
+                        parameter_value)
                 elif parameter_name[0:4] == 'tank':
                     # number = parameter_name[4:]
-                    (name, f_o2, f_he, volume, pressure, rule) = \
-                        parameter_value.split(";")
+                    (name, f_o2, f_he, volume,
+                     pressure, rule) = parameter_value.split(";")
                     dives[section]['tanks'][name] = Tank(
                         float(f_o2),
                         float(f_he),
@@ -264,23 +264,23 @@ class DipplannerConfigFiles():
             if dives[section]['tanks'] == {}:
                 # no tank provided, try to get the previous tanks
                 try:
-                    dives[section]['tanks'] = \
-                        dives['dive%s' % (dive_number - 1)]['tanks']
+                    dives[section]['tanks'] = dives[
+                        'dive%s' % (dive_number - 1)]['tanks']
                 except KeyError:
                     print("Error : no tank provided for this dive !")
                     sys.exit(0)
 
-            for parameter_name, parameter_value in config.items(section):
-                if parameter_name[0:7] == 'segment':
+            for param_name, param_value in config.items(section):
+                if param_name[0:7] == 'segment':
                     # number = parameter_name[4:]
                     (depth, time,
-                     tankname, setpoint) = parameter_value.split(";")
+                     tankname, setpoint) = param_value.split(";")
                     try:
-                        dives[section]['segments'][parameter_name] = \
-                            SegmentDive(float(safe_eval_calculator(depth)),
-                                        float(safe_eval_calculator(time)),
-                                        dives[section]['tanks'][tankname],
-                                        float(setpoint))
+                        dives[section]['segments'][param_name] = SegmentDive(
+                            float(safe_eval_calculator(depth)),
+                            float(safe_eval_calculator(time)),
+                            dives[section]['tanks'][tankname],
+                            float(setpoint))
                     except KeyError:
                         print("Error : tank name (%s) in not found"
                               " in tank list !"

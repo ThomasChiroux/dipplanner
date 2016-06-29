@@ -90,10 +90,9 @@ class TestModelBuhlmannModelSimple6(TestModelBuhlmannModel):
 
 class TestModelBuhlmannModelSimple7(TestModelBuhlmannModel):
     def runTest(self):
-        self.assertEqual(self.model1.validate_model(),
-                         self.model1.MODEL_VALIDATION_SUCCESS,
-                         "Error in model validation : %s"
-                         % self.model1.validate_model())
+        self.assertTrue(
+            self.model1.validate_model(),
+            "Error in model validation : %s" % self.model1.validate_model())
 
 
 class TestModelBuhlmannModelSimple8(TestModelBuhlmannModel):

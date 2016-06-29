@@ -208,8 +208,8 @@ class Tank():
         else:
             min_re = re.search("1/([0-9])", tank_rule)
             if min_re is not None:
-                self.min_gas = self.total_gas * \
-                    (float(1) - 2 * (1 / float(min_re.group(1))))
+                self.min_gas = self.total_gas * (
+                    float(1) - 2 * (1 / float(min_re.group(1))))
             else:
                 self.min_gas = 0
         self.logger.debug("minimum gas authorised: %s", self.min_gas)
@@ -284,25 +284,25 @@ class Tank():
         T = 273.15 + temp  # default temp at 15°C
 
         # at first, calculate a and b values for this gas
-        a_gas = math.sqrt(a_o2 * a_o2) * f_o2 * f_o2 +\
-            math.sqrt(a_o2 * a_he) * f_o2 * f_he +\
-            math.sqrt(a_o2 * a_n2) * f_o2 * f_n2 +\
-            math.sqrt(a_he * a_o2) * f_he * f_o2 +\
-            math.sqrt(a_he * a_he) * f_he * f_he +\
-            math.sqrt(a_he * a_n2) * f_he * f_n2 +\
-            math.sqrt(a_n2 * a_o2) * f_n2 * f_o2 +\
-            math.sqrt(a_n2 * a_he) * f_n2 * f_he +\
-            math.sqrt(a_n2 * a_n2) * f_n2 * f_n2
+        a_gas = (math.sqrt(a_o2 * a_o2) * f_o2 * f_o2 +
+                 math.sqrt(a_o2 * a_he) * f_o2 * f_he +
+                 math.sqrt(a_o2 * a_n2) * f_o2 * f_n2 +
+                 math.sqrt(a_he * a_o2) * f_he * f_o2 +
+                 math.sqrt(a_he * a_he) * f_he * f_he +
+                 math.sqrt(a_he * a_n2) * f_he * f_n2 +
+                 math.sqrt(a_n2 * a_o2) * f_n2 * f_o2 +
+                 math.sqrt(a_n2 * a_he) * f_n2 * f_he +
+                 math.sqrt(a_n2 * a_n2) * f_n2 * f_n2)
         # print "a: %s" % a_gas
-        b_gas = math.sqrt(b_o2 * b_o2) * f_o2 * f_o2 +\
-            math.sqrt(b_o2 * b_he) * f_o2 * f_he +\
-            math.sqrt(b_o2 * b_n2) * f_o2 * f_n2 +\
-            math.sqrt(b_he * b_o2) * f_he * f_o2 +\
-            math.sqrt(b_he * b_he) * f_he * f_he +\
-            math.sqrt(b_he * b_n2) * f_he * f_n2 +\
-            math.sqrt(b_n2 * b_o2) * f_n2 * f_o2 +\
-            math.sqrt(b_n2 * b_he) * f_n2 * f_he +\
-            math.sqrt(b_n2 * b_n2) * f_n2 * f_n2
+        b_gas = (math.sqrt(b_o2 * b_o2) * f_o2 * f_o2 +
+                 math.sqrt(b_o2 * b_he) * f_o2 * f_he +
+                 math.sqrt(b_o2 * b_n2) * f_o2 * f_n2 +
+                 math.sqrt(b_he * b_o2) * f_he * f_o2 +
+                 math.sqrt(b_he * b_he) * f_he * f_he +
+                 math.sqrt(b_he * b_n2) * f_he * f_n2 +
+                 math.sqrt(b_n2 * b_o2) * f_n2 * f_o2 +
+                 math.sqrt(b_n2 * b_he) * f_n2 * f_he +
+                 math.sqrt(b_n2 * b_n2) * f_n2 * f_n2)
         # print "b: %s" % b_gas
         # now approximate n (quantities of molecules of gas in the tank in mol)
         # using perfect gas law : PV = nRT : n = PV/RT
@@ -310,9 +310,10 @@ class Tank():
 
         # recalculate pressure on the tank whith approx_n
         # P=n.R.T/(V-n.b)-n2.a/V2)
-        tank_pressure_mid = (approx_n * R * T) / (tank_vol - approx_n * b_gas)\
-            - (approx_n * approx_n * a_gas)\
-            / (tank_vol * tank_vol)
+        tank_pressure_mid = ((approx_n * R * T) /
+                             (tank_vol - approx_n * b_gas) -
+                             (approx_n * approx_n * a_gas) /
+                             (tank_vol * tank_vol))
 
         # now try to approx tank_pressure with new_tank_pressure by
         # variating approx_n
@@ -329,8 +330,10 @@ class Tank():
             n_mid = (n_left + n_right) / 2
             # new pressure calculated using:
             # P = nRT/(V - nb) - n2a/V2
-            tank_pressure_mid = (n_mid * R * T) / (tank_vol - n_mid * b_gas) -\
-                (n_mid * n_mid * a_gas) / (tank_vol * tank_vol)
+            tank_pressure_mid = ((n_mid * R * T) /
+                                 (tank_vol - n_mid * b_gas) -
+                                 (n_mid * n_mid * a_gas) /
+                                 (tank_vol * tank_vol))
             if tank_pressure_mid > tank_pressure:
                 # keep left
                 n_right = n_mid
@@ -340,10 +343,11 @@ class Tank():
 
         # recalculate volume using van der waals again
         # V = nR3T3/(PR2T2+aP2) + nb
-        total_gas_volume = n_mid * pow(R, 3) * pow(T, 3) / \
+        total_gas_volume = (
+            n_mid * pow(R, 3) * pow(T, 3) /
             (settings.AMBIANT_PRESSURE_SURFACE * pow(R, 2) * pow(T, 2) +
-             a_gas * pow(settings.AMBIANT_PRESSURE_SURFACE, 2)) + \
-            n_mid * b_gas
+             a_gas * pow(settings.AMBIANT_PRESSURE_SURFACE, 2)) +
+            n_mid * b_gas)
         self.logger.debug("real total gas volume : %02fl instead of %02fl",
                           total_gas_volume, tank_vol * tank_pressure)
         return total_gas_volume
@@ -545,22 +549,22 @@ class Tank():
         #                  Oxygen O2: 20.95%,
         #                  Argon Ar: 0.934%
         # OC
-        reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * \
-            (settings.N2_NARCOTIC_VALUE * 0.7808 +
-             settings.O2_NARCOTIC_VALUE * 0.2095 +
-             settings.AR_NARCOTIC_VALUE * 0.00934)
+        reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * (
+            settings.N2_NARCOTIC_VALUE * settings.DEFAULT_AIR_FN2 +
+            settings.O2_NARCOTIC_VALUE * settings.DEFAULT_AIR_FO2 +
+            settings.AR_NARCOTIC_VALUE * settings.DEFAULT_AIR_FAR)
         # OC mode
         narcotic_tank = (self.f_n2 * settings.N2_NARCOTIC_VALUE +
                          self.f_o2 * settings.O2_NARCOTIC_VALUE +
                          self.f_he * settings.HE_NARCOTIC_VALUE)
 
-        p_absolute = (depth_to_pressure(end) +
-                      settings.AMBIANT_PRESSURE_SURFACE) * \
-            reference_narcotic / narcotic_tank
+        p_absolute = ((depth_to_pressure(end) +
+                       settings.AMBIANT_PRESSURE_SURFACE) *
+                      reference_narcotic / narcotic_tank)
         mod = pressure_to_depth(p_absolute - settings.AMBIANT_PRESSURE_SURFACE)
         return mod
 
-    def get_end_for_given_depth(self, depth):
+    def get_end_for_given_depth(self, depth, setpoint=0.0):
         """Calculate end (equivalent narcotic depth).
 
         based on given depth and based on gaz inside the tank
@@ -574,27 +578,61 @@ class Tank():
             All narcotic indexes can by changed in the config file,
             in the [advanced] section
 
+        Instead of Mvplan, dipplanner uses a 'calculation method' based on
+        narcosis effet of all gas used, assuming there is no trace of
+        other gases (like argon) in the breathing gas, but compare the narcotic
+        effect with surface gas, wich is 'air' and contains
+        a small amount of argon
+
         :param int depth: in meter
+        :param float setpoint: ppo2 in bar. If 0: OC mode, if > 0.0, CCR mode.
 
         :returns: end -- equivalent narcotic depth in meter
-        :rtype: int
-
-        .. todo:: get and return float instead of int ?
+        :rtype: float
         """
-        p_absolute = depth_to_pressure(depth) + \
-            settings.AMBIANT_PRESSURE_SURFACE
+        p_absolute = (depth_to_pressure(depth) +
+                      settings.AMBIANT_PRESSURE_SURFACE)
         # calculate the reference narcotic effect of air
         # Air consists of: Nitrogen N2: 78.08%,
         #                  Oxygen O2: 20.95%,
         #                  Argon Ar: 0.934%
-        reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * \
-            (settings.N2_NARCOTIC_VALUE * 0.7808 +
-             settings.O2_NARCOTIC_VALUE * 0.2095 +
-             settings.AR_NARCOTIC_VALUE * 0.00934)
-        # OC mode
-        narcotic_index = p_absolute * (self.f_n2 * settings.N2_NARCOTIC_VALUE +
-                                       self.f_o2 * settings.O2_NARCOTIC_VALUE +
-                                       self.f_he * settings.HE_NARCOTIC_VALUE)
+        reference_narcotic = settings.AMBIANT_PRESSURE_SURFACE * (
+            settings.N2_NARCOTIC_VALUE * settings.DEFAULT_AIR_FN2 +
+            settings.O2_NARCOTIC_VALUE * settings.DEFAULT_AIR_FO2 +
+            settings.AR_NARCOTIC_VALUE * settings.DEFAULT_AIR_FAR)
+
+        if setpoint > 0:
+            # CCR mode
+            f_inert = self.f_he + self.f_n2
+            if f_inert > 0:
+                pp_inert = p_absolute - setpoint
+            else:
+                pp_inert = 0
+            if pp_inert > 0:
+                # sort of approximation here ?
+                # calculate here a narcotic index based on the proportion
+                # of innertgases in the dilluent tank
+                # should (perhaps) calculate based on proportion
+                # of innert gases inthe loop ?
+                ppn2_inspired = (pp_inert * self.f_n2) / f_inert
+                pphe_inspired = (pp_inert * self.f_he) / f_inert
+                narcotic_index = (ppn2_inspired * settings.N2_NARCOTIC_VALUE +
+                                  setpoint * settings.O2_NARCOTIC_VALUE +
+                                  pphe_inspired * settings.HE_NARCOTIC_VALUE)
+
+                self.logger.debug("pabs: %.3f, pp_inert: %.3f at %sm, "
+                                  "ppn2i:%s, pphei:%s, narco idx:%s",
+                                  p_absolute, pp_inert,
+                                  depth, ppn2_inspired,
+                                  pphe_inspired, narcotic_index)
+            else:
+                narcotic_index = 0
+        else:
+            # OC mode
+            narcotic_index = p_absolute * (
+                self.f_n2 * settings.N2_NARCOTIC_VALUE +
+                self.f_o2 * settings.O2_NARCOTIC_VALUE +
+                self.f_he * settings.HE_NARCOTIC_VALUE)
 
         end = pressure_to_depth(narcotic_index / reference_narcotic -
                                 settings.AMBIANT_PRESSURE_SURFACE)

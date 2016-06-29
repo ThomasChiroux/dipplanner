@@ -74,8 +74,8 @@ class OxTox():
         """
         if pp_o2 > 0.5:
             # only accumulate OTU for ppO2 > 0.5 atm
-            diff_otu = (float(time) / 60) * \
-                math.pow((0.5 / (pp_o2 - 0.5)), -0.833333)
+            diff_otu = ((float(time) / 60) *
+                        math.pow((0.5 / (pp_o2 - 0.5)), -0.833333))
             self.otu += diff_otu
 
         # CNS calculation

@@ -59,7 +59,7 @@ class Compartment():
         # initiate class logger
         self.logger = logging.getLogger(
             "dipplanner.model.buhlmann.compartment.Compartment")
-        self.logger.debug("creating an instance of Compartment")
+        # self.logger.debug("creating an instance of Compartment")
 
         self.h_he = 0.0
         self.h_n2 = 0.0
@@ -81,9 +81,9 @@ class Compartment():
         self.old_k_he = None
         self.old_seg_time = None
 
-        if h_he is not None and h_n2 is not None and \
-                a_he is not None and b_he is not None and \
-                a_n2 is not None and b_n2 is not None:
+        if (h_he is not None and h_n2 is not None and
+                a_he is not None and b_he is not None and
+                a_n2 is not None and b_n2 is not None):
             self.set_compartment_time_constants(h_he, h_n2,
                                                 a_he, b_he,
                                                 a_n2, b_n2)
@@ -177,10 +177,10 @@ class Compartment():
         # Calculate and returns a_he_n2 and b_he_n2
         # based on current pp_he and pp_n2 of this compartment
         #  calculate adjusted a, b coefficients based on those of He and N2
-        self.a_he_n2 = ((self.a_he * pp_he) + (self.a_n2 * pp_n2)) / \
-            (pp_he + pp_n2)
-        self.b_he_n2 = ((self.b_he * pp_he) + (self.b_n2 * pp_n2)) / \
-            (pp_he + pp_n2)
+        self.a_he_n2 = (((self.a_he * pp_he) + (self.a_n2 * pp_n2)) /
+                        (pp_he + pp_n2))
+        self.b_he_n2 = (((self.b_he * pp_he) + (self.b_n2 * pp_n2)) /
+                        (pp_he + pp_n2))
 
     def const_depth(self, pp_he_inspired, pp_n2_inspired, seg_time):
         """Constant depth calculations.
@@ -253,14 +253,16 @@ class Compartment():
             raise ModelStateException(
                 "Error in argument: negative value is not allowed")
         else:
-            new_pp_he = pp_he_inspired + rate_he * \
-                (float(seg_time) - (1.0 / self.k_he)) - \
-                (pp_he_inspired - self.pp_he - (rate_he / self.k_he)) * \
-                math.exp(-self.k_he * float(seg_time))
-            new_pp_n2 = pp_n2_inspired + rate_n2 * \
-                (float(seg_time) - (1.0 / self.k_n2)) - \
-                (pp_n2_inspired - self.pp_n2 - (rate_n2 / self.k_n2)) * \
-                math.exp(-self.k_n2 * float(seg_time))
+            new_pp_he = (pp_he_inspired +
+                         rate_he * (float(seg_time) - (1.0 / self.k_he)) -
+                         (pp_he_inspired - self.pp_he -
+                          (rate_he / self.k_he)) *
+                         math.exp(-self.k_he * float(seg_time)))
+            new_pp_n2 = (pp_n2_inspired +
+                         rate_n2 * (float(seg_time) - (1.0 / self.k_n2)) -
+                         (pp_n2_inspired - self.pp_n2 -
+                          (rate_n2 / self.k_n2)) *
+                         math.exp(-self.k_n2 * float(seg_time)))
             # self.set_pp(new_pp_he, new_pp_n2)
 
             # below is an 'inline' version of set_pp for optimisation:
@@ -311,8 +313,8 @@ class Compartment():
         :returns: maximum tolerated pressure (absolute) in bar
         :rtype: float
         """
-        return ((self.pp_he + self.pp_n2) - self.a_he_n2 * gf) / \
-            (gf / self.b_he_n2 - gf + 1.0)
+        return (((self.pp_he + self.pp_n2) - self.a_he_n2 * gf) /
+                (gf / self.b_he_n2 - gf + 1.0))
 
     def get_mv(self, p_amb):
         """Get M-Value for a compartment, given an ambient pressure.

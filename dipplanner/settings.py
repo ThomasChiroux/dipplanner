@@ -45,6 +45,16 @@ N2_NARCOTIC_VALUE = 1.0  #: nitrogen narcotic value
 O2_NARCOTIC_VALUE = 1.0  #: oxygen narcotic value
 AR_NARCOTIC_VALUE = 2.33  #: argon narcotic value
 
+DEFAULT_AIR_FH2 = 0.0  #: fraction of HE in standard AIR
+DEFAULT_AIR_FN2 = 0.7808  #: fraction of N2 in standard AIR
+DEFAULT_AIR_FO2 = 0.2095  #: fraction of O2 in standard AIR
+DEFAULT_AIR_FAR = 0.00934  #: fraction of AR (argon) in standard AIR
+
+#: fraction of innert gas in standard AIR, rounded to 2 decimals
+#: (should be 0.79)
+DEFAULT_AIR_F_INNERT_GAS = round(
+    DEFAULT_AIR_FH2 + DEFAULT_AIR_FN2 + DEFAULT_AIR_FAR, 2)
+
 STOP_DEPTH_INCREMENT = 3  #: in meter
 LAST_STOP_DEPTH = 3  #: in meter : last stop before surfacing
 STOP_TIME_INCREMENT = 1  #: in second
@@ -82,8 +92,9 @@ DEFAULT_MAX_END = 30  #: in meter
 DIVE_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
 DECO_CONSUMPTION_RATE = 12.0 / 60  #: liter/s
 
-DESCENT_RATE = float(20) / 60  #: m/s
-ASCENT_RATE = float(10) / 60  #: m/s
+DESCENT_RATE = 20 / 60  #: m/s
+ASCENT_RATE = 10 / 60  #: m/s
+DECO_ASCENT_RATE = 3 / 60  #: m/s  # TODO add this in config files
 
 #: Warning : if RUN-TIME is True, the segment duration must
 #:           include descent time
@@ -97,7 +108,14 @@ USE_OC_DECO = True  #: if True, use enabled gases of decomp in oc or bailout
 GF_LOW = 0.30  #: % between 0.0 and 1.0
 GF_HIGH = 0.80  #: % between 0.0 and 1.0
 
-# TODO: check the usage of the MULTILEVEL_MODE setting
-MULTILEVEL_MODE = False  #: TO CHECK
+#: On dives with multiple depth segments it is possible that
+#: decompression encountered during the excursion from a deep to
+#: shallower segment will initialise the gradient factors prematurely.
+#: Selecting this option keeps the gradient factor set at low until the last
+#: dive segment is executed.
+#: (normal behaviour is to initialise the gradient factor to Low at
+#: the first deco stop encountered. From then on it linearly increases the
+#: gradient factor until the final stop when it is set to High)
+MULTILEVEL_MODE = False
 
 AUTOMATIC_TANK_REFILL = True  #: automatic refill of tanks between dives

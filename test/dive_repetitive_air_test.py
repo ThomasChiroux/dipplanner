@@ -23,12 +23,8 @@ import unittest
 from dipplanner.main import activate_debug_for_tests
 
 from dipplanner.dive import Dive
-from dipplanner.dive import ProcessingError, NothingToProcess, InfiniteDeco
 from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
-from dipplanner.segment import SegmentDeco
-from dipplanner.segment import SegmentAscDesc
-from dipplanner.segment import UnauthorizedMod
 from dipplanner.tools import seconds_to_mmss
 from dipplanner import settings
 
@@ -84,22 +80,22 @@ class TestRepetitiveDive1(TestDive):
         self.profile1.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 68:09', \
+        assert seconds_to_mmss(self.profile1.run_time) == ' 74:05', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile1.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               40.0702502936, 7, 'bad dive OTU ? (%s)'
+                               40.09112728236156, 7, 'bad dive OTU ? (%s)'
                                % self.profile1.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               14.3091665925, 7, 'bad dive CNS ? (%s)'
+                               14.316049625697232, 7, 'bad dive CNS ? (%s)'
                                % (self.profile1.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
-        self.assertAlmostEqual(self.airtank12.used_gas, 2115.5196384,
+        self.assertAlmostEqual(self.airtank12.used_gas, 2304.0800886,
                                7, 'bad used gas (%s)'
                                % self.airtank12.used_gas)
 
@@ -111,12 +107,12 @@ class TestRepetitiveDive1(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 5460, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 5520, 'Bad no flight time: %s'
                          % no_flight_time)
 
     def test_no_flight_wo_exc(self):
         no_flight_time = self.profile1.no_flight_time_wo_exception()
-        self.assertEqual(no_flight_time, 5460, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 5520, 'Bad no flight time: %s'
                          % no_flight_time)
 
     def test_surfaceint(self):
@@ -149,22 +145,22 @@ class TestRepetitiveDive2(TestDive):
         self.profile2.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile2.run_time) == ' 70:18', \
+        assert seconds_to_mmss(self.profile2.run_time) == ' 74:20', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile2.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile2.model.ox_tox.otu,
-                               66.8427163401, 7, 'bad dive OTU ? (%s)'
+                               66.85239727175716, 7, 'bad dive OTU ? (%s)'
                                % self.profile2.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile2.model.ox_tox.cns * 100,
-                               18.1490350581, 7, 'bad dive CNS ? (%s)'
+                               18.150264896332764, 7, 'bad dive CNS ? (%s)'
                                % (self.profile2.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
-        self.assertAlmostEqual(self.airtank.used_gas, 2701.73162947, 7,
+        self.assertAlmostEqual(self.airtank.used_gas, 2811.7178412750004, 7,
                                'bad used gas (%s)'
                                % self.airtank.used_gas)
 
@@ -176,12 +172,12 @@ class TestRepetitiveDive2(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile2.no_flight_time()
-        self.assertEqual(no_flight_time, 18360, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 18540, 'Bad no flight time: %s'
                          % no_flight_time)
 
     def test_no_flight_wo_exc(self):
         no_flight_time = self.profile2.no_flight_time_wo_exception()
-        self.assertEqual(no_flight_time, 18360, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 18540, 'Bad no flight time: %s'
                          % no_flight_time)
 
     def test_surfaceint(self):
@@ -221,22 +217,22 @@ class TestRepetitiveDive3(TestDive):
         self.profile3.do_dive()
 
     def test_rt(self):
-        assert seconds_to_mmss(self.profile3.run_time) == ' 38:36', \
+        assert seconds_to_mmss(self.profile3.run_time) == ' 44:17', \
             'bad dive runtime ? (%s)' \
             % seconds_to_mmss(self.profile3.run_time)
 
     def test_otu(self):
         self.assertAlmostEqual(self.profile3.model.ox_tox.otu,
-                               86.8657204829, 7, 'bad dive OTU ? (%s)'
+                               86.88508234608658, 7, 'bad dive OTU ? (%s)'
                                % self.profile3.model.ox_tox.otu)
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile3.model.ox_tox.cns * 100,
-                               7.75546902304, 7, 'bad dive CNS ? (%s)'
+                               7.757933503026783, 7, 'bad dive CNS ? (%s)'
                                % (self.profile3.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
-        self.assertAlmostEqual(self.airtank.used_gas, 2115.5196384, 7,
+        self.assertAlmostEqual(self.airtank.used_gas, 2304.0800886, 7,
                                'bad used gas (%s)'
                                % self.airtank.used_gas)
 
@@ -248,12 +244,12 @@ class TestRepetitiveDive3(TestDive):
 
     def test_no_flight(self):
         no_flight_time = self.profile3.no_flight_time()
-        self.assertEqual(no_flight_time, 1620, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 1680, 'Bad no flight time: %s'
                          % no_flight_time)
 
     def test_no_flight_wo_exc(self):
         no_flight_time = self.profile3.no_flight_time_wo_exception()
-        self.assertEqual(no_flight_time, 1620, 'Bad no flight time: %s'
+        self.assertEqual(no_flight_time, 1680, 'Bad no flight time: %s'
         % no_flight_time)
 
     def test_surfaceint(self):

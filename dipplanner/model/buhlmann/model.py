@@ -28,6 +28,7 @@ from dipplanner import settings
 from dipplanner.model.buhlmann.compartment import Compartment
 from dipplanner.model.buhlmann.gradient import Gradient
 from dipplanner.model.buhlmann.oxygen_toxicity import OxTox
+from dipplanner.model.buhlmann.model_exceptions import ModelValidationException
 from dipplanner import tools
 
 
@@ -55,15 +56,9 @@ class Model():
         * metadata (str) -- Stores infos about where the model was created
         * units (str) -- only 'metric' allowed
         * COMPS (int) -- static info : number of compartments
-        * MODEL_VALIDATION_SUCCESS (int) -- static const for validation success
-        * MODEL_VALIDATION_FAILURE (int) -- static const for validation failure
     """
 
     COMPS = 16
-
-    # TODO: SUPPRIMER CES DEUX ELEMENTS ET REMPLACER PAR DES RAISE
-    MODEL_VALIDATION_SUCCESS = 1
-    MODEL_VALIDATION_FAILURE = 0
 
     def __init__(self):
         """Init of Model class."""
@@ -84,10 +79,9 @@ class Model():
         self.set_time_constants()
 
         for comp in self.tissues:
-            comp.set_pp(0.0, 0.79 *
+            comp.set_pp(0.0, settings.DEFAULT_AIR_F_INNERT_GAS *
                         (settings.AMBIANT_PRESSURE_SURFACE -
                          tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP)))
-            # TODO: Check above : 0.79 or settings.DEFAULT_AIR_PPN2 (tdb) ?
 
         self.metadata = "(none)"
 
@@ -235,29 +229,28 @@ class Model():
         This is needed to check a model that has been loaded from XML
         Resets time constants
 
-        :returns: self.MODEL_VALIDATION_SUCCESS -- if OK
-                  self.MODEL_VALIDATION_FAILURE -- if not OK
-        :rtype: int
+        :returns: True if OK
+        :rtype: bool
 
-        TODO: change the return values, (by true/false and raise when error)
+        :raises ModelValidationException: when validation failed.
         """
         time_constant_zero = False  # need for resetting time constants
 
         for comp in self.tissues:
             if comp.pp_n2 <= 0.0:
-                return self.MODEL_VALIDATION_FAILURE
+                raise ModelValidationException("pp_N2 < 0 in compartment")
             if comp.pp_he < 0.0:
-                return self.MODEL_VALIDATION_FAILURE
-            if comp.k_he == 0.0 or \
-                    comp.k_n2 == 0.0 or \
-                    comp.a_he == 0.0 or \
-                    comp.b_he == 0.0 or \
-                    comp.a_n2 == 0.0 or \
-                    comp.b_n2 == 0.0:
+                raise ModelValidationException("pp_He < 0 in compartment")
+            if (comp.k_he == 0.0 or
+                    comp.k_n2 == 0.0 or
+                    comp.a_he == 0.0 or
+                    comp.b_he == 0.0 or
+                    comp.a_n2 == 0.0 or
+                    comp.b_n2 == 0.0):
                 time_constant_zero = True
         if time_constant_zero:
             self.set_time_constants()
-        return self.MODEL_VALIDATION_SUCCESS
+        return True
 
     def control_compartment(self):
         """Determine the controlling compartment at ceiling (1-16).
@@ -348,8 +341,8 @@ class Model():
             # Determine pInert by subtracting absolute oxygen pressure and pH2O
             # Note that if f_he and f_n2 == 0.0 then need to force pp's to zero
             if f_he + f_n2 > 0.0:
-                p_inert = ambiant_pressure - pp_o2 - \
-                    tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP)
+                p_inert = (ambiant_pressure - pp_o2 -
+                           tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP))
             else:
                 p_inert = 0.0
 
@@ -419,10 +412,12 @@ class Model():
         if pp_o2 > 0.0:
             # CCR mode
             # Calculate inert gas partial pressure == pAmb - pO2 - pH2O
-            p_inert_start = start_ambiant_pressure - pp_o2 - \
-                tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP)
-            p_inert_finish = finish_ambiant_pressure - pp_o2 - \
-                tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP)
+            p_inert_start = (start_ambiant_pressure - pp_o2 -
+                             tools.calculate_pp_h2o_surf(
+                                 settings.SURFACE_TEMP))
+            p_inert_finish = (finish_ambiant_pressure - pp_o2 -
+                              tools.calculate_pp_h2o_surf(
+                                  settings.SURFACE_TEMP))
             # Check that it doesn't go less than zero.
             # Could be due to shallow deco or starting on high setpoint
             if p_inert_start < 0.0:
@@ -445,7 +440,6 @@ class Model():
                 rate_he = 0.0
                 rate_n2 = 0.0
             # update ox_tox, constant pp_o2
-            # TODO - what if depth is less than pO2 in msw ?
             self.ox_tox.add_o2(seg_time, pp_o2)
         else:
             # OC mode

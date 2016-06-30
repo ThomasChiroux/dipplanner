@@ -153,6 +153,17 @@ class TestAllCli(TestCliArguments):
             "Wrong ascentrate: %s"
             % settings.ASCENT_RATE)
 
+    def test_deco_ascentrate(self):
+        cli_args = ["dipplanner",
+                    "-t", "airtank;0.21;0.0;12;200;50b",
+                    "-s", "30;25*60;airtank;0.0",
+                    "--deco-ascentrate=4", ]
+        dipplanner_arguments = DipplannerCliArguments(cli_args)
+        self.assertEqual(settings.DECO_ASCENT_RATE,
+            4.0/60,
+            "Wrong deco_ascentrate: %s"
+            % settings.DECO_ASCENT_RATE)
+
     def test_mawppo2(self):
         cli_args = ["dipplanner",
                     "-t", "airtank;0.21;0.0;12;200;50b",
@@ -354,6 +365,12 @@ class TestAllConfig(TestCliArguments):
                          8.0/60,
                          "Wrong ascentrate: %s"
                          % settings.ASCENT_RATE)
+
+    def test_deco_ascentrate(self):
+        self.assertEqual(settings.DECO_ASCENT_RATE,
+                         4.0/60,
+                         "Wrong ascentrate: %s"
+                         % settings.DECO_ASCENT_RATE)
 
     def test_mawppo2(self):
         self.assertEqual(settings.DEFAULT_MAX_PPO2,

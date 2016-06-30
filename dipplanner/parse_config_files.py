@@ -131,6 +131,10 @@ class DipplannerConfigFiles():
                 settings.ASCENT_RATE = float(
                     config.get(section, 'ascent_rate')) / 60
 
+            if config.has_option(section, 'deco_ascent_rate'):
+                settings.DECO_ASCENT_RATE = float(
+                    config.get(section, 'deco_ascent_rate')) / 60
+
             if config.has_option(section, 'max_ppo2'):
                 settings.DEFAULT_MAX_PPO2 = float(config.get(section,
                                                              'max_ppo2'))

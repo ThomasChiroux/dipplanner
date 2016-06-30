@@ -161,6 +161,9 @@ class DipplannerCliArguments():
         group2.add_argument(
             "--ascentrate", metavar="VAL", type=str,
             help="""ascent rate (in m/minute).""")
+        group2.add_argument(
+            "--deco-ascentrate", metavar="VAL", type=str,
+            help="""ascent rate when in deco (in m/minute).""")
 
         group2.add_argument(
             "--maxppo2", metavar="VAL", type=float,
@@ -298,6 +301,15 @@ class DipplannerCliArguments():
             except ValueError:
                 self.parser.error("Error while parsing option "
                                   "ascentrate : %s" % args.ascentrate)
+
+        if args.deco_ascentrate:
+            try:
+                settings.DECO_ASCENT_RATE = float(
+                    safe_eval_calculator(args.deco_ascentrate)) / 60
+            except ValueError:
+                self.parser.error(
+                    "Error while parsing option "
+                    "deco_ascentrate : %s" % args.deco_ascentrate)
 
         if args.model:
             settings.DECO_MODEL = args.model

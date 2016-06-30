@@ -45,13 +45,17 @@ Gas: {% for tank in dive.tanks %}
 Oxygen Toxicity: OTU:{{ dive.model.ox_tox.otu|int }}, CNS:
   {{- "%d"|format(dive.model.ox_tox.cns*100)}}%
 {{- self.separator() }}
-
-{%- if dive.no_flight_time_value %}
-{{ self.separator() }}
-No-flight time: {{ dive.get_no_flight_hhmmss() }}
+No-flight time: {{ dive.get_no_flight_hhmmss() -}} {{ " " * 5 }} - {{ " " * 5 -}}
+ Full desat: {{ dive.get_full_desat_hhmmss() }}
 {{- self.separator() }}
-{%- endif -%}
-{% endfor -%}
+       Tissues saturations
+      +---------+---------+---------+---------+---------+---------+
+      {% for comp in dive.model.tissues %}
+        {{- "x" * ((comp.pp_n2 - 0.78)* 30)|round(method='ceil')|int}}{{"o" * (comp.pp_he * 30)|round(method='ceil')|int}}
+      {% endfor -%}
+      +---------+---------+---------+---------+---------+---------+
+        x: N2 ----- o: He
+      {% endfor -%}
 
 {%- block dive_footer %}
 WARNING : This software is highly experimental and

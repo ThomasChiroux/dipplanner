@@ -204,6 +204,7 @@ class Dive():
         # other initialisations
         self.surface_interval = 0
         self.no_flight_time_value = None
+        self.full_desat_time_value = None
         self.is_closed_circuit = False  # OC by default
         self.pp_o2 = 0.0  # OC by default
         self.current_tank = None
@@ -656,6 +657,62 @@ class Dive():
 
         self.no_flight_time_value = no_flight_time
         return no_flight_time
+
+    def get_full_desat_hhmmss(self):
+        """Return full desat time (if calculated) in hhmmss format.
+
+        instead of an int in seconds
+
+        :returns: "hh:mm:ss" full desat time
+        :rtype: str
+        """
+        if self.full_desat_time_value is not None:
+            return seconds_to_hhmmss(self.full_desat_time_value)
+        else:
+            return seconds_to_hhmmss(self.full_desat_time())
+
+    def full_desat_time(self):
+        """Evaluate the full desat time.
+
+        by doing deco at const depth of 0m until all
+        compartement are (nearly) empty.
+
+        :returns: full desat time in seconds
+        :rtype: int
+
+        :raises InfiniteDeco: if the no flight time can not achieve enough
+                              decompression to be able to go to give altitude
+        """
+        full_desat_time = 0
+        margin = 0.005
+
+        # bigger stop time to speed up calculation
+        # (precision is not necesary here)
+        stop_time = 60  # in second
+
+        model_copy = copy.deepcopy(self.model)
+        full_desat = False
+        while not full_desat:
+            # loop for "deco" calculation based on the new ceiling
+            model_copy.const_depth(pressure=0.0,
+                                   seg_time=stop_time,
+                                   f_he=0.0,
+                                   f_n2=settings.DEFAULT_AIR_FN2,
+                                   pp_o2=0.0)
+            full_desat_time += stop_time
+
+            if full_desat_time > 300000:
+                raise InfiniteDeco("Infinite deco error")
+
+            full_desat = True
+            for comp in model_copy.tissues:
+                if (comp.pp_n2 > settings.DEFAULT_AIR_FN2 + margin or
+                        comp.pp_he > margin):
+                    full_desat = False
+                    break
+
+        self.full_desat_time_value = full_desat_time
+        return full_desat_time
 
     def ascend(self, target_depth):
         """Ascend to target depth, decompressing if necessary.

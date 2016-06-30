@@ -124,6 +124,12 @@ class TestDiveAir10m10min(TestDive):
                          120,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         1500,
+                         "Bad full desat time: %s" % desat)
+
 
 class TestDiveAir10m20min(TestDive):
     def setUp(self):
@@ -169,6 +175,11 @@ class TestDiveAir10m20min(TestDive):
                          1140,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         1500,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir10m30min(TestDive):
     def setUp(self):

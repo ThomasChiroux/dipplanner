@@ -241,12 +241,8 @@ class Model():
                 raise ModelValidationException("pp_N2 < 0 in compartment")
             if comp.pp_he < 0.0:
                 raise ModelValidationException("pp_He < 0 in compartment")
-            if (comp.k_he == 0.0 or
-                    comp.k_n2 == 0.0 or
-                    comp.a_he == 0.0 or
-                    comp.b_he == 0.0 or
-                    comp.a_n2 == 0.0 or
-                    comp.b_n2 == 0.0):
+            if 0.0 in (comp.k_he, comp.k_n2, comp.a_he,
+                       comp.b_he, comp.a_n2, comp.b_n2):
                 time_constant_zero = True
         if time_constant_zero:
             self.set_time_constants()

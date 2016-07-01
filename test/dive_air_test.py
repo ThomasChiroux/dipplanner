@@ -127,7 +127,7 @@ class TestDiveAir10m10min(TestDive):
     def test_full_desat(self):
         desat = self.profile1.full_desat_time()
         self.assertEqual(desat,
-                         1500,
+                         7920,
                          "Bad full desat time: %s" % desat)
 
 
@@ -178,7 +178,7 @@ class TestDiveAir10m20min(TestDive):
     def test_full_desat(self):
         desat = self.profile1.full_desat_time()
         self.assertEqual(desat,
-                         1500,
+                         16140,
                          "Bad full desat time: %s" % desat)
 
 class TestDiveAir10m30min(TestDive):
@@ -226,6 +226,11 @@ class TestDiveAir10m30min(TestDive):
                          "Bad no flight time: %s" % no_flight_time)
                          #TODO: STRANGE VALUE..
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         24240,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir10m40min(TestDive):
     def setUp(self):
@@ -272,6 +277,11 @@ class TestDiveAir10m40min(TestDive):
                          "Bad no flight time: %s" % no_flight_time)
                          #TODO: strange Value
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         32520,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir10m50min(TestDive):
     def setUp(self):
@@ -318,6 +328,11 @@ class TestDiveAir10m50min(TestDive):
                          "Bad no flight time: %s" % no_flight_time)
                          # TODO:Strange Value
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         40620,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir10m60min(TestDive):
     def setUp(self):
@@ -363,6 +378,11 @@ class TestDiveAir10m60min(TestDive):
                          60,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         48780,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir10m70min(TestDive):
     def setUp(self):
@@ -426,6 +446,11 @@ class TestDiveAir20m10min(TestDive):
                          0,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         15300,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir20m20min(TestDive):
     def setUp(self):
@@ -473,6 +498,11 @@ class TestDiveAir20m20min(TestDive):
                          180,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         31920,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir20m30min(TestDive):
     def setUp(self):
@@ -520,6 +550,11 @@ class TestDiveAir20m30min(TestDive):
                          720,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         48840,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir20m40min(TestDive):
     def setUp(self):
@@ -567,6 +602,11 @@ class TestDiveAir20m40min(TestDive):
                          1440,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         63120,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir20m50min(TestDive):
     def setUp(self):
@@ -630,6 +670,11 @@ class TestDiveAir30m10min(TestDive):
                          120,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         22200,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir30m20min(TestDive):
     def setUp(self):
@@ -677,6 +722,11 @@ class TestDiveAir30m20min(TestDive):
                          780,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         49020,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir30m30min(TestDive):
     def setUp(self):
@@ -724,6 +774,11 @@ class TestDiveAir30m30min(TestDive):
                          1920,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         71160,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir30m40min(TestDive):
     def setUp(self):
@@ -771,6 +826,11 @@ class TestDiveAir30m40min(TestDive):
                          3240,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         87720,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir30m50min(TestDive):
     def setUp(self):
@@ -834,6 +894,11 @@ class TestDiveAir40m10min(TestDive):
                          240,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         28620,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir40m20min(TestDive):
     def setUp(self):
@@ -881,6 +946,11 @@ class TestDiveAir40m20min(TestDive):
                          1620,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         65040,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir40m30min(TestDive):
     def setUp(self):
@@ -928,6 +998,11 @@ class TestDiveAir40m30min(TestDive):
                          3480,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         89640,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir40m40min(TestDive):
     def setUp(self):
@@ -991,6 +1066,11 @@ class TestDiveAir50m10min(TestDive):
                          420,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         35460,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir50m20min(TestDive):
     def setUp(self):
@@ -1038,6 +1118,11 @@ class TestDiveAir50m20min(TestDive):
                          2460,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         78720,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir50m30min(TestDive):
     def setUp(self):
@@ -1085,6 +1170,11 @@ class TestDiveAir50m30min(TestDive):
                          7260,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         104640,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir50m40min(TestDive):
     def setUp(self):
@@ -1148,6 +1238,11 @@ class TestDiveAir60m10min(TestDive):
                          540,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         42180,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir60m20min(TestDive):
     def setUp(self):
@@ -1194,7 +1289,11 @@ class TestDiveAir60m20min(TestDive):
                          3540,
                          "Bad no flight time: %s" % no_flight_time)
 
-
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         90060,
+                         "Bad full desat time: %s" % desat)
 class TestDiveAir60m25min(TestDive):
     def setUp(self):
         TestDive.setUp(self)
@@ -1241,6 +1340,11 @@ class TestDiveAir60m25min(TestDive):
                          7740,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         105780,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAir60m30min(TestDive):
     def setUp(self):
@@ -1322,6 +1426,11 @@ class TestDiveMultilevel(TestDive):
                          5460,
                          "Bad no flight time: %s" % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         99900,
+                         "Bad full desat time: %s" % desat)
 
 # =============================================================================
 # ========================= M A I N ===========================================

@@ -109,6 +109,11 @@ class TestDiveAirDecoNx8010m10min(TestDive):
         self.assertEqual(no_flight_time, 120, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         7800,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8010m20min(TestDive):
 
@@ -158,6 +163,11 @@ class TestDiveAirDecoNx8010m20min(TestDive):
         self.assertEqual(no_flight_time, 1080, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         16020,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8010m30min(TestDive):
 
@@ -206,6 +216,11 @@ class TestDiveAirDecoNx8010m30min(TestDive):
         self.assertEqual(no_flight_time, 0, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         24000,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8010m40min(TestDive):
 
@@ -255,6 +270,11 @@ class TestDiveAirDecoNx8010m40min(TestDive):
         self.assertEqual(no_flight_time, 0, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         32280,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8010m50min(TestDive):
 
@@ -304,6 +324,11 @@ class TestDiveAirDecoNx8010m50min(TestDive):
         self.assertEqual(no_flight_time, 0, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         40440,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8010m60min(TestDive):
 
@@ -353,6 +378,11 @@ class TestDiveAirDecoNx8010m60min(TestDive):
         self.assertEqual(no_flight_time, 60, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         48600,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8010m70min(TestDive):
 
@@ -376,6 +406,11 @@ class TestDiveAirDecoNx8010m70min(TestDive):
                          % (self.profile1.tanks[1].check_rule(),
                          self.profile1.tanks[1].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         55680,
+                         "Bad full desat time: %s" % desat)
 
 # ==================================================== 20m tests ==============
 
@@ -426,6 +461,11 @@ class TestDiveAirDecoNx8020m10min(TestDive):
         self.assertEqual(no_flight_time, 0, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         15060,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8020m20min(TestDive):
 
@@ -474,6 +514,11 @@ class TestDiveAirDecoNx8020m20min(TestDive):
         self.assertEqual(no_flight_time, 180, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         31620,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8020m30min(TestDive):
 
@@ -522,6 +567,11 @@ class TestDiveAirDecoNx8020m30min(TestDive):
         self.assertEqual(no_flight_time, 720, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         48120,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8020m40min(TestDive):
 
@@ -570,6 +620,11 @@ class TestDiveAirDecoNx8020m40min(TestDive):
         self.assertEqual(no_flight_time, 1320, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         60900,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8020m50min(TestDive):
 
@@ -643,6 +698,11 @@ class TestDiveAirDecoNx8030m10min(TestDive):
         self.assertEqual(no_flight_time, 120, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         21780,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8030m20min(TestDive):
 
@@ -691,6 +751,11 @@ class TestDiveAirDecoNx8030m20min(TestDive):
         self.assertEqual(no_flight_time, 600, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         45360,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8030m30min(TestDive):
 
@@ -739,6 +804,11 @@ class TestDiveAirDecoNx8030m30min(TestDive):
         self.assertEqual(no_flight_time, 1560, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         64320,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8030m40min(TestDive):
 
@@ -787,6 +857,11 @@ class TestDiveAirDecoNx8030m40min(TestDive):
         self.assertEqual(no_flight_time, 2460, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         78660,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8030m50min(TestDive):
 
@@ -860,6 +935,11 @@ class TestDiveAirDecoNx8040m10min(TestDive):
         self.assertEqual(no_flight_time, 240, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         27420,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8040m20min(TestDive):
 
@@ -908,6 +988,11 @@ class TestDiveAirDecoNx8040m20min(TestDive):
         self.assertEqual(no_flight_time, 1200, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         58200,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8040m30min(TestDive):
 
@@ -956,6 +1041,11 @@ class TestDiveAirDecoNx8040m30min(TestDive):
         self.assertEqual(no_flight_time, 2520, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         79380,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8040m40min(TestDive):
 
@@ -1029,6 +1119,11 @@ class TestDiveAirDecoNx8050m10min(TestDive):
         self.assertEqual(no_flight_time, 300, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         32400,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8050m20min(TestDive):
 
@@ -1077,6 +1172,11 @@ class TestDiveAirDecoNx8050m20min(TestDive):
         self.assertEqual(no_flight_time, 1860, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         69720,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8050m30min(TestDive):
 
@@ -1125,6 +1225,11 @@ class TestDiveAirDecoNx8050m30min(TestDive):
         self.assertEqual(no_flight_time, 4020, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         92580,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8050m40min(TestDive):
 
@@ -1173,6 +1278,11 @@ class TestDiveAirDecoNx8050m40min(TestDive):
         self.assertEqual(no_flight_time, 9240, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         108960,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8050m50min(TestDive):
 
@@ -1246,6 +1356,11 @@ class TestDiveAirDecoNx8060m10min(TestDive):
         self.assertEqual(no_flight_time, 480, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         37980,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8060m20min(TestDive):
 
@@ -1294,6 +1409,11 @@ class TestDiveAirDecoNx8060m20min(TestDive):
         self.assertEqual(no_flight_time, 2520, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         79200,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8060m25min(TestDive):
 
@@ -1342,6 +1462,11 @@ class TestDiveAirDecoNx8060m25min(TestDive):
         self.assertEqual(no_flight_time, 4200, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         93420,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8060m30min(TestDive):
 
@@ -1390,6 +1515,11 @@ class TestDiveAirDecoNx8060m30min(TestDive):
         self.assertEqual(no_flight_time, 6900, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         103740,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveAirDecoNx8060m40min(TestDive):
 
@@ -1477,6 +1607,11 @@ class TestDiveMultilevel(TestDive):
         self.assertEqual(no_flight_time, 3420, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         88920,
+                         "Bad full desat time: %s" % desat)
 
 # =============================================================================
 # ========================= M A I N ===========================================

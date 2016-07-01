@@ -32,9 +32,7 @@ from dipplanner import settings
 class TestDive(unittest.TestCase):
 
     def setUp(self):
-
         # temporary hack (tests):
-
         activate_debug_for_tests()
 
         settings.RUN_TIME = True
@@ -121,6 +119,11 @@ class TestRepetitiveDive1(TestDive):
                          'wrong surface interval:%s'
                          % self.profile1.get_surface_interval())
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         100680,
+                         "Bad full desat time: %s" % desat)
 
 class TestRepetitiveDive2(TestDive):
 
@@ -186,6 +189,11 @@ class TestRepetitiveDive2(TestDive):
                          'wrong surface interval:%s'
                          % self.profile2.get_surface_interval())
 
+    def test_full_desat(self):
+        desat = self.profile2.full_desat_time()
+        self.assertEqual(desat,
+                         127020,
+                         "Bad full desat time: %s" % desat)
 class TestRepetitiveDive3(TestDive):
 
     def setUp(self):
@@ -258,6 +266,11 @@ class TestRepetitiveDive3(TestDive):
                          'wrong surface interval:%s'
                          % self.profile3.get_surface_interval())
 
+    def test_full_desat(self):
+        desat = self.profile3.full_desat_time()
+        self.assertEqual(desat,
+                         110940,
+                         "Bad full desat time: %s" % desat)
 # ========================== M A I N ==========================================
 # =============================================================================
 

@@ -35,6 +35,7 @@ from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive, SegmentDeco, SegmentAscDesc
 from dipplanner.model.buhlmann.model import Model as BuhlmannModel
 
+from dipplanner.tools import calculate_pp_h2o_surf
 from dipplanner.tools import depth_to_pressure
 from dipplanner.tools import seconds_to_mmss
 from dipplanner.tools import seconds_to_hhmmss
@@ -674,8 +675,12 @@ class Dive():
     def full_desat_time(self):
         """Evaluate the full desat time.
 
-        by doing deco at const depth of 0m until all
-        compartement are (nearly) empty.
+        By doing deco at const depth of 0m until all compartement
+        are (nearly) empty.
+        Because of compartments halftimes, full desat is never really achieved.
+        So we need to setup an arbitrary "margin": when sur-saturation falls
+        below this margin, we consider that the compartment is not satured
+        anymore.
 
         :returns: full desat time in seconds
         :rtype: int
@@ -684,7 +689,7 @@ class Dive():
                               decompression to be able to go to give altitude
         """
         full_desat_time = 0
-        margin = 0.005
+        margin = 0.01 + calculate_pp_h2o_surf(settings.SURFACE_TEMP)
 
         # bigger stop time to speed up calculation
         # (precision is not necesary here)

@@ -113,6 +113,11 @@ class TestRepetitiveTxDive1(TestDive):
         self.assertEqual(no_flight_time, 12780, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         64020,
+                         "Bad full desat time: %s" % desat)
 
 class TestRepetitiveTxDive2(TestDive):
 
@@ -167,6 +172,11 @@ class TestRepetitiveTxDive2(TestDive):
         self.assertEqual(no_flight_time, 19020, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile2.full_desat_time()
+        self.assertEqual(desat,
+                         74700,
+                         "Bad full desat time: %s" % desat)
 
 class TestRepetitiveTxDive3(TestDive):
 
@@ -210,7 +220,7 @@ class TestRepetitiveTxDive3(TestDive):
 
     def test_cns(self):
         self.assertAlmostEqual(self.profile3.model.ox_tox.cns * 100,
-                               12.641247611355421 , 7, 'bad dive CNS ? (%s)'
+                               12.641247611355421, 7, 'bad dive CNS ? (%s)'
                                % (self.profile3.model.ox_tox.cns * 100))
 
     def test_tank_cons(self):
@@ -229,6 +239,11 @@ class TestRepetitiveTxDive3(TestDive):
         self.assertEqual(no_flight_time, 7500, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile3.full_desat_time()
+        self.assertEqual(desat,
+                         71880,
+                         "Bad full desat time: %s" % desat)
 
 # =============================================================================
 # ========================== M A I N ==========================================

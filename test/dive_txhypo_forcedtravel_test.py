@@ -109,6 +109,11 @@ class TestDiveTxHypo50m10min(TestDive):
         self.assertEqual(no_flight_time, 1200, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         29220,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo50m20min(TestDive):
 
@@ -167,6 +172,11 @@ class TestDiveTxHypo50m20min(TestDive):
         self.assertEqual(no_flight_time, 4500, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         42840,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo50m30min(TestDive):
 
@@ -224,6 +234,11 @@ class TestDiveTxHypo50m30min(TestDive):
         self.assertEqual(no_flight_time, 8460, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         49980,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo50m40min(TestDive):
 
@@ -281,6 +296,11 @@ class TestDiveTxHypo50m40min(TestDive):
         self.assertEqual(no_flight_time, 13680, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         54360,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo50m50min(TestDive):
 
@@ -313,6 +333,11 @@ class TestDiveTxHypo50m50min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         58800,
+                         "Bad full desat time: %s" % desat)
 
 # ==================================================== 60m tests ==============
 
@@ -372,6 +397,11 @@ class TestDiveTxHypo60m10min(TestDive):
         self.assertEqual(no_flight_time, 1740, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         33180,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo60m20min(TestDive):
 
@@ -429,6 +459,11 @@ class TestDiveTxHypo60m20min(TestDive):
         self.assertEqual(no_flight_time, 6240, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         46440,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo60m30min(TestDive):
 
@@ -486,6 +521,11 @@ class TestDiveTxHypo60m30min(TestDive):
         self.assertEqual(no_flight_time, 12660, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         53580,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo60m40min(TestDive):
 
@@ -518,6 +558,11 @@ class TestDiveTxHypo60m40min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         62880,
+                         "Bad full desat time: %s" % desat)
 
 # ==================================================== 70m tests ==============
 
@@ -577,6 +622,11 @@ class TestDiveTxHypo70m10min(TestDive):
         self.assertEqual(no_flight_time, 2460, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         36480,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo70m20min(TestDive):
 
@@ -634,6 +684,11 @@ class TestDiveTxHypo70m20min(TestDive):
         self.assertEqual(no_flight_time, 8580, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         49320,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo70m30min(TestDive):
 
@@ -666,6 +721,11 @@ class TestDiveTxHypo70m30min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         62580,
+                         "Bad full desat time: %s" % desat)
 
 # ==================================================== 80m tests ==============
 
@@ -725,6 +785,11 @@ class TestDiveTxHypo80m10min(TestDive):
         self.assertEqual(no_flight_time, 3360, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         39480,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo80m20min(TestDive):
 
@@ -782,6 +847,11 @@ class TestDiveTxHypo80m20min(TestDive):
         self.assertEqual(no_flight_time, 11880, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         55680,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo80m30min(TestDive):
 
@@ -814,6 +884,11 @@ class TestDiveTxHypo80m30min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         70740,
+                         "Bad full desat time: %s" % desat)
 
 # ==================================================== 90m tests ==============
 
@@ -873,6 +948,11 @@ class TestDiveTxHypo90m10min(TestDive):
         self.assertEqual(no_flight_time, 4740, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         42180,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo90m20min(TestDive):
 
@@ -930,6 +1010,11 @@ class TestDiveTxHypo90m20min(TestDive):
         self.assertEqual(no_flight_time, 14760, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         63120,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo90m30min(TestDive):
 
@@ -962,6 +1047,11 @@ class TestDiveTxHypo90m30min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         77640,
+                         "Bad full desat time: %s" % desat)
 
 # =================================================== 100m tests ==============
 
@@ -1021,6 +1111,11 @@ class TestDiveTxHypo100m10min(TestDive):
         self.assertEqual(no_flight_time, 5880, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         44640,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo100m15min(TestDive):
 
@@ -1078,6 +1173,11 @@ class TestDiveTxHypo100m15min(TestDive):
         self.assertEqual(no_flight_time, 12000, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         58260,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo100m20min(TestDive):
 
@@ -1110,6 +1210,11 @@ class TestDiveTxHypo100m20min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         68760,
+                         "Bad full desat time: %s" % desat)
 
 # =================================================== 110m tests ==============
 
@@ -1169,6 +1274,11 @@ class TestDiveTxHypo110m10min(TestDive):
         self.assertEqual(no_flight_time, 6900, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         47040,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo110m15min(TestDive):
 
@@ -1226,6 +1336,11 @@ class TestDiveTxHypo110m15min(TestDive):
         self.assertEqual(no_flight_time, 14280, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         63840,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo110m20min(TestDive):
 
@@ -1258,6 +1373,11 @@ class TestDiveTxHypo110m20min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         74760,
+                         "Bad full desat time: %s" % desat)
 
 # =================================================== 120m tests ==============
 
@@ -1317,6 +1437,11 @@ class TestDiveTxHypo120m10min(TestDive):
         self.assertEqual(no_flight_time, 8760, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         52920,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo120m15min(TestDive):
 
@@ -1349,6 +1474,11 @@ class TestDiveTxHypo120m15min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         69000,
+                         "Bad full desat time: %s" % desat)
 
 # =================================================== 130m tests ==============
 
@@ -1408,6 +1538,11 @@ class TestDiveTxHypo130m10min(TestDive):
         self.assertEqual(no_flight_time, 10980, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         57780,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo130m15min(TestDive):
 
@@ -1440,6 +1575,11 @@ class TestDiveTxHypo130m15min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         73620,
+                         "Bad full desat time: %s" % desat)
 
 # =================================================== 140m tests ==============
 
@@ -1499,6 +1639,11 @@ class TestDiveTxHypo140m10min(TestDive):
         self.assertEqual(no_flight_time, 13260, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         62640,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo140m15min(TestDive):
 
@@ -1531,6 +1676,11 @@ class TestDiveTxHypo140m15min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         78600,
+                         "Bad full desat time: %s" % desat)
 
 # =================================================== 150m tests ==============
 
@@ -1590,6 +1740,11 @@ class TestDiveTxHypo150m10min(TestDive):
         self.assertEqual(no_flight_time, 15240, 'Bad no flight time: %s'
                          % no_flight_time)
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         66960,
+                         "Bad full desat time: %s" % desat)
 
 class TestDiveTxHypo150m15min(TestDive):
 
@@ -1622,6 +1777,11 @@ class TestDiveTxHypo150m15min(TestDive):
                          % (self.profile1.tanks[2].check_rule(),
                          self.profile1.tanks[2].name))
 
+    def test_full_desat(self):
+        desat = self.profile1.full_desat_time()
+        self.assertEqual(desat,
+                         82320,
+                         "Bad full desat time: %s" % desat)
 
 # =================================================== 160m tests ==============
 

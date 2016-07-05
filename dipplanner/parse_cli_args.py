@@ -132,8 +132,8 @@ class DipplannerCliArguments():
         group2 = self.parser.add_argument_group("Dive Parameters")
         group2.add_argument(
             "--model", metavar="VAL", type=str,
-            choices=['ZHL16b', 'ZHL16c'],
-            help="""Decompression model: either ZHL16b or ZHL16c """)
+            choices=['ZHL16a', 'ZHL16b', 'ZHL16c'],
+            help="""Decompression model: either ZHL16a, ZHL16b or ZHL16c """)
 
         group2.add_argument(
             "--gflow", metavar="VAL", type=str,

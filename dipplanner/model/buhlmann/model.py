@@ -144,7 +144,7 @@ class Model():
         """
         self.gradient = Gradient(settings.GF_LOW, settings.GF_HIGH)
 
-    def set_time_constants(self, deco_model=settings.DECO_MODEL):
+    def set_time_constants(self, deco_model=None):
         """Initialize time constants in buhlmann tissue list.
 
         Only for metric values
@@ -154,10 +154,54 @@ class Model():
         # note: comparing with buhlmann original (1990) ZH-L16 a coeficient,
         # there is here a x10 factor for a coeficient
         # h_he, h_n2, a_he, b_he, a_n2, b_n2
+        if deco_model is None:
+            deco_model = settings.DECO_MODEL
         if deco_model == "ZHL16c":
             self.logger.info("model used: Buhlmann ZHL16c")
-            self.tissues[0].set_compartment_time_constants(
-                001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
+            if settings.BUHLMANN_VALUES == '1a':
+                self.tissues[0].set_compartment_time_constants(
+                    001.51, 004.0, 17.424, 0.4245, 12.599, 0.5050)
+            elif settings.BUHLMANN_VALUES == '1b':
+                self.tissues[0].set_compartment_time_constants(
+                    001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
+            self.tissues[1].set_compartment_time_constants(
+                003.02, 008.0, 13.830, 0.5747, 10.000, 0.6514)
+            self.tissues[2].set_compartment_time_constants(
+                004.72, 012.5, 11.919, 0.6527, 08.618, 0.7222)
+            self.tissues[3].set_compartment_time_constants(
+                006.99, 018.5, 10.458, 0.7223, 07.562, 0.7825)
+            self.tissues[4].set_compartment_time_constants(
+                010.21, 027.0, 09.220, 0.7582, 06.200, 0.8126)
+            self.tissues[5].set_compartment_time_constants(
+                014.48, 038.3, 08.205, 0.7957, 05.043, 0.8434)
+            self.tissues[6].set_compartment_time_constants(
+                020.53, 054.3, 07.305, 0.8279, 04.410, 0.8693)
+            self.tissues[7].set_compartment_time_constants(
+                029.11, 077.0, 06.502, 0.8553, 04.000, 0.8910)
+            self.tissues[8].set_compartment_time_constants(
+                041.20, 109.0, 05.950, 0.8757, 03.750, 0.9092)
+            self.tissues[9].set_compartment_time_constants(
+                055.19, 146.0, 05.545, 0.8903, 03.500, 0.9222)
+            self.tissues[10].set_compartment_time_constants(
+                070.69, 187.0, 05.333, 0.8997, 03.295, 0.9319)
+            self.tissues[11].set_compartment_time_constants(
+                090.34, 239.0, 05.189, 0.9073, 03.065, 0.9403)
+            self.tissues[12].set_compartment_time_constants(
+                115.29, 305.0, 05.181, 0.9122, 02.835, 0.9477)
+            self.tissues[13].set_compartment_time_constants(
+                147.42, 390.0, 05.176, 0.9171, 02.610, 0.9544)
+            self.tissues[14].set_compartment_time_constants(
+                188.24, 498.0, 05.172, 0.9217, 02.480, 0.9602)
+            self.tissues[15].set_compartment_time_constants(
+                240.03, 635.0, 05.119, 0.9267, 02.327, 0.9653)
+        elif deco_model == "ZHL16b":
+            self.logger.info("model used: Buhlmann ZHL16b")
+            if settings.BUHLMANN_VALUES == '1a':
+                self.tissues[0].set_compartment_time_constants(
+                    001.51, 004.0, 17.424, 0.4245, 12.599, 0.5050)
+            elif settings.BUHLMANN_VALUES == '1b':
+                self.tissues[0].set_compartment_time_constants(
+                    001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
             self.tissues[1].set_compartment_time_constants(
                 003.02, 008.0, 13.830, 0.5747, 10.000, 0.6514)
             self.tissues[2].set_compartment_time_constants(
@@ -188,10 +232,14 @@ class Model():
                 188.24, 498.0, 05.172, 0.9217, 02.523, 0.9602)
             self.tissues[15].set_compartment_time_constants(
                 240.03, 635.0, 05.119, 0.9267, 02.327, 0.9653)
-        elif deco_model == "ZHL16b":
-            self.logger.info("model used: Buhlmann ZHL16b")
-            self.tissues[0].set_compartment_time_constants(
-                001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
+        elif deco_model == "ZHL16a":
+            self.logger.info("model used: Buhlmann ZHL16a")
+            if settings.BUHLMANN_VALUES == '1a':
+                self.tissues[0].set_compartment_time_constants(
+                    001.51, 004.0, 17.424, 0.4245, 12.599, 0.5050)
+            elif settings.BUHLMANN_VALUES == '1b':
+                self.tissues[0].set_compartment_time_constants(
+                    001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
             self.tissues[1].set_compartment_time_constants(
                 003.02, 008.0, 13.830, 0.5747, 10.000, 0.6514)
             self.tissues[2].set_compartment_time_constants(

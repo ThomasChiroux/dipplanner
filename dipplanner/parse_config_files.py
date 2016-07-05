@@ -92,7 +92,7 @@ class DipplannerConfigFiles():
             section = 'general'
             if config.has_option(section, 'deco_model'):
                 model = ''.join(config.get(section, 'deco_model')).strip()
-                if model == "ZHL16b" or model == "ZHL16c":
+                if model in ("ZHL16a", "ZHL16b", "ZHL16c"):
                     settings.DECO_MODEL = model
 
             if config.has_option(section, 'gf_low'):

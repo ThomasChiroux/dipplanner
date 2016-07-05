@@ -77,7 +77,9 @@ FLIGHT_ALTITUDE = 2450
 # ========= User settings ========
 TEMPLATE = "default-color.tpl"  #: template should be in templates/ directory
 
-DECO_MODEL = "ZHL16c"  #: ZHL16c or ZHL16b
+DECO_MODEL = "ZHL16c"  #: ZHL16c or ZHL16b or ZHL16a
+BUHLMANN_VALUES = "1a"  #: 1a (4 mins for 1st comp) or 1b (5 mins)
+
 
 WATER_DENSITY = SEA_WATER_DENSITY  #: water density kg/l
 

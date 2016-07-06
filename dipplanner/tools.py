@@ -145,7 +145,7 @@ def altitude_to_pressure(altitude):
             settings.AMBIANT_PRESSURE_SEA_LEVEL)
 
 
-def depth_to_pressure(depth, method=settings.METHOD_FOR_DEPTH_CALCULATION):
+def depth_to_pressure(depth, method=None):
     """Calculate pressure based on given depth.
 
     depending of choosen mehod (complex or not), the calculation is done
@@ -158,6 +158,8 @@ def depth_to_pressure(depth, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     :returns: depth pressure in bar
     :rtype: float
     """
+    if method is None:
+        method = settings.METHOD_FOR_DEPTH_CALCULATION
     if method == 'complex':
         g = 9.81
         return settings.WATER_DENSITY * 1E3 * g * float(depth) * 1E-5
@@ -165,7 +167,7 @@ def depth_to_pressure(depth, method=settings.METHOD_FOR_DEPTH_CALCULATION):
         return depth / 10
 
 
-def pressure_to_depth(pressure, method=settings.METHOD_FOR_DEPTH_CALCULATION):
+def pressure_to_depth(pressure, method=None):
     """Calculate depth based on given pressure.
 
     depending of choosen mehod (complex or not), the calculation is done
@@ -178,6 +180,8 @@ def pressure_to_depth(pressure, method=settings.METHOD_FOR_DEPTH_CALCULATION):
     :returns: depth in meter
     :rtype: float
     """
+    if method is None:
+        method = settings.METHOD_FOR_DEPTH_CALCULATION
     if method == 'complex':
         g = 9.81
         return pressure / (settings.WATER_DENSITY * 1E3 * g * 1E-5)

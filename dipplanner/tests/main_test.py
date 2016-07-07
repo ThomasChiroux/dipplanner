@@ -293,7 +293,7 @@ class TestAllConfig(TestCliArguments):
         cli_args = ["dipplanner",
                     "-t", "airtank;0.21;0.0;12;200;50b",
                     "-s", "30;25*60;airtank;0.0",
-                    "-c", "test/configs/test_config.cfg",
+                    "-c", "dipplanner/tests/configs/test_config.cfg",
                     "-c", "configs/test_config.cfg", ]
 
         dipplanner_arguments = DipplannerCliArguments(cli_args)
@@ -302,11 +302,12 @@ class TestAllConfig(TestCliArguments):
 
     @classmethod
     def tearDownClass(cls):
-        cli_args = ["dipplanner",
-                    "-t", "airtank;0.21;0.0;12;200;50b",
-                    "-s", "30;25*60;airtank;0.0",
-                    "-c", "test/configs/restore_default_config.cfg",
-                    "-c", "configs/restore_default_config.cfg", ]
+        cli_args = [
+            "dipplanner",
+            "-t", "airtank;0.21;0.0;12;200;50b",
+            "-s", "30;25*60;airtank;0.0",
+            "-c", "dipplanner/tests/configs/restore_default_config.cfg",
+            "-c", "configs/restore_default_config.cfg", ]
 
         DipplannerCliArguments(cli_args)
 
@@ -527,20 +528,3 @@ class TestAllConfig(TestCliArguments):
                          2699,
                          "Wrong flight_altitude: %s"
                          % settings.FLIGHT_ALTITUDE)
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-        help='name of the tests to run '
-             '(separated by space) [optionnal]')
-    args = parser.parse_args()
-    if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
-            sys.modules[__name__])
-    else:
-        suite = unittest.findTestCases(sys.modules[__name__])
-    unittest.TextTestRunner(verbosity=2).run(suite)
-

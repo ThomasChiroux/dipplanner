@@ -90,8 +90,8 @@ DEFAULT_MAX_PPO2 = 1.6  #: in bar
 DEFAULT_MIN_PPO2 = 0.21  #: in bar
 DEFAULT_MAX_END = 30  #: in meter
 
-DIVE_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
-DECO_CONSUMPTION_RATE = 12.0 / 60  #: liter/s
+DIVE_CONSUMPTION_RATE = 20.0 / 60  #: liter/s
+DECO_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
 
 DESCENT_RATE = 20 / 60  #: m/s
 ASCENT_RATE = 10 / 60  #: m/s

@@ -8,29 +8,29 @@ see README for more infos.
 Run all tests:
 ==============
 
-python test/run_unittest.py
-
-or (with nose)
-
-python test/run_nose.py
-
-or 
-
-python setup.py test
+nosetests
 
 
 Run one test in particular:
 ===========================
 
-python test/module_test.py
+nosetests  dipplanner/tests/module_to_test.py
 
 Run one sub-test in particular:
 ===============================
 
-python test/module_test.py submodule
+nosetests  dipplanner/tests/module_to_test.py ClassToTest
 
-Example of sub-module test
-==========================
+ex::
 
-python test/dive_test.py TestDiveAirDiveRunTime1
+    nosetests dipplanner/tests/dive_test.py TestDiveAirDiveRunTime1
+
+Test only rt for a specific module
+==================================
+
+ex::
+
+    nosetests -e "tank|flight|otu|cns|desat" dipplanner/tests/dive_air_test.py
+
+
 

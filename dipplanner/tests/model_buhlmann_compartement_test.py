@@ -164,23 +164,3 @@ class TestModelBuhlmannCompartemntMV1(TestModelBuhlmannCompartemnt):
         mv = self.compt3.get_mv(1.0)
         self.assertEqual(round(mv, 11), 1.06671806333,
                          "wrong mv for given amb pressure : %s" % mv)
-
-
-def main():
-    import sys
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run '
-                             '(separated by space) [optionnal]')
-    args = parser.parse_args()
-    if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
-                                                         sys.modules[__name__])
-    else:
-        suite = unittest.findTestCases(sys.modules[__name__])
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
-if __name__ == "__main__":
-    main()

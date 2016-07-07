@@ -31,32 +31,14 @@ from dipplanner.segment import SegmentDive
 from dipplanner.tools import seconds_to_mmss
 from dipplanner import settings
 
-
-class TestDive(unittest.TestCase):
-
-    def setUp(self):
-
-        # temporary hack (tests):
-
-        activate_debug_for_tests()
-        settings.RUN_TIME = True
-        settings.SURFACE_TEMP = 12
-        self.air12l = Tank(tank_vol=12.0, tank_pressure=200)
-        self.airtank = Tank(tank_vol=18.0, tank_pressure=200)
-        self.airtank12 = Tank(tank_vol=12.0, tank_pressure=200)
-        self.airdouble = Tank(tank_vol=30.0, tank_pressure=200)  # bi15l 200b
-        self.txtank1 = Tank(0.21, 0.30, tank_vol=20.0,
-                            tank_pressure=200)
-        self.txtanknormodbl = Tank(0.21, 0.30, tank_vol=30.0,
-                                   tank_pressure=200)
-        self.deco1 = Tank(0.8, 0.0, tank_vol=7.0, tank_pressure=200)
-        self.deco2 = Tank(0.5, 0.0, tank_vol=7.0, tank_pressure=200)
-        self.decoo2 = Tank(1.0, 0.0, tank_vol=7.0, tank_pressure=200)
+from dipplanner.tests.common import TestDive
 
 
 class TestDiveNotEnoughGas1(TestDive):
+    """Test a profile with not enough gas."""
 
     def runTest(self):
+        """Not enought gas test"""
         diveseg1 = SegmentDive(60, 30 * 60, self.air12l, 0)
         self.profile1 = Dive([diveseg1], [self.air12l])
         self.profile1.do_dive()
@@ -66,6 +48,7 @@ class TestDiveNotEnoughGas1(TestDive):
                          % self.profile1.tanks[0].check_rule())
 
 class TestDiveAirDiveOutput1(TestDive):
+    """Test segments output for air dive 1."""
 
     expected_result = [
         " DESCENT: at  30m for   1:30 [RT:  1:30], on Air,  SP:0.0, END:29m",
@@ -79,16 +62,18 @@ class TestDiveAirDiveOutput1(TestDive):
         "  ASCENT: at   6m for   1:00 [RT: 37:30], on Air,  SP:0.0, END:5m",
         "    DECO: at   6m for   4:59 [RT: 42:29], on Air,  SP:0.0, END:5m",
         "  ASCENT: at   3m for   1:00 [RT: 43:29], on Air,  SP:0.0, END:2m",
-        "    DECO: at   3m for   8:43 [RT: 52:12], on Air,  SP:0.0, END:2m",
-        "  ASCENT: at   0m for   1:00 [RT: 53:12], on Air,  SP:0.0, END:0m", ]
+        "    DECO: at   3m for  12:42 [RT: 56:11], on Air,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 57:11], on Air,  SP:0.0, END:0m", ]
 
     def setUp(self):
-        TestDive.setUp(self)
+        """Init of the tests."""
+        super().setUp()
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
         self.profile1 = Dive([diveseg1], [self.airtank])
         self.profile1.do_dive()
 
     def test_segments(self):
+        """Check all segments."""
         for idx in range(len(self.expected_result)):
             self.assertEqual(
                 str(self.profile1.output_segments[idx]),
@@ -98,6 +83,7 @@ class TestDiveAirDiveOutput1(TestDive):
 
 
 class TestDiveAirDiveOutput_woExc(TestDive):
+    """Test segments output for air dive 1 without exc."""
 
     expected_result = [
         " DESCENT: at  30m for   1:30 [RT:  1:30], on Air,  SP:0.0, END:29m",
@@ -111,17 +97,19 @@ class TestDiveAirDiveOutput_woExc(TestDive):
         "  ASCENT: at   6m for   1:00 [RT: 37:30], on Air,  SP:0.0, END:5m",
         "    DECO: at   6m for   4:59 [RT: 42:29], on Air,  SP:0.0, END:5m",
         "  ASCENT: at   3m for   1:00 [RT: 43:29], on Air,  SP:0.0, END:2m",
-        "    DECO: at   3m for   8:43 [RT: 52:12], on Air,  SP:0.0, END:2m",
-        "  ASCENT: at   0m for   1:00 [RT: 53:12], on Air,  SP:0.0, END:0m", ]
+        "    DECO: at   3m for  12:42 [RT: 56:11], on Air,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 57:11], on Air,  SP:0.0, END:0m", ]
 
 
     def setUp(self):
-        TestDive.setUp(self)
+        """Init of the tests."""
+        super().setUp()
         diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
         self.profile1 = Dive([diveseg1], [self.airtank])
         self.profile1.do_dive_without_exceptions()
 
     def test_segments(self):
+        """Check all segments."""
         for idx in range(len(self.expected_result)):
             self.assertEqual(
                 str(self.profile1.output_segments[idx]),
@@ -130,19 +118,8 @@ class TestDiveAirDiveOutput_woExc(TestDive):
                     idx, self.profile1.output_segments[idx]))
 
 
-
-class TestDiveAirDiveRunTime1(TestDive):
-
-    def runTest(self):
-        diveseg1 = SegmentDive(30, 30 * 60, self.airtank, 0)
-        self.profile1 = Dive([diveseg1], [self.airtank])
-        self.profile1.do_dive()
-        self.assertEqual(seconds_to_mmss(self.profile1.run_time),
-                         ' 53:12', 'bad dive runtime ? (%s)'
-                         % seconds_to_mmss(self.profile1.run_time))
-
-
 class TestDiveAirDiveOutput2(TestDive):
+    """Test segments output for air dive 2."""
 
     expected_result = [
         " DESCENT: at  20m for   1:00 [RT:  1:00], on Air,  SP:0.0, END:19m",
@@ -156,32 +133,24 @@ class TestDiveAirDiveOutput2(TestDive):
         "  ASCENT: at   0m for   1:00 [RT: 34:58], on Air,  SP:0.0, END:0m", ]
 
     def setUp(self):
-        TestDive.setUp(self)
+        """Init of the tests."""
+        super().setUp()
         diveseg2 = SegmentDive(20, 30 * 60, self.airtank, 0)
-        self.profile2 = Dive([diveseg2], [self.airtank])
-        self.profile2.do_dive()
+        self.profile1 = Dive([diveseg2], [self.airtank])
+        self.profile1.do_dive()
 
     def test_segments(self):
+        """Check all segments."""
         for idx in range(len(self.expected_result)):
             self.assertEqual(
-                str(self.profile2.output_segments[idx]),
+                str(self.profile1.output_segments[idx]),
                 self.expected_result[idx],
                 'bad segment n°%s (%s)' % (
-                    idx, self.profile2.output_segments[idx]))
-
-
-class TestDiveAirDiveRunTime2(TestDive):
-
-    def runTest(self):
-        diveseg2 = SegmentDive(20, 30 * 60, self.airtank, 0)
-        self.profile2 = Dive([diveseg2], [self.airtank])
-        self.profile2.do_dive()
-        self.assertEqual(seconds_to_mmss(self.profile2.run_time),
-                         ' 34:58', 'bad dive runtime (%s)'
-                         % seconds_to_mmss(self.profile2.run_time))
+                    idx, self.profile1.output_segments[idx]))
 
 
 class TestDiveAirDiveOutput3(TestDive):
+    """Test segments output for air dive 3."""
 
     expected_result = [
         " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:53m",
@@ -199,42 +168,34 @@ class TestDiveAirDiveOutput3(TestDive):
         "  ASCENT: at  15m for   1:00 [RT: 46:00], on Air,  SP:0.0, END:14m",
         "    DECO: at  15m for   5:24 [RT: 51:24], on Air,  SP:0.0, END:14m",
         "  ASCENT: at  12m for   1:00 [RT: 52:24], on Air,  SP:0.0, END:11m",
-        "    DECO: at  12m for   6:37 [RT: 59:01], on Air,  SP:0.0, END:11m",
-        "  ASCENT: at   9m for   1:00 [RT: 60:01], on Air,  SP:0.0, END:8m",
-        "    DECO: at   9m for  11:01 [RT: 71:02], on Air,  SP:0.0, END:8m",
-        "  ASCENT: at   6m for   1:00 [RT: 72:02], on Air,  SP:0.0, END:5m",
-        "    DECO: at   6m for  21:45 [RT: 93:47], on Air,  SP:0.0, END:5m",
-        "  ASCENT: at   3m for   1:00 [RT: 94:47], on Air,  SP:0.0, END:2m",
-        "    DECO: at   3m for  45:11 [RT:139:58], on Air,  SP:0.0, END:2m",
-        "  ASCENT: at   0m for   1:00 [RT:140:58], on Air,  SP:0.0, END:0m", ]
+        "    DECO: at  12m for   7:02 [RT: 59:26], on Air,  SP:0.0, END:11m",
+        "  ASCENT: at   9m for   1:00 [RT: 60:26], on Air,  SP:0.0, END:8m",
+        "    DECO: at   9m for  13:49 [RT: 74:15], on Air,  SP:0.0, END:8m",
+        "  ASCENT: at   6m for   1:00 [RT: 75:15], on Air,  SP:0.0, END:5m",
+        "    DECO: at   6m for  25:28 [RT:100:43], on Air,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT:101:43], on Air,  SP:0.0, END:2m",
+        "    DECO: at   3m for  52:20 [RT:154:03], on Air,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT:155:03], on Air,  SP:0.0, END:0m", ]
 
     def setUp(self):
-        TestDive.setUp(self)
+        """Init of the tests."""
+        super().setUp()
         diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble])
-        self.profile3.do_dive()
+        self.profile1 = Dive([diveseg3], [self.airdouble])
+        self.profile1.do_dive()
 
     def test_segments(self):
+        """Check all segments."""
         for idx in range(len(self.expected_result)):
             self.assertEqual(
-                str(self.profile3.output_segments[idx]),
+                str(self.profile1.output_segments[idx]),
                 self.expected_result[idx],
                 'bad segment n°%s (%s)' % (
-                    idx, self.profile3.output_segments[idx]))
-
-
-class TestDiveAirDiveRunTime3(TestDive):
-
-    def runTest(self):
-        diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble])
-        self.profile3.do_dive()
-        self.assertEqual(seconds_to_mmss(self.profile3.run_time),
-                         '140:58', 'bad dive runtime (%s)'
-                         % seconds_to_mmss(self.profile3.run_time))
+                    idx, self.profile1.output_segments[idx]))
 
 
 class TestDiveAirDiveOutput4(TestDive):
+    """Test segments output for air dive 4."""
 
     expected_result = [
         " DESCENT: at  55m for   2:45 [RT:  2:45], on Air,  SP:0.0, END:53m",
@@ -254,42 +215,33 @@ class TestDiveAirDiveOutput4(TestDive):
         "  ASCENT: at  12m for   1:00 [RT: 47:42], on Nitrox 50,  SP:0.0, END:11m",
         "    DECO: at  12m for   4:13 [RT: 51:55], on Nitrox 50,  SP:0.0, END:11m",
         "  ASCENT: at   9m for   1:00 [RT: 52:55], on Nitrox 50,  SP:0.0, END:8m",
-        "    DECO: at   9m for   5:45 [RT: 58:40], on Nitrox 50,  SP:0.0, END:8m",
-        "  ASCENT: at   6m for   1:00 [RT: 59:40], on Nitrox 50,  SP:0.0, END:5m",
-        "    DECO: at   6m for   6:39 [RT: 66:19], on Oxygen,  SP:0.0, END:5m",
-        "  ASCENT: at   3m for   1:00 [RT: 67:19], on Oxygen,  SP:0.0, END:2m",
-        "    DECO: at   3m for  11:28 [RT: 78:47], on Oxygen,  SP:0.0, END:2m",
-        "  ASCENT: at   0m for   1:00 [RT: 79:47], on Oxygen,  SP:0.0, END:0m", ]
+        "    DECO: at   9m for   6:41 [RT: 59:36], on Nitrox 50,  SP:0.0, END:8m",
+        "  ASCENT: at   6m for   1:00 [RT: 60:36], on Nitrox 50,  SP:0.0, END:5m",
+        "    DECO: at   6m for   7:20 [RT: 67:56], on Oxygen,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 68:56], on Oxygen,  SP:0.0, END:2m",
+        "    DECO: at   3m for  12:32 [RT: 81:28], on Oxygen,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 82:28], on Oxygen,  SP:0.0, END:0m", ]
 
     def setUp(self):
-        TestDive.setUp(self)
+        """Init of the tests."""
+        super().setUp()
         diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble, self.decoo2,
+        self.profile1 = Dive([diveseg3], [self.airdouble, self.decoo2,
                              self.deco2])
-        self.profile3.do_dive()
+        self.profile1.do_dive()
 
     def test_segments(self):
+        """Check all segments."""
         for idx in range(len(self.expected_result)):
             self.assertEqual(
-                str(self.profile3.output_segments[idx]),
+                str(self.profile1.output_segments[idx]),
                 self.expected_result[idx],
                 'bad segment n°%s (%s)' % (
-                    idx, self.profile3.output_segments[idx]))
-
-
-class TestDiveAirDiveRunTime4(TestDive):
-
-    def runTest(self):
-        diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
-        self.profile3 = Dive([diveseg3], [self.airdouble, self.deco2,
-                             self.decoo2])
-        self.profile3.do_dive()
-        self.assertEqual(seconds_to_mmss(self.profile3.run_time),
-                         ' 79:47', 'bad dive runtime (%s)'
-                         % seconds_to_mmss(self.profile3.run_time))
+                    idx, self.profile1.output_segments[idx]))
 
 
 class TestDiveTxDiveOutput1(TestDive):
+    """Test segments output for tx dive 1."""
 
     expected_result = [
         " DESCENT: at  30m for   1:30 [RT:  1:30], on Trimix 21/30,  SP:0.0, END:19m",
@@ -301,18 +253,20 @@ class TestDiveTxDiveOutput1(TestDive):
         "  ASCENT: at   9m for   1:00 [RT: 34:09], on Trimix 21/30,  SP:0.0, END:4m",
         "    DECO: at   9m for   3:04 [RT: 37:13], on Trimix 21/30,  SP:0.0, END:4m",
         "  ASCENT: at   6m for   1:00 [RT: 38:13], on Trimix 21/30,  SP:0.0, END:1m",
-        "    DECO: at   6m for   5:13 [RT: 43:26], on Trimix 21/30,  SP:0.0, END:1m",
-        "  ASCENT: at   3m for   1:00 [RT: 44:26], on Trimix 21/30,  SP:0.0, END:0m",
-        "    DECO: at   3m for  14:26 [RT: 58:52], on Trimix 21/30,  SP:0.0, END:0m",
-        "  ASCENT: at   0m for   1:00 [RT: 59:52], on Trimix 21/30,  SP:0.0, END:0m", ]
+        "    DECO: at   6m for   6:25 [RT: 44:38], on Trimix 21/30,  SP:0.0, END:1m",
+        "  ASCENT: at   3m for   1:00 [RT: 45:38], on Trimix 21/30,  SP:0.0, END:0m",
+        "    DECO: at   3m for  16:12 [RT: 61:50], on Trimix 21/30,  SP:0.0, END:0m",
+        "  ASCENT: at   0m for   1:00 [RT: 62:50], on Trimix 21/30,  SP:0.0, END:0m", ]
 
     def setUp(self):
-        TestDive.setUp(self)
+        """Init of the tests."""
+        super().setUp()
         diveseg1 = SegmentDive(30, 30 * 60, self.txtank1, 0)
         self.profile1 = Dive([diveseg1], [self.txtank1])
         self.profile1.do_dive()
 
     def test_segments(self):
+        """Check all segments."""
         for idx in range(len(self.expected_result)):
             self.assertEqual(
                 str(self.profile1.output_segments[idx]),
@@ -321,18 +275,8 @@ class TestDiveTxDiveOutput1(TestDive):
                     idx, self.profile1.output_segments[idx]))
 
 
-class TestDiveTxDiveRunTime1(TestDive):
-
-    def runTest(self):
-        diveseg1 = SegmentDive(30, 30 * 60, self.txtank1, 0)
-        self.profile1 = Dive([diveseg1], [self.txtank1])
-        self.profile1.do_dive()
-        self.assertEqual(seconds_to_mmss(self.profile1.run_time),
-                         ' 59:52', 'bad dive runtime (%s)'
-                         % seconds_to_mmss(self.profile1.run_time))
-
-
 class TestDiveCCRDiveOutput1(TestDive):
+    """Test segments output for ccr dive 1."""
 
     expected_result = [
         " DESCENT: at  55m for   2:45 [RT:  2:45], on Trimix 21/30,  SP:1.4, END:38m",
@@ -348,51 +292,29 @@ class TestDiveCCRDiveOutput1(TestDive):
         "  ASCENT: at  18m for   1:00 [RT: 39:30], on Trimix 21/30,  SP:1.4, END:13m",
         "    DECO: at  18m for   1:55 [RT: 41:25], on Trimix 21/30,  SP:1.4, END:13m",
         "  ASCENT: at  15m for   1:00 [RT: 42:25], on Trimix 21/30,  SP:1.4, END:11m",
-        "    DECO: at  15m for   2:09 [RT: 44:34], on Trimix 21/30,  SP:1.4, END:11m",
-        "  ASCENT: at  12m for   1:00 [RT: 45:34], on Trimix 21/30,  SP:1.4, END:9m",
-        "    DECO: at  12m for   3:16 [RT: 48:50], on Trimix 21/30,  SP:1.4, END:9m",
-        "  ASCENT: at   9m for   1:00 [RT: 49:50], on Trimix 21/30,  SP:1.4, END:7m",
-        "    DECO: at   9m for   4:59 [RT: 54:49], on Trimix 21/30,  SP:1.4, END:7m",
-        "  ASCENT: at   6m for   1:00 [RT: 55:49], on Trimix 21/30,  SP:1.4, END:4m",
-        "    DECO: at   6m for   6:24 [RT: 62:13], on Oxygen,  SP:0.0, END:5m",
-        "  ASCENT: at   3m for   1:00 [RT: 63:13], on Oxygen,  SP:0.0, END:2m",
-        "    DECO: at   3m for  11:46 [RT: 74:59], on Oxygen,  SP:0.0, END:2m",
-        "  ASCENT: at   0m for   1:00 [RT: 75:59], on Oxygen,  SP:0.0, END:0m", ]
+        "    DECO: at  15m for   2:21 [RT: 44:46], on Trimix 21/30,  SP:1.4, END:11m",
+        "  ASCENT: at  12m for   1:00 [RT: 45:46], on Trimix 21/30,  SP:1.4, END:9m",
+        "    DECO: at  12m for   3:21 [RT: 49:07], on Trimix 21/30,  SP:1.4, END:9m",
+        "  ASCENT: at   9m for   1:00 [RT: 50:07], on Trimix 21/30,  SP:1.4, END:7m",
+        "    DECO: at   9m for   5:15 [RT: 55:22], on Trimix 21/30,  SP:1.4, END:7m",
+        "  ASCENT: at   6m for   1:00 [RT: 56:22], on Trimix 21/30,  SP:1.4, END:4m",
+        "    DECO: at   6m for   6:44 [RT: 63:06], on Oxygen,  SP:0.0, END:5m",
+        "  ASCENT: at   3m for   1:00 [RT: 64:06], on Oxygen,  SP:0.0, END:2m",
+        "    DECO: at   3m for  12:26 [RT: 76:32], on Oxygen,  SP:0.0, END:2m",
+        "  ASCENT: at   0m for   1:00 [RT: 77:32], on Oxygen,  SP:0.0, END:0m", ]
 
     def setUp(self):
-        TestDive.setUp(self)
+        """Init of the tests."""
+        super().setUp()
         diveseg1 = SegmentDive(55, 30 * 60, self.txtank1, 1.4)
         self.profile1 = Dive([diveseg1], [self.txtank1, self.decoo2])
         self.profile1.do_dive()
 
     def test_segments(self):
+        """Check all segments."""
         for idx in range(len(self.expected_result)):
             self.assertEqual(
                 str(self.profile1.output_segments[idx]),
                 self.expected_result[idx],
                 'bad segment n°%s (%s)' % (
                     idx, self.profile1.output_segments[idx]))
-
-# =============================================================================
-# ========================== M A I N ==========================================
-# =============================================================================
-
-def main():
-    import sys
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run '
-                             '(separated by space) [optionnal]')
-    args = parser.parse_args()
-    if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
-                                                         sys.modules[__name__])
-    else:
-        suite = unittest.findTestCases(sys.modules[__name__])
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
-
-if __name__ == '__main__':
-    main()

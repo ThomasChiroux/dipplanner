@@ -23,6 +23,7 @@ import pkg_resources
 from dipplanner.dive import Dive
 from dipplanner.segment import SegmentDive
 from dipplanner.segment import UnauthorizedMod
+from dipplanner import settings
 
 from dipplanner.tests.common import TestDive, TMethodsMixin
 
@@ -30,7 +31,7 @@ from dipplanner.tests.common import TestDive, TMethodsMixin
 # ============================================================================
 # ======= S Y S T E M A T I C        T E S T S ===============================
 # ============================================================================
-class TestDiveAirBase(TestDive):
+class TestDiveCCAirBase(TestDive):
     """Class for test air dive."""
 
     def setUp(self):
@@ -44,221 +45,162 @@ class TestDiveAirBase(TestDive):
                 __name__.split('.')[-1] + '.json').decode('utf-8'))
 
 
-class TestDiveAir(TestDiveAirBase):
+class TestDiveCCAir(TestDiveCCAirBase):
     """Class for test air dive."""
 
     def setUp(self):
         """Init of the tests."""
         super().setUp()
 
-        self.dive_tank = self.airtank12
-        self.all_tanks = [self.airtank12]
-        self.do_dive()
-
-
-class TestDiveAirMultilevel(TestDiveAirBase):
-    """Multilevel dive test."""
-
-    def setUp(self):
-        """Init of multilevel test."""
-        super().setUp()
-
-        self.dive_tank = self.airdouble
-        self.all_tanks = [self.airdouble]
+        settings.RUN_TIME = False
+        self.setpoint = 1.2
+        self.dive_tank = self.ccair
+        self.all_tanks = [self.ccair]
         self.do_dive()
 
 
 # AIR =========================================================================
 # =============================================s====== 10m tests ==============
-class TestDiveAir10m10min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir10m10min(TestDiveCCAir, TMethodsMixin):
     """Test air 10m 10min."""
 
     params = ((10, 10), )
 
 
 
-class TestDiveAir10m20min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir10m20min(TestDiveCCAir, TMethodsMixin):
     """Test air 10m 20min."""
 
     params = ((10, 20), )
 
 
-class TestDiveAir10m30min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir10m30min(TestDiveCCAir, TMethodsMixin):
     """Test air 10m 30min."""
 
     params = ((10, 30), )
 
 
-class TestDiveAir10m40min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir10m40min(TestDiveCCAir, TMethodsMixin):
     """Test air 10m 40min."""
 
     params = ((10, 40), )
 
 
-class TestDiveAir10m50min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir10m50min(TestDiveCCAir, TMethodsMixin):
     """Test air 10m 50min."""
 
     params = ((10, 50), )
 
 
-class TestDiveAir10m60min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir10m60min(TestDiveCCAir, TMethodsMixin):
     """Test air 10m 60min."""
 
     params = ((10, 60), )
 
 
-class TestDiveAir10m70min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir10m70min(TestDiveCCAir, TMethodsMixin):
     """Test air 10m 70min."""
 
     params = ((10, 70), )
 
 
 # ==================================================== 20m tests ==============
-class TestDiveAir20m10min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir20m10min(TestDiveCCAir, TMethodsMixin):
     """Test air 20m 10min."""
 
     params = ((20, 10), )
 
-class TestDiveAir20m20min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir20m20min(TestDiveCCAir, TMethodsMixin):
     """Test air 20m 20min."""
 
     params = ((20, 20), )
 
-class TestDiveAir20m30min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir20m30min(TestDiveCCAir, TMethodsMixin):
     """Test air 20m 30min."""
 
     params = ((20, 30), )
 
-class TestDiveAir20m40min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir20m40min(TestDiveCCAir, TMethodsMixin):
     """Test air 20m 40min."""
 
     params = ((20, 40), )
 
-class TestDiveAir20m50min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir20m50min(TestDiveCCAir, TMethodsMixin):
     """Test air 20m 50min."""
 
     params = ((20, 50), )
 
 
 # ==================================================== 30m tests ==============
-class TestDiveAir30m10min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir30m10min(TestDiveCCAir, TMethodsMixin):
     """Test air 30m 10min."""
 
     params = ((30, 10), )
 
 
-class TestDiveAir30m20min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir30m20min(TestDiveCCAir, TMethodsMixin):
     """Test air 30m 20min."""
 
     params = ((30, 20), )
 
 
-class TestDiveAir30m30min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir30m30min(TestDiveCCAir, TMethodsMixin):
     """Test air 30m 30min."""
 
     params = ((30, 30), )
 
-class TestDiveAir30m40min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir30m40min(TestDiveCCAir, TMethodsMixin):
     """Test air 30m 40min."""
 
     params = ((30, 40), )
 
-class TestDiveAir30m50min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir30m50min(TestDiveCCAir, TMethodsMixin):
     """Test air 30m 50min."""
 
     params = ((30, 50), )
 
 # ==================================================== 40m tests ==============
-class TestDiveAir40m10min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir40m10min(TestDiveCCAir, TMethodsMixin):
     """Test air 40m 10min."""
 
     params = ((40, 10), )
 
-class TestDiveAir40m20min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir40m20min(TestDiveCCAir, TMethodsMixin):
     """Test air 40m 20min."""
 
     params = ((40, 20), )
 
 
-class TestDiveAir40m30min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir40m30min(TestDiveCCAir, TMethodsMixin):
     """Test air 40m 30min."""
 
     params = ((40, 30), )
 
-class TestDiveAir40m40min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir40m40min(TestDiveCCAir, TMethodsMixin):
     """Test air 40m 40min."""
 
     params = ((40, 40), )
 
-class TestDiveAir40m50min(TestDiveAir, TMethodsMixin):
+class TestDiveCCAir40m50min(TestDiveCCAir, TMethodsMixin):
     """Test air 40m 50min."""
 
     params = ((40, 50), )
 
-# ==================================================== 50m tests ==============
-class TestDiveAir50m10min(TestDiveAir, TMethodsMixin):
-    """Test air 50m 10min."""
-
-    params = ((50, 10), )
-
-class TestDiveAir50m20min(TestDiveAir, TMethodsMixin):
-    """Test air 50m 20min."""
-
-    params = ((50, 20), )
-
-class TestDiveAir50m30min(TestDiveAir, TMethodsMixin):
-    """Test air 50m 30min."""
-
-    params = ((50, 30), )
-
-class TestDiveAir50m40min(TestDiveAir, TMethodsMixin):
-    """Test air 50m 40min."""
-
-    params = ((50, 40), )
-
-
-class TestDiveAir50m50min(TestDiveAir, TMethodsMixin):
-    """Test air 50m 50min."""
-
-    params = ((50, 50), )
-
-
-# ==================================================== 60m tests ==============
-class TestDiveAir60m10min(TestDiveAir, TMethodsMixin):
-    """Test air 60m 10min."""
-
-    params = ((60, 10), )
-
-
-class TestDiveAir60m20min(TestDiveAir, TMethodsMixin):
-    """Test air 60m 20min."""
-
-    params = ((60, 20), )
-
-
-class TestDiveAir60m25min(TestDiveAir, TMethodsMixin):
-    """Test air 60m 25min."""
-
-    params = ((60, 25), )
-
-class TestDiveAir60m30min(TestDiveAir, TMethodsMixin):
-    """Test air 60m 30min."""
-
-    params = ((60, 30), )
-
-
 # ==================================================== 70m tests ==============
-class TestDiveAir70m10min(TestDive):
+class TestDiveCCAir50m10min(TestDive):
     """Test air 70m 10min."""
 
-    params = ((70, 10), )
+    params = ((50, 10), )
 
     def runTest(self):
         """Run one test."""
         try:
+            self.setpoint = 1.2
+            self.dive_tank = self.ccair
+            self.all_tanks = [self.ccair]
             diveseg1 = SegmentDive(self.params[0][0], self.params[0][1] * 60,
-                                   self.airdouble, 0)
-            self.profile1 = Dive([diveseg1], [self.airdouble])
+                                   self.dive_tank, self.setpoint)
+            self.profile1 = Dive([diveseg1], self.all_tanks)
             self.profile1.do_dive()
         except UnauthorizedMod:
             pass
@@ -267,8 +209,8 @@ class TestDiveAir70m10min(TestDive):
 
 
 # ======================= Multilevel Dive =====================================
-class TestDiveAirMultilevel1(TestDiveAirMultilevel, TMethodsMixin):
+class TestDiveCCAirMultilevel1(TestDiveCCAir, TMethodsMixin):
     """Multilevel dive test."""
 
-    params = ((40, 10), (50, 12), (30, 15))
+    params = ((40, 10), (45, 12), (30, 15))
     name = 'multilevel1'

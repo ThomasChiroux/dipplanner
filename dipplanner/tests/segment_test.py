@@ -161,23 +161,3 @@ class TestSegmentWrongMod4(TestSegment):
             pass
         else:
             self.fail("should raise UnauthorizedMod")
-
-
-def main():
-    import sys
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run '
-                             '(separated by space) [optionnal]')
-    args = parser.parse_args()
-    if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
-                                                         sys.modules[__name__])
-    else:
-        suite = unittest.findTestCases(sys.modules[__name__])
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
-if __name__ == "__main__":
-    main()

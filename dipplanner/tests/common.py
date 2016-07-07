@@ -22,6 +22,8 @@ import unittest
 # import here the module / classes to be tested
 from dipplanner.main import activate_debug_for_tests
 
+from dipplanner.dive import Dive
+from dipplanner.segment import SegmentDive
 from dipplanner.tank import Tank
 from dipplanner.tools import seconds_to_mmss
 from dipplanner import settings
@@ -59,6 +61,19 @@ class TestDive(unittest.TestCase):
                                    tank_vol=30.0,
                                    tank_pressure=200,
                                    tank_rule="10b")
+
+        self.txhypo = Tank(0.10, 0.50,
+                           tank_vol=30.0, tank_pressure=200)  # 2x 15l
+
+        self.txtravel = Tank(0.21, 0.30, tank_vol=24.0,
+                             tank_pressure=200)  # 2x S80
+
+
+        self.ccair = Tank(tank_vol=3.0, tank_pressure=200, tank_rule='10b')
+        self.cctxhypo = Tank(0.10, 0.50, tank_vol=3.0, tank_pressure=200,
+                           tank_rule='10b')
+        self.setpoint = 1.2
+
         self.deco1 = Tank(0.8,
                           0.0,
                           tank_vol=7.0,
@@ -75,20 +90,84 @@ class TestDive(unittest.TestCase):
                            tank_pressure=200,
                            tank_rule="10b")
 
+        self.setpoint = 0.0
+        self.dive_segs = []
+
+    def do_dive(self):
+        """do the actual dive.
+
+        self.params is in the form ((depth, time), (depth, time))
+        each couple of depth, time is a segment of the same dive.
+        """
+        if not hasattr(self, 'name'):
+            self.name = '%s:%s' % (self.params[0][0], self.params[0][1])
+
+        for param in self.params:
+            self.dive_segs.append(SegmentDive(param[0], param[1] * 60,
+                                  self.dive_tank, self.setpoint))
+        self.profile1 = Dive(self.dive_segs, self.all_tanks)
+        self.profile1.do_dive()
+        # self.write_details()
+
+    def do_repetitive_dive(self):
+        """do the actual dive.
+
+        self.params is in the form:
+            ((depth, time, interval), (depth, time, interval))
+        each couple of depth, time, interval is a full dive at the given depth
+        interval is done before the dive.
+        """
+        if not hasattr(self, 'name'):
+            self.name = '%s:%s' % (self.params[0][0], self.params[0][1])
+        self.profiles = []  # repetive dive profiles.
+        for param in self.params:
+            if len(self.profiles) > 0:
+                self.profiles.append(
+                    Dive([SegmentDive(param[0], param[1] * 60,
+                                      self.dive_tank, self.setpoint)],
+                         self.all_tanks,
+                         self.profiles[-1]))
+                self.profiles[-1].do_surface_interval(param[2] * 60)
+            else:
+                self.profiles.append(
+                    Dive([SegmentDive(param[0], param[1] * 60,
+                                      self.dive_tank, self.setpoint)],
+                         self.all_tanks))
+            self.profiles[-1].do_dive()
+
+        self.profile1 = self.profiles[-1]  # save last dive
+        # self.write_details()
+
     def tearDown(self):
         """After tests."""
         settings.SURFACE_TEMP = 20
+        settings.RUN_TIME = True
+
+    @property
+    def details(self):
+        """Output details of the dive.
+
+        :returns: string
+        :rtype: str
+        """
+        return '"%s": ["%s", %f, %f, %d, %d, %f, %s], ' % (
+            self.name,
+            seconds_to_mmss(self.profile1.run_time),
+            self.profile1.model.ox_tox.otu,
+            self.profile1.model.ox_tox.cns * 100,
+            self.profile1.no_flight_time(),
+            self.profile1.full_desat_time(),
+            self.profile1.tanks[0].used_gas,
+            str(self.profile1.tanks[0].check_rule()).lower())
 
     def print_details(self):
         """print detailed results."""
-        print("['%s', %f, %f, %d, %d, %f, %s], " % (
-              seconds_to_mmss(self.profile1.run_time),
-              self.profile1.model.ox_tox.otu,
-              self.profile1.model.ox_tox.cns * 100,
-              self.profile1.no_flight_time(),
-              self.profile1.full_desat_time(),
-              self.profile1.tanks[0].used_gas,
-              self.profile1.tanks[0].check_rule()))
+        print(self.details)
+
+    def write_details(self):
+        """write in /tmp/details.txt the detailed results."""
+        with open('/tmp/details.txt', 'a') as myfile:
+            myfile.write(self.details + '\n')
 
 
 class TMethodsMixin():
@@ -132,7 +211,7 @@ class TMethodsMixin():
                          "Bad full desat time: %s" % desat)
 
     def test_tank_cons(self):
-        """Check consumption of the Tank."""
+        """Check consumption of the Tank 0."""
         self.assertAlmostEqual(
             self.profile1.tanks[0].used_gas,
             self.results[self.name][5],
@@ -140,7 +219,7 @@ class TMethodsMixin():
             "bad used gas (%s)" % self.profile1.tanks[0].used_gas)
 
     def test_tank_cons_rule(self):
-        """Check Tank Rule."""
+        """Check Tank 0 Rule."""
         self.assertEqual(self.profile1.tanks[0].check_rule(),
                          self.results[self.name][6],
                          'Wrong tank status : it should pass the remaining'
@@ -149,7 +228,7 @@ class TMethodsMixin():
 
 
 class TMethodsMixinDeco(TMethodsMixin):
-    """The real tests."""
+    """Add tank test for the deco tank."""
 
     def test_tank_cons_1(self):
         """Check consumption of the Tank 1."""
@@ -160,9 +239,29 @@ class TMethodsMixinDeco(TMethodsMixin):
             "bad used gas (%s)" % self.profile1.tanks[1].used_gas)
 
     def test_tank_cons_rule_1(self):
-        """Check Tank Rule."""
+        """Check Tank 1 Rule."""
         self.assertEqual(self.profile1.tanks[1].check_rule(),
                          self.results[self.name][8],
                          'Wrong tank status : it should pass the remaining'
                          'gas rule test (result:%s)' %
                          self.profile1.tanks[1].check_rule())
+
+
+class TMethodsMixinDecoTravel(TMethodsMixinDeco):
+    """Add tank test for the travel tank."""
+
+    def test_tank_cons_2(self):
+        """Check consumption of the Tank 2."""
+        self.assertAlmostEqual(
+            self.profile1.tanks[2].used_gas,
+            self.results[self.name][9],
+            5,
+            "bad used gas (%s)" % self.profile1.tanks[2].used_gas)
+
+    def test_tank_cons_rule_2(self):
+        """Check Tank 2 Rule."""
+        self.assertEqual(self.profile1.tanks[2].check_rule(),
+                         self.results[self.name][10],
+                         'Wrong tank status : it should pass the remaining'
+                         'gas rule test (result:%s)' %
+                         self.profile1.tanks[2].check_rule())

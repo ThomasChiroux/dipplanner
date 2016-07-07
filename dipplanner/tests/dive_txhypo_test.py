@@ -17,1734 +17,326 @@
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
 """Test Dives in hypoxic trimix."""
+import json
+import pkg_resources
 import unittest
 
-# import here the module / classes to be tested
-from dipplanner.main import activate_debug_for_tests
 
 from dipplanner.dive import Dive
-from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
 from dipplanner.segment import UnauthorizedMod
 from dipplanner.tools import seconds_to_mmss
-from dipplanner import settings
+
+from dipplanner.tests.common import TestDive, TMethodsMixinDecoTravel
 
 
-class TestDive(unittest.TestCase):
+class TestDiveTxHypoBase(TestDive):
+    """Class for test air dive."""
 
     def setUp(self):
+        """Init of the tests."""
+        super().setUp()
 
-        # temporary hack (tests):
+        # load json results file
+        self.results = json.loads(
+            pkg_resources.resource_string(
+                "dipplanner.tests",
+                __name__.split('.')[-1] + '.json').decode('utf-8'))
 
-        activate_debug_for_tests()
+    @property
+    def details(self):
+        """print detailed results."""
+        return '"%s": ["%s", %f, %f, %d, %d, %f, %s, %f, %s, %f, %s], ' % (
+            self.name,
+            seconds_to_mmss(self.profile1.run_time),
+            self.profile1.model.ox_tox.otu,
+            self.profile1.model.ox_tox.cns * 100,
+            self.profile1.no_flight_time(),
+            self.profile1.full_desat_time(),
+            self.profile1.tanks[0].used_gas,
+            str(self.profile1.tanks[0].check_rule()).lower(),
+            self.profile1.tanks[1].used_gas,
+            str(self.profile1.tanks[1].check_rule()).lower(),
+            self.profile1.tanks[2].used_gas,
+            str(self.profile1.tanks[2].check_rule()).lower())
 
-        self.txhypo = Tank(0.10, 0.50,
-                           tank_vol=30.0, tank_pressure=200)  # 2x 15l
-        self.txtravel = Tank(0.21, 0.30, tank_vol=24.0,
-                             tank_pressure=200)  # 2x S80
-        self.deco1 = Tank(0.8, 0.0, tank_vol=7.0, tank_pressure=200)  # 1x S80
 
-        self.divesegdesc1 = SegmentDive(40, 130, self.txtravel, 0)
-        self.divesegdesc2 = SegmentDive(40, 30, self.txhypo, 0)
+class TestDiveTxHypo(TestDiveTxHypoBase):
+    """Class for test air dive."""
 
-        settings.RUN_TIME = False
-        settings.SURFACE_TEMP = 12
+    def setUp(self):
+        """Init of the tests."""
+        super().setUp()
+
+        self.dive_tank = self.txhypo
+        self.all_tanks = [self.txtravel, self.txhypo, self.deco1]
+        self.do_dive()
 
 
 # TxHypo 10/50 + tavel Tx21/30 + DECO Nx80 ====================================
 # ==================================================== 50m tests ==============
+class TestDiveTxHypo50m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 50m 10min."""
 
-class TestDiveTxHypo50m10min(TestDive):
-
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(50, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 34:40', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 14, 0,
-                               'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100, 8,
-                               0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 1063.50427732, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 1140, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         28200,
-                         "Bad full desat time: %s" % desat)
-
-class TestDiveTxHypo50m20min(TestDive):
-
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(50, 20 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 70:35', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 39, 0,
-                               'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               23, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 2094.62227732, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 4320, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         42360,
-                         "Bad full desat time: %s" % desat)
+    params = ((50, 10), )
 
 
-class TestDiveTxHypo50m30min(TestDive):
+class TestDiveTxHypo50m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 50m 20min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(50, 30 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '113:19', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               68.41018165372607, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               40, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 3125.74027732, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 8220, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         49680,
-                         "Bad full desat time: %s" % desat)
+    params = ((50, 20), )
 
 
-class TestDiveTxHypo50m40min(TestDive):
+class TestDiveTxHypo50m30min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 50m 30min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(50, 40 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '160:26', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               102.25472115141113, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               58.59929779247194, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 4156.85827732, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 13440, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         54180,
-                         "Bad full desat time: %s" % desat)
+    params = ((50, 30), )
 
 
-class TestDiveTxHypo50m50min(TestDive):
+class TestDiveTxHypo50m40min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 50m 40min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(50, 50 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+    params = ((50, 40), )
 
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
 
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
+class TestDiveTxHypo50m50min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 50m 50min."""
 
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         58440,
-                         "Bad full desat time: %s" % desat)
+    params = ((50, 50), )
 
 
 # ==================================================== 60m tests ==============
+class TestDiveTxHypo60m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 60m 10min."""
 
-class TestDiveTxHypo60m10min(TestDive):
-
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(60, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 44:03', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 21, 0,
-                               'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               12, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 1291.12760482, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 1560, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         32280,
-                         "Bad full desat time: %s" % desat)
+    params = ((60, 10), )
 
 
-class TestDiveTxHypo60m20min(TestDive):
+class TestDiveTxHypo60m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 60m 20min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(60, 20 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 91:26', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               58.27243170631685, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               32, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 2494.01870482, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 6120, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         46080,
-                         "Bad full desat time: %s" % desat)
+    params = ((60, 20), )
 
 
-class TestDiveTxHypo60m30min(TestDive):
+class TestDiveTxHypo60m30min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 60m 30min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(60, 30 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '146:52', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               100.9401275017839, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               56, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 3696.90980482, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 12420, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         53040,
-                         "Bad full desat time: %s" % desat)
+    params = ((60, 30), )
 
 
-class TestDiveTxHypo60m40min(TestDive):
+class TestDiveTxHypo60m40min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 60m 40min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(60, 40 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         62520,
-                         "Bad full desat time: %s" % desat)
-
+    params = ((60, 40), )
 
 # ==================================================== 70m tests ==============
+class TestDiveTxHypo70m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 70m 10min."""
 
-class TestDiveTxHypo70m10min(TestDive):
-
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(70, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 53:46', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu, 30, 0,
-                               'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               16, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 1580.95197052, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 2340, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         35880,
-                         "Bad full desat time: %s" % desat)
+    params = ((70, 10), )
 
 
-class TestDiveTxHypo70m20min(TestDive):
+class TestDiveTxHypo70m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 70m 20min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(70, 20 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '114:36', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               78.67797998734787, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               42.49520678854243, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 2955.61617052, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 8280, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         49020,
-                         "Bad full desat time: %s" % desat)
+    params = ((70, 20), )
 
 
-class TestDiveTxHypo70m30min(TestDive):
+class TestDiveTxHypo70m30min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 70m 30min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(70, 30 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
+    params = ((70, 30), )
 
 
 # ==================================================== 80m tests ==============
+class TestDiveTxHypo80m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 80m 10min."""
 
-class TestDiveTxHypo80m10min(TestDive):
-
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(80, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 65:43', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               39.97131998326519, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               21, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 1971.80768302, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 3060, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         38820,
-                         "Bad full desat time: %s" % desat)
+    params = ((80, 10), )
 
 
-class TestDiveTxHypo80m20min(TestDive):
+class TestDiveTxHypo80m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 80m 20min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(80, 20 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '140:39', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               103.048494213224, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               55, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 3518.24498302, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 11520, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         55020,
-                         "Bad full desat time: %s" % desat)
+    params = ((80, 20), )
 
 
-class TestDiveTxHypo80m30min(TestDive):
+class TestDiveTxHypo80m30min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 80m 30min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(80, 30 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
+    params = ((80, 30), )
 
 # ==================================================== 90m tests ==============
+class TestDiveTxHypo90m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 90m 10min."""
 
-class TestDiveTxHypo90m10min(TestDive):
-
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(90, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 77:14', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               49.78981737617727, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               27, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 2388.42936052, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 4440, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         41580,
-                         "Bad full desat time: %s" % desat)
+    params = ((90, 10), )
 
 
-class TestDiveTxHypo90m20min(TestDive):
+class TestDiveTxHypo90m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 90m 20min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(90, 20 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '170:17', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               129.52062953350546, 5,
-                               'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               68.5234776437918, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 4106.63976052, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 14460, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         62580,
-                         "Bad full desat time: %s" % desat)
+    params = ((90, 20), )
 
 
-class TestDiveTxHypo90m30min(TestDive):
+class TestDiveTxHypo90m30min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 90m 30min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(90, 30 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
+    params = ((90, 30), )
 
 
 # =================================================== 100m tests ==============
+class TestDiveTxHypo100m5min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 100m 5min."""
 
-class TestDiveTxHypo100m10min(TestDive):
+    params = ((100, 5), )
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(100, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+class TestDiveTxHypo100m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 100m 10min."""
 
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == ' 91:32', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               61.24430791066309, 3, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               32, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 2830.81700302, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 5700, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         44100,
-                         "Bad full desat time: %s" % desat)
+    params = ((100, 10), )
 
 
-class TestDiveTxHypo100m15min(TestDive):
+class TestDiveTxHypo100m15min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 100m 15min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(100, 15 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '143:38', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               107.74900015134172, 0,
-                               'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               57, 0, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 3775.80875302, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 11640, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         57540,
-                         "Bad full desat time: %s" % desat)
+    params = ((100, 15), )
 
 
-class TestDiveTxHypo100m20min(TestDive):
+class TestDiveTxHypo100m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 100m 20min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(100, 20 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
+    params = ((100, 20), )
 
 
 # =================================================== 110m tests ==============
+class TestDiveTxHypo110m5min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 110m 5min."""
 
-class TestDiveTxHypo110m10min(TestDive):
+    params = ((110, 5), )
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(110, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+class TestDiveTxHypo110m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 110m 10min."""
 
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '106:23', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               74.27833402994307, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               39.73311873051845, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 3298.97061052, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 6660, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         46260,
-                         "Bad full desat time: %s" % desat)
+    params = ((110, 10), )
 
 
-class TestDiveTxHypo110m15min(TestDive):
+class TestDiveTxHypo110m15min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 110m 15min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(110, 15 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '167:54', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               128.3582279940003, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               68.80253012506343, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 4424.666418673434, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 13980, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         63240,
-                         "Bad full desat time: %s" % desat)
+    params = ((110, 15), )
 
 
-class TestDiveTxHypo110m20min(TestDive):
+class TestDiveTxHypo110m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 110m 20min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(110, 20 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         74280,
-                         "Bad full desat time: %s" % desat)
+    params = ((110, 20), )
 
 
 # =================================================== 120m tests ==============
+class TestDiveTxHypo120m5min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 120m 5min."""
 
-class TestDiveTxHypo120m10min(TestDive):
+    params = ((120, 5), )
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(120, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+class TestDiveTxHypo120m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 120m 10min."""
 
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '122:46', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
+    params = ((120, 10), )
 
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               87.45903983744498, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
 
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               47.095873055392815, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
+class TestDiveTxHypo120m15min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 120m 15min."""
 
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 3887.7076911734343, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
+    params = ((120, 15), )
 
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
 
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
+class TestDiveTxHypo120m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 120m 20min."""
 
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 8400, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         51900,
-                         "Bad full desat time: %s" % desat)
-
-class TestDiveTxHypo120m15min(TestDive):
-
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(120, 15 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
-
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
+    params = ((120, 20), )
 
 # =================================================== 130m tests ==============
+class TestDiveTxHypo130m5min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 130m 5min."""
 
-class TestDiveTxHypo130m10min(TestDive):
+    params = ((130, 5), )
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(130, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+class TestDiveTxHypo130m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 130m 10min."""
 
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '141:11', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               103.24989705478667, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               57.99808348439559, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 4617.614088073433, 1,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 10620, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         57000,
-                         "Bad full desat time: %s" % desat)
+    params = ((130, 10), )
 
 
-class TestDiveTxHypo130m15min(TestDive):
+class TestDiveTxHypo130m15min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 130m 15min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(130, 15 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+    params = ((130, 15), )
 
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
 
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
+class TestDiveTxHypo130m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 130m 20min."""
 
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
+    params = ((130, 20), )
 
 
 # =================================================== 140m tests ==============
+class TestDiveTxHypo140m5min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 140m 5min."""
 
-class TestDiveTxHypo140m10min(TestDive):
+    params = ((140, 5), )
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(140, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+class TestDiveTxHypo140m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 140m 10min."""
 
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '160:21', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               119.71933135854655, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               80.98821829365991, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 5424.244738573434, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 12840, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         61980,
-                         "Bad full desat time: %s" % desat)
+    params = ((140, 10), )
 
 
-class TestDiveTxHypo140m15min(TestDive):
+class TestDiveTxHypo140m15min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 140m 15min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(140, 15 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+    params = ((140, 15), )
 
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
 
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
+class TestDiveTxHypo140m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 140m 20min."""
 
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
+    params = ((140, 20), )
 
 
 # =================================================== 150m tests ==============
+class TestDiveTxHypo150m5min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 150m 5min."""
 
-class TestDiveTxHypo150m10min(TestDive):
+    params = ((150, 5), )
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(150, 10 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+class TestDiveTxHypo150m10min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 150m 10min."""
 
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '184:02', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               138.68333026220657, 5, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               151.09048726727502, 5, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 6285.765894673433, 5,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule_0(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
-
-    def test_tank_cons_rule_1(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
-
-    def test_tank_cons_rule_2(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 14940, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         66300,
-                         "Bad full desat time: %s" % desat)
+    params = ((150, 10), )
 
 
-class TestDiveTxHypo150m15min(TestDive):
+class TestDiveTxHypo150m15min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 150m 15min."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(150, 15 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1], [self.txtravel, self.txhypo,
-                             self.deco1])
-        self.profile1.do_dive()
+    params = ((150, 15), )
 
-    def test_tank0_cons(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[0].check_rule(),
-                         self.profile1.tanks[0].name))
 
-    def test_tank1_cons(self):
-        self.assertEqual(self.profile1.tanks[1].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[1].check_rule(),
-                         self.profile1.tanks[1].name))
+class TestDiveTxHypo150m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo 150m 20min."""
 
-    def test_tank2_cons(self):
-        self.assertEqual(self.profile1.tanks[2].check_rule(), False,
-                         'Wrong tank status : it should fail the remaining '
-                         'gas rule test (result:%s on %s)'
-                         % (self.profile1.tanks[2].check_rule(),
-                         self.profile1.tanks[2].name))
+    params = ((150, 20), )
 
 
 # =================================================== 160m tests ==============
-
 class TestDiveTxHypo160m10min(TestDive):
 
-    def setUp(self):
-        TestDive.setUp(self)
+    params = ((160, 10), )
 
     def runTest(self):
         try:
-            diveseg1 = SegmentDive(160, 10 * 60, self.txhypo, 0)
+            diveseg1 = SegmentDive(self.params[0][0], self.params[0][1] * 60,
+                                   self.txhypo, 0)
             self.profile1 = Dive([diveseg1], [self.txtravel,
                                  self.txhypo, self.deco1])
             self.profile1.do_dive()
@@ -1756,74 +348,9 @@ class TestDiveTxHypo160m10min(TestDive):
 
 # ======================== Multilevel Dive ====================================
 
-class TestDiveMultilevel(TestDive):
+class TestDiveMultilevel(TestDiveTxHypo, TMethodsMixinDecoTravel):
+    """Test tx hypo multilevel 1."""
 
-    def setUp(self):
-        TestDive.setUp(self)
-        diveseg1 = SegmentDive(40, 10 * 60, self.txhypo, 0)
-        diveseg2 = SegmentDive(50, 12 * 60, self.txhypo, 0)
-        diveseg3 = SegmentDive(30, 15 * 60, self.txhypo, 0)
-        self.profile1 = Dive([diveseg1, diveseg2, diveseg3],
-                             [self.txtravel, self.txhypo, self.deco1])
-        self.profile1.do_dive()
+    params = ((40, 10), (50, 12), (30, 15))
+    name = 'multilevel1'
 
-    def test_rt(self):
-        assert seconds_to_mmss(self.profile1.run_time) == '102:29', \
-            'bad dive runtime ? (%s)' \
-            % seconds_to_mmss(self.profile1.run_time)
-
-    def test_otu(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.otu,
-                               52.12326676000943, 7, 'bad dive OTU ? (%s)'
-                               % self.profile1.model.ox_tox.otu)
-
-    def test_cns(self):
-        self.assertAlmostEqual(self.profile1.model.ox_tox.cns * 100,
-                               31.797127780758593, 7, 'bad dive CNS ? (%s)'
-                               % (self.profile1.model.ox_tox.cns * 100))
-
-    def test_tank_cons(self):
-        self.assertAlmostEqual(self.txhypo.used_gas, 3347.1747525, 7,
-                               'bad used gas (%s)'
-                               % self.txhypo.used_gas)
-
-    def test_tank_cons_rule(self):
-        self.assertEqual(self.profile1.tanks[0].check_rule(), True,
-                         'Wrong tank status : it should pass the remaining '
-                         'gas rule test (result:%s)'
-                         % self.profile1.tanks[0].check_rule())
-
-    def test_no_flight(self):
-        no_flight_time = self.profile1.no_flight_time()
-        self.assertEqual(no_flight_time, 6720, 'Bad no flight time: %s'
-                         % no_flight_time)
-
-    def test_full_desat(self):
-        desat = self.profile1.full_desat_time()
-        self.assertEqual(desat,
-                         48720,
-                         "Bad full desat time: %s" % desat)
-
-
-# =============================================================================
-# ========================== M A I N ==========================================
-# =============================================================================
-
-def main():
-    import sys
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run '
-                             '(separated by space) [optionnal]')
-    args = parser.parse_args()
-    if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
-                                                         sys.modules[__name__])
-    else:
-        suite = unittest.findTestCases(sys.modules[__name__])
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
-if __name__ == '__main__':
-    main()

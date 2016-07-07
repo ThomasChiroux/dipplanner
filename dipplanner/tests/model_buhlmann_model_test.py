@@ -121,21 +121,21 @@ class TestModelBuhlmannModelSimple10(TestModelBuhlmannModel):
 class TestModelBuhlmannModelOutput1(TestModelBuhlmannModel):
     def runTest(self):
         self.assertEqual(str(self.model1),
-                         """C:0 He:0.000000 N2:0.789444 gf:0.30 mv_at:2.986111 max_amb:0.354302 MV:0.264372
+                         """C:0 He:0.000000 N2:0.789444 gf:0.30 mv_at:3.266336 max_amb:0.317972 MV:0.241691
 C:1 He:0.000000 N2:0.789444 gf:0.30 mv_at:2.555496 max_amb:0.421736 MV:0.308920
 C:2 He:0.000000 N2:0.789444 gf:0.30 mv_at:2.264805 max_amb:0.475978 MV:0.348571
 C:3 He:0.000000 N2:0.789444 gf:0.30 mv_at:2.051088 max_amb:0.519283 MV:0.384891
-C:4 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.913623 max_amb:0.551293 MV:0.412539
-C:5 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.761387 max_amb:0.588654 MV:0.448195
-C:6 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.660293 max_amb:0.613368 MV:0.475485
-C:7 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.587205 max_amb:0.631276 MV:0.497380
-C:8 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.533141 max_amb:0.644524 MV:0.514920
-C:9 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.478531 max_amb:0.658830 MV:0.533938
-C:10 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.436995 max_amb:0.669849 MV:0.549372
-C:11 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.399882 max_amb:0.679806 MV:0.563937
-C:12 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.354167 max_amb:0.692480 MV:0.582974
-C:13 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.335362 max_amb:0.697339 MV:0.591184
-C:14 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.307549 max_amb:0.704988 MV:0.603759
+C:4 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.866923 max_amb:0.564396 MV:0.422858
+C:5 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.705687 max_amb:0.604483 MV:0.462831
+C:6 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.606593 max_amb:0.628783 MV:0.491378
+C:7 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.537205 max_amb:0.645745 MV:0.513558
+C:8 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.489441 max_amb:0.657253 MV:0.530027
+C:9 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.448731 max_amb:0.667549 MV:0.544921
+C:10 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.416795 max_amb:0.675779 MV:0.557204
+C:11 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.384082 max_amb:0.684457 MV:0.570374
+C:12 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.352667 max_amb:0.692922 MV:0.583620
+C:13 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.322662 max_amb:0.701095 MV:0.596860
+C:14 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.303249 max_amb:0.706262 MV:0.605751
 C:15 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.282374 max_amb:0.711956 MV:0.615612
 """, "Error in model output : %s" % str(self.model1))
 
@@ -149,40 +149,20 @@ class TestModelBuhlmannModelGf1(TestModelBuhlmannModel):
 class TestModelBuhlmannModelOutput2(TestModelBuhlmannModel):
     def runTest(self):
         self.assertEqual(str(self.model2),
-                         """C:0 He:0.000000 N2:19.999134 gf:0.30 mv_at:2.986111 max_amb:15.873180 MV:6.697384
+                         """C:0 He:0.000000 N2:21.526944 gf:0.30 mv_at:3.266336 max_amb:16.343125 MV:6.590549
 C:1 He:0.000000 N2:16.110229 gf:0.30 mv_at:2.555496 max_amb:13.623089 MV:6.304150
 C:2 He:0.000000 N2:12.306296 gf:0.30 mv_at:2.264805 max_amb:10.801312 MV:5.433712
 C:3 He:0.000000 N2:9.371747 gf:0.30 mv_at:2.051088 max_amb:8.441019 MV:4.569159
-C:4 He:0.000000 N2:7.073091 gf:0.30 mv_at:1.913623 max_amb:6.428334 MV:3.696177
-C:5 He:0.000000 N2:5.415924 gf:0.30 mv_at:1.761387 max_amb:4.971023 MV:3.074806
-C:6 He:0.000000 N2:4.155465 gf:0.30 mv_at:1.660293 max_amb:3.834116 MV:2.502850
-C:7 He:0.000000 N2:3.216158 gf:0.30 mv_at:1.587205 max_amb:2.972082 MV:2.026303
-C:8 He:0.000000 N2:2.530704 gf:0.30 mv_at:1.533141 max_amb:2.335132 MV:1.650666
-C:9 He:0.000000 N2:2.101916 gf:0.30 mv_at:1.478531 max_amb:1.938904 MV:1.421624
-C:10 He:0.000000 N2:1.820520 gf:0.30 mv_at:1.436995 max_amb:1.678806 MV:1.266894
-C:11 He:0.000000 N2:1.600073 gf:0.30 mv_at:1.399882 max_amb:1.475283 MV:1.143006
-C:12 He:0.000000 N2:1.427042 gf:0.30 mv_at:1.354167 max_amb:1.319693 MV:1.053815
-C:13 He:0.000000 N2:1.289557 gf:0.30 mv_at:1.335362 max_amb:1.190384 MV:0.965698
-C:14 He:0.000000 N2:1.182002 gf:0.30 mv_at:1.307549 max_amb:1.092724 MV:0.903983
+C:4 He:0.000000 N2:7.073091 gf:0.30 mv_at:1.866923 max_amb:6.441438 MV:3.788635
+C:5 He:0.000000 N2:5.415924 gf:0.30 mv_at:1.705687 max_amb:4.986851 MV:3.175215
+C:6 He:0.000000 N2:4.155465 gf:0.30 mv_at:1.606593 max_amb:3.849531 MV:2.586508
+C:7 He:0.000000 N2:3.216158 gf:0.30 mv_at:1.537205 max_amb:2.986551 MV:2.092211
+C:8 He:0.000000 N2:2.530704 gf:0.30 mv_at:1.489441 max_amb:2.347861 MV:1.699096
+C:9 He:0.000000 N2:2.101916 gf:0.30 mv_at:1.448731 max_amb:1.947623 MV:1.450867
+C:10 He:0.000000 N2:1.820520 gf:0.30 mv_at:1.416795 max_amb:1.684736 MV:1.284957
+C:11 He:0.000000 N2:1.600073 gf:0.30 mv_at:1.384082 max_amb:1.479934 MV:1.156054
+C:12 He:0.000000 N2:1.427042 gf:0.30 mv_at:1.352667 max_amb:1.320136 MV:1.054984
+C:13 He:0.000000 N2:1.289557 gf:0.30 mv_at:1.322662 max_amb:1.194140 MV:0.974971
+C:14 He:0.000000 N2:1.182002 gf:0.30 mv_at:1.303249 max_amb:1.093999 MV:0.906966
 C:15 He:0.000000 N2:1.097863 gf:0.30 mv_at:1.282374 max_amb:1.017084 MV:0.856118
 """, "Error in model output : %s" % str(self.model2))
-
-
-def main():
-    import sys
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('tests', metavar='TestName', type=str, nargs='*',
-                        help='name of the tests to run '
-                             '(separated by space) [optionnal]')
-    args = parser.parse_args()
-    if args.tests:
-        suite = unittest.TestLoader().loadTestsFromNames(args.tests,
-                                                         sys.modules[__name__])
-    else:
-        suite = unittest.findTestCases(sys.modules[__name__])
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
-if __name__ == "__main__":
-    main()

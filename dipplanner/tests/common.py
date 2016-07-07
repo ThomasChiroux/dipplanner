@@ -16,6 +16,10 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init, no-member
+# pylint: disable=too-many-instance-attributes
 """Common methods for tests."""
 import unittest
 
@@ -31,6 +35,8 @@ from dipplanner import settings
 
 class TestDive(unittest.TestCase):
     """Generic Test Dive class."""
+
+    params = ((0, 0), )
 
     def setUp(self):
         """Init of the tests."""
@@ -71,7 +77,7 @@ class TestDive(unittest.TestCase):
 
         self.ccair = Tank(tank_vol=3.0, tank_pressure=200, tank_rule='10b')
         self.cctxhypo = Tank(0.10, 0.50, tank_vol=3.0, tank_pressure=200,
-                           tank_rule='10b')
+                             tank_rule='10b')
         self.setpoint = 1.2
 
         self.deco1 = Tank(0.8,
@@ -91,6 +97,8 @@ class TestDive(unittest.TestCase):
                            tank_rule="10b")
 
         self.setpoint = 0.0
+        self.dive_tank = None
+        self.all_tanks = None
         self.dive_segs = []
 
     def do_dive(self):
@@ -104,7 +112,7 @@ class TestDive(unittest.TestCase):
 
         for param in self.params:
             self.dive_segs.append(SegmentDive(param[0], param[1] * 60,
-                                  self.dive_tank, self.setpoint))
+                                              self.dive_tank, self.setpoint))
         self.profile1 = Dive(self.dive_segs, self.all_tanks)
         self.profile1.do_dive()
         # self.write_details()

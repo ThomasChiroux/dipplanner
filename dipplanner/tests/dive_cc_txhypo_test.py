@@ -16,16 +16,16 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init
 """Test Dives in hypoxic trimix."""
 import json
 import pkg_resources
-import unittest
-
 
 from dipplanner.dive import Dive
 from dipplanner.segment import SegmentDive
 from dipplanner.segment import UnauthorizedMod
-from dipplanner.tools import seconds_to_mmss
 from dipplanner import settings
 
 from dipplanner.tests.common import TestDive, TMethodsMixin
@@ -196,10 +196,12 @@ class TestDiveCCTxHypo100m20min(TestDiveCCTxHypo, TMethodsMixin):
 
 # =================================================== 160m tests ==============
 class TestDiveCCTxHypo110m10min(TestDive):
+    """test CC tx hypo 110m 10min."""
 
     params = ((110, 10), )
 
     def runTest(self):
+        """Should raise and error."""
         try:
             self.setpoint = 1.2
             self.dive_tank = self.cctxhypo

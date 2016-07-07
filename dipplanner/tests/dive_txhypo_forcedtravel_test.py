@@ -16,13 +16,15 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init
 """Test Dives in hypoxic trimix with forced travel.
 
 switch from travel to bottom mix at 40m
 """
 import json
 import pkg_resources
-import unittest
 
 
 from dipplanner.dive import Dive
@@ -334,10 +336,12 @@ class TestDiveTxHypo150m20min(TestDiveTxHypo, TMethodsMixinDecoTravel):
 
 # =================================================== 160m tests ==============
 class TestDiveTxHypo160m10min(TestDive):
+    """Test tx hypo 160m 10min."""
 
     params = ((160, 10), )
 
     def runTest(self):
+        """Should raise an error."""
         try:
             diveseg1 = SegmentDive(self.params[0][0], self.params[0][1] * 60,
                                    self.txhypo, 0)

@@ -16,13 +16,12 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init
 """Test repetitive Dives with trimix."""
 import json
 import pkg_resources
-
-from dipplanner.dive import Dive
-from dipplanner.segment import SegmentDive
-from dipplanner.segment import UnauthorizedMod
 
 from dipplanner.tests.common import TestDive, TMethodsMixin
 

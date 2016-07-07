@@ -16,6 +16,9 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init
 """Test for Model class."""
 import unittest
 # import here the module / classes to be tested
@@ -27,7 +30,11 @@ from dipplanner.model.buhlmann.model_exceptions import ModelStateException
 
 
 class TestModelBuhlmannModel(unittest.TestCase):
+    """Test the buhlmann model."""
+
     def setUp(self):
+        """Init of the tests."""
+        super().setUp()
         # temporary hack (tests):
         activate_debug_for_tests()
         settings.RUN_TIME = True
@@ -39,87 +46,75 @@ class TestModelBuhlmannModel(unittest.TestCase):
         self.model2 = Model()
         self.model2.const_depth(30, 12 * 60, 0.0, 0.79, 0.0)
 
-
-class TestModelBuhlmannModelSimple1(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_units(self):
+        """check units."""
         self.assertEqual(self.model1.units, "metric",
                          "Error in model unit : %s" % self.model1.units)
 
-
-class TestModelBuhlmannModelSimple2(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_gf_low(self):
+        """check gf low."""
         self.assertEqual(self.model1.gradient.gf_low, settings.GF_LOW,
                          "Error in model gradient gf low : %s"
                          % self.model1.gradient.gf_low)
 
-
-class TestModelBuhlmannModelSimple3(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_gf_high(self):
+        """check gf high."""
         self.assertEqual(self.model1.gradient.gf_high, settings.GF_HIGH,
                          "Error in model gradient gf high : %s"
                          % self.model1.gradient.gf_high)
 
-
-class TestModelBuhlmannModelSimple3b(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_gf(self):
+        """check gf."""
         self.assertEqual(self.model1.gradient.gf, settings.GF_LOW,
                          "Error in model gradient gf : %s"
                          % self.model1.gradient.gf)
 
-
-class TestModelBuhlmannModelSimple4(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_metadata(self):
+        """check metadata."""
         self.assertEqual(self.model1.metadata, "(none)",
                          "Error in model metadata : %s"
                          % self.model1.metadata)
 
-
-class TestModelBuhlmannModelSimple5(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_tissues(self):
+        """check tissues."""
         self.assertEqual(len(self.model1.tissues), 16,
                          "Error in tissues number : %s"
                          % len(self.model1.tissues))
 
-
-class TestModelBuhlmannModelSimple6(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_otu(self):
+        """check otu."""
         self.assertEqual(self.model1.ox_tox.otu, 0.0,
                          "Error in model ox tox otu : %s"
                          % self.model1.ox_tox.otu)
 
-
-class TestModelBuhlmannModelSimple7(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_validation(self):
+        """check validation."""
         self.assertTrue(
             self.model1.validate_model(),
             "Error in model validation : %s" % self.model1.validate_model())
 
-
-class TestModelBuhlmannModelSimple8(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_control_compartment(self):
+        """check control compartement."""
         # empty model should have the first compartement
         # for control compartment ??
         self.assertEqual(self.model1.control_compartment(), 1,
                          "Error in control compartement : %s"
                          % self.model1.control_compartment())
 
-
-class TestModelBuhlmannModelSimple9(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_ceiling(self):
+        """check ceiling."""
         self.assertEqual(self.model1.ceiling(), 0.0,
                          "Error in model ceiling : %s"
                          % self.model1.ceiling())
 
-
-class TestModelBuhlmannModelSimple10(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_mv(self):
+        """check m value."""
         mv = self.model1.m_value(12)
         self.assertAlmostEqual(mv, 0.0575659327931, 13,
                                "Error in model m_value : %s" % mv)
 
-
-class TestModelBuhlmannModelOutput1(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_output1(self):
+        """check str output of model 1."""
         self.assertEqual(str(self.model1),
                          """C:0 He:0.000000 N2:0.789444 gf:0.30 mv_at:3.266336 max_amb:0.317972 MV:0.241691
 C:1 He:0.000000 N2:0.789444 gf:0.30 mv_at:2.555496 max_amb:0.421736 MV:0.308920
@@ -139,15 +134,13 @@ C:14 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.303249 max_amb:0.706262 MV:0.605751
 C:15 He:0.000000 N2:0.789444 gf:0.30 mv_at:1.282374 max_amb:0.711956 MV:0.615612
 """, "Error in model output : %s" % str(self.model1))
 
-
-class TestModelBuhlmannModelGf1(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model_2_gf(self):
+        """check gf of model 2."""
         self.assertEqual(self.model2.gradient.gf, settings.GF_LOW,
                          "Error in model gf : %s" % self.model2.gradient.gf)
 
-
-class TestModelBuhlmannModelOutput2(TestModelBuhlmannModel):
-    def runTest(self):
+    def test_model2_output_2(self):
+        """check str output of model 1."""
         self.assertEqual(str(self.model2),
                          """C:0 He:0.000000 N2:21.526944 gf:0.30 mv_at:3.266336 max_amb:16.343125 MV:6.590549
 C:1 He:0.000000 N2:16.110229 gf:0.30 mv_at:2.555496 max_amb:13.623089 MV:6.304150

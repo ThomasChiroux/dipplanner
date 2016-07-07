@@ -16,11 +16,12 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init
 """Test Dives with air and deco."""
 import json
 import pkg_resources
-import unittest
-
 
 from dipplanner.dive import Dive
 from dipplanner.segment import SegmentDive

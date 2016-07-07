@@ -16,6 +16,9 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init
 """Test for Segment class."""
 import unittest
 # import here the module / classes to be tested
@@ -28,11 +31,17 @@ from dipplanner import settings
 
 
 class TestSegment(unittest.TestCase):
+    """Test Segment base class."""
+
     def setUp(self):
+        """Init of the tests."""
+        super().setUp()
         # temporary hack (tests):
         activate_debug_for_tests()
         settings.RUN_TIME = True
         settings.SURFACE_TEMP = 12
+        settings.DIVE_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
+        settings.DECO_CONSUMPTION_RATE = 12.0 / 60  #: liter/s
         self.airtank = Tank()
         self.trimixtank1 = Tank(f_o2=0.10, f_he=0.70)
         self.nitroxtank1 = Tank(f_o2=0.40)
@@ -46,81 +55,79 @@ class TestSegment(unittest.TestCase):
         self.descseg1 = SegmentAscDesc(0, 40, 20.0 / 60, self.airtank, 0)
         self.descseg2 = SegmentAscDesc(40, 150, 20.0 / 60, self.trimixtank1, 0)
 
+    def tearDown(self):
+        """Restore some settings."""
+        settings.RUN_TIME = True
+        settings.SURFACE_TEMP = 20
+        settings.DIVE_CONSUMPTION_RATE = 20.0 / 60  #: liter/s
+        settings.DECO_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
 
-class TestSegmentGasUsed1(TestSegment):
-    def runTest(self):
+    def test_gas_used_1(self):
+        """test_gas_used 1."""
         self.assertAlmostEqual(self.diveseg1.gas_used, 687.5718, 4,
                                'Wrong gas used : %s'
                                % self.diveseg1.gas_used)
 
-
-class TestSegmentGasEnd1(TestSegment):
-    def runTest(self):
+    def test_gas_end_1(self):
+        """test_gas_end 1."""
         self.assertAlmostEqual(self.diveseg1.end,
                                29.0057341025, 5,
                                'wrong E.N.D : %s' % self.diveseg1.end)
 
-
-class TestSegmentGasEnd2(TestSegment):
-    def runTest(self):
+    def test_gas_end_2(self):
+        """test_gas_end 2."""
         self.assertAlmostEqual(self.diveseg2.end,
                                61.912489531, 5,
                                'wrong E.N.D : %s' % self.diveseg2.end)
 
+    def test_str_1(self):
+        """test_str 1."""
+        self.assertEqual(
+            str(self.diveseg2),
+            "   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  "
+            "SP:0.0, END:61m",
+            'wrong name : %s' % str(self.diveseg2))
 
-class TestSegmentStr1(TestSegment):
-    def runTest(self):
-        self.assertEqual(str(self.diveseg2),
-                         "   CONST: at 150m for  10:00 [RT:  0:00], on Trimix 10/70,  SP:0.0, END:61m",
-                         'wrong name : %s' % str(self.diveseg2))
-
-
-class TestSegmentDeco1(TestSegment):
-    def runTest(self):
+    def test_deco_1(self):
+        """test deco seg gas used 1."""
         self.assertAlmostEqual(self.decoseg1.gas_used,
                                133.54596, 5,
                                'Wrong gas used : %s'
                                % self.decoseg1.gas_used)
 
-
-class TestSegmentDeco2(TestSegment):
-    def runTest(self):
+    def test_deco_2(self):
+        """test deco seg gas used 2."""
         self.assertAlmostEqual(self.decoseg2.gas_used,
                                236.94822, 5, 'Wrong gas used : %s'
                                % self.decoseg2.gas_used)
 
-
-class TestSegmentAsc1(TestSegment):
-    def runTest(self):
+    def test_asc_1(self):
+        """test asc seg gas used 2."""
         self.assertAlmostEqual(self.ascseg1.gas_used,
                                944.99175, 5, 'Wrong gas used : %s'
                                % self.ascseg1.gas_used)
 
-
-class TestSegmentAsc2(TestSegment):
-    def runTest(self):
+    def test_asc_2(self):
+        """test asc seg gas used 2."""
         self.assertAlmostEqual(self.ascseg2.gas_used,
                                95.9356818, 7, 'Wrong gas used : %s'
                                % self.ascseg2.gas_used)
 
-
-class TestSegmentDesc1(TestSegment):
-    def runTest(self):
+    def test_desc_1(self):
+        """test desc seg gas used 2."""
         self.assertAlmostEqual(self.descseg1.gas_used,
                                103.15974, 5, 'Wrong gas used : %s'
                                % self.descseg1.gas_used)
 
-
-class TestSegmentDesc2(TestSegment):
-    def runTest(self):
+    def test_desc_2(self):
+        """test desc seg gas used 2."""
         self.assertAlmostEqual(self.descseg2.gas_used,
                                992.2533225, 7,
                                'Wrong gas used : %s'
                                % self.descseg2.gas_used)
 
-
-class TestSegmentWrongMod1(TestSegment):
-    def runTest(self):
+    def test_wrong_mod_1(self):
+        """test wrong mod 1."""
         try:
             baddiveseg = SegmentDive(150, 10 * 60, self.airtank, 0)
             baddiveseg.check()
@@ -129,9 +136,8 @@ class TestSegmentWrongMod1(TestSegment):
         else:
             self.fail("should raise UnauthorizedMod")
 
-
-class TestSegmentWrongMod2(TestSegment):
-    def runTest(self):
+    def test_wrong_mod_2(self):
+        """test wrong mod 2."""
         try:
             baddiveseg = SegmentDeco(3, 10 * 60, self.trimixtank1, 0)
             baddiveseg.check()
@@ -140,9 +146,8 @@ class TestSegmentWrongMod2(TestSegment):
         else:
             self.fail("should raise UnauthorizedMod")
 
-
-class TestSegmentWrongMod3(TestSegment):
-    def runTest(self):
+    def test_wrong_mod_3(self):
+        """test wrong mod 3."""
         try:
             baddiveseg = SegmentAscDesc(150, 3, 10, self.nitroxtank1, 0)
             baddiveseg.check()
@@ -151,9 +156,8 @@ class TestSegmentWrongMod3(TestSegment):
         else:
             self.fail("should raise UnauthorizedMod")
 
-
-class TestSegmentWrongMod4(TestSegment):
-    def runTest(self):
+    def test_wrong_mod_4(self):
+        """test wrong mod 4."""
         try:
             baddiveseg = SegmentAscDesc(3, 150, 10, self.trimixtank1, 0)
             baddiveseg.check()

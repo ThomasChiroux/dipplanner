@@ -20,8 +20,11 @@ Description
 Model supported
 ^^^^^^^^^^^^^^^
 
+* Bülhmann ZH-L16A with Gradient Factor
 * Bülhmann ZH-L16B with Gradient Factor
 * Bülhmann ZH-L16C with Gradient Factor
+
+  for each, with 1a or 1b variation (4' or 5' quickest compartment)
 
 Gases
 ^^^^^

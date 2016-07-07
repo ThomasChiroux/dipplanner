@@ -16,20 +16,15 @@
 # If not, see <http://www.gnu.org/licenses/gpl.html>
 #
 # This module is part of dipplanner, a Dive planning Tool written in python
+# pylint: disable=too-many-public-methods, protected-access, no-self-use
+# pylint: disable=too-few-public-methods, duplicate-code, invalid-name
+# pylint: disable=too-many-ancestors, attribute-defined-outside-init
 """Test for Dive class.
 
 TODO: more test profiles
 """
-import unittest
-
-# import here the module / classes to be tested
-from dipplanner.main import activate_debug_for_tests
-
 from dipplanner.dive import Dive
-from dipplanner.tank import Tank
 from dipplanner.segment import SegmentDive
-from dipplanner.tools import seconds_to_mmss
-from dipplanner import settings
 
 from dipplanner.tests.common import TestDive
 
@@ -227,7 +222,7 @@ class TestDiveAirDiveOutput4(TestDive):
         super().setUp()
         diveseg3 = SegmentDive(55, 30 * 60, self.airdouble, 0)
         self.profile1 = Dive([diveseg3], [self.airdouble, self.decoo2,
-                             self.deco2])
+                                          self.deco2])
         self.profile1.do_dive()
 
     def test_segments(self):

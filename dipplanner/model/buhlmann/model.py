@@ -73,6 +73,9 @@ class Model():
         self.gradient = None
         self.init_gradient()
 
+        # store water wapour pp
+        self.pp_h2o = tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP)
+
         for _ in range(self.COMPS):
             self.tissues.append(Compartment())
 
@@ -81,8 +84,7 @@ class Model():
         for comp in self.tissues:
             comp.set_pp(pp_he=0.0,
                         pp_n2=settings.DEFAULT_AIR_F_INNERT_GAS *
-                        (settings.AMBIANT_PRESSURE_SURFACE -
-                         tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP)))
+                        (settings.AMBIANT_PRESSURE_SURFACE - self.pp_h2o))
 
         self.metadata = "(none)"
 
@@ -386,8 +388,7 @@ class Model():
             # Determine pInert by subtracting absolute oxygen pressure and pH2O
             # Note that if f_he and f_n2 == 0.0 then need to force pp's to zero
             if f_he + f_n2 > 0.0:
-                p_inert = (ambiant_pressure - pp_o2 -
-                           tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP))
+                p_inert = (ambiant_pressure - pp_o2 - self.pp_h2o)
             else:
                 p_inert = 0.0
 
@@ -410,26 +411,20 @@ class Model():
             else:
                 # pp_o2 is equal to the depth, also true is there is
                 # no inert gaz
-                self.ox_tox.add_o2(seg_time, ambiant_pressure -
-                                   tools.calculate_pp_h2o_surf(
-                                       settings.SURFACE_TEMP))
+                self.ox_tox.add_o2(seg_time, ambiant_pressure - self.pp_h2o)
         else:
             # OC mode
-            pp_he_inspired = (ambiant_pressure -
-                              tools.calculate_pp_h2o_surf(
-                                  settings.SURFACE_TEMP)) * f_he
-            pp_n2_inspired = (ambiant_pressure -
-                              tools.calculate_pp_h2o_surf(
-                                  settings.SURFACE_TEMP)) * f_n2
+            pp_he_inspired = (ambiant_pressure - self.pp_h2o) * f_he
+            pp_n2_inspired = (ambiant_pressure - self.pp_h2o) * f_n2
             # update ox_tox
             if pressure == 0.0:  # surface
                 self.ox_tox.remove_o2(seg_time)
             else:
                 self.ox_tox.add_o2(
                     seg_time,
-                    (ambiant_pressure - tools.calculate_pp_h2o_surf(
-                        settings.SURFACE_TEMP)) * (1.0 - f_he - f_n2))
+                    (ambiant_pressure - self.pp_h2o) * (1.0 - f_he - f_n2))
         if seg_time > 0:
+            print(seg_time)
             for comp in self.tissues:
                 comp.const_depth(pp_he_inspired, pp_n2_inspired, seg_time)
 
@@ -453,17 +448,15 @@ class Model():
         # rem: here we do not bother of PP_H2O like in constant_depth : WHY ?
         start_ambiant_pressure = start + settings.AMBIANT_PRESSURE_SURFACE
         finish_ambiant_pressure = finish + settings.AMBIANT_PRESSURE_SURFACE
-        seg_time = abs((tools.pressure_to_depth(finish) -
-                        tools.pressure_to_depth(start)) / rate)
+        # here we have seg_time in min and rate in m/min
+        # rate should be in bar/min (or bar/s), not m/min nor m/sec
+        rate = tools.depth_to_pressure(rate)
+        seg_time = abs((finish - start) / rate)
         if pp_o2 > 0.0:
             # CCR mode
             # Calculate inert gas partial pressure == pAmb - pO2 - pH2O
-            p_inert_start = (start_ambiant_pressure - pp_o2 -
-                             tools.calculate_pp_h2o_surf(
-                                 settings.SURFACE_TEMP))
-            p_inert_finish = (finish_ambiant_pressure - pp_o2 -
-                              tools.calculate_pp_h2o_surf(
-                                  settings.SURFACE_TEMP))
+            p_inert_start = (start_ambiant_pressure - pp_o2 - self.pp_h2o)
+            p_inert_finish = (finish_ambiant_pressure - pp_o2 - self.pp_h2o)
             # Check that it doesn't go less than zero.
             # Could be due to shallow deco or starting on high setpoint
             if p_inert_start < 0.0:
@@ -490,19 +483,14 @@ class Model():
         else:
             # OC mode
             # calculate He and N2 components
-            pp_he_inspired = (start_ambiant_pressure -
-                              tools.calculate_pp_h2o_surf(
-                                  settings.SURFACE_TEMP)) * f_he
-            pp_n2_inspired = (start_ambiant_pressure -
-                              tools.calculate_pp_h2o_surf(
-                                  settings.SURFACE_TEMP)) * f_n2
+            pp_he_inspired = (start_ambiant_pressure - self.pp_h2o) * f_he
+            pp_n2_inspired = (start_ambiant_pressure - self.pp_h2o) * f_n2
             rate_he = rate * f_he
             rate_n2 = rate * f_n2
             # update ox_tox, use average pp_o2
             pp_o2_inspired_avg = (
                 (start_ambiant_pressure - finish_ambiant_pressure) / 2 +
-                finish_ambiant_pressure - tools.calculate_pp_h2o_surf(
-                    settings.SURFACE_TEMP)) * (1.0 - f_he - f_n2)
+                finish_ambiant_pressure - self.pp_h2o) * (1.0 - f_he - f_n2)
             self.ox_tox.add_o2(seg_time, pp_o2_inspired_avg)
 
         for comp in self.tissues:

@@ -49,10 +49,8 @@ DEFAULT_AIR_FH2 = 0.0  #: fraction of HE in standard AIR
 DEFAULT_AIR_FN2 = 0.7808  #: fraction of N2 in standard AIR
 DEFAULT_AIR_FO2 = 0.2095  #: fraction of O2 in standard AIR
 DEFAULT_AIR_FAR = 0.00934  #: fraction of AR (argon) in standard AIR
-#: fraction of innert gas in standard AIR, rounded to 2 decimals
-#: (should be 0.79)
-DEFAULT_AIR_F_INNERT_GAS = round(
-    DEFAULT_AIR_FH2 + DEFAULT_AIR_FN2 + DEFAULT_AIR_FAR, 2)
+#: fraction of innert gas in standard AIR
+DEFAULT_AIR_F_INNERT_GAS = DEFAULT_AIR_FH2 + DEFAULT_AIR_FN2 + DEFAULT_AIR_FAR
 
 STOP_DEPTH_INCREMENT = 3  #: in meter
 LAST_STOP_DEPTH = 3  #: in meter : last stop before surfacing
@@ -78,7 +76,7 @@ FLIGHT_ALTITUDE = 2450
 TEMPLATE = "default-color.tpl"  #: template should be in templates/ directory
 
 DECO_MODEL = "ZHL16c"  #: ZHL16c or ZHL16b or ZHL16a
-BUHLMANN_VALUES = "1b"  #: 1a (4 mins for 1st comp) or 1b (5 mins)
+BUHLMANN_VALUES = "1a"  #: 1a (4 mins for 1st comp) or 1b (5 mins)
 
 
 WATER_DENSITY = SEA_WATER_DENSITY  #: water density kg/l
@@ -93,9 +91,9 @@ DEFAULT_MAX_END = 30  #: in meter
 DIVE_CONSUMPTION_RATE = 20.0 / 60  #: liter/s
 DECO_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
 
-DESCENT_RATE = 20   #: m/min
-ASCENT_RATE = 10   #: m/min
-DECO_ASCENT_RATE = 3   #: m/min
+DESCENT_RATE = 20 / 60   #: m/s
+ASCENT_RATE = 10 / 60   #: m/s
+DECO_ASCENT_RATE = 3 / 60   #: m/s
 
 #: Warning : if RUN-TIME is True, the segment duration must
 #:           include descent time

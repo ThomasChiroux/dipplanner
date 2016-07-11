@@ -129,7 +129,7 @@ def main(cli_arguments=None):
         # the result.
 
     # now calculate no flight time based on the last dive
-    current_dive.no_flight_time_wo_exception()
+    ######current_dive.no_flight_time_wo_exception()
 
     # now Prepare the output
     env = Environment(loader=PackageLoader('dipplanner', 'templates'))

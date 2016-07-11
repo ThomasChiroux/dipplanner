@@ -153,8 +153,8 @@ class Compartment():
         """
         self.h_he = h_he
         self.h_n2 = h_n2
-        self.k_he = math.log(2) / (float(h_he) * 60)
-        self.k_n2 = math.log(2) / (float(h_n2) * 60)
+        self.k_he = math.log(2) / (float(h_he))  # * 60)
+        self.k_n2 = math.log(2) / (float(h_n2))  # * 60)
         self.a_he = float(a_he)
         self.b_he = float(b_he)
         self.a_n2 = float(a_n2)
@@ -174,7 +174,7 @@ class Compartment():
         self.pp_n2 = pp_n2
 
         # calculate_p_a_b_inert
-        # Calculate and returns a_he_n2 and b_he_n2
+        # Calculate a_he_n2 and b_he_n2
         # based on current pp_he and pp_n2 of this compartment
         #  calculate adjusted a, b coefficients based on those of He and N2
         self.a_he_n2 = (((self.a_he * pp_he) + (self.a_n2 * pp_n2)) /
@@ -190,7 +190,7 @@ class Compartment():
 
         :param float pp_he_inspired: partial pressure of inspired helium
         :param float pp_n2_inspired: partial pressure of inspired nitrogen
-        :param float seg_time: segment time in seconds
+        :param float seg_time: segment time in minutes
 
         :raises ModelStateException: if pp or time < 0
         """
@@ -198,13 +198,11 @@ class Compartment():
         # (1 - math.exp(-self.k_he*float(seg_time)))
         # calculation : only calculate when seg_time changes (k_he or k_n2 does
         # not change for a dive)
-        if self.old_seg_time is None:
-            self.old_seg_time = seg_time
-            self.const_exp_const_depth_he = (1 - math.exp(-self.k_he *
-                                                          float(seg_time)))
-            self.const_exp_const_depth_n2 = (1 - math.exp(-self.k_n2 *
-                                                          float(seg_time)))
-        elif self.old_seg_time != seg_time:
+
+        # transform time from second to minute
+        seg_time = seg_time / 60
+
+        if self.old_seg_time is None or self.old_seg_time != seg_time:
             self.old_seg_time = seg_time
             self.const_exp_const_depth_he = (1 - math.exp(-self.k_he *
                                                           float(seg_time)))
@@ -219,63 +217,45 @@ class Compartment():
                                       self.const_exp_const_depth_he)
             new_pp_n2 = self.pp_n2 + ((pp_n2_inspired - self.pp_n2) *
                                       self.const_exp_const_depth_n2)
-            # self.set_pp(new_pp_he, new_pp_n2)
-
-            # below is an 'inline' version of set_pp for optimisation:
-            self.pp_he = new_pp_he
-            self.pp_n2 = new_pp_n2
-
-            # calculate_p_a_b_inert
-            # Calculate and returns a_he_n2 and b_he_n2
-            # based on current pp_he and pp_n2 of this compartment
-            #  calculate adjusted a, b coefficients based on those of He and N2
-            self.a_he_n2 = ((self.a_he * new_pp_he) +
-                            (self.a_n2 * new_pp_n2)) / (new_pp_he + new_pp_n2)
-            self.b_he_n2 = ((self.b_he * new_pp_he) +
-                            (self.b_n2 * new_pp_n2)) / (new_pp_he + new_pp_n2)
+            self.set_pp(new_pp_he, new_pp_n2)
 
     def asc_desc(self, pp_he_inspired, pp_n2_inspired,
                  rate_he, rate_n2, seg_time):
         """Ascend or descent calculations.
 
-        Uses equation : P=Pio+R(t -1/k)-[Pio-Po-(R/k)]e^-kt
+        Uses Schreiner equation : P=Pio+R(t -1/k)-[Pio-Po-(R/k)]e^-kt
         store the new values in self.pp_he and self.pp_n2
 
         :param float pp_he_inspired: partial pressure of inspired helium
         :param float pp_n2_inspired: partial pressure of inspired nitrogen
         :param float rate_he: rate of change of pp_he
         :param float rate_n2: rate of change of pp_n2
-        :param float seg_time: segment time in seconds
+        :param float seg_time: segment time in minutes
 
         :raises ModelStateException: if pp or time < 0
         """
+        # transform rate and time from second to minute
+        rate_he = rate_he * 60
+        rate_n2 = rate_n2 * 60
+        seg_time = seg_time / 60
+
         if pp_he_inspired < 0 or pp_n2_inspired < 0 or seg_time < 0:
             raise ModelStateException(
                 "Error in argument: negative value is not allowed")
         else:
             new_pp_he = (pp_he_inspired +
-                         rate_he * (float(seg_time) - (1.0 / self.k_he)) -
+                         rate_he * (seg_time - (1.0 / self.k_he)) -
                          (pp_he_inspired - self.pp_he -
                           (rate_he / self.k_he)) *
-                         math.exp(-self.k_he * float(seg_time)))
+                         math.exp(-self.k_he * seg_time))
             new_pp_n2 = (pp_n2_inspired +
-                         rate_n2 * (float(seg_time) - (1.0 / self.k_n2)) -
+                         rate_n2 * (seg_time - (1.0 / self.k_n2)) -
                          (pp_n2_inspired - self.pp_n2 -
                           (rate_n2 / self.k_n2)) *
-                         math.exp(-self.k_n2 * float(seg_time)))
-            # self.set_pp(new_pp_he, new_pp_n2)
-            # below is an 'inline' version of set_pp for optimisation:
-            self.pp_he = new_pp_he
-            self.pp_n2 = new_pp_n2
-
-            # calculate_p_a_b_inert
-            # Calculate and returns a_he_n2 and b_he_n2
-            # based on current pp_he and pp_n2 of this compartment
-            #  calculate adjusted a, b coefficients based on those of He and N2
-            self.a_he_n2 = ((self.a_he * new_pp_he) +
-                            (self.a_n2 * new_pp_n2)) / (new_pp_he + new_pp_n2)
-            self.b_he_n2 = ((self.b_he * new_pp_he) +
-                            (self.b_n2 * new_pp_n2)) / (new_pp_he + new_pp_n2)
+                         math.exp(-self.k_n2 * seg_time))
+            if self.h_n2 == 4:
+                print(self.h_n2, ": result:", new_pp_n2, "# Pi:", pp_n2_inspired, "# rate n2:", rate_n2, "# seg_time:", seg_time, "# k_n2:", self.k_n2)
+            self.set_pp(new_pp_he, new_pp_n2)
 
     def get_m_value_at(self, pressure):
         """Get M-Value for given ambient pressure using the Buhlmann equation.

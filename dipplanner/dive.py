@@ -447,10 +447,10 @@ class Dive():
                                        self.current_tank,
                                        self.pp_o2))
                     self.run_time += abs(float(delta_depth) /
-                                         (float(settings.DESCENT_RATE) / 60))
+                                         (float(settings.DESCENT_RATE)))
                     self.logger.debug("descent time : %ss",
                                       float(delta_depth) /
-                                      settings.DESCENT_RATE / 60)
+                                      settings.DESCENT_RATE)
                 else:  # ascent
                     # call ascend method of this class
                     # for decompression calculation
@@ -563,7 +563,7 @@ class Dive():
         exception inside self.dive_exceptions instead.
 
         :param int altitude: in meter : altitude used for the calculation
-        :param float flight_ascent_rate: in m/min
+        :param float flight_ascent_rate: in m/s
         :param tank: [optionnal]
                      it is possible to provide a tank while calling
                      no_flight_time to force "no flight deco" with
@@ -594,7 +594,7 @@ class Dive():
         The stop time represents the no flight time
 
         :param int altitude: in meter : altitude used for the calculation
-        :param float flight_ascent_rate: in m/min
+        :param float flight_ascent_rate: in m/ms
         :param tank: (optionnal)
                     it is possible to provide a tank while calling
                     no_flight_time to force "no flight deco" with
@@ -688,6 +688,9 @@ class Dive():
         :raises InfiniteDeco: if the no flight time can not achieve enough
                               decompression to be able to go to give altitude
         """
+        # TODO: DONE FOR TESTS HERE:
+        return 0
+
         full_desat_time = 0
         margin = 0.01 + calculate_pp_h2o_surf(settings.SURFACE_TEMP)
 
@@ -817,16 +820,17 @@ class Dive():
                                       self.model.gradient.gf)
 
                 # calculate stop_time
-                if (deco_stop_time == 0 and
-                        self.run_time % settings.STOP_TIME_INCREMENT > 0):
-                    stop_time = (
-                        int(self.run_time / settings.STOP_TIME_INCREMENT) *
-                        settings.STOP_TIME_INCREMENT +
-                        settings.STOP_TIME_INCREMENT - self.run_time)
-                    if stop_time == 0:
-                        stop_time = settings.STOP_TIME_INCREMENT  # in second
-                else:
-                    stop_time = settings.STOP_TIME_INCREMENT  # in second
+                # if (deco_stop_time == 0 and
+                #         self.run_time % settings.STOP_TIME_INCREMENT > 0):
+                #     stop_time = (
+                #         int(self.run_time / settings.STOP_TIME_INCREMENT) *
+                #         settings.STOP_TIME_INCREMENT +
+                #         settings.STOP_TIME_INCREMENT - self.run_time)
+                #     print("+++++ ", stop_time)
+                #     if stop_time == 0:
+                #         stop_time = settings.STOP_TIME_INCREMENT  # in second
+                # else:
+                stop_time = settings.STOP_TIME_INCREMENT  # in second
 
                 # execute the stop
                 self.model.const_depth(depth_to_pressure(self.current_depth),
@@ -876,7 +880,7 @@ class Dive():
                                     self.pp_o2)
                 self.run_time += abs((float(self.current_depth) -
                                       float(next_stop_depth)) /
-                                     float(settings.ASCENT_RATE / 60))
+                                     float(settings.ASCENT_RATE))
                 self.logger.debug("update run time : %ss", self.run_time)
             else:
                 self.logger.debug("...in deco cycle, do asc from %s to %s",
@@ -889,7 +893,7 @@ class Dive():
                                     self.pp_o2)
                 self.run_time += abs((float(self.current_depth) -
                                       float(next_stop_depth)) /
-                                     float(settings.DECO_ASCENT_RATE / 60))
+                                     float(settings.DECO_ASCENT_RATE))
                 self.logger.debug("update run time : %ss", self.run_time)
                 self.output_segments.append(
                     SegmentAscDesc(self.current_depth,

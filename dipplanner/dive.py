@@ -446,11 +446,11 @@ class Dive():
                                        settings.DESCENT_RATE,
                                        self.current_tank,
                                        self.pp_o2))
-                    self.run_time += (float(delta_depth) /
-                                      float(settings.DESCENT_RATE))
+                    self.run_time += abs(float(delta_depth) /
+                                         (float(settings.DESCENT_RATE) / 60))
                     self.logger.debug("descent time : %ss",
                                       float(delta_depth) /
-                                      settings.DESCENT_RATE)
+                                      settings.DESCENT_RATE / 60)
                 else:  # ascent
                     # call ascend method of this class
                     # for decompression calculation
@@ -563,7 +563,7 @@ class Dive():
         exception inside self.dive_exceptions instead.
 
         :param int altitude: in meter : altitude used for the calculation
-        :param float flight_ascent_rate: in m/s
+        :param float flight_ascent_rate: in m/min
         :param tank: [optionnal]
                      it is possible to provide a tank while calling
                      no_flight_time to force "no flight deco" with
@@ -594,7 +594,7 @@ class Dive():
         The stop time represents the no flight time
 
         :param int altitude: in meter : altitude used for the calculation
-        :param float flight_ascent_rate: in m/s
+        :param float flight_ascent_rate: in m/min
         :param tank: (optionnal)
                     it is possible to provide a tank while calling
                     no_flight_time to force "no flight deco" with
@@ -870,26 +870,26 @@ class Dive():
                                   self.current_depth, next_stop_depth)
                 self.model.asc_desc(depth_to_pressure(self.current_depth),
                                     depth_to_pressure(next_stop_depth),
-                                    settings.ASCENT_RATE,
+                                    -settings.ASCENT_RATE,
                                     self.current_tank.f_he,
                                     self.current_tank.f_n2,
                                     self.pp_o2)
-                self.run_time += (abs(float(self.current_depth) -
+                self.run_time += abs((float(self.current_depth) -
                                       float(next_stop_depth)) /
-                                  float(settings.ASCENT_RATE))
+                                     float(settings.ASCENT_RATE / 60))
                 self.logger.debug("update run time : %ss", self.run_time)
             else:
                 self.logger.debug("...in deco cycle, do asc from %s to %s",
                                   self.current_depth, next_stop_depth)
                 self.model.asc_desc(depth_to_pressure(self.current_depth),
                                     depth_to_pressure(next_stop_depth),
-                                    settings.DECO_ASCENT_RATE,
+                                    -settings.DECO_ASCENT_RATE,
                                     self.current_tank.f_he,
                                     self.current_tank.f_n2,
                                     self.pp_o2)
-                self.run_time += (abs(float(self.current_depth) -
+                self.run_time += abs((float(self.current_depth) -
                                       float(next_stop_depth)) /
-                                  float(settings.DECO_ASCENT_RATE))
+                                     float(settings.DECO_ASCENT_RATE / 60))
                 self.logger.debug("update run time : %ss", self.run_time)
                 self.output_segments.append(
                     SegmentAscDesc(self.current_depth,
@@ -954,7 +954,7 @@ class Dive():
             self.output_segments.append(
                 SegmentAscDesc(start_depth,
                                self.current_depth,
-                               settings.ASCENT_RATE,
+                               -settings.ASCENT_RATE,
                                self.current_tank,
                                self.pp_o2))
 

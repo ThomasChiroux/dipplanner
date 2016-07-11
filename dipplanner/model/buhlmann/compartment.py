@@ -155,9 +155,9 @@ class Compartment():
         self.h_n2 = h_n2
         self.k_he = math.log(2) / (float(h_he) * 60)
         self.k_n2 = math.log(2) / (float(h_n2) * 60)
-        self.a_he = float(a_he) / 10
+        self.a_he = float(a_he)
         self.b_he = float(b_he)
-        self.a_n2 = float(a_n2) / 10
+        self.a_n2 = float(a_n2)
         self.b_n2 = float(b_n2)
 
     def set_pp(self, pp_he, pp_n2):
@@ -264,7 +264,6 @@ class Compartment():
                           (rate_n2 / self.k_n2)) *
                          math.exp(-self.k_n2 * float(seg_time)))
             # self.set_pp(new_pp_he, new_pp_n2)
-
             # below is an 'inline' version of set_pp for optimisation:
             self.pp_he = new_pp_he
             self.pp_n2 = new_pp_n2

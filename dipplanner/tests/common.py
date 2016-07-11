@@ -43,8 +43,8 @@ class TestDive(unittest.TestCase):
         # temporary hack (tests):
         super().setUp()
         activate_debug_for_tests()
-        settings.RUN_TIME = True
-        settings.SURFACE_TEMP = 12
+        # settings.RUN_TIME = True
+        # settings.SURFACE_TEMP = 12
         self.air12l = Tank(tank_vol=12.0,
                            tank_pressure=200,
                            tank_rule="10b")
@@ -73,7 +73,6 @@ class TestDive(unittest.TestCase):
 
         self.txtravel = Tank(0.21, 0.30, tank_vol=24.0,
                              tank_pressure=200)  # 2x S80
-
 
         self.ccair = Tank(tank_vol=3.0, tank_pressure=200, tank_rule='10b')
         self.cctxhypo = Tank(0.10, 0.50, tank_vol=3.0, tank_pressure=200,
@@ -148,7 +147,7 @@ class TestDive(unittest.TestCase):
 
     def tearDown(self):
         """After tests."""
-        settings.SURFACE_TEMP = 20
+        # settings.SURFACE_TEMP = 20
         settings.RUN_TIME = True
 
     @property

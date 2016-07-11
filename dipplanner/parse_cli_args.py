@@ -289,7 +289,7 @@ class DipplannerCliArguments():
         if args.descentrate:
             try:
                 settings.DESCENT_RATE = float(
-                    safe_eval_calculator(args.descentrate)) / 60
+                    safe_eval_calculator(args.descentrate))
             except ValueError:
                 self.parser.error("Error while parsing option "
                                   "descentrate : %s" % args.descentrate)
@@ -297,7 +297,7 @@ class DipplannerCliArguments():
         if args.ascentrate:
             try:
                 settings.ASCENT_RATE = float(
-                    safe_eval_calculator(args.ascentrate)) / 60
+                    safe_eval_calculator(args.ascentrate))
             except ValueError:
                 self.parser.error("Error while parsing option "
                                   "ascentrate : %s" % args.ascentrate)
@@ -305,7 +305,7 @@ class DipplannerCliArguments():
         if args.deco_ascentrate:
             try:
                 settings.DECO_ASCENT_RATE = float(
-                    safe_eval_calculator(args.deco_ascentrate)) / 60
+                    safe_eval_calculator(args.deco_ascentrate))
             except ValueError:
                 self.parser.error(
                     "Error while parsing option "

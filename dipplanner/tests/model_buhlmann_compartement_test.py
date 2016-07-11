@@ -39,15 +39,15 @@ class TestModelBuhlmannCompartemnt(unittest.TestCase):
         settings.RUN_TIME = True
         settings.SURFACE_TEMP = 12
         self.compt1 = Compartment(1.88, 5.0,
-                                  16.189, 0.4770,
-                                  11.696, 0.5578)
+                                  1.6189, 0.4770,
+                                  1.1696, 0.5578)
         self.compt2 = Compartment(1.88, 5.0,
-                                  16.189, 0.4770,
-                                  11.696, 0.5578)
+                                  1.6189, 0.4770,
+                                  1.1696, 0.5578)
         self.compt2.set_pp(0.3 * 5, (1 - 0.21 - 0.3) * 5)
         self.compt3 = Compartment(1.88, 5.0,
-                                  16.189, 0.4770,
-                                  11.696, 0.5578)
+                                  1.6189, 0.4770,
+                                  1.1696, 0.5578)
         self.compt3.set_pp(0.0, 3.16)
 
     def test_compartment_simple_1(self):

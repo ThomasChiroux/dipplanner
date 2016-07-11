@@ -137,7 +137,7 @@ class TestAllCli(TestCliArguments):
                     "--descentrate=42", ]
         _ = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DESCENT_RATE,
-                         42.0/60,
+                         42.0,
                          "Wrong descentrate: %s" % settings.DESCENT_RATE)
 
     def test_ascentrate(self):
@@ -147,7 +147,7 @@ class TestAllCli(TestCliArguments):
                     "--ascentrate=9", ]
         _ = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.ASCENT_RATE,
-                         9.0/60,
+                         9.0,
                          "Wrong ascentrate: %s" % settings.ASCENT_RATE)
 
     def test_deco_ascentrate(self):
@@ -157,7 +157,7 @@ class TestAllCli(TestCliArguments):
                     "--deco-ascentrate=4", ]
         _ = DipplannerCliArguments(cli_args)
         self.assertEqual(settings.DECO_ASCENT_RATE,
-                         4.0/60,
+                         4.0,
                          "Wrong deco_ascentrate: %s" %
                          settings.DECO_ASCENT_RATE)
 
@@ -350,17 +350,17 @@ class TestAllConfig(TestCliArguments):
 
     def test_descentrate(self):
         self.assertEqual(settings.DESCENT_RATE,
-                         32.0/60,
+                         32.0,
                          "Wrong descentrate: %s" % settings.DESCENT_RATE)
 
     def test_ascentrate(self):
         self.assertEqual(settings.ASCENT_RATE,
-                         8.0/60,
+                         8.0,
                          "Wrong ascentrate: %s" % settings.ASCENT_RATE)
 
     def test_deco_ascentrate(self):
         self.assertEqual(settings.DECO_ASCENT_RATE,
-                         4.0/60,
+                         4.0,
                          "Wrong ascentrate: %s" % settings.DECO_ASCENT_RATE)
 
     def test_mawppo2(self):

@@ -161,116 +161,116 @@ class Model():
             self.logger.info("model used: Buhlmann ZHL16c")
             if settings.BUHLMANN_VALUES == '1a':
                 self.tissues[0].set_compartment_time_constants(
-                    001.51, 004.0, 17.424, 0.4245, 12.599, 0.5050)
+                    001.51, 004.0, 1.7424, 0.4245, 1.2599, 0.5050)
             elif settings.BUHLMANN_VALUES == '1b':
                 self.tissues[0].set_compartment_time_constants(
-                    001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
+                    001.88, 005.0, 1.6189, 0.4770, 1.1696, 0.5578)
             self.tissues[1].set_compartment_time_constants(
-                003.02, 008.0, 13.830, 0.5747, 10.000, 0.6514)
+                003.02, 008.0, 1.3830, 0.5747, 1.0000, 0.6514)
             self.tissues[2].set_compartment_time_constants(
-                004.72, 012.5, 11.919, 0.6527, 08.618, 0.7222)
+                004.72, 012.5, 1.1919, 0.6527, 0.8618, 0.7222)
             self.tissues[3].set_compartment_time_constants(
-                006.99, 018.5, 10.458, 0.7223, 07.562, 0.7825)
+                006.99, 018.5, 1.0458, 0.7223, 0.7562, 0.7825)
             self.tissues[4].set_compartment_time_constants(
-                010.21, 027.0, 09.220, 0.7582, 06.200, 0.8126)
+                010.21, 027.0, 0.9220, 0.7582, 0.6200, 0.8126)
             self.tissues[5].set_compartment_time_constants(
-                014.48, 038.3, 08.205, 0.7957, 05.043, 0.8434)
+                014.48, 038.3, 0.8205, 0.7957, 0.5043, 0.8434)
             self.tissues[6].set_compartment_time_constants(
-                020.53, 054.3, 07.305, 0.8279, 04.410, 0.8693)
+                020.53, 054.3, 0.7305, 0.8279, 0.4410, 0.8693)
             self.tissues[7].set_compartment_time_constants(
-                029.11, 077.0, 06.502, 0.8553, 04.000, 0.8910)
+                029.11, 077.0, 0.6502, 0.8553, 0.4000, 0.8910)
             self.tissues[8].set_compartment_time_constants(
-                041.20, 109.0, 05.950, 0.8757, 03.750, 0.9092)
+                041.20, 109.0, 0.5950, 0.8757, 0.3750, 0.9092)
             self.tissues[9].set_compartment_time_constants(
-                055.19, 146.0, 05.545, 0.8903, 03.500, 0.9222)
+                055.19, 146.0, 0.5545, 0.8903, 0.3500, 0.9222)
             self.tissues[10].set_compartment_time_constants(
-                070.69, 187.0, 05.333, 0.8997, 03.295, 0.9319)
+                070.69, 187.0, 0.5333, 0.8997, 0.3295, 0.9319)
             self.tissues[11].set_compartment_time_constants(
-                090.34, 239.0, 05.189, 0.9073, 03.065, 0.9403)
+                090.34, 239.0, 0.5189, 0.9073, 0.3065, 0.9403)
             self.tissues[12].set_compartment_time_constants(
-                115.29, 305.0, 05.181, 0.9122, 02.835, 0.9477)
+                115.29, 305.0, 0.5181, 0.9122, 0.2835, 0.9477)
             self.tissues[13].set_compartment_time_constants(
-                147.42, 390.0, 05.176, 0.9171, 02.610, 0.9544)
+                147.42, 390.0, 0.5176, 0.9171, 0.2610, 0.9544)
             self.tissues[14].set_compartment_time_constants(
-                188.24, 498.0, 05.172, 0.9217, 02.480, 0.9602)
+                188.24, 498.0, 0.5172, 0.9217, 0.2480, 0.9602)
             self.tissues[15].set_compartment_time_constants(
-                240.03, 635.0, 05.119, 0.9267, 02.327, 0.9653)
+                240.03, 635.0, 0.5119, 0.9267, 0.2327, 0.9653)
         elif deco_model == "ZHL16b":
             self.logger.info("model used: Buhlmann ZHL16b")
             if settings.BUHLMANN_VALUES == '1a':
                 self.tissues[0].set_compartment_time_constants(
-                    001.51, 004.0, 17.424, 0.4245, 12.599, 0.5050)
+                    001.51, 004.0, 1.7424, 0.4245, 1.2599, 0.5050)
             elif settings.BUHLMANN_VALUES == '1b':
                 self.tissues[0].set_compartment_time_constants(
-                    001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
+                    001.88, 005.0, 1.6189, 0.4770, 1.1696, 0.5578)
             self.tissues[1].set_compartment_time_constants(
-                003.02, 008.0, 13.830, 0.5747, 10.000, 0.6514)
+                003.02, 008.0, 1.3830, 0.5747, 1.0000, 0.6514)
             self.tissues[2].set_compartment_time_constants(
-                004.72, 012.5, 11.919, 0.6527, 08.618, 0.7222)
+                004.72, 012.5, 1.1919, 0.6527, 0.8618, 0.7222)
             self.tissues[3].set_compartment_time_constants(
-                006.99, 018.5, 10.458, 0.7223, 07.562, 0.7825)
+                006.99, 018.5, 1.0458, 0.7223, 0.7562, 0.7825)
             self.tissues[4].set_compartment_time_constants(
-                010.21, 027.0, 09.220, 0.7582, 06.667, 0.8126)
+                010.21, 027.0, 0.9220, 0.7582, 0.6667, 0.8126)
             self.tissues[5].set_compartment_time_constants(
-                014.48, 038.3, 08.205, 0.7957, 05.600, 0.8434)
+                014.48, 038.3, 0.8205, 0.7957, 0.5600, 0.8434)
             self.tissues[6].set_compartment_time_constants(
-                020.53, 054.3, 07.305, 0.8279, 04.947, 0.8693)
+                020.53, 054.3, 0.7305, 0.8279, 0.4947, 0.8693)
             self.tissues[7].set_compartment_time_constants(
-                029.11, 077.0, 06.502, 0.8553, 04.500, 0.8910)
+                029.11, 077.0, 0.6502, 0.8553, 0.4500, 0.8910)
             self.tissues[8].set_compartment_time_constants(
-                041.20, 109.0, 05.950, 0.8757, 04.187, 0.9092)
+                041.20, 109.0, 0.5950, 0.8757, 0.4187, 0.9092)
             self.tissues[9].set_compartment_time_constants(
-                055.19, 146.0, 05.545, 0.8903, 03.798, 0.9222)
+                055.19, 146.0, 0.5545, 0.8903, 0.3798, 0.9222)
             self.tissues[10].set_compartment_time_constants(
-                070.69, 187.0, 05.333, 0.8997, 03.497, 0.9319)
+                070.69, 187.0, 0.5333, 0.8997, 0.3497, 0.9319)
             self.tissues[11].set_compartment_time_constants(
-                090.34, 239.0, 05.189, 0.9073, 03.223, 0.9403)
+                090.34, 239.0, 0.5189, 0.9073, 0.3223, 0.9403)
             self.tissues[12].set_compartment_time_constants(
-                115.29, 305.0, 05.181, 0.9122, 02.850, 0.9477)
+                115.29, 305.0, 0.5181, 0.9122, 0.2850, 0.9477)
             self.tissues[13].set_compartment_time_constants(
-                147.42, 390.0, 05.176, 0.9171, 02.737, 0.9544)
+                147.42, 390.0, 0.5176, 0.9171, 0.2737, 0.9544)
             self.tissues[14].set_compartment_time_constants(
-                188.24, 498.0, 05.172, 0.9217, 02.523, 0.9602)
+                188.24, 498.0, 0.5172, 0.9217, 0.2523, 0.9602)
             self.tissues[15].set_compartment_time_constants(
-                240.03, 635.0, 05.119, 0.9267, 02.327, 0.9653)
+                240.03, 635.0, 0.5119, 0.9267, 0.2327, 0.9653)
         elif deco_model == "ZHL16a":
             self.logger.info("model used: Buhlmann ZHL16a")
             if settings.BUHLMANN_VALUES == '1a':
                 self.tissues[0].set_compartment_time_constants(
-                    001.51, 004.0, 17.424, 0.4245, 12.599, 0.5050)
+                    001.51, 004.0, 1.7424, 0.4245, 1.2599, 0.5050)
             elif settings.BUHLMANN_VALUES == '1b':
                 self.tissues[0].set_compartment_time_constants(
-                    001.88, 005.0, 16.189, 0.4770, 11.696, 0.5578)
+                    001.88, 005.0, 1.6189, 0.4770, 1.1696, 0.5578)
             self.tissues[1].set_compartment_time_constants(
-                003.02, 008.0, 13.830, 0.5747, 10.000, 0.6514)
+                003.02, 008.0, 1.3830, 0.5747, 1.0000, 0.6514)
             self.tissues[2].set_compartment_time_constants(
-                004.72, 012.5, 11.919, 0.6527, 08.618, 0.7222)
+                004.72, 012.5, 1.1919, 0.6527, 0.8618, 0.7222)
             self.tissues[3].set_compartment_time_constants(
-                006.99, 018.5, 10.458, 0.7223, 07.562, 0.7825)
+                006.99, 018.5, 1.0458, 0.7223, 0.7562, 0.7825)
             self.tissues[4].set_compartment_time_constants(
-                010.21, 027.0, 09.220, 0.7582, 06.667, 0.8126)
+                010.21, 027.0, 0.9220, 0.7582, 0.6667, 0.8126)
             self.tissues[5].set_compartment_time_constants(
-                014.48, 038.3, 08.205, 0.7957, 05.933, 0.8434)
+                014.48, 038.3, 0.8205, 0.7957, 0.5933, 0.8434)
             self.tissues[6].set_compartment_time_constants(
-                020.53, 054.3, 07.305, 0.8279, 05.282, 0.8693)
+                020.53, 054.3, 0.7305, 0.8279, 0.5282, 0.8693)
             self.tissues[7].set_compartment_time_constants(
-                029.11, 077.0, 06.502, 0.8553, 04.710, 0.8910)
+                029.11, 077.0, 0.6502, 0.8553, 0.4710, 0.8910)
             self.tissues[8].set_compartment_time_constants(
-                041.20, 109.0, 05.950, 0.8757, 04.187, 0.9092)
+                041.20, 109.0, 0.5950, 0.8757, 0.4187, 0.9092)
             self.tissues[9].set_compartment_time_constants(
-                055.19, 146.0, 05.545, 0.8903, 03.798, 0.9222)
+                055.19, 146.0, 0.5545, 0.8903, 0.3798, 0.9222)
             self.tissues[10].set_compartment_time_constants(
-                070.69, 187.0, 05.333, 0.8997, 03.497, 0.9319)
+                070.69, 187.0, 0.5333, 0.8997, 0.3497, 0.9319)
             self.tissues[11].set_compartment_time_constants(
-                090.34, 239.0, 05.189, 0.9073, 03.223, 0.9403)
+                090.34, 239.0, 0.5189, 0.9073, 0.3223, 0.9403)
             self.tissues[12].set_compartment_time_constants(
-                115.29, 305.0, 05.181, 0.9122, 02.971, 0.9477)
+                115.29, 305.0, 0.5181, 0.9122, 0.2971, 0.9477)
             self.tissues[13].set_compartment_time_constants(
-                147.42, 390.0, 05.176, 0.9171, 02.737, 0.9544)
+                147.42, 390.0, 0.5176, 0.9171, 0.2737, 0.9544)
             self.tissues[14].set_compartment_time_constants(
-                188.24, 498.0, 05.172, 0.9217, 02.523, 0.9602)
+                188.24, 498.0, 0.5172, 0.9217, 0.2523, 0.9602)
             self.tissues[15].set_compartment_time_constants(
-                240.03, 635.0, 05.119, 0.9267, 02.327, 0.9653)
+                240.03, 635.0, 0.5119, 0.9267, 0.2327, 0.9653)
 
     def validate_model(self):
         """Validate model - checks over the model and looks for corruption.
@@ -453,7 +453,8 @@ class Model():
         # rem: here we do not bother of PP_H2O like in constant_depth : WHY ?
         start_ambiant_pressure = start + settings.AMBIANT_PRESSURE_SURFACE
         finish_ambiant_pressure = finish + settings.AMBIANT_PRESSURE_SURFACE
-        seg_time = abs(float(finish) - float(start)) / rate
+        seg_time = abs((tools.pressure_to_depth(finish) -
+                        tools.pressure_to_depth(start)) / rate)
         if pp_o2 > 0.0:
             # CCR mode
             # Calculate inert gas partial pressure == pAmb - pO2 - pH2O

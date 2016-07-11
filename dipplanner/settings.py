@@ -38,7 +38,7 @@ ABSOLUTE_MAX_TANK_SIZE = 2 * 20  #: in liter
 
 #: Temperature at surface.
 #: Used to calculate PP_H2O_SURFACE
-SURFACE_TEMP = 20
+SURFACE_TEMP = 37
 
 HE_NARCOTIC_VALUE = 0.23  #: helium narcotic value
 N2_NARCOTIC_VALUE = 1.0  #: nitrogen narcotic value
@@ -78,7 +78,7 @@ FLIGHT_ALTITUDE = 2450
 TEMPLATE = "default-color.tpl"  #: template should be in templates/ directory
 
 DECO_MODEL = "ZHL16c"  #: ZHL16c or ZHL16b or ZHL16a
-BUHLMANN_VALUES = "1a"  #: 1a (4 mins for 1st comp) or 1b (5 mins)
+BUHLMANN_VALUES = "1b"  #: 1a (4 mins for 1st comp) or 1b (5 mins)
 
 
 WATER_DENSITY = SEA_WATER_DENSITY  #: water density kg/l
@@ -87,15 +87,15 @@ WATER_DENSITY = SEA_WATER_DENSITY  #: water density kg/l
 AMBIANT_PRESSURE_SURFACE = AMBIANT_PRESSURE_SEA_LEVEL
 
 DEFAULT_MAX_PPO2 = 1.6  #: in bar
-DEFAULT_MIN_PPO2 = 0.21  #: in bar
+DEFAULT_MIN_PPO2 = 0.16  #: in bar
 DEFAULT_MAX_END = 30  #: in meter
 
 DIVE_CONSUMPTION_RATE = 20.0 / 60  #: liter/s
 DECO_CONSUMPTION_RATE = 17.0 / 60  #: liter/s
 
-DESCENT_RATE = 20 / 60  #: m/s
-ASCENT_RATE = 10 / 60  #: m/s
-DECO_ASCENT_RATE = 3 / 60  #: m/s
+DESCENT_RATE = 20   #: m/min
+ASCENT_RATE = 10   #: m/min
+DECO_ASCENT_RATE = 3   #: m/min
 
 #: Warning : if RUN-TIME is True, the segment duration must
 #:           include descent time

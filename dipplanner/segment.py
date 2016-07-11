@@ -374,7 +374,7 @@ class SegmentAscDesc(Segment):
         self.tank = tank  # tank used for this segment
 
         # calculate the time based on start-end depth and rate:
-        self.time = (abs(self.end_depth - self.start_depth) / self.rate)
+        self.time = abs((self.end_depth - self.start_depth) / (self.rate / 60))
 
         if start_depth > end_depth:
             self.type = 'ascent'  # type of segment

@@ -73,13 +73,14 @@ class Model():
         self.gradient = None
         self.init_gradient()
 
-        for _ in range(0, self.COMPS):
+        for _ in range(self.COMPS):
             self.tissues.append(Compartment())
 
         self.set_time_constants()
 
         for comp in self.tissues:
-            comp.set_pp(0.0, settings.DEFAULT_AIR_F_INNERT_GAS *
+            comp.set_pp(pp_he=0.0,
+                        pp_n2=settings.DEFAULT_AIR_F_INNERT_GAS *
                         (settings.AMBIANT_PRESSURE_SURFACE -
                          tools.calculate_pp_h2o_surf(settings.SURFACE_TEMP)))
 

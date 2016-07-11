@@ -33,7 +33,7 @@ class Gradient():
         * gf_high (float) -- high Gradient factor, from 0.0 to 1.0
         * gf (float) -- current gf
         * gf_slope (float) -- slope of the linear equation
-        * gf_set (float) -- Indicates that gf Slope has been initialised
+        * gf_set (bool) -- Indicates that gf Slope has been initialised
     """
 
     def __init__(self, gf_low, gf_high):
